@@ -11,6 +11,70 @@ a **TEST STAND-IN** server. The real target is the **ao-org classic VB6 server**
 No compiled VB6 server was available for this milestone, so live interoperability
 with it remains untested. The stand-in is a deterministic fixture, not a game server.
 
+M2 adds a browser client that renders local classic maps and an animated character
+with keyboard/touch walking through the bridge. **The demonstrated backend is the
+stand-in.** Wine now runs x86 Windows programs on this Mac, but the real server is
+still blocked by the absence of a compiled Server.exe or licensed VB6 compiler.
+The exact Wine recipe and observed limits are in [the build log](docs/BUILD-LOG.md).
+
+## Browser preview (M2)
+
+```sh
+pnpm install --frozen-lockfile
+AO_ASSETS="$HOME/Projects/ao-reference/Recursos" pnpm dev:standin
+# Open http://127.0.0.1:5173 and choose Enter world.
+
+# Use a free port if 5173 is occupied:
+AO_ASSETS="$HOME/Projects/ao-reference/Recursos" AO_WEB_PORT=5187 pnpm dev:standin
+
+# Point the same browser/bridge at an existing classic TCP server:
+AO_ASSETS="$HOME/Projects/ao-reference/Recursos" AO_TCP_HOST=127.0.0.1 AO_TCP_PORT=7666 pnpm dev
+
+# Build and run the production bundle locally with the stand-in:
+AO_ASSETS="$HOME/Projects/ao-reference/Recursos" pnpm web:preview
+```
+
+Use arrows/WASD or the on-screen direction buttons. Quick taps and held input work;
+releasing, cancelling a touch, switching tabs or losing focus stops held movement.
+The client picks the first account character, waits for server placement/intervals,
+predicts one step, then requests the server position. Only a matching reply adds a
+confirmed step. Rejections immediately restore server coordinates. Silence is a
+timeout, never proof of a move. Credentials are not stored and the password input
+is cleared when connecting. A disconnected session can be connected again.
+
+The launcher binds to loopback by default, starts the bridge on a free port, and
+proxies `/bridge` through the web origin. For a phone on your **local network**, set
+`AO_WEB_HOST=0.0.0.0` and open `http://<Mac-LAN-IP>:5173` on the phone; the WebSocket
+uses that same origin automatically. This is a local development launcher, not a
+public hosting setup. No native wrappers or cloud services are involved.
+
+`AO_ASSETS` must point to an existing `Recursos` directory. Only numeric PNGs,
+numbered CSM maps and four required index files are served. Assets are neither
+copied nor imported into the build; screenshots and build output are gitignored.
+Code-only checkout/build/tests need no game assets. The browser runtime dependency
+is PixiJS 8.23.0 plus the dependency-free protocol package; no UI framework.
+
+Browser checks need the local resources, installed Google Chrome and Playwright
+WebKit. They exercise the built app through the actual WebSocket→TCP→stand-in path:
+
+```sh
+pnpm exec playwright install webkit
+AO_ASSETS="$HOME/Projects/ao-reference/Recursos" pnpm test:browser
+```
+
+Desktop Chrome, mobile Chrome and mobile WebKit each verify login, four directions,
+30 seconds connected, confirmed coordinates, credential rejection and disconnect.
+Screenshots are written to `artifacts/screenshots/m2-{desktop-chrome,mobile-chrome,mobile-webkit}.png`.
+These are browser emulations on the Mac, not physical-phone testing.
+
+M2 supports four/five-layer CSM render prefixes, `graficos.ini`, `cabezas.ind` and
+`cuerpos.dat`/`moldes.ini` character animations. It is a movement/rendering preview:
+equipment, NPC rendering, chat, combat, map collision prediction, roof fading,
+lighting, particles and full gameplay remain out of scope. The stand-in has no
+collision rules. See [the asset contract and limitations](docs/ASSETS.md).
+
+## Protocol and headless tools (M1)
+
 Requires Node 24 and pnpm 12.21.0. From this repository:
 
 ```sh

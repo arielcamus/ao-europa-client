@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#111a19" />
+    <title>Argentum Online · Browser client</title>
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <a class="brand" href="/" aria-label="Argentum Online home"
+          ><span class="monogram">AO</span
+          ><span>ARGENTUM <small>ONLINE</small></span></a
+        >
+        <span class="milestone">BROWSER CLIENT <b>M2</b></span>
+        <span id="mode" class="badge">Loading configuration</span>
+      </header>
+      <main>
+        <section class="world-panel" aria-label="World">
+          <div class="world-heading">
+            <span id="map-name">A world worth returning to.</span
+            ><span id="connection" role="status">Not connected</span>
+          </div>
+          <div id="viewport">
+            <div id="welcome">
+              <span class="eyebrow">ARGENTUM ONLINE</span>
+              <h1>The familiar world.<br />A new way in.</h1>
+              <p>
+                Enter with your local test character<br />and take your first
+                steps in the browser.
+              </p>
+            </div>
+            <div id="location" hidden>
+              <span>MAP <b id="map-number">—</b></span
+              ><span id="position">—</span>
+            </div>
+            <div id="dpad" aria-label="Touch movement" hidden>
+              <button type="button" data-heading="1" aria-label="Walk north">
+                ↑
+              </button>
+              <button type="button" data-heading="4" aria-label="Walk west">
+                ←
+              </button>
+              <span aria-hidden="true">✦</span>
+              <button type="button" data-heading="2" aria-label="Walk east">
+                →
+              </button>
+              <button type="button" data-heading="3" aria-label="Walk south">
+                ↓
+              </button>
+            </div>
+          </div>
+          <div class="world-footer">
+            <span
+              >↑ ↓ ← → <span class="muted">or</span> W A S D
+              <span class="muted">to walk</span></span
+            ><span>32 px tiles · Original local artwork</span>
+          </div>
+        </section>
+        <aside>
+          <span class="eyebrow">YOUR JOURNEY</span>
+          <h2 id="character-name">Enter the world</h2>
+          <p id="mode-note" class="description">
+            Loading local connection settings…
+          </p>
+          <form id="login">
+            <label for="email">Account</label
+            ><input id="email" name="email" autocomplete="username" required />
+            <label for="password">Password</label
+            ><input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+            <button class="primary" id="connect" type="submit">
+              Enter world <span aria-hidden="true">↗</span>
+            </button>
+          </form>
+          <button id="disconnect" class="secondary" type="button" hidden>
+            Leave world
+          </button>
+          <div id="error" role="alert" hidden></div>
+          <div id="session-details" hidden>
+            <div class="section-label">SESSION</div>
+            <dl>
+              <div>
+                <dt>Time connected</dt>
+                <dd id="duration">0 s</dd>
+              </div>
+              <div>
+                <dt>Steps confirmed</dt>
+                <dd id="confirmed">0</dd>
+              </div>
+              <div>
+                <dt>Position corrections</dt>
+                <dd id="corrected">0</dd>
+              </div>
+            </dl>
+            <p class="description small">
+              Each step is checked against the server’s position.
+            </p>
+          </div>
+          <div class="build-note">
+            <span class="status-dot"></span>
+            <div>
+              <strong>Local development preview</strong>
+              <p id="scope-note">Map rendering and movement only.</p>
+              <p id="asset-note" hidden></p>
+            </div>
+          </div>
+        </aside>
+      </main>
+      <footer>
+        <span>Made for the browser. Desktop & touch.</span
+        ><span
+          >Artwork © Noland Studios · CC BY-NC-ND 4.0 · Loaded locally</span
+        >
+      </footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

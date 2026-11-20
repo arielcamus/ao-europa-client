@@ -3,3 +3,8 @@ dist
 assets/
 *.log
 .DS_Store
+artifacts/
+test-results/
+playwright-report/
+.env
+.env.local

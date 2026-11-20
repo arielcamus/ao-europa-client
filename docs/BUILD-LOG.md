@@ -207,3 +207,95 @@ Sources: [Homebrew cask](https://formulae.brew.sh/cask/wine-stable),
 [WineHQ macOS package maintainer](https://github.com/Gcenx/macOS_Wine_builds),
 [Winetricks runtime extraction](https://github.com/Winetricks/winetricks/blob/master/src/winetricks),
 and the pinned server README/Agents.md.
+
+## 2026-11-20 M2 browser map and movement (stand-in)
+
+Branch `m2-browser` is based on the updated `m1-protocol` branch. A separate
+pre-existing `~/Projects/ao-client-m2` worktree uses port 5173; it was left untouched.
+This session's preview uses **http://127.0.0.1:5187/** and browser tests use 5188.
+
+- Added a plain TypeScript/PixiJS browser app, without a UI framework or native
+  wrapper. Keyboard arrows/WASD and touch buttons support taps and held movement;
+  input resets on release, cancellation, focus loss and hidden tabs.
+- Reused the binary protocol and bridge. The browser performs account/first-character
+  login, waits for authoritative placement, uses resourceMap for asset selection,
+  paces walks from server interval/speed and maintains increasing counters. One
+  outstanding walk/position probe prevents ambiguous confirmations. Rejections snap
+  to server coordinates, no reply times out, and silence never counts as acceptance.
+- Added packed four/five-layer CSM render-prefix readers, current `graficos.ini`,
+  body templates/direct references, head indexes, and original PNG loading. Source
+  provenance and intentionally unimplemented features are in docs/ASSETS.md.
+- Renderer reuses sprites, loads nearby sheets on demand, discards stale map loads,
+  releases textures on map changes, and caps resolution at 2 and rendering at 60 fps.
+  Body/head rendering, walking animation and camera interpolation are implemented.
+- Local launcher mounts only allowed assets through `AO_ASSETS`, runs the bridge
+  on an ephemeral loopback port, proxies same-origin WebSockets and cleans up on
+  failure/signals. `--standin` is explicit. Normal `pnpm dev` targets an existing
+  TCP server; there is no silent fallback to the stand-in.
+- The UI visibly labels **TEST STAND-IN** and its absence of collision/gameplay
+  rules. No real-server interoperability is claimed. No assets, screenshots,
+  binaries, generated art, credentials or local environment files were staged.
+
+Observed and fixed during actual browser/resource checks:
+
+- The supplied graficos.ini has one unused static record with surplus fields;
+  follow the VB6 reader's first-six-fields behavior instead of guessing animation.
+- Some 5068.png rectangles exceed the actual 512px image height. Preserve their
+  indexed footprint, clip absent pixels to transparent and show a visible count.
+  This is a documented preview fallback; native sampler parity remains unverified.
+- Rendering work could consume a short press before the next animation frame.
+  Key/pointer down now starts a step immediately; held input continues on the ticker.
+- Playwright WebKit's mouse click on a scrolled mobile viewport could hit HTML.
+  Mobile browser cases use actual touch taps after scrolling the target into view.
+- Retain self character index across map changes, clear stale placement, and start
+  a fresh placement deadline at each warp. Ignore old-session asynchronous load
+  failures after reconnect. Keep Pixi's shared EMPTY texture alive during cleanup.
+
+Local resource scan: 842 CSM render prefixes parse; `mapa844.csm` is empty (0 bytes)
+and is rejected. 77,746 graphic records, 757 heads, all 921 mapa1 graphic references
+resolve. Tests embed original synthetic data only. One exploratory Node strip-only
+command failed on TS parameter properties; the scan succeeded with Node's
+`--experimental-transform-types`. This flag is not needed by normal app commands.
+
+Validation commands:
+
+```sh
+pnpm install --frozen-lockfile
+pnpm typecheck
+pnpm test
+pnpm exec playwright install webkit
+AO_ASSETS="$HOME/Projects/ao-reference/Recursos" pnpm test:browser
+git diff --check
+```
+
+Unit/transport verification: **77 tests pass in 5 files**; includes the real
+WebSocket→TCP bridge in browser-session tests for accepted and rejected walks,
+placement ordering, paced headings, counters, correction, silence/timeouts,
+malformed/partial data, map changes and synthetic resource formats. Typecheck and
+all five workspace builds pass. Frozen lockfile installation succeeds.
+
+Browser validation uses the production Vite bundle, installed Chrome 157 and
+Playwright WebKit 27.2. Desktop Chrome and 390×844 touch Chrome/WebKit each check
+login, 30 seconds after Logged, four accepted directions, no corrections, bad
+credentials, leave/reconnect, and local-file allowlist rejection. Mobile tests also
+resize to 844×390 and walk; desktop checks held keys stop on blur. These are browser
+emulations on this Mac, not tests on physical phones.
+Final result: **6 browser tests passed in 1.7 minutes**, with no page errors or
+failed asset requests in the four-direction/30-second checks.
+
+Bundle measurement (sum of all emitted JS chunks, including lazy chunks):
+**557,566 bytes raw / 163,522 bytes gzip**. CSS: 6.58 kB / 2.22 kB gzip.
+This excludes artwork and local resource files. One desktop inspection loaded 23
+resource requests including indexes/map and used about 53 MB of JS heap; that is
+not a measurement of total GPU/process memory. The only new browser runtime
+dependency is `pixi.js@8.23.0`; Vite and Playwright are development dependencies.
+
+Screenshots (local, ignored; manually inspected desktop and mobile renders):
+
+- `artifacts/screenshots/m2-desktop-chrome.png`
+- `artifacts/screenshots/m2-mobile-chrome.png`
+- `artifacts/screenshots/m2-mobile-webkit.png`
+
+The preview server is left running on loopback port 5187 for inspection. Its
+launch command was `AO_ASSETS="$HOME/Projects/ao-reference/Recursos" AO_WEB_PORT=5187
+node tools/dev-web.mjs --standin --preview`. No server deployment or PR merge.
