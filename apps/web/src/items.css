@@ -1,0 +1,16 @@
+/* Items UI: shop, amount dialog and equipped stats. Original VB6 geometry; AGPL-3.0-or-later. */
+.items-window { position: absolute; background: #000 no-repeat 0 0; z-index: 5; color: #fff; }
+.items-window[hidden] { display: none; }
+.items-button { position: absolute; border: 0; padding: 0; background-color: transparent; background-repeat: no-repeat; }
+.items-input { position: absolute; padding: 0; border: 0; background: #12130d; color: #fff; font: bold 12px Tahoma, Arial, sans-serif; text-align: center; }
+.items-name, .items-desc, .items-cost { position: absolute; display: block; text-align: center; text-shadow: 1px 1px #000; pointer-events: none; overflow: hidden; }
+.items-name { font: bold 9px/12px Tahoma, Arial, sans-serif; color: #fff; }
+.items-desc { font: bold 8px/10px Tahoma, Arial, sans-serif; color: #c0c0c0; }
+.items-cost { font: bold 11px/14px Tahoma, Arial, sans-serif; color: #fff; text-align: left; }
+.items-slot { position: absolute; width: 34px; height: 34px; padding: 0; border: 0; background-color: transparent; background-repeat: no-repeat; color: #efe4b0; text-shadow: 1px 1px #000; font: bold 11px Arial, sans-serif; }
+.items-slot[aria-pressed="true"]::after { content: ''; position: absolute; inset: 0; background: #64646464; pointer-events: none; }
+.items-confirm { background: #1b1410; border: 1px solid #6b5a3a; text-align: center; font: bold 12px Tahoma, Arial, sans-serif; }
+.items-confirm p { margin: 16px 8px 14px; }
+.items-confirm-button { width: 70px; height: 24px; margin: 0 8px; border: 1px solid #6b5a3a; background: #2a2018; color: #e8dcb0; font: bold 12px Tahoma, Arial, sans-serif; }
+.items-stat { position: absolute; }
+.items-gold { position: absolute; }

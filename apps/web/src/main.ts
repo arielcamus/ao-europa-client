@@ -12,6 +12,9 @@ import { ChatBubbles } from './chat-bubbles.js';
 import { sharedLocale } from './chat-locale.js';
 import { CombatOverlay } from './combat-overlay.js';
 import { fetchText } from './assets.js';
+import { ItemsUI } from './items-ui.js';
+import { KeyAction, keyAction } from './keymap.js';
+import { KeysClientPacketId as K, WorkSkill } from '@ao/protocol';
 
 applyClassicLayout();
 const form = element<HTMLFormElement>('login'), account = element<HTMLInputElement>('email'), password = element<HTMLInputElement>('password');
@@ -37,6 +40,8 @@ const npcDialog = new NpcDialog(element('classic'), renderer);
 const bubbles = new ChatBubbles(element('chat-bubbles'));
 const chatBox = new ChatBox(chatForm, chat, element('messages'), () => renderer.app.canvas.focus(), error => close(String(error)));
 const combatOverlay = new CombatOverlay(viewport, renderer);
+const itemsUi = new ItemsUI(ui, element('classic'), report);
+ui.onActivate = slot => guard(() => session?.itemActions.activate(slot));
 const clearInput = () => { keys.clear(); touchHeading = undefined; };
 function walk(heading: Heading) {
   try { if (session && renderer.readyMap === session.resourceMap) session.walk(heading); }
@@ -44,6 +49,10 @@ function walk(heading: Heading) {
 }
 function attack() {
   try { session?.attack(); } catch (error) { close(error instanceof Error ? error.message : String(error)); }
+}
+/** Run an item or key action; a write failure closes the session like every other send. */
+function guard(action: () => unknown) {
+  try { action(); } catch (error) { close(error instanceof Error ? error.message : String(error)); }
 }
 function close(message = 'Disconnected') {
   clearInput(); stoppedAt = performance.now(); chatBox.close(); npcDialog.hide();
@@ -99,6 +108,7 @@ async function boot() {
 }
 function updateUi(now: number) {
   ui.update(session);
+  itemsUi.update(session);
   if (!session) return;
   const playing = session.ready && renderer.readyMap === session.resourceMap;
   if (playing) {
@@ -154,16 +164,72 @@ const openChat = (guild = false) => {
   clearInput(); chatBox.open(guild);
 };
 element('chat-open').onclick = () => openChat();
-const directions: Record<string, Heading> = { ArrowUp: Heading.North, KeyW: Heading.North, ArrowRight: Heading.East, KeyD: Heading.East, ArrowDown: Heading.South, KeyS: Heading.South, ArrowLeft: Heading.West, KeyA: Heading.West };
+// Walking: bindings 14-17 of [DEFAULTSMODERN] (W S A D) plus the arrows (keymap.ts).
+const WALK: Partial<Record<KeyAction, Heading>> = { [KeyAction.MoveUp]: Heading.North, [KeyAction.MoveDown]: Heading.South, [KeyAction.MoveLeft]: Heading.West, [KeyAction.MoveRight]: Heading.East };
+const directions = { get: (code: string) => { const action = keyAction(code); return action === undefined ? undefined : WALK[action]; } };
+const DEAD = '¡¡Estás muerto!!'; // MENSAJE_ESTAS_MUERTO
+let lastClanCall = -Infinity;
+/** modBindKeys.Accionar: what each [DEFAULTSMODERN] binding does. Bindings without a client feature yet say so in the console. */
+function gameKey(action: KeyAction) {
+  const s = session;
+  if (!s?.ready) return;
+  const dead = s.dead, slot = ui.selectedSlot;
+  const unavailable = (what: string) => s.ui.message(`${what}: aún no disponible en este cliente.`);
+  const ifAlive = (run: () => unknown) => { if (dead) s.ui.message(DEAD); else guard(run); };
+  switch (action) {
+    case KeyAction.Attack: attack(); return;
+    case KeyAction.Loot: ifAlive(() => s.itemActions.pickUp()); return;
+    case KeyAction.Drop: ifAlive(() => itemsUi.dropSelected()); return;
+    case KeyAction.UseItem: guard(() => s.itemActions.useKey(slot)); return;
+    case KeyAction.EquipItem: ifAlive(() => s.itemActions.equip(slot)); return;
+    case KeyAction.ChangeSafe: // SeguroGame on: the key never turns it off (/SEG does)
+      if (s.safeMode !== false) s.ui.message('Para desactivar el seguro escribe /SEG o usa el botón en la pestaña MENU en la esquina inferior derecha.');
+      else guard(() => s.sendAction({ id: K.SafeToggle }));
+      return;
+    case KeyAction.HideNames: renderer.showNames = !renderer.showNames; return;
+    case KeyAction.PartyToggle: guard(() => s.sendAction({ id: K.PartySafeToggle })); return;
+    case KeyAction.Steal: ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Steal, counter: 0 })); return;
+    case KeyAction.RefreshPosition: guard(() => s.refreshPosition()); return;
+    case KeyAction.Hide: ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Hide, counter: 0 })); return;
+    case KeyAction.ShowOnline: unavailable('Mostrar usuarios online'); return;
+    case KeyAction.ScreenShot: unavailable('Captura de pantalla'); return;
+    case KeyAction.ClanCall: case KeyAction.ClanMark: { // IntervaloPermiteLLamadaClan: 5 s between clan calls/marks
+      const now = performance.now();
+      if (now - lastClanCall < 5000) return;
+      lastClanCall = now; guard(() => s.sendAction({ id: action === KeyAction.ClanCall ? K.ClanCall : K.ClanMark }));
+      return;
+    }
+    case KeyAction.GameStats: unavailable('Estadísticas (FPS)'); return;
+    case KeyAction.Meditate: // WriteMeditate: not with full mana, not dead, not while walking
+      if (s.ui.stats.mana !== undefined && s.ui.stats.mana === s.ui.stats.maxMana) return;
+      if (s.motion) return;
+      ifAlive(() => s.sendAction({ id: K.Meditate }));
+      return;
+    case KeyAction.ExitGame: guard(() => s.sendAction({ id: K.Quit })); return;
+    case KeyAction.Taming: ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Tame, counter: 0 })); return;
+    case KeyAction.SendText: openChat(); return;
+    default:
+      // Hotkeys 1-0 (WriteUseHKeySlot) only exist when the server enables them (FeatureToggles eEnableHotkeys), not decoded yet.
+      if (action >= KeyAction.HotKey1 && action <= KeyAction.HotKey10) unavailable('Atajos 1-0');
+  }
+}
 window.addEventListener('keydown', event => {
-  if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
-  if (event.target instanceof HTMLElement && event.target.closest('input, textarea, select, button, [role="listbox"], dialog')) return;
-  // Control is the classic attack key (DefaultKey.ini binding 1, modBindKeys.Accionar); key repeat is paced by Intervals.hit.
-  if ((event.code === 'ControlLeft' || event.code === 'ControlRight') && !event.altKey && !event.metaKey) { event.preventDefault(); attack(); return; }
-  if (event.ctrlKey || event.metaKey || event.altKey) return;
-  if (event.key === 'Enter') { event.preventDefault(); openChat(); return; }
-  if (event.key === 'Delete') { event.preventDefault(); openChat(true); return; }
-  const heading = directions[event.code];
+  if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); itemsUi.closeDialogs(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
+  // The inventory slot that was just clicked keeps focus; the game keys must still work from it.
+  const inInventory = event.target instanceof HTMLElement && event.target.closest('#inventory') !== null;
+  if (event.target instanceof HTMLElement && !inInventory && event.target.closest('input, textarea, select, button, [role="listbox"], dialog')) return;
+  if (event.metaKey || event.altKey) return;
+  const action = keyAction(event.code);
+  // Control is itself a binding (attack); any other Control+key is the browser's.
+  if (event.ctrlKey && action !== KeyAction.Attack) return;
+  if (event.key === 'Delete') { event.preventDefault(); openChat(true); return; } // frmMain: Delete opens the guild chat box
+  if (action !== undefined && action !== KeyAction.MoveUp && action !== KeyAction.MoveDown && action !== KeyAction.MoveLeft && action !== KeyAction.MoveRight) {
+    event.preventDefault();
+    // Attack repeats like the VB6 key (paced by Intervals.hit); every other action fires once per press.
+    if (!event.repeat || action === KeyAction.Attack) gameKey(action);
+    return;
+  }
+  const heading = directions.get(event.code);
   if (heading) { event.preventDefault(); keys.set(event.code, heading); walk(heading); }
 });
 window.addEventListener('keyup', event => { keys.delete(event.code); });
