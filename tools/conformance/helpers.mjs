@@ -7,6 +7,11 @@ export function mapBlocked(map = 1) {
   const root = process.env.AO_ASSETS ?? path.join(process.env.HOME, 'Projects/ao-reference/Recursos');
   return blockedTiles(path.join(root, 'Mapas', `Mapa${map}.csm`));
 }
+/** Newest ObjectCreate for (x, y) seen so far: the door object index (the server broadcasts the new state on every toggle). */
+export function doorState(rec, x, y) {
+  const hit = rec.records.filter(r => r.name === 'ObjectCreate').map(r => Buffer.from(r.hex, 'hex')).filter(b => b[2] === x && b[3] === y).at(-1);
+  return hit ? hit.readUInt16LE(4) : undefined;
+}
 const heads = [[1, 0, -1], [2, 1, 0], [3, 0, 1], [4, -1, 0]];
 
 export function makeWalker(rec, blocked = mapBlocked()) {

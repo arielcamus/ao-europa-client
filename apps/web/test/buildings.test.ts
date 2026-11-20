@@ -19,4 +19,20 @@ describe('recorded VB6 sessions: why Ullathorpe buildings stay closed', () => {
     const last = positions(load('bank-doors-closed')).slice(-4);
     expect(last.every(p => p.x === 77 && p.y === 56)).toBe(true);
   });
+  // MSG_NOT_IN_THE_CASTLE_WHITELIST = 2215: GameLogic.DoTileEvents warps the walker back to (x, y+1) on trigger 21..40 unless a castle with that trigger exists.
+  const castleBounces = (rows: Row[]) => rows.filter(r => r.name === 'LocaleMsg' && Buffer.from(r.hex, 'hex').readInt16LE(2) === 2215);
+  it('carpentry (trigger 32, EMPEROR_CASTLE_ENTRY_12): with the door open the doorway step is bounced back to (65,80) by the castle whitelist', () => {
+    const rows = load('carpentry-castle-trigger-bounce');
+    expect(castleBounces(rows).length).toBeGreaterThanOrEqual(3);
+    // The door at (65,79) was open (obj 2333) when the session started: the refusal is not a door or key problem.
+    const door = rows.filter(r => r.name === 'ObjectCreate').map(r => Buffer.from(r.hex, 'hex')).filter(b => b[2] === 65 && b[3] === 79);
+    expect(door.at(-1)!.readUInt16LE(4)).toBe(2333);
+    expect(positions(rows).slice(-2)).toEqual([expect.objectContaining({ x: 65, y: 80 }), expect.objectContaining({ x: 65, y: 80 })]);
+  });
+  it('bank (trigger 29, EMPEROR_CASTLE_ENTRY_9): the opened west door (77,55) is bounced back to (77,56) by the same rule', () => {
+    const rows = load('bank-castle-trigger-bounce');
+    expect(castleBounces(rows).length).toBeGreaterThanOrEqual(3);
+    const last = positions(rows).slice(-2);
+    expect(last.every(p => p.x === 77 && p.y === 56)).toBe(true);
+  });
 });
