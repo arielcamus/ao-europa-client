@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 // @ts-expect-error plain ESM script without types
-import { computeCoverage, parseEnums, discoverRefs } from '../build-map.mjs';
+import { computeCoverage, parseEnums, discoverRefs, renderMarkdown } from '../build-map.mjs';
 
 interface Pkt { key: string; name: string; covered: boolean; merged: boolean; branches: string[]; codecFiles: string[]; package: string }
 const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..', '..', '..');
@@ -11,6 +11,17 @@ const refs = discoverRefs();
 const cov = computeCoverage({ refs });
 
 describe('feature coverage map', () => {
+  it('scans only the checked-out tree, never other branches or PRs', () => {
+    expect(refs.map((r: { name: string }) => r.name)).toEqual(['main']);
+  });
+
+  it('docs/COVERAGE.md and docs/coverage.json are up to date with the checked-out tree', () => {
+    const md = readFileSync(join(ROOT, 'docs', 'COVERAGE.md'), 'utf8');
+    const json = readFileSync(join(ROOT, 'docs', 'coverage.json'), 'utf8');
+    expect(md, 'run node tools/coverage/build-map.mjs').toBe(renderMarkdown(cov) + '\n');
+    expect(json, 'run node tools/coverage/build-map.mjs').toBe(JSON.stringify(cov, null, 1) + '\n');
+  });
+
   it('reads the VB6 enums from the cached snapshot', () => {
     const e = parseEnums();
     const byName = (d: 's2c' | 'c2s', n: string) => e[d].find((p: { name: string }) => p.name === n)?.id;
