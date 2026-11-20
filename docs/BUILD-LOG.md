@@ -819,3 +819,6 @@ Result: transport, framing and the login handshake match PROTOCOL.md byte for by
 - The four error handlers (main, Bank, Inventory, Patron tier) now log `... Línea: <Erl> [dbgStep=<last step>]`; the main one also logs `Source=<Err.Source>`.
 - Static suspect: none obvious. Candidates considered and left alone: main recordset `RS` stays open while the `Setup*` routines run other queries on the same connection; fields are read out of select order and some twice (`is_banned`); neither is wrong in VB6.
 - Read the result: `Get-EventLog -LogName Application -Source Argentum20 -Newest 5 | % { $_.Message }` after running `node tools/real-server/vb6-create-account.mjs`-style login (or the bot).
+
+## 2026-11-20 first dbgStep read was useless (instrumentation bug), fixed
+Application log after login: `Error en LoadCharacterFromDB: Aotest. -2147467259 - Unspecified error Source=. Línea: 0 [dbgStep=LoadCharacterFromDB L334: Call LogDatabaseError(...)]`. My marker generator had also put a marker on the first line of the `ErrorHandler:` block, overwriting the real last step. Removed (backup `.orig6`, patch file regenerated); other handlers never had one. Needs one more re-import + F5.

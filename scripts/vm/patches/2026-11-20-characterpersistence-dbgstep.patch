@@ -102,7 +102,7 @@
  End Function
  
  Private Sub LogInvalidCharacterObjects(ByVal UserIndex As Integer, ByVal inventoryName As String, ByVal invalidObjects As String)
-@@ -262,177 +280,281 @@
+@@ -262,177 +280,280 @@
      Dim inventoryLoaded As Boolean
      Dim bankLoaded      As Boolean
      failureReason = vbNullString
@@ -206,7 +206,6 @@
      Exit Function
  ErrorHandler:
 -    Call LogDatabaseError("Error en LoadCharacterFromDB: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.Description & ". Línea: " & Erl)
-+    dbgStep = "LoadCharacterFromDB L334: Call LogDatabaseError(""Error en LoadCharacterFromDB: "" & UserList(UserIndex).nam"
 +    Call LogDatabaseError("Error en LoadCharacterFromDB: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.Description & " Source=" & Err.Source & ". Línea: " & Erl & " [dbgStep=" & dbgStep & "]")
  End Function
  
@@ -385,7 +384,7 @@
              User.Stats.UserHechizos(RS!Number) = RS!spell_id
              RS.MoveNext
          Wend
-@@ -441,12 +563,16 @@
+@@ -441,12 +562,16 @@
  
  Private Sub SetupUserPets(ByRef User As t_User)
      Dim RS As ADODB.Recordset
@@ -402,7 +401,7 @@
                  If val(RS!pet_id) <> 0 Then
                      User.NroMascotas = User.NroMascotas + 1
                  End If
-@@ -460,15 +586,20 @@
+@@ -460,15 +585,20 @@
      Dim RS      As ADODB.Recordset
      Dim counter As Long
      counter = 0
@@ -423,7 +422,7 @@
                          .ElementalTags = RS!elemental_tags
                      Else
                          .ObjIndex = 0
-@@ -484,10 +615,13 @@
+@@ -484,10 +614,13 @@
  Private Sub SetupUserSkills(ByRef User As t_User)
      Dim RS As ADODB.Recordset
      Dim LoopC As Long
@@ -437,7 +436,7 @@
              User.Stats.SkillDirty(RS!Number) = False
              RS.MoveNext
          Wend
-@@ -505,26 +639,41 @@
+@@ -505,26 +638,41 @@
      For SlotC = 1 To MAXUSERQUESTS
          User.QuestStats.Quests(SlotC).Dirty = False ' Loaded state starts clean.
      Next SlotC
@@ -479,7 +478,7 @@
                              User.QuestStats.Quests(RS!Number).NPCsTarget(LoopC) = val(NPCsTarget(LoopC - 1))
                          Next LoopC
                      End If
-@@ -538,6 +687,7 @@
+@@ -538,6 +686,7 @@
  Private Sub SetupUserQuestsDone(ByRef User As t_User)
      Dim RS    As ADODB.Recordset
      Dim LoopC As Byte
@@ -487,7 +486,7 @@
      Set RS = Query("SELECT quest_id FROM quest_done WHERE user_id = ?;", User.Id)
      If Not RS Is Nothing Then
          User.QuestStats.NumQuestsDone = RS.RecordCount
-@@ -545,6 +695,7 @@
+@@ -545,6 +694,7 @@
              ReDim User.QuestStats.QuestsDone(1 To User.QuestStats.NumQuestsDone)
              LoopC = 1
              While Not RS.EOF
@@ -495,7 +494,7 @@
                  User.QuestStats.QuestsDone(LoopC) = RS!quest_id
                  LoopC = LoopC + 1
                  RS.MoveNext
-@@ -579,9 +730,11 @@
+@@ -579,9 +729,11 @@
      On Error GoTo ErrorHandler_GetPatronTierFromAccountID
      GetPatronTierFromAccountID = e_TipoUsuario.tNormal
      Dim RS As ADODB.Recordset
@@ -507,7 +506,7 @@
          tipo_usuario_db = RS!is_active_patron
          Select Case tipo_usuario_db
              Case patron_tier_aventurero
-@@ -600,7 +753,7 @@
+@@ -600,7 +752,7 @@
      End If
      Exit Function
  ErrorHandler_GetPatronTierFromAccountID:
