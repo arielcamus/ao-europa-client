@@ -76,6 +76,7 @@ every file under `tests/fixtures/vb6/**` and fails when a known packet does not 
 | `buildings/bank-doors-closed.jsonl` | walking onto the Finanzas doorway (77,56)->(77,55): rejected (`PosUpdate` unchanged); the doors are objects 1424/1426 that were missing from `Obj.dat` |
 | `buildings/carpentry-castle-trigger-bounce.jsonl` | Carpintería (door obj 2333 open at (65,79), `Llave=0`): stepping north into the doorway is accepted then undone by `GameLogic.DoTileEvents` (trigger 32 = EMPEROR_CASTLE_ENTRY_12, no castle exists): `AreaChanged` resync + `LocaleMsg` 2215, `PosUpdate` back to (65,80) |
 | `buildings/bank-castle-trigger-bounce.jsonl` | Finanzas west door (77,55): `LeftClick` opens 1424 -> 1423 (`BlockPosition`x4 + `ObjectCreate`); stepping north is bounced the same way (trigger 29 = EMPEROR_CASTLE_ENTRY_9), `LocaleMsg` 2215. The east door (79,55) is shown as obj 1425 in the login `ObjectCreate` burst |
+| `buildings/nix-building-castle-trigger-enters.jsonl` | after the server fix: Ciudad de Nix (map 34) building with trigger 24, door (43,47) opened by `LeftClick`, walking north (43,48)->(43,45) is accepted, no `LocaleMsg` 2215. The character was placed through the server DB (docs/DATA-PATCHES.md) |
 | `buildings/church-patron-tile.jsonl` | walking into the Templo interior (trigger 20, ONLY_PATREON_TILE): `LocaleMsg` and `PosUpdate` unchanged |
 
 Server facts verified while recording (VB6 `HandleLeftClick` / `HandleWorldAction` / `HandleDoorAction` / `LegalWalk`):
