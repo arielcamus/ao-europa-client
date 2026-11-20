@@ -1,0 +1,11 @@
+--- a/Codigo/ModCastle.bas
++++ b/Codigo/ModCastle.bas
+@@ -710,6 +710,8 @@
+ 
+     Dim CastleIndex As Integer
+     If Not IsEmperorCastleCreated(UserIndex, trigger, CastleIndex) Then
++        'No founded castle owns this trigger (triggers 21-40 are also used by ordinary building interiors): nothing to enforce, let the player through.
++        CheckCastleEntryWhiteList = True
+         Exit Function
+     End If
+ 
