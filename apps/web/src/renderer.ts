@@ -7,8 +7,8 @@ import { Application, Container, Rectangle, Sprite, Texture } from 'pixi.js';
 import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
 import type { Session } from './session.js';
-import { DOOR_OBJECT_TYPE, RoofLights, nearRoof, parseObjectGraphics } from './map-objects.js';
-import type { ObjectGraphic } from './map-objects.js';
+import { DOOR_OBJECT_TYPE, ObjType, RoofLights, TreeFade, fixedObjects, nearRoof, objectDraws, parseObjectGraphics, treeCoversPlayer } from './map-objects.js';
+import type { GroundObject, ObjectGraphic } from './map-objects.js';
 
 class SpritePool {
   private sprites: Sprite[] = [];
@@ -47,6 +47,11 @@ export class WorldRenderer {
   private readonly world = new Container();
   private objectGraphics = new Map<number, ObjectGraphic>();
   private readonly roofs = new RoofLights();
+  private readonly trees = new TreeFade();
+  /** Trees, signs, deposits and decorations come from the map file, never from the server (ModAreas.EsObjetoFijo). */
+  private fixed = new Map<number, GroundObject>();
+  /** The map-file object on a tile, if any (the server sees these too). */
+  fixedObjectAt(x: number, y: number): GroundObject | undefined { return this.fixed.get((y - 1) * 100 + x - 1); }
   private lastRender = 0;
 
   constructor(private readonly host: HTMLElement, private readonly report: (message: string) => void) {}
@@ -80,7 +85,7 @@ export class WorldRenderer {
   }
   async loadMap(id: number) {
     const epoch = ++this.epoch;
-    this.readyMap = undefined; this.map = undefined;
+    this.readyMap = undefined; this.map = undefined; this.fixed = new Map(); this.trees.clear();
     this.pools.forEach(pool => { pool.reset(); pool.finish(); });
     // Keep texture memory bounded to the current map. Late loads are discarded.
     for (const texture of this.textures.values()) if (texture !== Texture.EMPTY) texture.destroy();
@@ -88,7 +93,7 @@ export class WorldRenderer {
     this.textures.clear(); this.sources.clear(); this.pending.clear(); this.failed.clear(); this.loadedSheets = 0; this.clippedFrames = 0;
     const [bytes] = await Promise.all([fetchBytes(`Mapas/mapa${id}.csm`), this.loadMetadata()]);
     if (epoch !== this.epoch) return;
-    this.map = parseMap(bytes); this.mapName = this.map.name; this.roofs.reset(this.map.triggers); this.readyMap = id;
+    this.map = parseMap(bytes); this.fixed = fixedObjects(this.map.objects, this.objectGraphics); this.mapName = this.map.name; this.roofs.reset(this.map.triggers); this.readyMap = id;
   }
   private animation(id: number) {
     let animation = this.animations.get(id);
@@ -182,11 +187,15 @@ export class WorldRenderer {
         // Split that layer around the self row; roofs remain above everything.
         const pool = this.pools[layer < 3 ? layer : layer === 4 ? 6 : y < session.position!.y ? 3 : 5]!;
         const tile = (y - 1) * 100 + x - 1;
-        // Ground objects (doors included) sit between the second and third map layers.
-        if (layer === 2) {
-          const object = session.mapObjects.objectAt(x, y);
-          const grh = object ? this.objectGraphics.get(object.objIndex)?.grh : undefined;
-          if (grh) this.draw(pool, this.animation(grh), x * 32, y * 32, now, true);
+        const object = session.mapObjects.objectAt(x, y) ?? this.fixed.get(tile);
+        // Objects (doors, trees, signs, items) sit between the second and third map layers, and big ones repeat in the row pass
+        // with layer 4, over that row's characters (RenderScreen). Trees fade when they cover the player.
+        if (object && (layer === 2 || layer === 3)) {
+          for (const draw of objectDraws(object, this.objectGraphics)) {
+            if (draw.pass !== (layer === 2 ? 'ground' : 'row')) continue;
+            const alpha = draw.type === ObjType.Tree && draw.pass === 'row' ? this.trees.step(tile, treeCoversPlayer(session.position!, x, y), dt) : 1;
+            this.draw(pool, this.animation(draw.grh), x * 32, y * 32, now, true, alpha);
+          }
         }
         const id = this.map.layers[layer]![tile]!;
         if (!id) continue;

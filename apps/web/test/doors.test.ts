@@ -85,6 +85,18 @@ describe('ground objects and doors', () => {
     map.create(71, 35, { objIndex: 5, amount: 1, elementalTags: 0 });
     expect(doorClickTile(map, isDoor, { x: 71, y: 35 }, nobody)).toBeUndefined();
   });
+  it('a fixed map-file object (tree, sign) counts as an object on its tile, like the server MapData', () => {
+    const map = new MapObjects(); map.create(72, 35, { objIndex: 2334, amount: 1, elementalTags: 0 });
+    const isDoor = (i: number) => i === 2334;
+    const tree = { objIndex: 9, amount: 1, elementalTags: 0 };
+    const treeAt = (x: number, y: number) => (x === 71 && y === 35 ? tree : undefined);
+    // A tree on the tapped tile: the server uses the tree, never the neighbouring door.
+    expect(doorClickTile(map, isDoor, { x: 71, y: 35 }, () => false, treeAt)).toBeUndefined();
+    // Player below the door: the (x-1,y) fallback holds a tree, so (x-1,y-1) is chosen instead.
+    const playerBelow = (x: number, y: number) => x === 72 && y === 36;
+    expect(doorClickTile(map, isDoor, { x: 72, y: 35 }, playerBelow)).toEqual({ x: 71, y: 35 });
+    expect(doorClickTile(map, isDoor, { x: 72, y: 35 }, playerBelow, treeAt)).toEqual({ x: 71, y: 34 });
+  });
   it('session applies door packets from the server and drops them on a map change', () => {
     const h = harness(); h.login();
     h.recv({ id: D.ObjectCreate, x: 72, y: 35, objIndex: 2334, amount: 1, elementalTags: 0 }, { id: D.BlockPosition, x: 72, y: 35, sides: 15 });
