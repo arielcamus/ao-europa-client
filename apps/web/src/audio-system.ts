@@ -66,7 +66,9 @@ export class AudioSystem {
     try { this.director.zones = parseZones(await fetchText('Dat/zonas.dat')); }
     catch (error) { this.report(`Zonas de música no disponibles: ${String(error)}`); }
   }
-  attach(session: Session) { this.world.session = session; session.onPacket = packet => this.director.receive(packet); }
+  attach(session: Session) { this.world.session = session; session.onPacket = packet => {
+      try { this.director.receive(packet); } catch (error) { this.report(`Audio: ${String(error)}`); } // sound must never drop the session
+    }; }
   detach() { this.world.session = undefined; this.director.reset(); }
-  tick() { this.director.tick(); }
+  tick() { try { this.director.tick(); } catch (error) { this.report(`Audio: ${String(error)}`); } }
 }

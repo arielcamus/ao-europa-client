@@ -26,6 +26,8 @@ export interface AudioDeps {
 }
 export interface MusicStream { start(): Promise<boolean>; stop(): void; setGain(gain: number): void; /** The playing <audio> element, for diagnostics. */ element?(): HTMLMediaElement | undefined }
 
+/** Decoded effects kept in memory (least recently used go first); the pack has ~2000 sounds. */
+export const MAX_CACHED_BUFFERS = 96;
 export const SETTINGS_KEY = 'ao.audio.settings.v1';
 /** Which sound files the local Recursos holds (served as /ao-assets/audio-index.json); lower-case names without extension. */
 export interface SoundCatalog { ogg: ReadonlySet<string>; wav: ReadonlySet<string>; mp3: ReadonlySet<string> }
@@ -71,6 +73,7 @@ export class AudioEngine {
   private unlocked = false;
   private readonly buffers = new Map<string, Promise<AudioBuffer | undefined>>();
   private readonly voices = new Set<Voice>();
+  private readonly uniquePending = new Set<string>();
   private ambient: Voice | undefined;
   private ambientId = 0;
   private music: { name: string; stream: MusicStream } | undefined;
@@ -138,7 +141,8 @@ export class AudioEngine {
   }
 
   /** ao20audio.PlayWav / PlayFx: one sound effect. `volume` is a DirectSound attenuation (0 = category volume). */
-  async playWave(id: string | number, options: PlayOptions = {}): Promise<boolean> {
+  playWave(id: string | number, options: PlayOptions = {}): Promise<boolean> { return this.playWaveNow(id, options).catch(() => false); }
+  private async playWaveNow(id: string | number, options: PlayOptions): Promise<boolean> {
     const category = options.category ?? 'general';
     const name = String(id);
     if (!this.categoryOn(category)) return false;
@@ -147,9 +151,13 @@ export class AudioEngine {
     const entry = this.log({ ...event, result: this.unlocked && this.context ? 'pending' : 'locked' });
     if (!this.unlocked || !this.context) return false;
     const label = options.label ?? '';
-    if (label && options.unique && [...this.voices].some(voice => voice.label === label)) return true;
+    if (label && options.unique) {
+      if (this.uniquePending.has(label) || [...this.voices].some(voice => voice.label === label)) return true;
+      this.uniquePending.add(label);
+    }
     if (label) for (const voice of [...this.voices]) if (voice.label === label && voice.id === name) this.stopVoice(voice);
-    const buffer = await this.buffer(name);
+    let buffer: AudioBuffer | undefined;
+    try { buffer = await this.buffer(name); } finally { this.uniquePending.delete(label); }
     if (!buffer) { entry.result = 'missing'; return false; }
     if (!this.categoryOn(category)) return false;
     entry.result = 'played';
@@ -185,6 +193,7 @@ export class AudioEngine {
   }
   private buffer(name: string): Promise<AudioBuffer | undefined> {
     let pending = this.buffers.get(name);
+    if (pending) { this.buffers.delete(name); this.buffers.set(name, pending); } // most recently used last
     if (!pending) {
       pending = (async () => {
         const load = this.deps.loadBytes ?? fetchBytes;
@@ -196,12 +205,14 @@ export class AudioEngine {
         return undefined;
       })();
       this.buffers.set(name, pending);
+      while (this.buffers.size > MAX_CACHED_BUFFERS) this.buffers.delete(this.buffers.keys().next().value as string);
     }
     return pending;
   }
 
   /** ao20audio.PlayAmbientAudio / PlayWeatherAudio: one looping ambient bed at a time; 0 stops it. */
-  async playAmbient(id: number): Promise<void> {
+  playAmbient(id: number): Promise<void> { return this.playAmbientNow(id).catch(() => undefined); }
+  private async playAmbientNow(id: number): Promise<void> {
     if (id !== 0 && id === this.ambientId) return; // already the bed (a rain toggle then the map load): keep it running
     this.log({ kind: 'ambient', id: String(id), category: 'ambient', volume: this.settings.volAmbient });
     this.ambientId = id;
@@ -221,7 +232,8 @@ export class AudioEngine {
   }
 
   /** ao20audio.PlayMusic: streams OGG/<name>.ogg looping; the same track again is ignored; null stops (StopMusic). */
-  async playMusic(name: string | undefined): Promise<void> {
+  playMusic(name: string | undefined): Promise<void> { return this.playMusicNow(name).catch(() => undefined); }
+  private async playMusicNow(name: string | undefined): Promise<void> {
     this.log({ kind: 'music', id: name ?? '', volume: this.settings.volMusic });
     if (!name) { this.desiredMusic = undefined; this.stopMusicNow(); return; }
     if (this.desiredMusic === name && this.music) return;

@@ -134,6 +134,22 @@ describe('audio engine', () => {
     expect(parseCatalog(null)).toBeUndefined();
     expect(parseCatalog({ ogg: [1, 'a'] })!.ogg.has('a')).toBe(true);
   });
+  it('keeps at most 96 decoded buffers, dropping the least recently used, and runs a unique label once while loading', async () => {
+    const f = fakeAudio(); for (let i = 1; i <= 100; i++) f.files.set(`/ao-assets/OGG/${i}.ogg`, 4);
+    const engine = new AudioEngine(f.deps); engine.unlock();
+    for (let i = 1; i <= 100; i++) await engine.playWave(i);
+    f.requested.length = 0;
+    await engine.playWave(100); await engine.playWave(1);
+    expect(f.requested).toEqual(['/ao-assets/OGG/1.ogg']); // 100 cached, 1 was evicted
+    const before = f.started.length;
+    await Promise.all([engine.playWave(50, { label: 'u', unique: true }), engine.playWave(50, { label: 'u', unique: true })]);
+    expect(f.started.length - before).toBe(1);
+  });
+  it('never rejects: a failing context is swallowed', async () => {
+    const f = fakeAudio(); const engine = new AudioEngine({ ...f.deps, loadBytes: async () => { throw new Error('boom'); } }); engine.unlock();
+    await expect(engine.playWave(1)).resolves.toBe(false);
+    await expect(engine.playAmbient(3)).resolves.toBeUndefined();
+  });
   it('lists the Mp3 only for tracks the pack ships twice', () => {
     expect(musicUrls('ost_31', parseCatalog({ ogg: [], mp3: ['31'] }))).toEqual(['/ao-assets/Mp3/31.mp3']);
     expect(musicUrls('ost_4', parseCatalog({ ogg: ['ost_4'], mp3: ['31'] }))).toEqual(['/ao-assets/OGG/ost_4.ogg']);
