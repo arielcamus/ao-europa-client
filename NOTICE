@@ -1,4 +1,4 @@
-ao-client M1: TypeScript adaptations made 2026-11-20.
+ao-client M1/M2: TypeScript adaptations made 2026-11-20.
 
 Argentum 20 Game Server and Game Client
 Copyright (C) 2023-2026 Noland Studios LTD.
@@ -21,3 +21,13 @@ ao-client project is distributed under AGPL-3.0-or-later.
 
 No game assets are included. The stand-in is a test fixture, not the AO game
 server; the real interoperability target is the ao-org classic VB6 server.
+
+M2 map, GRH, body/head and rendering adaptations:
+Argentum 20 client CODIGO/Recursos.bas, GameIni.bas, Declares.bas,
+TileEngine.bas, TileEngine_Map.bas, TileEngine_RenderScreen.bas,
+and Graficos_Renderizado.bas. Copyright (C) 2022 Noland Studios, AGPL-3.0-or-later.
+Optimized map format designed by Juan Martín Sotuyo Dodero (Maraxus).
+Reference client revision b648c1a9b14903884393a7194e9faa0bc275633b.
+Local Recursos revision 89615f34162d9fa0bf0fae4242cd6639edbf772f;
+game artwork remains separately licensed CC BY-NC-ND, local-only, unmodified,
+and excluded from git and builds. Code licensing does not license the artwork.

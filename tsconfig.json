@@ -1,7 +1,10 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "paths": { "@ao/protocol": ["./packages/protocol/src/index.ts"] }
+    "paths": {
+      "@ao/protocol": ["./packages/protocol/src/index.ts"],
+      "@ao/formats": ["./packages/formats/src/index.ts"]
+    }
   },
   "include": ["packages/*/src/**/*.ts", "packages/*/test/**/*.ts", "apps/*/src/**/*.ts", "apps/*/test/**/*.ts", "tools/standin-server/src/**/*.ts", "tools/standin-server/test/**/*.ts", "vitest.config.ts"]
 }

@@ -114,3 +114,44 @@ AO_STANDIN_DEBUG=0 AO_STANDIN_REJECT_WALKS=1 pnpm bot:standin
 - No implemented layout remains unverified against the paired VB6 source procedures.
   **Unverified limitation:** no real compiled VB6 server exists here; the stand-in
   proves the source-derived subset and transport behavior, not a live game login.
+
+## 2026-11-20 M2 resource formats
+
+- Worktree `~/Projects/ao-client-m2`, branch `m2-render`, initially clean. Read this
+  log first; no applicable AGENTS.md found in the worktree or ancestor directories.
+- WEB ONLY: Vite + TypeScript + Pixi, no UI framework or native packaging. Browser
+  format code uses Uint8Array/DataView/TextDecoder, without Node dependencies.
+- Paired source: client `b648c1a9b14903884393a7194e9faa0bc275633b`, Recursos
+  `89615f34162d9fa0bf0fae4242cd6639edbf772f`. Retained AGPL attribution in ports
+  and NOTICE. Assets and `docs/screenshots/` are ignored and never staged.
+- `.csm`: signed LE counts; VB6 ANSI strings with uint16 lengths; packed records,
+  no in-memory padding. Legacy four layers insert an empty layer 3; W5L2 uses
+  five. Physical tail order is triggers, particles, lights, objects, NPCs, exits.
+  Stored map bounds are all zero in map 1; runtime bounds are fixed at 1..100.
+  Entry blocking uses destination bit `1 << (heading - 1)`, not `blocked != 0`.
+- Real-data gotchas found by tests: map 1 has 1,419 undeclared trailing bytes.
+  Preserve their count and ignore them like CargarMapa, rather than inventing
+  records; validate recognized W2B1 tails and all declared records. Modern files
+  reject unknown tails. Graphics index has sparse IDs and unused dangling/nested
+  animation references: report IDs and fail only when such a frame is resolved.
+- Body templates are rows SOUTH/NORTH/WEST/EAST, while protocol headings are
+  NORTH/EAST/SOUTH/WEST. `cabezas.ind` has a 263-byte fixed header, uint16 count,
+  and four int32 GRHs per head. Bodies resolve on demand without expanding all
+  5,000 templates. Animation speed is total cycle duration, not frames per second.
+- Tests independently assemble small in-memory excerpts from AO_ASSETS at runtime;
+  no derived fixture bytes are saved. Asset tests skip when AO_ASSETS is absent.
+- Commands (worktree root):
+
+```sh
+pnpm install
+# Sandbox DNS failed; repeated with network escalation. pnpm 12 then required
+# an explicit esbuild lifecycle allowlist (allowBuilds.esbuild: true).
+pnpm install --offline
+AO_ASSETS=/Users/dev/Projects/ao-reference/Recursos pnpm exec vitest run packages/formats/test/formats.test.ts
+pnpm typecheck
+```
+
+- Formats: **9 tests passed** against the real files; typecheck passed. Web tooling
+  installed for subsequent work: Vite 7.3.8, Pixi 8.23.0, puppeteer-core 24.43.1
+  (dev-only, uses installed Chrome; no browser download). No optional package
+  agent skills activated. Build setting documented at https://pnpm.io/settings/build.
