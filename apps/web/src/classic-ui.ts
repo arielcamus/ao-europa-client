@@ -9,6 +9,7 @@ import type { Session } from './session.js';
 import type { WorldRenderer } from './renderer.js';
 import { loadInterface, loadedInterfaceUrl } from './interface-assets.js';
 import { renderMessage } from './chat-console.js';
+import { loadSpellTables, swapSpellSlots } from './spells.js';
 
 export const element = <T extends HTMLElement = HTMLElement>(id: string) => {
   const node = document.getElementById(id);
@@ -45,18 +46,23 @@ export class ClassicUI {
     }
     element('inventory-tab').onclick = () => this.showSpells(false);
     element('spells-tab').onclick = () => this.showSpells(true);
-    element('spell-up').onclick = () => this.selectSpell(this.selectedSpell - 1);
-    element('spell-down').onclick = () => this.selectSpell(this.selectedSpell + 1);
+    element('spell-up').onclick = () => this.moveSpell(true);
+    element('spell-down').onclick = () => this.moveSpell(false);
     element('spells').addEventListener('keydown', event => {
       if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
         event.preventDefault(); this.selectSpell(this.selectedSpell + (event.key === 'ArrowDown' ? 1 : -1));
       }
     });
+    // imgSpellInfo_Click: ask the server (WriteSpellInfo); it answers with a HECINF console line.
     element('spell-info').onclick = () => {
       const spell = this.session?.ui.spells.get(this.selectedSpell);
-      if (spell && spell.index > 0) this.session?.ui.message(this.spells.get(`hechizo${spell.index}`)?.get('desc') ?? 'Sin descripción.');
+      if (this.session?.ready && spell && spell.index > 0) this.session.spells.info(this.selectedSpell);
     };
-    element('cast').onclick = () => this.session?.ui.message('El lanzamiento de hechizos aún no está disponible.');
+    // cmdLanzar_Click -> UseSpell: WriteCastSpell, then the server asks for a target (WorkRequestTarget).
+    element('cast').onclick = () => {
+      const spell = this.session?.ui.spells.get(this.selectedSpell);
+      if (this.session?.ready && spell && spell.index > 0) this.session.spells.cast(this.selectedSpell, this.spellName(spell.index));
+    };
     for (const id of ['settings', 'manual']) element(id).onclick = () => {
       this.session?.ui.message('Flechas / WASD: caminar. En el teléfono, mantén pulsado el mapa en la dirección deseada. Enter: chat. Escape: cerrar chat.');
       this.session?.ui.message('Gráficos originales © AO / Noland Studios · CC BY-NC-ND · cargados localmente. Combate y uso de objetos aún no disponibles.');
@@ -86,6 +92,7 @@ export class ClassicUI {
       ...['centrohechizo', 'centroinventario', 'ventanaprincipal_info'].map(name => loadInterface(name)),
     ]);
     this.objects = parseIni(objects); this.spells = parseIni(spells);
+    await loadSpellTables(this.spells).catch(error => this.report(String(error)));
     await this.renderInventory();
     element('classic').dataset.uiReady = 'true';
   }
@@ -111,6 +118,16 @@ export class ClassicUI {
     element<HTMLImageElement>('stats-art').src = loadedInterfaceUrl(show ? 'ventanaprincipal_info' : 'ventanaprincipal_stats');
     element('stats-panel').querySelectorAll<HTMLElement>('.bar, .label').forEach(node => { node.hidden = show; });
     element('menu-actions').hidden = !show;
+  }
+  private spellName(index: number) { return this.spells.get(`hechizo${index}`)?.get('nombre') ?? `Hechizo ${index}`; }
+  /** cmdMoverHechi_Click: swap the entries locally and tell the server (WriteMoveSpell). */
+  private moveSpell(up: boolean) {
+    const session = this.session;
+    if (!session?.ready || !session.ui.spells.has(this.selectedSpell)) return;
+    const slot = this.selectedSpell, target = swapSpellSlots(session.ui.spells, slot, up);
+    if (target === slot) return;
+    session.spells.move(up, slot);
+    this.selectedSpell = target; session.ui.revision++;
   }
   private selectSpell(slot: number) {
     const rows = [...element('spells').children] as HTMLElement[];
@@ -161,6 +178,7 @@ export class ClassicUI {
     }
     if (!session) return;
     const ui = session.ui, stats = ui.stats;
+    element('cast').setAttribute('aria-disabled', String(!session.ready));
     const hp = stats.hp ?? session.self?.minHp, maxHp = stats.maxHp ?? session.self?.maxHp;
     const mana = stats.mana ?? session.self?.minMana, maxMana = stats.maxMana ?? session.self?.maxMana;
     const shield = stats.shield ?? 0;
@@ -189,7 +207,7 @@ export class ClassicUI {
       const spell = ui.spells.get(slot), row = document.createElement('div');
       row.className = 'spell'; row.dataset.slot = String(slot); row.id = `spell-${slot}`;
       row.setAttribute('role', 'option'); row.setAttribute('aria-selected', String(slot === this.selectedSpell));
-      row.textContent = spell && spell.index > 0 ? this.spells.get(`hechizo${spell.index}`)?.get('nombre') ?? `Hechizo ${spell.index}` : '(Vacío)';
+      row.textContent = spell && spell.index > 0 ? this.spellName(spell.index) : '(Vacío)';
       row.onclick = () => this.selectSpell(slot); list.append(row);
     }
     list.scrollTop = scroll;

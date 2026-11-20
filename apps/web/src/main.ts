@@ -36,7 +36,7 @@ const ui = new ClassicUI(renderer, report);
 const npcDialog = new NpcDialog(element('classic'), renderer);
 const bubbles = new ChatBubbles(element('chat-bubbles'));
 const chatBox = new ChatBox(chatForm, chat, element('messages'), () => renderer.app.canvas.focus(), error => close(String(error)));
-const combatOverlay = new CombatOverlay(viewport, renderer, report);
+const combatOverlay = new CombatOverlay(viewport, renderer);
 const clearInput = () => { keys.clear(); touchHeading = undefined; };
 function walk(heading: Heading) {
   try { if (session && renderer.readyMap === session.resourceMap) session.walk(heading); }
@@ -70,7 +70,7 @@ async function boot() {
     ? 'Mundo de prueba local. Objetos y estadísticas de muestra; sin combate ni persistencia.'
     : community ? 'Servidor comunitario · movimiento y persistencia. Chat aún no disponible.' : 'Cliente clásico · movimiento, inventario, hechizos y chat.';
   if (config.mode === 'standin') { account.value = 'standin@local'; password.value = 'testpass'; }
-  await Promise.all([renderer.init(), ui.init(), bubbles.init(), combatOverlay.init().catch(error => report(`Efectos de combate no disponibles: ${String(error)}`))]);
+  await Promise.all([renderer.init(), ui.init(), bubbles.init()]);
   // Chat text that the server sends as locale ids; the console is redrawn once it arrives.
   void Promise.all([fetchText('init/sp_localindex.dat'), fetchText('init/SP_LocalMsg.dat')])
     .then(([index, messages]) => { sharedLocale.load(index, messages); if (session) session.ui.revision++; })
@@ -117,6 +117,7 @@ function updateUi(now: number) {
   element('corrected').textContent = String(session.correctedWalks);
   element('duration').textContent = `${Math.floor(((stoppedAt ?? now) - (session.loggedAt ?? session.connectedAt)) / 1000)} s`;
   viewport.dataset.rendered = String(playing && renderer.settled);
+  viewport.dataset.targeting = String(session.spells.targeting !== undefined);
   element('asset-note').hidden = renderer.clippedFrames === 0;
   element('asset-note').textContent = `El recurso local contiene ${renderer.clippedFrames} regiones fuera de su imagen. Los píxeles ausentes quedan transparentes.`;
 }
@@ -155,7 +156,7 @@ const openChat = (guild = false) => {
 element('chat-open').onclick = () => openChat();
 const directions: Record<string, Heading> = { ArrowUp: Heading.North, KeyW: Heading.North, ArrowRight: Heading.East, KeyD: Heading.East, ArrowDown: Heading.South, KeyS: Heading.South, ArrowLeft: Heading.West, KeyA: Heading.West };
 window.addEventListener('keydown', event => {
-  if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); clearInput(); renderer.app.canvas.focus(); return; }
+  if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
   if (event.target instanceof HTMLElement && event.target.closest('input, textarea, select, button, [role="listbox"], dialog')) return;
   // Control is the classic attack key (DefaultKey.ini binding 1, modBindKeys.Accionar); key repeat is paced by Intervals.hit.
   if ((event.code === 'ControlLeft' || event.code === 'ControlRight') && !event.altKey && !event.metaKey) { event.preventDefault(); attack(); return; }
@@ -195,8 +196,16 @@ const tileAt = (event: PointerEvent) => session ? renderer.tileAt(session, event
 viewport.addEventListener('pointermove', event => { if (event.pointerType === 'mouse') renderer.hoverTile = tileAt(event); });
 viewport.addEventListener('pointerleave', () => { renderer.hoverTile = undefined; });
 viewport.addEventListener('pointerdown', event => {
+  if (!event.isPrimary || !session?.ready) return;
+  // While the server asked for a target (UsingSkill <> 0) any click or tap is a WorkLeftClick (ModGameplayUI), never a LeftClick.
+  if (session.spells.targeting) {
+    event.preventDefault(); clearInput();
+    const tile = tileAt(event);
+    if (tile) try { session.spells.click(tile.x, tile.y); } catch (error) { close(String(error)); }
+    renderer.app.canvas.focus(); return;
+  }
   // Servers without look-at support (community adapter) keep the old click-to-walk.
-  if (chatSupported && event.pointerType === 'mouse' && event.button === 0 && session?.ready) {
+  if (chatSupported && event.pointerType === 'mouse' && event.button === 0) {
     event.preventDefault(); renderer.app.canvas.focus();
     // One LeftClick per click (VB6 frmMain): on a door the tile follows the server's door rule, anywhere else it is the tile
     // itself. The counter is the session's shared one, so door, look-at, NPC and attack-target clicks never collide.
@@ -204,7 +213,6 @@ viewport.addEventListener('pointerdown', event => {
     try { if (tile) session.leftClick(tile.x, tile.y); } catch (error) { close(String(error)); }
     return;
   }
-  if (!event.isPrimary || !session?.ready) return;
   const door = doorAt(event);
   if (door) { event.preventDefault(); clearInput(); session.leftClick(door.x, door.y); renderer.app.canvas.focus(); return; }
   event.preventDefault(); clearInput(); aim(event); walk(touchHeading!);

@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
-  BodyPart, CombatClientPacketId as CC, CombatServerPacketId as CS, DoorClientPacketId as DC, NpcsServerPacketId as NS, FrameDecoder,
+  BodyPart, CombatClientPacketId as CC, CombatServerPacketId as CS, DoorClientPacketId as DC, NpcsServerPacketId as NS, SpellServerPacketId as SS, FrameDecoder,
   decodeClientPacket, decodeServerPacket, encodeClientPacket, encodeServerPacket,
 } from '../src/index.js';
 
@@ -19,7 +19,7 @@ const server = [
   ['CharacterRemove', '2b00 0700 01 00', { id: NS.CharacterRemove, charIndex: 7, vanish: true, warp: false }],
   ['CharacterChange', '3100 0100 01 3d03 0000 03 0000 0000 0000 0000 0000 0000 0000',
     { id: NS.CharacterChange, charIndex: 1, flags: 1, body: 829, head: 0, heading: 3, weapon: 0, shield: 0, helmet: 0, cart: 0, backpack: 0, fx: 0, fxLoops: 0 }],
-  ['CreateFX', '3c00 0500 0e00 0000 0a 14', { id: CS.CreateFX, charIndex: 5, fx: 14, loops: 0, x: 10, y: 20 }],
+  ['CreateFX', '3c00 0500 0e00 0000 0a 14', { id: SS.CreateFX, charIndex: 5, fx: 14, loops: 0, x: 10, y: 20 }],
   ['TextOverChar', '7d00 03 313233 0500 0000ff00', { id: CS.TextOverChar, text: '123', charIndex: 5, color: 0x00ff0000 }],
   ['LocaleMsg', '8d00 7e01 01 35 01 05', { id: NS.LocaleMsg, messageId: 382, text: '5', font: 1, channel: 5 }],
   ['ArmaMov', '9100 0900 00', { id: CS.ArmaMov, charIndex: 9, isRanged: 0 }],

@@ -13,6 +13,7 @@ import type { PacketFamily } from './packet-counters.js';
 import { CharacterTracker } from './characters.js';
 import { NpcsServerPacketId as NS } from '@ao/protocol';
 import { CombatState } from './combat.js';
+import { SpellState } from './spells.js';
 
 export interface Position { x: number; y: number }
 const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
@@ -27,6 +28,7 @@ export class Session {
   /** Everybody on the map, with names, equipment, slides and overhead text (feat/npcs). */
   readonly tracker = new CharacterTracker();
   readonly combat = new CombatState();
+  readonly spells: SpellState;
   characterLevel: number | undefined;
   phase: Phase = 'connecting';
   map: number | undefined;
@@ -64,6 +66,7 @@ export class Session {
     this.credentials = { ...credentials };
     this.ui.chat.clock = clock; this.ui.chat.characters = index => this.characters.get(index);
     this.connectedAt = clock();
+    this.spells = new SpellState(packet => this.send(packet), clock, (text, font) => this.ui.message(text, font), family => this.next(family));
     this.placementDeadline = this.connectedAt + 10_000;
   }
   get self() { return this.charIndex === undefined ? undefined : this.characters.get(this.charIndex); }
@@ -95,7 +98,12 @@ export class Session {
       if ('unknown' in packet) { this.unknownFrames++; continue; }
       this.ui.receive(packet);
       this.tracker.receive(packet, this.clock());
-      this.combat.receive(packet, { ui: this.ui, characters: this.characters, charIndex: this.charIndex, clock: this.clock });
+      this.combat.receive(packet, {
+        ui: this.ui, characters: this.characters, charIndex: this.charIndex, clock: this.clock,
+        // CharAtaca blood goes into the one spell FX list; VB6 skips it when the victim is sailing.
+        bleed: (charIndex, fx) => { if (!this.tracker.chars.get(charIndex)?.sailing) this.spells.addFx({ fx, charIndex, x: 0, y: 0, loops: 0, startedAt: this.clock() }); },
+      });
+      this.spells.receive(packet);
       switch (packet.id) {
         case S.Connected:
           if (this.phase !== 'connecting' || !this.credentials) throw new Error('Unexpected Connected');

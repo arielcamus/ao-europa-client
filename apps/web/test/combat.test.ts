@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { BodyPart, ClientPacketId as C, CombatClientPacketId as CC, CombatServerPacketId as CS, DoorClientPacketId as DC, NpcsServerPacketId as NS, FrameDecoder, ServerPacketId as S, decodeClientPacket, encodeServerFrame } from '@ao/protocol';
+import { BodyPart, ClientPacketId as C, CombatClientPacketId as CC, CombatServerPacketId as CS, DoorClientPacketId as DC, NpcsServerPacketId as NS, SpellServerPacketId as SS, FrameDecoder, ServerPacketId as S, decodeClientPacket, encodeServerFrame } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
 import { Session } from '../src/session.js';
@@ -85,10 +85,15 @@ describe('server responses', () => {
     expect(h.session.combat.floating).toHaveLength(0);
     h.recv({ id: CS.CharSwing, charIndex: SELF, showFx: true, showText: true, notifyText: true });
     expect(h.session.combat.floating[0]).toMatchObject({ text: 'Fallo', charIndex: SELF });
+    // HandleCharAtaca: no blood on a sailing victim (Navegando = flags And 2; the fixture character has flags 3).
+    h.recv({ id: CS.CharAtaca, charIndex: NPC, victimIndex: SELF, damage: 4 });
+    expect(h.session.spells.effects).toEqual([]);
+    h.session.tracker.chars.get(SELF)!.sailing = false;
     h.recv({ id: CS.CharAtaca, charIndex: NPC, victimIndex: SELF, damage: 4 }, { id: CS.CharAtaca, charIndex: NPC, victimIndex: SELF, damage: -1 });
-    expect(h.session.combat.fx).toEqual([expect.objectContaining({ charIndex: SELF, fx: 14, loops: 0 })]);
-    h.recv({ id: CS.CreateFX, charIndex: NPC, fx: 3, loops: 0, x: 0, y: 0 });
-    expect(h.session.combat.fx).toHaveLength(2);
+    // The blood splash goes into the one spell FX list (spells #10 draws CreateFX in the canvas).
+    expect(h.session.spells.effects).toEqual([expect.objectContaining({ charIndex: SELF, fx: 14, loops: 0 })]);
+    h.recv({ id: SS.CreateFX, charIndex: NPC, fx: 3, loops: 0, x: 0, y: 0 });
+    expect(h.session.spells.effects).toHaveLength(2);
   });
   it('removes a killed creature and its floating text', () => {
     const h = harness();

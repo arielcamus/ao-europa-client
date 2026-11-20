@@ -5,3 +5,4 @@ export * from './packets/doors.js';
 export * from './packets/npcs.js';
 export * from './packets/chat.js';
 export * from './packets/combat.js';
+export * from './packets/spells.js';

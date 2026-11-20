@@ -1,0 +1,136 @@
+/*
+ * Spell casting state, adapted 2026-11-20 from the classic client's frmMain
+ * (cmdLanzar_Click, cmdMoverHechi_Click, imgSpellInfo_Click), ModGameplayUI.UseSpell
+ * and the left-click path (WriteWorkLeftClick), plus Protocol.HandleWorkRequestTarget,
+ * HandleCreateFX and HandleFxPiso. Spell console tokens (HECINF, HecMSG...) are expanded by chat-console.ts.
+ * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty. See NOTICE.
+ */
+import { ServerPacketId as S, SpellClientPacketId as SC, SpellServerPacketId as SS, MAGIC_SKILL } from '@ao/protocol';
+import type { ClientPacket, ServerPacket } from '@ao/protocol';
+import { fetchText, parseIni } from './assets.js';
+import type { Ini } from './assets.js';
+import { sharedLocale } from './chat-locale.js';
+import type { PacketFamily } from './packet-counters.js';
+
+/** Plays once for loops=0; the client's Grh test is `Elapsed < frameTime * (Loops + 1)`, -1 repeats forever. */
+export interface ActiveFx {
+  /** FXs.ini section number (the FX id on the wire). */
+  fx: number;
+  /** Target character, or undefined for a floor FX. */
+  charIndex: number | undefined;
+  /** Tile for floor FX, or the fallback tile when the character is not known. */
+  x: number; y: number;
+  loops: number;
+  startedAt: number;
+  /** Floor FX carry the Grh directly (FxPiso) instead of an FXs.ini id. */
+  grh?: number;
+}
+export interface Targeting { skill: number; area: boolean; radius: number }
+
+const EMPTY = '(Vacío)';
+/** Languages/1.json MENSAJE_LANZAMIENTO_RAPIDO and MENSAJE_TRABAJO_MAGIA, Spanish. */
+export const MSG_TOO_FAST = 'No puedes lanzar hechizos tan rápido.';
+export const MSG_CLICK_TARGET = 'Haz click sobre el objetivo...';
+const MAX_FX = 64;
+
+/** Data tables read from the local resource mount: Dat/Hechizos.dat and init/FXs.ini. Console text is chat's (ChatLocale). */
+export interface SpellTables { spells: Ini; fx: Ini }
+export const spellTables: SpellTables = { spells: new Map(), fx: new Map() };
+
+/** Load the FX table once. `spells` is the already parsed Dat/Hechizos.dat; chat's HECINF/HecMSG text reads it too. */
+export async function loadSpellTables(spells: Ini): Promise<void> {
+  spellTables.spells = spells; sharedLocale.spellData = spells;
+  spellTables.fx = parseIni(await fetchText('init/FXs.ini'));
+}
+
+export class SpellState {
+  /** Set by WorkRequestTarget; cleared by a click, by a cancel (skill 0) or by leaving the map. */
+  targeting: Targeting | undefined;
+  effects: ActiveFx[] = [];
+  cooldowns = new Map<number, { timeLeft: number; totalTime: number; at: number }>();
+  revision = 0;
+  private magicInterval = 0;
+  private lastMagic = -Infinity;
+
+  constructor(
+    private readonly send: (packet: ClientPacket) => void,
+    private readonly clock: () => number,
+    private readonly message: (text: string, font?: number) => void,
+    /** The session's shared counters (PacketCounters): CastSpell and WorkLeftClick never keep their own. */
+    private readonly next: (family: PacketFamily) => number,
+  ) {}
+
+  /** ModGameplayUI.UseSpell: the slot is 1-based, the server answers with WorkRequestTarget. */
+  cast(slot: number, name: string): boolean {
+    if (slot < 1 || slot > 40 || name === EMPTY) return false;
+    this.send({ id: SC.CastSpell, slot, counter: this.next('castSpell') });
+    return true;
+  }
+  /** WriteWorkLeftClick with skill Magia, only while the server asked for a target. */
+  click(x: number, y: number): boolean {
+    if (!this.targeting) return false;
+    const { skill } = this.targeting;
+    const now = this.clock();
+    // SinBloqueo mode (the classic default) still sends but tells the player they are too fast.
+    if (skill === MAGIC_SKILL && now - this.lastMagic < this.magicInterval) this.message(MSG_TOO_FAST);
+    if (skill === MAGIC_SKILL) this.lastMagic = now;
+    this.send({ id: SC.WorkLeftClick, x, y, skill, counter: this.next('workLeftClick') });
+    this.targeting = undefined; this.revision++; // UsaLanzar = False: UsingSkill = 0
+    return true;
+  }
+  info(slot: number) { if (slot >= 1) this.send({ id: SC.SpellInfo, slot }); }
+  move(up: boolean, slot: number) { this.send({ id: SC.MoveSpell, up, slot }); }
+  cancel() { if (this.targeting) { this.targeting = undefined; this.revision++; } }
+  reset() { this.targeting = undefined; this.effects = []; this.revision++; }
+
+  receive(packet: ServerPacket) {
+    switch (packet.id) {
+      case S.Intervals: this.magicInterval = packet.magic; break;
+      case S.ChangeMap: this.reset(); break;
+      case SS.WorkRequestTarget: {
+        if (packet.skill === 0) this.targeting = undefined;
+        else if (!this.targeting || this.targeting.skill !== packet.skill) {
+          this.targeting = { skill: packet.skill, area: packet.area, radius: packet.radius };
+          if (packet.skill === MAGIC_SKILL) this.message(MSG_CLICK_TARGET);
+        }
+        this.revision++; break;
+      }
+      case SS.CreateFX: {
+        this.addFx({ fx: packet.fx, charIndex: packet.charIndex, x: packet.x, y: packet.y, loops: packet.loops, startedAt: this.clock() });
+        break;
+      }
+      case SS.FxFloor: {
+        this.addFx({ fx: 0, grh: packet.grh, charIndex: undefined, x: packet.x, y: packet.y, loops: 0, startedAt: this.clock() });
+        break;
+      }
+      // LocaleMsg (141) is printed once, by chat's console pipeline.
+      case SS.SendSkillCdUpdate: {
+        this.cooldowns.set(packet.skillId, { timeLeft: packet.timeLeft, totalTime: packet.totalTime, at: this.clock() });
+        break;
+      }
+      default: break;
+    }
+  }
+  /** Also fed by combat: the blood splash on a hit victim (HandleCharAtaca) uses this one FX list and renderer. */
+  addFx(fx: ActiveFx) {
+    this.effects.push(fx);
+    if (this.effects.length > MAX_FX) this.effects.shift();
+  }
+  /** Drop finished effects; `lengthMs(fx)` is one pass of the animation (0 = unknown, keep a second). */
+  prune(now: number, lengthMs: (fx: ActiveFx) => number) {
+    this.effects = this.effects.filter(fx => fx.loops < 0 || now - fx.startedAt < (lengthMs(fx) || 1000) * (fx.loops + 1));
+  }
+}
+
+/**
+ * cmdMoverHechi_Click: the client swaps the two list entries itself (the server does not resend
+ * them). `slot` is 1-based. Returns the new 1-based slot, or the same one when the move is a no-op.
+ */
+export function swapSpellSlots<T extends { slot: number }>(spells: Map<number, T>, slot: number, up: boolean): number {
+  const other = slot + (up ? -1 : 1);
+  if (other < 1 || other > 40 || (!spells.has(slot) && !spells.has(other))) return slot;
+  const a = spells.get(slot), b = spells.get(other);
+  if (b) spells.set(slot, { ...b, slot }); else spells.delete(slot);
+  if (a) spells.set(other, { ...a, slot: other }); else spells.delete(other);
+  return other;
+}

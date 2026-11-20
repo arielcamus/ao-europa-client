@@ -44,8 +44,11 @@ export function expandConsoleText(chat: string, locale: ChatLocale): string {
     case 'NPCNAME': return locale.npcName(vbVal(readField(2, chat, '*'))) + readField(3, chat, '*');
     case 'O': return `${locale.objectName(vbVal(readField(2, chat, '*')))} ${readField(3, chat, '*')}`;
     case 'HECINF': {
+      // Protocol.HandleConsoleMessage HECINF, with the requirement lines from HechizoData (ported from spells #10).
       const spell = locale.spell(vbVal(readField(2, chat, '*')));
-      return `------------< Información del hechizo >------------\nNombre: ${spell.name}\nDescripción: ${spell.desc}`;
+      const stamina = spell.staminaPercent > 0 ? `${spell.staminaPercent}% de stamina total.` : `${spell.stamina} puntos.`;
+      return [`------------< Información del hechizo >------------`, `Nombre: ${spell.name}`, `Descripción: ${spell.desc}`,
+        `Skill requerido: ${spell.minSkill} de magia.`, `Mana necesario: ${spell.mana} puntos.`, `Stamina necesaria: ${stamina}`].join('\n');
     }
     case 'ProMSG': return locale.spell(vbVal(readField(2, chat, '*'))).ownMessage;
     case 'HecMSG': return `${locale.spell(vbVal(readField(2, chat, '*'))).casterMessage} la criatura.`;
