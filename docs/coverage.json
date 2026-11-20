@@ -3,60 +3,72 @@
   {
    "name": "main",
    "ref": "origin/main",
-   "sha": "b44a35d",
+   "sha": "8bca36c",
    "pr": null
+  },
+  {
+   "name": "feat/buildings",
+   "ref": "origin/feat/buildings",
+   "sha": "12f1fbd",
+   "pr": 21
   },
   {
    "name": "feat/chat",
    "ref": "origin/feat/chat",
-   "sha": "e47646c",
+   "sha": "955d6c3",
    "pr": 7
   },
   {
    "name": "feat/combat",
    "ref": "origin/feat/combat",
-   "sha": "ba8d2d7",
-   "pr": 11
+   "sha": "1897b6c",
+   "pr": null
   },
   {
    "name": "feat/doors-roofs",
    "ref": "origin/feat/doors-roofs",
-   "sha": "0eaee25",
+   "sha": "999f088",
    "pr": 6
   },
   {
    "name": "feat/items",
    "ref": "origin/feat/items",
-   "sha": "2c93b6a",
+   "sha": "88bfcc5",
    "pr": 9
   },
   {
    "name": "feat/npcs",
    "ref": "origin/feat/npcs",
-   "sha": "f0cad38",
+   "sha": "fba7b39",
    "pr": 8
+  },
+  {
+   "name": "feat/screen-minimap",
+   "ref": "origin/feat/screen-minimap",
+   "sha": "c7e0df4",
+   "pr": 18
   },
   {
    "name": "feat/spells",
    "ref": "origin/feat/spells",
-   "sha": "c5f7b01",
+   "sha": "da5250e",
    "pr": 10
   }
  ],
  "headline": {
   "packets": 523,
-  "packetsCovered": 93,
-  "packetsMerged": 29,
+  "packetsCovered": 103,
+  "packetsMerged": 103,
   "s2c": 207,
   "c2s": 316,
-  "s2cCovered": 63,
-  "c2sCovered": 30,
+  "s2cCovered": 65,
+  "c2sCovered": 38,
   "forms": 86,
   "formsCovered": 2,
   "formsPartial": 2,
   "fixturePackets": 88,
-  "packetsPct": 17.8,
-  "packetsMergedPct": 5.5,
+  "packetsPct": 19.7,
+  "packetsMergedPct": 19.7,
   "formsPct": 2.3,
   "formsStartedPct": 4.7
  },
@@ -65,9 +77,9 @@
    "id": "core",
    "title": "Core movement / world / session",
    "packets": 68,
-   "packetsCovered": 31,
-   "packetsMerged": 20,
-   "packetsPct": 45.6,
+   "packetsCovered": 32,
+   "packetsMerged": 32,
+   "packetsPct": 47.1,
    "forms": 21,
    "formsCovered": 0,
    "formsPartial": 2,
@@ -78,7 +90,7 @@
    "title": "Chat",
    "packets": 28,
    "packetsCovered": 19,
-   "packetsMerged": 2,
+   "packetsMerged": 19,
    "packetsPct": 67.9,
    "forms": 0,
    "formsCovered": 0,
@@ -89,9 +101,9 @@
    "id": "combat",
    "title": "Combat",
    "packets": 41,
-   "packetsCovered": 12,
-   "packetsMerged": 0,
-   "packetsPct": 29.3,
+   "packetsCovered": 16,
+   "packetsMerged": 16,
+   "packetsPct": 39,
    "forms": 0,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -102,7 +114,7 @@
    "title": "Spells",
    "packets": 8,
    "packetsCovered": 6,
-   "packetsMerged": 1,
+   "packetsMerged": 6,
    "packetsPct": 75,
    "forms": 0,
    "formsCovered": 0,
@@ -113,9 +125,9 @@
    "id": "items",
    "title": "Items / commerce (NPC shop, inventory)",
    "packets": 27,
-   "packetsCovered": 21,
-   "packetsMerged": 4,
-   "packetsPct": 77.8,
+   "packetsCovered": 22,
+   "packetsMerged": 22,
+   "packetsPct": 81.5,
    "forms": 4,
    "formsCovered": 2,
    "formsPartial": 0,
@@ -173,9 +185,9 @@
    "id": "guild",
    "title": "Guild / clan",
    "packets": 41,
-   "packetsCovered": 0,
-   "packetsMerged": 0,
-   "packetsPct": 0,
+   "packetsCovered": 2,
+   "packetsMerged": 2,
+   "packetsPct": 4.9,
    "forms": 11,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -197,9 +209,9 @@
    "id": "skills",
    "title": "Skills / training / stats",
    "packets": 19,
-   "packetsCovered": 2,
-   "packetsMerged": 2,
-   "packetsPct": 10.5,
+   "packetsCovered": 3,
+   "packetsMerged": 3,
+   "packetsPct": 15.8,
    "forms": 3,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -221,9 +233,9 @@
    "id": "work",
    "title": "Fishing / mining / lumber (work skills)",
    "packets": 10,
-   "packetsCovered": 1,
-   "packetsMerged": 0,
-   "packetsPct": 10,
+   "packetsCovered": 2,
+   "packetsMerged": 2,
+   "packetsPct": 20,
    "forms": 0,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -258,7 +270,7 @@
    "title": "Events, battlegrounds, premium shop, remort, anti-cheat",
    "packets": 60,
    "packetsCovered": 1,
-   "packetsMerged": 0,
+   "packetsMerged": 1,
    "packetsPct": 1.7,
    "forms": 13,
    "formsCovered": 0,
@@ -297,6 +309,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -331,6 +347,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -356,20 +376,17 @@
    "writer": null,
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat, feat/npcs",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat",
-    "feat/npcs"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts",
-    "feat/npcs:packages/protocol/src/packets/npcs.ts"
+    "main:packages/protocol/src/packets/npcs.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl"
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl"
    ]
   },
   {
@@ -381,25 +398,22 @@
    "writer": "server Protocol_Writes.bas:WriteRemoveCharDialog",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat, feat/npcs",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat",
-    "feat/npcs"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts",
-    "feat/npcs:packages/protocol/src/packets/npcs.ts"
+    "main:packages/protocol/src/packets/npcs.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
-    "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
@@ -473,14 +487,12 @@
    "writer": "server Protocol_Writes.bas:WriteCommerceEnd",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -513,14 +525,12 @@
    "writer": "server Protocol_Writes.bas:WriteCommerceInit",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -672,14 +682,12 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "on feat/combat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts"
+    "main:packages/protocol/src/packets/combat.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -696,13 +704,19 @@
    "writer": "server Protocol_Writes.bas:WriteSafeModeOn",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/keys.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -728,11 +742,13 @@
    "writer": "server Protocol_Writes.bas:WriteSafeModeOff",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/keys.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl"
@@ -909,6 +925,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -943,6 +963,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
     "tests/fixtures/vb6/chat/whisper.jsonl",
@@ -963,14 +987,12 @@
    "writer": "server Protocol_Writes.bas:WriteNPCHitUser",
    "group": "combat",
    "package": "wp03",
-   "status": "on feat/combat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts"
+    "main:packages/protocol/src/packets/combat.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -984,14 +1006,12 @@
    "writer": "server Protocol_Writes.bas:WriteUserHittedByUser",
    "group": "combat",
    "package": "wp03",
-   "status": "on feat/combat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts"
+    "main:packages/protocol/src/packets/combat.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -1005,14 +1025,12 @@
    "writer": "server Protocol_Writes.bas:WriteUserHittedUser",
    "group": "combat",
    "package": "wp03",
-   "status": "on feat/combat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts"
+    "main:packages/protocol/src/packets/combat.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -1026,16 +1044,12 @@
    "writer": "server Protocol_Writes.bas:WriteChatOverHead",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat, feat/npcs",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat",
-    "feat/npcs"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts",
-    "feat/npcs:packages/protocol/src/packets/npcs.ts"
+    "main:packages/protocol/src/packets/npcs.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -1057,16 +1071,12 @@
    "writer": "server Protocol_Writes.bas:WriteLocaleChatOverHead",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat, feat/npcs",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat",
-    "feat/npcs"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts",
-    "feat/npcs:packages/protocol/src/packets/npcs.ts"
+    "main:packages/protocol/src/packets/npcs.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -1089,6 +1099,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -1114,14 +1128,12 @@
    "writer": null,
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts"
+    "main:packages/protocol/src/packets.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -1135,14 +1147,12 @@
    "writer": "server Protocol_Writes.bas:WriteGuildChat",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts"
+    "main:packages/protocol/src/packets.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -1199,6 +1209,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
@@ -1227,25 +1241,22 @@
    "writer": null,
    "group": "core",
    "package": "wp01",
-   "status": "on feat/combat, feat/npcs",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat",
-    "feat/npcs"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts",
-    "feat/npcs:packages/protocol/src/packets/npcs.ts"
+    "main:packages/protocol/src/packets/npcs.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
-    "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
@@ -1275,11 +1286,11 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
-    "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
@@ -1319,6 +1330,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -1353,6 +1368,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -1395,18 +1414,12 @@
    "writer": "server Protocol_Writes.bas:WriteCharacterChange",
    "group": "core",
    "package": "wp01",
-   "status": "on feat/combat, feat/items, feat/npcs",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat",
-    "feat/items",
-    "feat/npcs"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts",
-    "feat/items:packages/protocol/src/packets/items.ts",
-    "feat/npcs:packages/protocol/src/packets/npcs.ts"
+    "main:packages/protocol/src/packets/npcs.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -1425,19 +1438,19 @@
    "writer": "server Protocol_Writes.bas:WriteObjectCreate",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/doors-roofs, feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/doors-roofs",
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/doors-roofs:packages/protocol/src/packets/doors.ts",
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/doors.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -1463,14 +1476,12 @@
    "writer": null,
    "group": "core",
    "package": "wp02",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -1484,16 +1495,12 @@
    "writer": "server Protocol_Writes.bas:WriteObjectDelete",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/doors-roofs, feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/doors-roofs",
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/doors-roofs:packages/protocol/src/packets/doors.ts",
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/doors.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -1507,17 +1514,19 @@
    "writer": null,
    "group": "core",
    "package": "wp02",
-   "status": "on feat/doors-roofs",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/doors-roofs"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/doors-roofs:packages/protocol/src/packets/doors.ts"
+    "main:packages/protocol/src/packets/doors.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -1560,17 +1569,16 @@
    "writer": "server Protocol_Writes.bas:WritePlayWave",
    "group": "core",
    "package": "wp02",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -1619,6 +1627,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -1678,19 +1690,16 @@
    "writer": "server Protocol_Writes.bas:WriteCreateFX",
    "group": "spells",
    "package": "wp03",
-   "status": "on feat/combat, feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat",
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts",
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -1725,6 +1734,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -1751,14 +1764,12 @@
    "writer": "server Protocol_Writes.bas:WriteWorkRequestTarget",
    "group": "spells",
    "package": "wp03",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -1786,6 +1797,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -1858,6 +1873,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -2055,14 +2074,12 @@
    "writer": "server Protocol_Writes.bas:WriteChangeNPCInventorySlot",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -2087,6 +2104,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -2137,6 +2158,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -2271,6 +2296,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -2534,17 +2563,19 @@
    "writer": "server Protocol_Writes.bas:WriteFYA",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -2595,6 +2626,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -2746,6 +2781,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
@@ -2776,17 +2815,16 @@
    "writer": null,
    "group": "core",
    "package": "wp02",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -2812,14 +2850,12 @@
    "writer": null,
    "group": "core",
    "package": "wp02",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -2833,14 +2869,12 @@
    "writer": null,
    "group": "core",
    "package": "wp02",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -2854,14 +2888,12 @@
    "writer": null,
    "group": "core",
    "package": "wp02",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -2882,6 +2914,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -2953,6 +2989,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
@@ -3053,14 +3093,12 @@
    "writer": "server Protocol_Writes.bas:WriteTextOverChar",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/combat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts"
+    "main:packages/protocol/src/packets/combat.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -3111,14 +3149,12 @@
    "writer": null,
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts"
+    "main:packages/protocol/src/packets.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -3230,6 +3266,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -3280,6 +3320,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -3373,23 +3417,19 @@
    "writer": "server Protocol_Writes.bas:WriteLocaleMsg",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat, feat/combat, feat/npcs, feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat",
-    "feat/combat",
-    "feat/npcs",
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts",
-    "feat/combat:packages/protocol/src/packets/combat.ts",
-    "feat/npcs:packages/protocol/src/packets/npcs.ts",
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/npcs.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/chat/whisper.jsonl",
@@ -3470,14 +3510,12 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "on feat/combat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts"
+    "main:packages/protocol/src/packets/combat.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -3564,14 +3602,12 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "on feat/combat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts"
+    "main:packages/protocol/src/packets/combat.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -3716,6 +3752,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -3758,17 +3798,19 @@
    "writer": "server Protocol_Writes.bas:WriteUpdateRM",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -3794,17 +3836,19 @@
    "writer": "server Protocol_Writes.bas:WriteUpdateDM",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -4092,6 +4136,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -4151,14 +4199,12 @@
    "writer": "server Protocol_Writes.bas:WriteSendSkillCdUpdate",
    "group": "combat",
    "package": "wp03",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -4189,14 +4235,12 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "on feat/combat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts"
+    "main:packages/protocol/src/packets/combat.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -4244,14 +4288,12 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -4354,14 +4396,12 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -4433,6 +4473,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -4482,6 +4526,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -4533,6 +4581,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -4582,6 +4634,10 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -4607,14 +4663,12 @@
    "writer": "server Protocol_Writes.bas:WriteShowPickUpObj",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -4730,14 +4784,12 @@
    "writer": null,
    "group": "work",
    "package": "wp10",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -4773,14 +4825,12 @@
    "writer": "client Protocol_Writes.bas:WriteSpellInfo",
    "group": "spells",
    "package": "wp03",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -4796,14 +4846,12 @@
    "writer": "client Protocol_Writes.bas:WriteEquipItem",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -4870,14 +4918,12 @@
    "writer": "client Protocol_Writes.bas:WriteCommerceBuy",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -4910,14 +4956,12 @@
    "writer": "client Protocol_Writes.bas:WriteCommerceSell",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -4967,14 +5011,12 @@
    "writer": "client Protocol_Writes.bas:WriteMoveSpell",
    "group": "spells",
    "package": "wp03",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -5398,11 +5440,13 @@
    "writer": "client Protocol_Writes.bas:WriteQuit",
    "group": "core",
    "package": "wp01",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/keys.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5500,14 +5544,12 @@
    "writer": "client Protocol_Writes.bas:WriteGrupoMsg",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts"
+    "main:packages/protocol/src/packets.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -5557,11 +5599,13 @@
    "writer": "client Protocol_Writes.bas:WriteMeditate",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/keys.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5574,14 +5618,12 @@
    "writer": "client Protocol_Writes.bas:WriteResucitate",
    "group": "combat",
    "package": "wp03",
-   "status": "on feat/combat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts"
+    "main:packages/protocol/src/packets/combat.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -5597,14 +5639,12 @@
    "writer": "client Protocol_Writes.bas:WriteHeal",
    "group": "combat",
    "package": "wp03",
-   "status": "on feat/combat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts"
+    "main:packages/protocol/src/packets/combat.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -5754,14 +5794,12 @@
    "writer": "client Protocol_Writes.bas:WriteGuildMessage",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts"
+    "main:packages/protocol/src/packets.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -5777,14 +5815,12 @@
    "writer": "client Protocol_Writes.bas:WriteGuildOnline",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts"
+    "main:packages/protocol/src/packets.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -5800,14 +5836,12 @@
    "writer": "client Protocol_Writes.bas:WriteCouncilMessage",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts"
+    "main:packages/protocol/src/packets.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -5823,14 +5857,12 @@
    "writer": "client Protocol_Writes.bas:WriteFactionMessage",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts"
+    "main:packages/protocol/src/packets.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -6025,6 +6057,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -6088,14 +6124,12 @@
    "writer": "client Protocol_Writes.bas:WriteYell",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts"
+    "main:packages/protocol/src/packets.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -6111,14 +6145,12 @@
    "writer": "client Protocol_Writes.bas:WriteWhisper",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts"
+    "main:packages/protocol/src/packets.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -6143,6 +6175,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -6168,6 +6204,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
     "tests/fixtures/vb6/chat/whisper.jsonl",
@@ -6188,14 +6228,12 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "on feat/combat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts"
+    "main:packages/protocol/src/packets/combat.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -6212,14 +6250,12 @@
    "writer": "client Protocol_Writes.bas:WritePickUp",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -6235,11 +6271,13 @@
    "writer": "client Protocol_Writes.bas:WriteSafeToggle",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/keys.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl"
@@ -6254,11 +6292,13 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/keys.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6339,14 +6379,12 @@
    "writer": "client Protocol_Writes.bas:WriteCommerceEnd",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -6430,14 +6468,12 @@
    "writer": "client Protocol_Writes.bas:WriteDrop",
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -6453,14 +6489,12 @@
    "writer": "client Protocol_Writes.bas:WriteCastSpell",
    "group": "spells",
    "package": "wp03",
-   "status": "on feat/spells",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/spells"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/spells:packages/protocol/src/packets/spells.ts"
+    "main:packages/protocol/src/packets/spells.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -6479,23 +6513,16 @@
    "writer": "client Protocol_Writes.bas:WriteLeftClick",
    "group": "core",
    "package": "wp01",
-   "status": "on feat/combat, feat/doors-roofs, feat/items, feat/npcs",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/combat",
-    "feat/doors-roofs",
-    "feat/items",
-    "feat/npcs"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/combat:packages/protocol/src/packets/combat.ts",
-    "feat/doors-roofs:packages/protocol/src/packets/doors.ts",
-    "feat/items:packages/protocol/src/packets/items.ts",
-    "feat/npcs:packages/protocol/src/packets/npcs.ts"
+    "main:packages/protocol/src/packets/doors.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -6512,14 +6539,12 @@
    "writer": "client Protocol_Writes.bas:WriteDoubleClick",
    "group": "core",
    "package": "wp01",
-   "status": "on feat/doors-roofs",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/doors-roofs"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/doors-roofs:packages/protocol/src/packets/doors.ts"
+    "main:packages/protocol/src/packets/doors.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -6535,11 +6560,13 @@
    "writer": "client Protocol_Writes.bas:WriteWork",
    "group": "work",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/keys.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6569,14 +6596,12 @@
    "writer": null,
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -8411,14 +8436,12 @@
    "writer": "client Protocol_Writes.bas:WriteGlobalMessage",
    "group": "chat",
    "package": "wp01",
-   "status": "on feat/chat",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/chat"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/chat:packages/protocol/src/packets.ts"
+    "main:packages/protocol/src/packets.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -9231,11 +9254,13 @@
    "writer": null,
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/keys.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9248,11 +9273,13 @@
    "writer": null,
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/keys.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9792,14 +9819,12 @@
    "writer": null,
    "group": "items",
    "package": "wp04",
-   "status": "on feat/items",
+   "status": "merged",
    "covered": true,
-   "merged": false,
-   "branches": [
-    "feat/items"
-   ],
+   "merged": true,
+   "branches": [],
    "codecFiles": [
-    "feat/items:packages/protocol/src/packets/items.ts"
+    "main:packages/protocol/src/packets/items.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -10019,11 +10044,13 @@
    "writer": "client Protocol_Writes.bas:WriteUseHKeySlot",
    "group": "items",
    "package": "wp04",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/keys.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10096,6 +10123,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -11315,123 +11346,7 @@
    "evidence": []
   }
  ],
- "duplicates": [
-  {
-   "key": "s2c:3",
-   "id": 3,
-   "name": "RemoveDialogs",
-   "direction": "s2c",
-   "branches": [
-    "feat/chat",
-    "feat/npcs"
-   ]
-  },
-  {
-   "key": "s2c:4",
-   "id": 4,
-   "name": "RemoveCharDialog",
-   "direction": "s2c",
-   "branches": [
-    "feat/chat",
-    "feat/npcs"
-   ]
-  },
-  {
-   "key": "s2c:35",
-   "id": 35,
-   "name": "ChatOverHead",
-   "direction": "s2c",
-   "branches": [
-    "feat/chat",
-    "feat/npcs"
-   ]
-  },
-  {
-   "key": "s2c:36",
-   "id": 36,
-   "name": "LocaleChatOverHead",
-   "direction": "s2c",
-   "branches": [
-    "feat/chat",
-    "feat/npcs"
-   ]
-  },
-  {
-   "key": "s2c:43",
-   "id": 43,
-   "name": "CharacterRemove",
-   "direction": "s2c",
-   "branches": [
-    "feat/combat",
-    "feat/npcs"
-   ]
-  },
-  {
-   "key": "s2c:49",
-   "id": 49,
-   "name": "CharacterChange",
-   "direction": "s2c",
-   "branches": [
-    "feat/combat",
-    "feat/items",
-    "feat/npcs"
-   ]
-  },
-  {
-   "key": "s2c:50",
-   "id": 50,
-   "name": "ObjectCreate",
-   "direction": "s2c",
-   "branches": [
-    "feat/doors-roofs",
-    "feat/items"
-   ]
-  },
-  {
-   "key": "s2c:52",
-   "id": 52,
-   "name": "ObjectDelete",
-   "direction": "s2c",
-   "branches": [
-    "feat/doors-roofs",
-    "feat/items"
-   ]
-  },
-  {
-   "key": "s2c:60",
-   "id": 60,
-   "name": "CreateFX",
-   "direction": "s2c",
-   "branches": [
-    "feat/combat",
-    "feat/spells"
-   ]
-  },
-  {
-   "key": "s2c:141",
-   "id": 141,
-   "name": "LocaleMsg",
-   "direction": "s2c",
-   "branches": [
-    "feat/chat",
-    "feat/combat",
-    "feat/npcs",
-    "feat/spells"
-   ]
-  },
-  {
-   "key": "c2s:95",
-   "id": 95,
-   "name": "LeftClick",
-   "direction": "c2s",
-   "branches": [
-    "feat/combat",
-    "feat/doors-roofs",
-    "feat/items",
-    "feat/npcs"
-   ]
-  }
- ],
+ "duplicates": [],
  "mainOverlap": [],
  "workPackages": [
   {
@@ -11461,7 +11376,6 @@
     "s2c:181",
     "s2c:194",
     "c2s:6",
-    "c2s:39",
     "c2s:51",
     "c2s:57",
     "c2s:74",
@@ -11494,7 +11408,6 @@
     "S181 UpdateFlag",
     "S194 UpdateCharValue",
     "C6 ChangeHeading",
-    "C39 Quit",
     "C51 Help",
     "C57 RequestMOTD",
     "C74 LoginNewChar",
@@ -11582,8 +11495,6 @@
     "s2c:16",
     "s2c:17",
     "s2c:18",
-    "s2c:20",
-    "s2c:21",
     "s2c:22",
     "s2c:23",
     "s2c:74",
@@ -11604,8 +11515,6 @@
     "s2c:164",
     "s2c:167",
     "s2c:192",
-    "c2s:82",
-    "c2s:83",
     "c2s:98",
     "c2s:263",
     "c2s:268",
@@ -11615,8 +11524,6 @@
     "S16 NPCKillUser",
     "S17 BlockedWithShieldUser",
     "S18 BlockedWithShieldOther",
-    "S20 SafeModeOn",
-    "S21 SafeModeOff",
     "S22 PartySafeOn",
     "S23 PartySafeOff",
     "S74 Blind",
@@ -11637,8 +11544,6 @@
     "S164 Stopped",
     "S167 DoAnimation",
     "S192 UpdateTrap",
-    "C82 SafeToggle",
-    "C83 PartySafeToggle",
     "C98 UseSpellMacro",
     "C263 SeguroClan",
     "C268 SeguroResu",
@@ -11655,16 +11560,14 @@
     "c2s:209",
     "c2s:225",
     "c2s:285",
-    "c2s:300",
-    "c2s:301"
+    "c2s:300"
    ],
    "packetNames": [
     "C53 CommerceStart",
     "C209 UseKey",
     "C225 Moveitem",
     "C285 DeleteItem",
-    "C300 SetHotkeySlot",
-    "C301 UseHKeySlot"
+    "C300 SetHotkeySlot"
    ],
    "forms": [
     "frmMensajePapiro",
@@ -11814,8 +11717,6 @@
     "c2s:237",
     "c2s:238",
     "c2s:254",
-    "c2s:255",
-    "c2s:256",
     "c2s:299"
    ],
    "packetNames": [
@@ -11866,8 +11767,6 @@
     "C237 AbandonarGrupo",
     "C238 HecharDeGrupo",
     "C254 QuieroFundarClan",
-    "C255 Llamadadeclan",
-    "C256 MarcaDeClanPack",
     "C299 ActionOnGroupFrame"
    ],
    "forms": [
@@ -11936,7 +11835,6 @@
     "c2s:8",
     "c2s:46",
     "c2s:47",
-    "c2s:48",
     "c2s:52",
     "c2s:85",
     "c2s:86",
@@ -11955,7 +11853,6 @@
     "C8 Train",
     "C46 TrainList",
     "C47 Rest",
-    "C48 Meditate",
     "C52 RequestStats",
     "C85 RequestAtributes",
     "C86 RequestSkills",
@@ -11989,7 +11886,6 @@
     "s2c:171",
     "s2c:176",
     "c2s:1",
-    "c2s:97",
     "c2s:100",
     "c2s:228",
     "c2s:229",
@@ -12025,7 +11921,6 @@
     "S171 CraftingResult",
     "S176 PelearConPezEspecial",
     "C1 CraftCarpenter",
-    "C97 Work",
     "C100 CraftBlacksmith",
     "C228 CraftAlquimista",
     "C229 FlagTrabajar",
