@@ -281,3 +281,20 @@ git check-ignore docs/screenshots/m2-desktop.png docs/screenshots/m2-mobile.png
   unverified. Headless mobile Chrome emulates touch/viewport, not a physical iOS
   or Android device. Native renderer pixel parity (including UV wrap and lighting)
   is not claimed. Stand-in rules cover only map bounds, CSM blocks and walk timing.
+
+## 2026-11-20 M2 final handoff
+
+- Local feature commits on `m2-render`: `0219ba9` (formats), `658e77a` (real-map
+  stand-in/browser transport), `40ec5c2` (rendering, touch and tooling). No push or PR.
+- Inspected the final production screenshots, including PNG dimensions:
+  `/Users/dev/Projects/ao-client-m2/docs/screenshots/m2-desktop.png`
+  is 1440×900 (2,070,257 bytes);
+  `/Users/dev/Projects/ao-client-m2/docs/screenshots/m2-mobile.png`
+  is 390×844 (519,920 bytes). Both show Connected and original character art.
+- `git ls-files --stage docs/screenshots assets` returned no tracked files;
+  `git status --ignored --short docs/screenshots` showed `!! docs/screenshots/`.
+  Production dist contains only index.html and four JS/CSS files in static/.
+- Stopped only this task's two identified Node listener processes with
+  `kill -INT 14244 79053`; both `dev:web` and `preview:web` sessions exited **0**,
+  confirming shutdown cleanup. Other pre-existing Chrome/server processes were
+  left alone. To run the finished client again: `pnpm dev:web`.
