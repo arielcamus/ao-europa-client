@@ -9,8 +9,15 @@ export interface WorldMap {
   blocked: Uint8Array;
   /** Per-tile trigger id (e_Trigger); 0 when none. Drives the roof rule. */
   triggers: Uint16Array;
-  /** M2 reads the render prefix only; gameplay/effect sections remain opaque. */
+  /**
+   * Objects stored in the map file (CargarMapa reads them into MapData.ObjGrh). The server never sends the "fixed" ones
+   * (trees, signs, deposits, decorations; ModAreas.EsObjetoFijo), so the map file is the only source for them.
+   */
+  objects: MapFileObject[];
+  /** The NPC and tile-exit sections after the objects stay opaque. */
   trailingBytes: number;
+}
+export interface MapFileObject { x: number; y: number; objIndex: number; amount: number;
 }
 export interface GraphicFrame { file: number; x: number; y: number; width: number; height: number }
 export interface Animation { frames: GraphicFrame[]; frameMs: number }
@@ -62,7 +69,8 @@ export function parseMap(bytes: Uint8Array): WorldMap {
   };
   const blockedCount = count(five ? r.i32() : first);
   const counts = Array.from({ length: five ? 5 : 4 }, () => count(r.i32()));
-  const [triggerCount] = Array.from({ length: 6 }, () => count(r.i32())) as [number, ...number[]];
+  // Header order (tMapHeader): triggers, lights, particles, NPCs, objects, tile exits.
+  const [triggerCount, lightCount, particleCount, , objectCount] = Array.from({ length: 6 }, () => count(r.i32())) as [number, number, number, number, number, number];
   r.take(8); // tMapSize is often all zero; the classic world bounds are 1..100.
   const name = r.text();
   r.u8(); r.text(); r.take(9); // backup, restrict, two music IDs, safe
@@ -89,7 +97,14 @@ export function parseMap(bytes: Uint8Array): WorldMap {
     const x = r.i16(), y = r.i16(), trigger = r.i16();
     if (x >= 1 && y >= 1 && x <= 100 && y <= 100) triggers[tileIndex(x, y)] = trigger; // tolerate stray editor tiles
   }
-  return { name, layers, blocked, triggers, trailingBytes: bytes.length - r.offset };
+  // File order after the triggers (Recursos.CargarMapa): particles (x,y,i32), lights (x,y,RGBA,range), objects (x,y,index,amount).
+  r.take(particleCount * 8); r.take(lightCount * 9);
+  const objects: MapFileObject[] = [];
+  for (let i = 0; i < objectCount; i++) {
+    const x = r.i16(), y = r.i16(), objIndex = r.i16(), amount = r.i16();
+    if (objIndex > 0 && x >= 1 && y >= 1 && x <= 100 && y <= 100) objects.push({ x, y, objIndex, amount });
+  }
+  return { name, layers, blocked, triggers, objects, trailingBytes: bytes.length - r.offset };
 }
 
 export function parseIni(text: string): Ini {

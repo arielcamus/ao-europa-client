@@ -167,7 +167,7 @@ function doorAt(event: PointerEvent | MouseEvent) {
   const tile = renderer.tileAt(session, event.clientX, event.clientY, performance.now());
   if (!tile) return undefined;
   const occupied = (x: number, y: number) => [...session!.characters.values()].some(c => c.x === x && c.y === y);
-  return doorClickTile(session.mapObjects, objIndex => renderer.isDoor(objIndex), tile, occupied);
+  return doorClickTile(session.mapObjects, objIndex => renderer.isDoor(objIndex), tile, occupied, (x, y) => renderer.fixedObjectAt(x, y));
 }
 viewport.addEventListener('pointerdown', event => {
   if (!event.isPrimary || !session?.ready) return;

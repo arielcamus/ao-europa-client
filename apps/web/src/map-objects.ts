@@ -3,6 +3,7 @@
  * Adapted 2026-11-20 from client Protocol.bas HandleObjectCreate/ObjectDelete/BlockPosition, TileEngine.bas HayTecho
  * and Graficos_Renderizado.bas (layer-4 roof fade). AGPL-3.0-or-later; no warranty. See ../../../LICENSE.
  */
+import type { MapFileObject } from './assets.js';
 export const ALL_SIDES = 15;
 /** Declares.bas: PRIMER_TRIGGER_TECHO. */
 export const FIRST_ROOF_TRIGGER = 60;
@@ -88,20 +89,81 @@ export const DOOR_OBJECT_TYPE = 6;
 export function doorClickTile(
   objects: MapObjects, isDoor: (objIndex: number) => boolean, tile: { x: number; y: number },
   occupied: (x: number, y: number) => boolean = () => false,
+  fixedAt: (x: number, y: number) => GroundObject | undefined = () => undefined,
 ) {
-  const door = (x: number, y: number) => { const o = objects.objectAt(x, y); return o !== undefined && isDoor(o.objIndex); };
+  // The server's MapData holds the map-file objects too (trees, signs, deposits, decorations), so a fixed object on a tile is
+  // "an object on (x,y)" for HandleWorldAction exactly like a server-sent one.
+  const objectAt = (x: number, y: number) => objects.objectAt(x, y) ?? fixedAt(x, y);
+  const door = (x: number, y: number) => { const o = objectAt(x, y); return o !== undefined && isDoor(o.objIndex); };
   const hasDoor = door(tile.x, tile.y) || door(tile.x + 1, tile.y) || door(tile.x + 1, tile.y + 1) || door(tile.x, tile.y + 1);
   // The server checks the tile itself first; a door on a neighbour is only reached when the tile holds no object.
-  const viaOwn = door(tile.x, tile.y) || (objects.objectAt(tile.x, tile.y) === undefined && (door(tile.x + 1, tile.y) || door(tile.x + 1, tile.y + 1) || door(tile.x, tile.y + 1)));
+  const viaOwn = door(tile.x, tile.y) || (objectAt(tile.x, tile.y) === undefined && (door(tile.x + 1, tile.y) || door(tile.x + 1, tile.y + 1) || door(tile.x, tile.y + 1)));
   if (!hasDoor || !viaOwn) return undefined;
   const blocked = (x: number, y: number) => occupied(x, y) || occupied(x, y + 1);
   if (!blocked(tile.x, tile.y)) return tile;
   for (const candidate of [{ x: tile.x - 1, y: tile.y }, { x: tile.x - 1, y: tile.y - 1 }, { x: tile.x, y: tile.y - 1 }]) {
     if (candidate.x < 1 || candidate.y < 1) continue;
-    if (objects.objectAt(candidate.x, candidate.y) !== undefined || blocked(candidate.x, candidate.y)) continue;
+    if (objectAt(candidate.x, candidate.y) !== undefined || blocked(candidate.x, candidate.y)) continue;
     // The candidate must reach the door through the server's neighbour order.
     const reaches = (candidate.x + 1 === tile.x && candidate.y === tile.y) || (candidate.x + 1 === tile.x && candidate.y + 1 === tile.y) || (candidate.x === tile.x && candidate.y + 1 === tile.y);
     if (reaches) return candidate;
   }
   return undefined;
+}
+
+/** eObjType values the renderer cares about (Declares.bas). */
+export const ObjType = {
+  Tree: 4, Door: 6, Sign: 8, CastleSpawner: 10, Teleport: 19, Decoration: 20, Deposit: 22, Anvil: 27, Forge: 28, Mailbox: 47, FishingPool: 52,
+} as const;
+/** TileEngine_Map.EsObjetoFijo: the server never sends these, the client reads them from the map file. */
+const FIXED_TYPES = new Set<number>([ObjType.Sign, ObjType.Tree, ObjType.Deposit, ObjType.Decoration]);
+/** TileEngine_RenderScreen, pass under characters: the object Select Case before "Layer 4 & chars". */
+const GROUND_PASS = new Set<number>([ObjType.Tree, ObjType.Door, ObjType.Teleport, ObjType.Sign, ObjType.Deposit, ObjType.Mailbox, ObjType.Forge, ObjType.Decoration, ObjType.FishingPool]);
+/** Same file, second pass of each row (drawn after that row's characters, with layer 4): "big objects". */
+const BIG_PASS = new Set<number>([ObjType.Tree, ObjType.Door, ObjType.Sign, ObjType.Deposit, ObjType.Mailbox, ObjType.Anvil, ObjType.Forge, ObjType.Decoration, ObjType.CastleSpawner]);
+export const drawsOnGround = (type: number) => GROUND_PASS.has(type);
+export const drawsOverCharacters = (type: number) => BIG_PASS.has(type);
+
+/** Fixed objects stored in the map file, keyed by tile (CargarMapa fills MapData.OBJInfo/ObjGrh from them). */
+export function fixedObjects(objects: readonly MapFileObject[], graphics: ReadonlyMap<number, ObjectGraphic>): Map<number, GroundObject> {
+  const result = new Map<number, GroundObject>();
+  for (const object of objects) {
+    const info = graphics.get(object.objIndex);
+    if (info && info.grh > 0 && FIXED_TYPES.has(info.type)) result.set(tileKey(object.x, object.y), { objIndex: object.objIndex, amount: object.amount, elementalTags: 0 });
+  }
+  return result;
+}
+
+export type DrawPass = 'ground' | 'row';
+export interface ObjectDraw { pass: DrawPass; grh: number; type: number }
+/**
+ * What the renderer draws for the object on a tile, in order. Trees and the other big objects are drawn twice, exactly like
+ * RenderScreen: once with the walkable layers and once in the row pass over characters.
+ */
+export function objectDraws(object: GroundObject | undefined, graphics: ReadonlyMap<number, ObjectGraphic>): ObjectDraw[] {
+  const info = object ? graphics.get(object.objIndex) : undefined;
+  if (!info || info.grh <= 0) return [];
+  const draws: ObjectDraw[] = [];
+  // Items on the floor (any other type) are not in the ground Select Case: they use the Else branch of the same pass.
+  if (GROUND_PASS.has(info.type) || !BIG_PASS.has(info.type)) draws.push({ pass: 'ground', grh: info.grh, type: info.type });
+  if (BIG_PASS.has(info.type)) draws.push({ pass: 'row', grh: info.grh, type: info.type });
+  return draws;
+}
+
+/** Declares.bas ARBOL_MIN_ALPHA / ARBOL_ALPHA_TIME: a tree in front of the player fades to 130/255 in 150 ms and back. */
+const TREE_MIN_ALPHA = 130 / 255, TREE_FADE_MS = 150;
+/** RenderScreen tree test for objects: within 2 tiles sideways and 7 rows, with the tree south of the player. */
+export const treeCoversPlayer = (player: { x: number; y: number }, x: number, y: number) =>
+  Math.abs(player.x - x) < 3 && Math.abs(player.y - y) < 8 && player.y < y;
+export class TreeFade {
+  private alpha = new Map<number, number>();
+  step(key: number, covers: boolean, dtMs: number): number {
+    const current = this.alpha.get(key) ?? 1;
+    if (current === 1 && !covers) return 1;
+    const rate = (1 - TREE_MIN_ALPHA) * (dtMs / TREE_FADE_MS);
+    const next = covers ? Math.max(TREE_MIN_ALPHA, current - rate) : Math.min(1, current + rate);
+    if (next === 1) this.alpha.delete(key); else this.alpha.set(key, next);
+    return next;
+  }
+  clear() { this.alpha.clear(); }
 }
