@@ -10,15 +10,15 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 136 of 523 = 26%.** Merged on main only: 136 = 26%.
-  - Server to client: 80 of 207. Client to server: 56 of 316. Packets with a recorded VB6 fixture: 116.
+- **Packets covered (merged + open branches): 147 of 523 = 28.1%.** Merged on main only: 147 = 28.1%.
+  - Server to client: 88 of 207. Client to server: 59 of 316. Packets with a recorded VB6 fixture: 116.
 - **Forms covered: 2 of 86 = 2.3%** (2 more partially, 4.7% started).
 
 ## (c) Feature groups, ordered by player value
 
 | # | Group | Packets covered | % | Merged | Forms covered | % | Partial forms |
 |---|---|---|---|---|---|---|---|
-| 1 | Core movement / world / session | 36/68 | 52.9% | 36 | 0/21 | 0% | 2 |
+| 1 | Core movement / world / session | 47/68 | 69.1% | 47 | 0/21 | 0% | 2 |
 | 2 | Chat | 21/28 | 75% | 21 | 0/0 | n/a | 0 |
 | 3 | Combat | 16/41 | 39% | 16 | 0/0 | n/a | 0 |
 | 4 | Spells | 6/8 | 75% | 6 | 0/0 | n/a | 0 |
@@ -199,8 +199,8 @@ Ids only: .
 | 54 | PlayMIDI | client Protocol.bas:HandlePlayMIDI | core | merged | `main:packages/protocol/src/packets/audio.ts` | no |
 | 55 | PlayWave | client Protocol.bas:HandlePlayWave | core | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 56 | GuildList | client Protocol.bas:HandleGuildList | guild | not started |  | no |
-| 57 | AreaChanged | client Protocol.bas:HandleAreaChanged | core | not started |  | yes |
-| 58 | PauseToggle | client Protocol.bas:HandlePauseToggle | core | not started |  | no |
+| 57 | AreaChanged | client Protocol.bas:HandleAreaChanged | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
+| 58 | PauseToggle | client Protocol.bas:HandlePauseToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
 | 59 | RainToggle | client Protocol.bas:HandleRainToggle | core | merged | `main:packages/protocol/src/packets/audio.ts` | no |
 | 60 | CreateFX | client Protocol.bas:HandleCreateFX | spells | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 61 | UpdateUserStats | client Protocol.bas:HandleUpdateUserStats | skills | merged | `main:packages/protocol/src/packets.ts` | yes |
@@ -259,13 +259,13 @@ Ids only: .
 | 114 | ParticleFXToFloor | client Protocol.bas:HandleParticleFXToFloor | core | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 115 | ParticleFXWithDestino | client Protocol.bas:HandleParticleFXWithDestino | core | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 116 | ParticleFXWithDestinoXY | client Protocol.bas:HandleParticleFXWithDestinoXY | core | merged | `main:packages/protocol/src/packets/spells.ts` | no |
-| 117 | Hora | client Protocol.bas:HandleHora | core | not started |  | yes |
-| 118 | Light | client Protocol.bas:HandleLight | core | not started |  | no |
-| 119 | AuraToChar | client Protocol.bas:HandleAuraToChar | core | not started |  | yes |
-| 120 | SpeedToChar | client Protocol.bas:HandleSpeedToChar | core | not started |  | yes |
-| 121 | LightToFloor | client Protocol.bas:HandleLightToFloor | core | not started |  | no |
+| 117 | Hora | client Protocol.bas:HandleHora | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
+| 118 | Light | client Protocol.bas:HandleLight | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
+| 119 | AuraToChar | client Protocol.bas:HandleAuraToChar | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
+| 120 | SpeedToChar | client Protocol.bas:HandleSpeedToChar | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
+| 121 | LightToFloor | client Protocol.bas:HandleLightToFloor | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
 | 122 | NieveToggle | client Protocol.bas:HandleNieveToggle | core | merged | `main:packages/protocol/src/packets/audio.ts` | no |
-| 123 | NieblaToggle | client Protocol.bas:HandleNieblaToggle | core | not started |  | yes |
+| 123 | NieblaToggle | client Protocol.bas:HandleNieblaToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 124 | Goliath | client Protocol.bas:HandleGoliath | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 125 | TextOverChar | client Protocol.bas:HandleTextOverChar | chat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 126 | TextOverTile | client Protocol.bas:HandleTextOverTile | chat | not started |  | no |
@@ -504,7 +504,7 @@ Ids only: .
 | 147 | GuildOnlineMembers | server Protocol.bas:HandleGuildOnlineMembers | gm | not started |  | no |
 | 148 | TeleportCreate | server Protocol.bas:HandleTeleportCreate | gm | not started |  | no |
 | 149 | TeleportDestroy | server Protocol.bas:HandleTeleportDestroy | gm | not started |  | no |
-| 150 | RainToggle | server Protocol.bas:HandleRainToggle | core | not started |  | no |
+| 150 | RainToggle | server Protocol.bas:HandleRainToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
 | 151 | SetCharDescription | server Protocol.bas:HandleSetCharDescription | gm | not started |  | no |
 | 152 | ForceMIDIToMap | server Protocol.bas:HandleForceWAVEToMap | gm | not started |  | no |
 | 153 | ForceWAVEToMap | server Protocol.bas:HandleForceWAVEToMap | gm | not started |  | no |
@@ -576,8 +576,8 @@ Ids only: .
 | 219 | AcceptDuel | server Protocol.bas:HandleAcceptDuel | extras | not started |  | no |
 | 220 | CancelDuel | server Protocol.bas:HandleCancelDuel | extras | not started |  | no |
 | 221 | QuitDuel | server Protocol.bas:HandleQuitDuel | extras | not started |  | no |
-| 222 | NieveToggle | server Protocol.bas:HandleNieveToggle | core | not started |  | no |
-| 223 | NieblaToggle | server Protocol.bas:HandleNieblaToggle | core | not started |  | no |
+| 222 | NieveToggle | server Protocol.bas:HandleNieveToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
+| 223 | NieblaToggle | server Protocol.bas:HandleNieblaToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
 | 224 | TransFerGold | server Protocol.bas:HandleTransFerGold | extras | not started |  | no |
 | 225 | Moveitem | server Protocol.bas:HandleMoveItem | items | not started |  | no |
 | 226 | Genio | server Protocol.bas:HandleGenio | gm | not started |  | no |
@@ -687,7 +687,7 @@ Account create/select/delete, character create, loading screens, HUD stat update
 
 Light, weather, particles, sound, projectiles, auras, area changes, world map form.
 
-- Packets (13): S57 AreaChanged, S58 PauseToggle, S117 Hora, S118 Light, S119 AuraToChar, S120 SpeedToChar, S121 LightToFloor, S123 NieblaToggle, S138 ShowFrmMapa, S144 Ubicacion, C150 RainToggle, C222 NieveToggle, C223 NieblaToggle
+- Packets (2): S138 ShowFrmMapa, S144 Ubicacion
 - Forms (1): frmMapaGrande
 
 ### wp03: Combat and spells completion

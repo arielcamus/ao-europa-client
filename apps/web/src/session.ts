@@ -19,6 +19,7 @@ import { ItemsController } from './items.js';
 import type { ObjectCatalog } from './object-catalog.js';
 import { BankTradeState } from './bank-trade-state.js';
 import { BankTradeController } from './bank-trade.js';
+import { WorldFx } from './fx-world.js';
 
 export interface Position { x: number; y: number }
 const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
@@ -35,6 +36,8 @@ export class Session {
   readonly combat = new CombatState();
   readonly spells: SpellState;
   readonly items = new ItemsState();
+  /** Time of day, light, weather, particles and projectiles (feat/world-fx). */
+  readonly world: WorldFx;
   /** Set by the UI once Dat/Obj.dat is loaded; item actions that need object types wait for it. */
   catalog: ObjectCatalog | undefined;
   readonly itemActions = new ItemsController({
@@ -84,6 +87,14 @@ export class Session {
     this.ui.chat.clock = clock; this.ui.chat.characters = index => this.characters.get(index);
     this.connectedAt = clock();
     this.spells = new SpellState(packet => this.send(packet), clock, (text, font) => this.ui.message(text, font), family => this.next(family));
+    this.world = new WorldFx(clock, {
+      // CambioDeArea: characters and non-fixed objects outside the new area go (self stays).
+      areaChanged: bounds => this.leaveArea(bounds),
+      // Effect_Render_Slot arrival: the end effect is an FXs.ini FX on a character or tile.
+      addFx: fx => this.spells.addFx({ ...fx, startedAt: this.clock() }),
+      speedToChar: (charIndex, speeding) => this.setSpeeding(charIndex, speeding),
+      charAt: (x, y) => this.tracker.at(x, y)?.charIndex,
+    });
     this.placementDeadline = this.connectedAt + 10_000;
   }
   get self() { return this.charIndex === undefined ? undefined : this.characters.get(this.charIndex); }
@@ -123,6 +134,7 @@ export class Session {
       this.spells.receive(packet);
       this.items.receive(packet);
       this.bankTrade.receive(packet);
+      this.world.receive(packet);
       switch (packet.id) {
         case S.Connected:
           if (this.phase !== 'connecting' || !this.credentials) throw new Error('Unexpected Connected');
@@ -200,6 +212,25 @@ export class Session {
       this.onPacket?.(packet);
     }
   }
+  /** ModAreas.CambioDeArea: erase every character (not self) and server-sent object outside the new area; fixed map objects stay (renderer). */
+  private leaveArea(bounds: { minX: number; maxX: number; minY: number; maxY: number }) {
+    const outside = (x: number, y: number) => x < bounds.minX || x > bounds.maxX || y < bounds.minY || y > bounds.maxY;
+    for (const [index, char] of [...this.tracker.chars]) if (index !== this.charIndex && outside(char.x, char.y)) this.tracker.chars.delete(index);
+    for (const [index, char] of [...this.characters]) if (index !== this.charIndex && outside(char.x, char.y)) this.characters.delete(index);
+    for (const key of [...this.mapObjects.objects.keys()]) {
+      const x = (key % 100) + 1, y = Math.floor(key / 100) + 1;
+      if (outside(x, y)) this.mapObjects.objects.delete(key);
+    }
+    this.tracker.revision++;
+  }
+  /** HandleSpeedToChar: the character's walk speed factor (Speeding); a zero factor reads as 1 like CharacterCreate. */
+  private setSpeeding(charIndex: number, speeding: number) {
+    if (!Number.isFinite(speeding) || speeding < 0 || speeding > 100) return;
+    const tracked = this.tracker.chars.get(charIndex);
+    if (tracked) tracked.speeding = speeding > 0 ? speeding : 1;
+    const copy = this.characters.get(charIndex);
+    if (copy) this.characters.set(charIndex, { ...copy, speeding });
+  }
   private validPosition(position: Position) {
     if (position.x < 1 || position.y < 1 || position.x > 100 || position.y > 100) throw new Error('Server position outside map');
   }
@@ -217,7 +248,8 @@ export class Session {
   }
   walk(heading: Heading): boolean {
     const now = this.clock();
-    if (!this.ready || this.pending || now - this.lastWalk < this.stepMs || !this.position || !this.self) return false;
+    // pausa (HandlePauseToggle) stops keyboard movement, map clicks and item use.
+    if (!this.ready || this.world.paused || this.pending || now - this.lastWalk < this.stepMs || !this.position || !this.self) return false;
     if (![Heading.North, Heading.East, Heading.South, Heading.West].includes(heading)) return false;
     const to = {
       x: this.position.x + (heading === Heading.East ? 1 : heading === Heading.West ? -1 : 0),
@@ -259,7 +291,7 @@ export class Session {
   private canClick(x: number, y: number): boolean {
     const now = this.clock();
     // While an NPC shop is open (frmComerciar is modal in VB6) the map takes no clicks.
-    if (!this.ready || this.items.shopOpen || now - this.lastClick < this.clickInterval || x < 1 || y < 1 || x > 100 || y > 100) return false;
+    if (!this.ready || this.world.paused || this.items.shopOpen || now - this.lastClick < this.clickInterval || x < 1 || y < 1 || x > 100 || y > 100) return false;
     this.lastClick = now; return true;
   }
   clickInterval = 200;
@@ -267,7 +299,7 @@ export class Session {
   get dead() { return this.ui.stats.hp === 0; }
   /** Control key / attack action: WriteAttack (id 80, counter from the shared PacketCounters) paced by Intervals.hit. */
   attack(): boolean {
-    if (!this.ready) return false;
+    if (!this.ready || this.world.paused) return false;
     return this.combat.attack(this.clock(), this.hitInterval, this.dead, this.ui, () => this.send({ id: CC.Attack, counter: this.next('attack') }));
   }
   talk(message: string): boolean {
