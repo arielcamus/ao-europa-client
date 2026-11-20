@@ -4,7 +4,7 @@
  * HandleRemoveDialogs) and TileEngine_Chars.bas (Char_Dialog_Set).
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; see NOTICE.
  */
-import { ServerPacketId as S, vbColor } from '@ao/protocol';
+import { NpcsServerPacketId as NS, ServerPacketId as S, vbColor } from '@ao/protocol';
 import type { CharacterCreate, ServerPacket } from '@ao/protocol';
 import { privilegeLevel } from './chat-fonts.js';
 import { readField, vbVal } from './chat-console.js';
@@ -47,7 +47,7 @@ export class ChatState {
   receive(packet: ServerPacket): boolean {
     switch (packet.id) {
       case S.ConsoleMsg: this.push({ kind: 'console', message: packet.message, font: packet.font }); return true;
-      case S.LocaleMsg: this.push({ kind: 'locale', id: packet.messageId, extra: packet.message, font: packet.font }); return true;
+      case NS.LocaleMsg: this.push({ kind: 'locale', id: packet.messageId, extra: packet.text, font: packet.font }); return true;
       case S.ConsoleFactionMessage: this.push({ kind: 'faction', message: packet.message, font: packet.font, label: packet.label }); return true;
       case S.GuildChat: this.push({ kind: 'guild', status: packet.status, message: packet.message }); return true;
       case S.ConsoleCharText: {
@@ -55,12 +55,12 @@ export class ChatState {
         this.push({ kind: 'user', name: packet.sourceName, text: packet.message, color: [c.r, c.g, c.b], status: packet.sourceStatus, level: privilegeLevel(packet.privileges) });
         return true;
       }
-      case S.ChatOverHead:
-        this.overHead(packet.chat, packet.charIndex, packet.color, packet.isSpell, packet.minTime, packet.maxTime); return true;
-      case S.LocaleChatOverHead:
-        this.overHead(this.locale.message(packet.chatId, packet.params), packet.charIndex, packet.color, packet.isSpell, packet.minTime, packet.maxTime); return true;
-      case S.RemoveCharDialog: this.dialogs.delete(packet.charIndex); return true;
-      case S.RemoveDialogs: this.dialogs.clear(); return true;
+      case NS.ChatOverHead:
+        this.overHead(packet.chat, packet.charIndex, packet.color, packet.isSpell, packet.minChatTime, packet.maxChatTime); return true;
+      case NS.LocaleChatOverHead:
+        this.overHead(this.locale.message(packet.chatId, packet.params), packet.charIndex, packet.color, packet.isSpell, packet.minChatTime, packet.maxChatTime); return true;
+      case NS.RemoveCharDialog: this.dialogs.delete(packet.charIndex); return true;
+      case NS.RemoveDialogs: this.dialogs.clear(); return true;
       default: return false;
     }
   }

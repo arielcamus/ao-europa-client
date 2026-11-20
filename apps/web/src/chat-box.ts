@@ -31,7 +31,7 @@ export class ChatBox {
       if (name && name !== 'A' && this.session?.ready && !this.guild) { this.input.whisperTo(name); this.open(); }
     });
   }
-  /** A new connection starts with fresh counters, as the VB6 client does at login. */
+  /** A new connection starts with a fresh SendingType; packet counters live in the Session (PacketCounters). */
   attach(session: Session | undefined) { if (session !== this.session) { this.session = session; this.input = new ChatInput(); this.close(); } }
   get visible() { return !this.form.hidden; }
 

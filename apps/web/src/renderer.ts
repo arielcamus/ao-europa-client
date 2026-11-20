@@ -12,7 +12,6 @@ import type { GroundObject, ObjectGraphic } from './map-objects.js';
 import { CharacterSprites } from './character-render.js';
 import { NPC_NAME_COLOR, parseColors, parseLocale, playerNameColor, privilegeTitle } from './character-data.js';
 import type { LocaleData, Rgb } from './character-data.js';
-import { vbColor } from './characters.js';
 
 class SpritePool {
   private sprites: Sprite[] = [];
@@ -273,11 +272,8 @@ export class WorldRenderer {
     const pool = this.pools[4]!;
     for (const { char, heading, x, y, moving, elapsed } of placed) {
       const px = x * 32, py = y * 32;
-      let top = py + 32;
       for (const layer of sprites.layers(char, heading)) {
-        const frame = layer.animation.frames[0]!;
         this.draw(pool, layer.animation, px + layer.x, py + layer.y, layer.walks && moving ? elapsed : 0);
-        top = Math.min(top, py + layer.y + 32 - frame.height);
       }
       if (char.npc) {
         // NPC names appear only under the cursor, in (0,129,195).
@@ -292,7 +288,7 @@ export class WorldRenderer {
         const title = privilegeTitle(Math.round(char.privileges ? Math.log2(char.privileges) : 0)) ?? char.clan;
         if (title) this.label(title, color, px + 16, py + 43);
       }
-      if (char.dialog) this.label(char.dialog.text, vbColor(char.dialog.color), px + 16, top - 3, 11, true);
+      // Overhead speech is drawn once, by ChatBubbles from ChatState (chat #7); the tracker's dialog only feeds the NPC window.
     }
     for (let i = this.labelsUsed; i < this.labels.length; i++) this.labels[i]!.visible = false;
   }

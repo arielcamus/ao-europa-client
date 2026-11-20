@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ServerPacketId as S, ClientPacketId as C, FrameDecoder, decodeClientPacket, encodeServerFrame, toVbColor } from '@ao/protocol';
+import { ServerPacketId as S, NpcsServerPacketId as NS, ClientPacketId as C, FrameDecoder, decodeClientPacket, encodeServerFrame, toVbColor } from '@ao/protocol';
 import type { CharacterCreate, ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
 import { characterName, dialogLife, DIALOG_FADE_MS } from '../src/chat-state.js';
@@ -90,7 +90,7 @@ describe('chat packets in the UI state', () => {
   it('routes console, locale, faction, guild and whisper packets into history', () => {
     const ui = new ClassicState(); ui.chat.locale = locale;
     ui.receive({ id: S.ConsoleMsg, message: 'Hola', font: 3, channel: 0 });
-    ui.receive({ id: S.LocaleMsg, messageId: 1, message: 'Eva¬Clan', font: 3 });
+    ui.receive({ id: NS.LocaleMsg, messageId: 1, text: 'Eva¬Clan', font: 3 });
     ui.receive({ id: S.ConsoleFactionMessage, message: ' Ana> hi', font: 20, label: 'MENSAJE_LEGION' });
     ui.receive({ id: S.GuildChat, status: 1, message: 'Ana> hi' });
     ui.receive({ id: S.ConsoleCharText, message: 'psst', color: toVbColor(157, 226, 20), sourceName: 'Bob', sourceStatus: 0, privileges: 0 });
@@ -101,9 +101,9 @@ describe('chat packets in the UI state', () => {
     let now = 1000;
     const ui = new ClassicState(); ui.chat.locale = locale; ui.chat.clock = () => now;
     ui.chat.characters = i => (i === 1 ? character() : i === 2 ? character({ charIndex: 2, name: 'Guardia', npc: 1 }) : undefined);
-    ui.receive({ id: S.ChatOverHead, chat: 'Hola ñ', charIndex: 1, color: toVbColor(255, 128, 0), isSpell: false, x: 5, y: 6, minTime: 0, maxTime: 0 });
-    ui.receive({ id: S.ChatOverHead, chat: 'Bienvenido', charIndex: 2, color: toVbColor(255, 255, 255), isSpell: false, x: 5, y: 6, minTime: 0, maxTime: 0 });
-    ui.receive({ id: S.ChatOverHead, chat: 'fantasma', charIndex: 9, color: 0, isSpell: false, x: 0, y: 0, minTime: 0, maxTime: 0 });
+    ui.receive({ id: NS.ChatOverHead, chat: 'Hola ñ', charIndex: 1, color: toVbColor(255, 128, 0), isSpell: false, x: 5, y: 6, minChatTime: 0, maxChatTime: 0 });
+    ui.receive({ id: NS.ChatOverHead, chat: 'Bienvenido', charIndex: 2, color: toVbColor(255, 255, 255), isSpell: false, x: 5, y: 6, minChatTime: 0, maxChatTime: 0 });
+    ui.receive({ id: NS.ChatOverHead, chat: 'fantasma', charIndex: 9, color: 0, isSpell: false, x: 0, y: 0, minChatTime: 0, maxChatTime: 0 });
     expect([...ui.chat.dialogs.keys()]).toEqual([1, 2]);
     expect(ui.chat.dialogs.get(1)).toMatchObject({ text: 'Hola ñ', color: [255, 128, 0], start: 1000, life: dialogLife('Hola ñ', false, 0) });
     expect(ui.messages.map(m => m.text)).toEqual(['[Ariel] Hola ñ']); // NPC and unknown speakers are not copied
@@ -115,21 +115,21 @@ describe('chat packets in the UI state', () => {
   });
   it('expands LOCMSG, NPCDESC, PMAG, QUESTFIN and NOCONSOLA overhead prefixes without copying them to the console', () => {
     const ui = new ClassicState(); ui.chat.locale = locale; ui.chat.characters = () => character();
-    const say = (chat: string) => ui.receive({ id: S.ChatOverHead, chat, charIndex: 1, color: 0, isSpell: true, x: 0, y: 0, minTime: 0, maxTime: 0 });
+    const say = (chat: string) => ui.receive({ id: NS.ChatOverHead, chat, charIndex: 1, color: 0, isSpell: true, x: 0, y: 0, minChatTime: 0, maxChatTime: 0 });
     say('LOCMSG*2*'); expect(ui.chat.dialogs.get(1)!.text).toBe('Hola');
     say('NPCDESC*7'); expect(ui.chat.dialogs.get(1)!.text).toBe('Hola, hijo mio.');
     say('PMAG*5'); expect(ui.chat.dialogs.get(1)!.text).toBe('OHL VOR');
     say('QUESTFIN*2'); expect(ui.chat.dialogs.get(1)!.text).toBe('Gracias por tu ayuda.');
     say('NOCONSOLA*< a la clan >'); expect(ui.chat.dialogs.get(1)!.text).toBe('< a la clan >');
     expect(ui.messages).toHaveLength(0);
-    ui.receive({ id: S.LocaleChatOverHead, chatId: 1, params: 'Eva¬Clan', charIndex: 1, color: 0, isSpell: false, x: 0, y: 0, minTime: 0, maxTime: 0 });
+    ui.receive({ id: NS.LocaleChatOverHead, chatId: 1, params: 'Eva¬Clan', charIndex: 1, color: 0, isSpell: false, x: 0, y: 0, minChatTime: 0, maxChatTime: 0 });
     expect(ui.chat.dialogs.get(1)!.text).toBe('[Eva] ha ingresado al clan Clan.');
   });
   it('honours RequiredMinDisplayTime for plain speech but never for spells, and uses MaxDisplayTime for spells', () => {
     let now = 0;
     const ui = new ClassicState(); ui.chat.clock = () => now; ui.chat.characters = () => character();
     const say = (chat: string, isSpell: boolean, minTime = 0, maxTime = 0) =>
-      ui.receive({ id: S.ChatOverHead, chat, charIndex: 1, color: 0, isSpell, x: 0, y: 0, minTime, maxTime });
+      ui.receive({ id: NS.ChatOverHead, chat, charIndex: 1, color: 0, isSpell, x: 0, y: 0, minChatTime: minTime, maxChatTime: maxTime });
     say('uno', false, 2000); now = 500; say('dos', false);
     expect(ui.chat.dialogs.get(1)!.text).toBe('uno');
     say('conjuro', true, 0, 1200); expect(ui.chat.dialogs.get(1)).toMatchObject({ text: 'conjuro', life: 1200 });
@@ -138,9 +138,9 @@ describe('chat packets in the UI state', () => {
   });
   it('removes one bubble on RemoveCharDialog and all of them on RemoveDialogs', () => {
     const ui = new ClassicState(); ui.chat.characters = () => character();
-    for (const charIndex of [1, 2]) ui.receive({ id: S.ChatOverHead, chat: 'x', charIndex, color: 0, isSpell: false, x: 0, y: 0, minTime: 0, maxTime: 0 });
-    ui.receive({ id: S.RemoveCharDialog, charIndex: 1 }); expect([...ui.chat.dialogs.keys()]).toEqual([2]);
-    ui.receive({ id: S.RemoveDialogs }); expect(ui.chat.dialogs.size).toBe(0);
+    for (const charIndex of [1, 2]) ui.receive({ id: NS.ChatOverHead, chat: 'x', charIndex, color: 0, isSpell: false, x: 0, y: 0, minChatTime: 0, maxChatTime: 0 });
+    ui.receive({ id: NS.RemoveCharDialog, charIndex: 1 }); expect([...ui.chat.dialogs.keys()]).toEqual([2]);
+    ui.receive({ id: NS.RemoveDialogs }); expect(ui.chat.dialogs.size).toBe(0);
   });
   it('bounds history and never interprets chat text as HTML', () => {
     const ui = new ClassicState();
@@ -157,12 +157,19 @@ describe('chat input rules (HandleChatMsg and ParseUserCommand)', () => {
     expect(run('\\Bob hola que tal').out.packet).toEqual({ id: C.Whisper, name: 'Bob', message: 'hola que tal' });
     expect(run('\\Bob').out).toEqual({ notes: [] });
   });
-  it('maps the channel commands and counts guild messages separately', () => {
+  it('maps the channel commands; guild messages get the session guildMessage counter', () => {
     expect(run('/GRUPO vamos').out.packet).toEqual({ id: C.GroupMessage, message: 'vamos' });
     expect(run('/cluster vamos').out.packet).toEqual({ id: C.GroupMessage, message: 'vamos' });
     const input = new ChatInput();
-    expect(input.submit('/CMSG uno').packet).toEqual({ id: C.GuildMessage, message: 'uno', counter: 1 });
-    expect(input.submit('/cmsg dos').packet).toEqual({ id: C.GuildMessage, message: 'dos', counter: 2 });
+    expect(input.submit('/CMSG uno').packet).toEqual({ id: C.GuildMessage, message: 'uno', counter: 0 }); // filled by Session.sendChat
+    expect(input.submit('/cmsg dos').packet).toEqual({ id: C.GuildMessage, message: 'dos', counter: 0 });
+    let now = 0; const sent: Uint8Array[] = [];
+    const session = new Session({ email: 'a', password: 'b' }, b => sent.push(b), () => now);
+    for (const p of [f.Connected, f.AccountCharacterList, f.Intervals, f.ChangeMap, { ...f.CharacterCreate, speeding: 1 }, f.UserCharIndexInServer, f.Logged]) session.receive(encodeServerFrame(p));
+    expect(session.sendChat(input.submit('/CMSG uno').packet!)).toBe(true);
+    expect(session.sendChat(input.submit('/CMSG dos').packet!)).toBe(true);
+    const decoder = new FrameDecoder();
+    expect(sent.flatMap(b => decoder.push(b).map(decodeClientPacket)).filter(p => p.id === C.GuildMessage).map(p => (p as { counter: number }).counter)).toEqual([1, 2]);
     expect(run('/BMSG hola').out.packet).toEqual({ id: C.CouncilMessage, message: 'hola' });
     expect(run('/FMSG hola').out.packet).toEqual({ id: C.FactionMessage, message: 'hola' });
     expect(run('/ONLINECLAN').out.packet).toEqual({ id: C.GuildOnline });
@@ -189,7 +196,7 @@ describe('chat input rules (HandleChatMsg and ParseUserCommand)', () => {
   });
   it('sends guild box text as /CMSG without changing the remembered channel', () => {
     const input = new ChatInput(); input.submit('-grito');
-    expect(input.guildMessage('hola').packet).toEqual({ id: C.GuildMessage, message: 'hola', counter: 1 });
+    expect(input.guildMessage('hola').packet).toEqual({ id: C.GuildMessage, message: 'hola', counter: 0 });
     expect(input.guildMessage('').packet).toBeUndefined();
     expect(input.prefill()).toBe('-');
   });
@@ -217,7 +224,7 @@ describe('chat in a session', () => {
   it('puts a bubble on the self character and uses the session clock', () => {
     let now = 10;
     const session = login([], () => now);
-    session.receive(encodeServerFrame({ id: S.ChatOverHead, chat: 'Hola', charIndex: f.UserCharIndexInServer.charIndex, color: 0xffffff, isSpell: false, x: 50, y: 50, minTime: 0, maxTime: 0 }));
+    session.receive(encodeServerFrame({ id: NS.ChatOverHead, chat: 'Hola', charIndex: f.UserCharIndexInServer.charIndex, color: 0xffffff, isSpell: false, x: 50, y: 50, minChatTime: 0, maxChatTime: 0 }));
     expect(session.ui.chat.dialogs.get(f.UserCharIndexInServer.charIndex)).toMatchObject({ text: 'Hola', start: 10, color: [255, 255, 255] });
     expect(session.ui.messages.at(-1)!.text).toBe('[Añ] Hola');
   });

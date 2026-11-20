@@ -44,11 +44,10 @@ const MESSAGES = {
   unsupported: 'Ese comando aún no está disponible.',
 };
 
-/** Holds what the VB6 client keeps between messages: SendingType, sndPrivateTo and the guild counter. */
+/** Holds what the VB6 client keeps between messages: SendingType and sndPrivateTo. The guild counter is the session's (PacketCounters). */
 export class ChatInput {
   sendingType = SendingType.Talk;
   whisperTarget = '';
-  private guildCounter = 0;
 
   /** CompletarEnvioMensajes: the text an opened box starts with. */
   prefill(): string {
@@ -106,7 +105,7 @@ export class ChatInput {
       const filled = args.trim() !== '';
       switch (command) {
         case '/CMSG':
-          if (hasArguments) outcome.packet = { id: C.GuildMessage, message: args, counter: ++this.guildCounter };
+          if (hasArguments) outcome.packet = { id: C.GuildMessage, message: args, counter: 0 }; // Session.sendChat fills the shared counter
           else note(MESSAGES.empty);
           return;
         case '/GRUPO': case '/CLUSTER':

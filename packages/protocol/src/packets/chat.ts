@@ -40,37 +40,16 @@ const bool: ChatCodec<boolean> = { read: r => r.readBool(), write: (w, v) => { w
 export const vbColor = (value: number) => ({ r: value & 255, g: (value >>> 8) & 255, b: (value >>> 16) & 255 });
 export const toVbColor = (r: number, g: number, b: number) => (r & 255) | ((g & 255) << 8) | ((b & 255) << 16);
 
-// Server PrepareMessageChatOverHead / client HandleChatOverHead. x/y are only
-// sent (non-zero) for the speaker position so an invisible speaker can be placed.
-const overHeadTail = { charIndex: int16, color: int32, isSpell: bool, x: byte, y: byte, minTime: int16, maxTime: int16 } as const;
 
 export const chatServerCodecs = {
-  /** WriteRemoveAllDialogs / HandleRemoveDialogs: no fields. */
-  removeDialogs: struct({}),
-  /** PrepareMessageRemoveCharDialog / HandleRemoveCharDialog. */
-  removeCharDialog: struct({ charIndex: int16 }),
-  /** PrepareMessageChatOverHead / HandleChatOverHead. */
-  chatOverHead: struct({ chat: string, ...overHeadTail }),
-  /** PrepareLocaleChatOverHead / HandleLocaleChatOverHead: text comes from the locale table. */
-  localeChatOverHead: struct({ chatId: int16, params: string, ...overHeadTail }),
+  // RemoveDialogs (3), RemoveCharDialog (4), ChatOverHead (35), LocaleChatOverHead (36) and LocaleMsg (141) are the npcs
+  // codecs (packets/npcs.ts): one codec per id.
   /** PrepareFactionMessageConsole / HandleConsoleFactionMessage. */
   consoleFactionMessage: struct({ message: string, font: byte, label: string }),
   /** PrepareMessageGuildChat / HandleGuildChat (status 10 = guild leader). */
   guildChat: struct({ status: byte, message: string }),
   /** PrepareConsoleCharText / HandleConsoleCharText (whispers). */
   consoleCharText: struct({ message: string, color: int32, sourceName: string, sourceStatus: int16, privileges: int16 }),
-  /** PrepareMessageLocaleMsg / HandleLocaleMsg; channel is optional for older senders. */
-  localeMsg: {
-    read(reader) {
-      // Not named `id`: that key is the packet discriminant.
-      const messageId = reader.readInt16(), message = reader.readString(), font = reader.readInt8();
-      return reader.remaining ? { messageId, message, font, channel: reader.readInt8() } : { messageId, message, font };
-    },
-    write(writer, value) {
-      writer.writeInt16(value.messageId); writer.writeString(value.message); writer.writeInt8(value.font);
-      if (value.channel !== undefined) writer.writeInt8(value.channel);
-    },
-  } satisfies ChatCodec<{ messageId: number; message: string; font: number; channel?: number }>,
 } as const;
 
 export const chatClientCodecs = {

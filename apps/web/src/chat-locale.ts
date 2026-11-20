@@ -7,6 +7,7 @@
  */
 import { parseIni } from './assets.js';
 import type { Ini } from './assets.js';
+import { lookAtFields } from './look-at.js';
 
 /** Server messages use U+00AC (the "not" sign, 0xAC in windows-1252) to separate parameters. */
 const SEPARATOR = '¬';
@@ -37,7 +38,8 @@ export class ChatLocale {
     if (id === 2266) return extra;
     const template = this.messages.get(id) ?? '';
     if (!extra) return template;
-    const fields = extra.split(SEPARATOR);
+    // Look-at replies (1105 user, 1621/1622 NPC) rewrite their packed fields first, like the VB6 client.
+    const fields = lookAtFields(id, extra.split(SEPARATOR), npcNumber => this.npcName(npcNumber) || undefined);
     let text = template;
     // Reverse order so ¬1 never eats the start of ¬10.
     for (let i = fields.length - 1; i >= 0; i--) text = text.split(`${SEPARATOR}${i + 1}`).join(fields[i]!);

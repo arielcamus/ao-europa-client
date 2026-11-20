@@ -1,5 +1,5 @@
 {"t_ms":1,"dir":"s2c","id":1,"name":"Connected","hex":"010001010a0102030405060708090a"}
-{"t_ms":1,"dir":"c2s","id":305,"name":"LoginAccount","hex":"31010f63686174406c6f63616c2e74657374012a"}
+{"t_ms":1,"dir":"c2s","id":305,"name":"LoginAccount","hex":"3101"}
 {"t_ms":5,"dir":"s2c","id":199,"name":"AccountCharacterList","hex":"c70001070554436861746b010301392b010100000000"}
 {"t_ms":5,"dir":"c2s","id":73,"name":"LoginExistingChar","hex":"490007000000055443686174"}
 {"t_ms":24,"dir":"s2c","id":63,"name":"S63","hex":"3f000fac0d01000100000000000000000000"}

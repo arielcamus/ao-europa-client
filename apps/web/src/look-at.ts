@@ -34,10 +34,9 @@ export function describeUser(packed: string): string {
   return text;
 }
 
-function npcInfo(fields: string[], locale: LocaleData, pet: boolean): string[] {
+function npcInfo(fields: string[], npcName: (npcNumber: number) => string | undefined, pet: boolean): string[] {
   const out = [...fields];
-  const npc = locale.npcs.get(Number(fields[0]));
-  out[0] = npc?.name ?? fields[0] ?? '';
+  out[0] = npcName(Number(fields[0])) ?? fields[0] ?? '';
   const [hp = '', , , , , mask = '0'] = (fields[2] ?? '').split('-');
   const extra = NPC_STATUS.filter(([bit]) => (Number(mask) & bit) !== 0).map(([, text]) => `[${text}]`).join('');
   out[1] = ''; // ElementalTagsToTxtParser: tags are not part of this subset.
@@ -46,13 +45,21 @@ function npcInfo(fields: string[], locale: LocaleData, pet: boolean): string[] {
   return out;
 }
 
+/**
+ * Locale_Parse_ServerMessage field rewrites for the look-at ids (UserInTileToTxtParser / NpcInTileToTxtParser); other ids keep
+ * their fields. Shared by the chat console pipeline (ChatLocale.message) so a look-at reply reads the same everywhere.
+ */
+export function lookAtFields(id: number, fields: string[], npcName: (npcNumber: number) => string | undefined): string[] {
+  if (id === MSG_YOU_SEE_CHARACTER) return [describeUser(fields[0] ?? ''), ...fields.slice(1)];
+  if (id === MSG_NPC || id === MSG_NPC_PET) return npcInfo(fields, npcName, id === MSG_NPC_PET);
+  return fields;
+}
+
 /** Locale_Parse_ServerMessage for the ids this feature handles; other ids use the plain template. */
 export function localeText(id: number, params: string, locale: LocaleData): string {
   const template = locale.messages.get(id) ?? '';
   if (!params) return template;
-  let fields = params.split(SEPARATOR);
-  if (id === MSG_YOU_SEE_CHARACTER) fields[0] = describeUser(fields[0] ?? '');
-  if (id === MSG_NPC || id === MSG_NPC_PET) fields = npcInfo(fields, locale, id === MSG_NPC_PET);
+  const fields = lookAtFields(id, params.split(SEPARATOR), npcNumber => locale.npcs.get(npcNumber)?.name);
   let text = template;
   // Replace from the end so ¬1 never clobbers ¬10, as the VB6 loop does.
   for (let i = fields.length - 1; i >= 0; i--) text = text.split(`${SEPARATOR}${i + 1}`).join(fields[i]!);

@@ -11,7 +11,7 @@
 import { createServer } from 'node:net';
 import type { Socket } from 'node:net';
 import {
-  ClientPacketId as C, ServerPacketId as S, Heading, FrameDecoder,
+  ClientPacketId as C, ServerPacketId as S, NpcsServerPacketId as NS, Heading, FrameDecoder,
   decodeClientPacket, encodeServerFrame,
 } from '@ao/protocol';
 import type { AccountCharacter, CharacterCreate, Intervals, ServerPacket } from '@ao/protocol';
@@ -127,11 +127,11 @@ export async function startStandin(options: StandinOptions = {}) {
               if (phase !== 'playing' || !options.classicUi) throw new Error('Talk unavailable in this fixture');
               if (packet.counter !== ++talkCounter) throw new Error('Non-increasing talk counter');
               // The VB6 server answers Talk with a ChatOverHead to the area (the client copies it to the console).
-              send({ id: S.ChatOverHead, chat: packet.message, charIndex: 1, color: 0xffffff, isSpell: false, x, y, minTime: 0, maxTime: 0 });
+              send({ id: NS.ChatOverHead, chat: packet.message, charIndex: 1, color: 0xffffff, isSpell: false, x, y, minChatTime: 0, maxChatTime: 0 });
               break;
             case C.Yell:
               if (phase !== 'playing' || !options.classicUi) throw new Error('Yell unavailable in this fixture');
-              send({ id: S.ChatOverHead, chat: packet.message, charIndex: 1, color: 0x0000ff, isSpell: false, x, y, minTime: 0, maxTime: 0 });
+              send({ id: NS.ChatOverHead, chat: packet.message, charIndex: 1, color: 0x0000ff, isSpell: false, x, y, minChatTime: 0, maxChatTime: 0 });
               break;
             case C.Whisper:
               if (phase !== 'playing' || !options.classicUi) throw new Error('Whisper unavailable in this fixture');
