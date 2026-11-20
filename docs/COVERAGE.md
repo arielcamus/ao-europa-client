@@ -201,7 +201,7 @@ Ids only: .
 | 56 | GuildList | client Protocol.bas:HandleGuildList | guild | not started |  | no |
 | 57 | AreaChanged | client Protocol.bas:HandleAreaChanged | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 58 | PauseToggle | client Protocol.bas:HandlePauseToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
-| 59 | RainToggle | client Protocol.bas:HandleRainToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
+| 59 | RainToggle | client Protocol.bas:HandleRainToggle | core | merged | `main:packages/protocol/src/packets/audio.ts` | no |
 | 60 | CreateFX | client Protocol.bas:HandleCreateFX | spells | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 61 | UpdateUserStats | client Protocol.bas:HandleUpdateUserStats | skills | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 62 | WorkRequestTarget | client Protocol.bas:HandleWorkRequestTarget | spells | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
@@ -264,7 +264,7 @@ Ids only: .
 | 119 | AuraToChar | client Protocol.bas:HandleAuraToChar | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 120 | SpeedToChar | client Protocol.bas:HandleSpeedToChar | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 121 | LightToFloor | client Protocol.bas:HandleLightToFloor | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
-| 122 | NieveToggle | client Protocol.bas:HandleNieveToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
+| 122 | NieveToggle | client Protocol.bas:HandleNieveToggle | core | merged | `main:packages/protocol/src/packets/audio.ts` | no |
 | 123 | NieblaToggle | client Protocol.bas:HandleNieblaToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 124 | Goliath | client Protocol.bas:HandleGoliath | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 125 | TextOverChar | client Protocol.bas:HandleTextOverChar | chat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
