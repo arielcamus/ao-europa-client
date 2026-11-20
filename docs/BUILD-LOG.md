@@ -44,3 +44,73 @@ pnpm test
   removed after its configuration error. The first install used pnpm's default cache.
 - Initial verification: **45 tests passed, 1 test file; typecheck passed**. Goldens
   were emitted by C++, independently of TypeScript, and frozen for Vitest.
+- Local commit: `0ecdddc feat(protocol): implement classic framing and verified packet subset`.
+
+## 2026-11-20 M1 TCP proof, stand-in and WebSocket bridge
+
+- Added `apps/bot` with raw TCP, Nagle disabled, redacted credential logging,
+  Connected → LoginAccount → first character → LoginExistingChar → Logged flow.
+  Placement uses CharacterCreate plus UserCharIndexInServer, independently of
+  account-list coordinates, and waits for Intervals before walking.
+- The five walks use counters 1..5 and respect walk interval / speeding plus a
+  margin. Packet 79 probes resulting positions through packet 31. The bot tracks
+  confirmed, corrected and inferred walks separately. A late correction revokes
+  prior inference; malformed/partial frames, disconnects and failed login stop.
+- CLI success requires a continuous connection for at least 30 seconds and at
+  least one accepted walk. It actually observes 30 seconds after Logged. Short
+  durations exist only in the library test harness, never as CLI/env overrides.
+- Added labelled `tools/standin-server`: source packet layouts and login order,
+  one fixed test account/character, a 100×100 coordinate box, server intervals,
+  counter checks and correction paths. Accepted walks send no self acknowledgement,
+  as in VB6 `MoveUserChar`. It is **NOT a game server** and uses no assets.
+- `tools/run-standin.mjs` uses an ephemeral loopback port, starts the bot only after
+  listen succeeds, propagates failure status and closes all fixture sockets/server.
+- Added `packages/bridge`, whose only external runtime dependency is `ws` (lockfile:
+  8.23.0). Binary bytes pass unchanged, with no parsing or extra length prefix.
+  TCP/WebSocket backpressure, upstream connection failure, closure, text rejection,
+  Nagle off on both TCP legs, and a 1 MiB WebSocket message cap are explicit.
+- Raised the TypeScript target to ES2024 for Node 24's Promise.withResolvers;
+  changed cached character updates to immutable replacements after typecheck
+  caught writes to inferred readonly fields. Build/typecheck subsequently passed.
+- Commands run (from repo root; no push or PR):
+
+```sh
+pnpm install
+pnpm typecheck
+pnpm build
+pnpm test
+pnpm bot:standin
+pnpm typecheck
+pnpm list --recursive --depth 0
+git diff --check
+AO_STANDIN_DEBUG=0 AO_STANDIN_REJECT_WALKS=1 pnpm bot:standin
+```
+
+- Loopback bind is blocked by the execution sandbox (`listen EPERM 127.0.0.1`).
+  The socket tests and CLI were rerun with execution escalation, not skipped or
+  mocked. Improved a test fixture's listen-error handler exposed by this run.
+  Also resumed paused WebSockets before closing after upstream failure, allowing
+  the WebSocket close handshake to complete.
+- Verification: **63 tests passed, 3 test files**, duration 5.64s; typecheck and
+  all four workspace builds passed. Tests cover normal/debug login, five accepted
+  walks, all corrections, auth failure, absent Logged/placement, empty accounts,
+  early EOF, malformed/unsized packets, unknown-frame skipping, inference/late
+  correction, 2 MiB byte-for-byte bridge transfer with backpressure, failed TCP
+  connects, text rejection, TCP EOF and a full WebSocket→TCP→stand-in login/walk.
+- Full CLI success (DEBUGGING=1): exit **0**, `connectedMs=30006.92225`,
+  `observedMs=30003.130208`, `walksSent=5`, `confirmedWalks=5`, `inferredWalks=0`,
+  `correctedWalks=0`, map 1, final position (51,50). Stand-in closed afterward.
+- Full negative CLI run (DEBUGGING=0, `AO_STANDIN_REJECT_WALKS=1`): all five
+  walks corrected to (50,50), stayed connected for the observation period,
+  then **exit 1** with `No walk accepted`. Stand-in closed afterward.
+- Final review found TextDecoder's default BOM stripping would alter a leading
+  U+FEFF in a String8. Added `ignoreBOM: true` and an independent C++ golden
+  (`04efbbbf41`) for that case. Recompiled the oracle and regenerated fixtures;
+  inspected the diff: the only fixture change was the new BOM entry. Reran
+  `pnpm test`, `pnpm typecheck`, `pnpm build`, and `git diff --check` afterward.
+- Final verification: **64 tests passed, 3 test files (5.19s)**; typecheck, all four
+  workspace builds, and whitespace checks passed. Runtime dependencies: none for
+  protocol/bot/stand-in beyond workspace code; `ws` only for the bridge.
+- No implemented layout remains unverified against the paired VB6 source procedures.
+  **Unverified limitation:** no real compiled VB6 server exists here; the stand-in
+  proves the source-derived subset and transport behavior, not a live game login.
