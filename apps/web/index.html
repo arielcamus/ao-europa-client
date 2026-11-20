@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>Argentum Online · Cliente clásico</title>
+  </head>
+  <body>
+    <div id="classic-fit">
+      <main id="classic" aria-label="Argentum Online">
+        <img class="main-art" data-interface="ventanaprincipal" alt="" draggable="false" />
+        <div id="console" data-vb="RecTxt" role="log" aria-label="Mensajes del servidor" aria-live="polite">
+          <div><strong id="mode">Argentum Online</strong> · <span id="connection">Disconnected</span></div>
+          <div id="scope-note"></div>
+          <div id="messages"></div>
+          <div id="error" role="alert" hidden></div>
+        </div>
+        <button id="chat-open" data-vb="Image3" class="hotspot" aria-label="Abrir chat" title="Chat (Enter)"></button>
+        <form id="chat-form" data-vb="SendTxt" hidden>
+          <input id="chat" aria-label="Chat" maxlength="160" autocomplete="off" placeholder="Escribe y pulsa Enter…" />
+        </form>
+        <div id="viewport" data-vb="renderer"></div>
+        <div id="minimap" data-vb="MiniMap" aria-label="Minimapa"><span id="minimap-dot" hidden></span></div>
+        <span id="map-name" data-vb="NameMapa" class="label"></span>
+        <span data-vb="Coord" class="label coordinate"><span id="map-number">—</span> · <span id="position">—</span></span>
+        <span id="character-name" data-vb="NombrePJ" class="label character-name"></span>
+        <span id="level" data-vb="lblLvl" class="label"></span>
+        <span id="clock" data-vb="lblhora" class="label"></span>
+        <div id="experience-fill" data-vb="ExpBar" class="bar"><img data-interface="barraexperiencia" alt="" /></div>
+        <span id="experience-text" data-vb="exp" class="label"></span>
+        <button id="disconnect" data-vb="Image4-1" class="hotspot" aria-label="Leave world" title="Desconectar" hidden></button>
+        <button id="settings" data-vb="OpcionesBoton" class="hotspot" aria-label="Ajustes" title="Controles y conexión"></button>
+        <button id="manual" data-vb="imgManual" class="hotspot" aria-label="Manual" title="Controles"></button>
+        <section id="inventory-panel" data-vb="panel" aria-label="Inventario y hechizos">
+          <img id="panel-art" class="panel-art" data-interface="centroinventario" alt="" />
+          <button id="inventory-tab" data-vb="imgInventario" class="hotspot" role="tab" aria-selected="true" aria-controls="inventory" aria-label="Inventario"></button>
+          <button id="spells-tab" data-vb="imgHechizos" class="hotspot" role="tab" aria-selected="false" aria-controls="spells" aria-label="Hechizos"></button>
+          <div id="inventory" data-vb="picInv" role="tabpanel" aria-label="Inventario"></div>
+          <div id="spells" data-vb="picHechiz" role="listbox" aria-label="Hechizos" tabindex="0" hidden></div>
+          <button id="cast" data-vb="cmdlanzar" class="art-button" data-interface="boton-lanzar-default" aria-label="Lanzar" aria-disabled="true" hidden></button>
+          <button id="spell-info" data-vb="imgSpellInfo" class="hotspot" aria-label="Información del hechizo" hidden></button>
+          <button id="spell-up" data-vb="cmdMoverHechi-1" class="art-button" data-interface="boton-sm-flecha-arr-default" aria-label="Hechizo anterior" hidden></button>
+          <button id="spell-down" data-vb="cmdMoverHechi-0" class="art-button" data-interface="boton-sm-flecha-aba-default" aria-label="Hechizo siguiente" hidden></button>
+        </section>
+        <section id="stats-panel" data-vb="panelInf" aria-label="Estadísticas">
+          <img id="stats-art" class="panel-art" data-interface="ventanaprincipal_stats" alt="" />
+          <button id="stats-tab" data-vb="panelinferior-0" class="hotspot" aria-label="Stats"></button>
+          <button id="menu-tab" data-vb="panelinferior-1" class="hotspot" aria-label="Menú"></button>
+          <div id="hp-fill" data-vb="Hpshp" class="bar"><img data-interface="barradevida" alt="" /></div>
+          <div id="shield-fill" class="bar"><img data-interface="shield-bar" data-unlocalized alt="" /></div>
+          <div id="mana-fill" data-vb="MANShp" class="bar"><img data-interface="barrademana" alt="" /></div>
+          <div id="stamina-fill" data-vb="STAShp" class="bar"><img data-interface="barradeenergia" alt="" /></div>
+          <div id="water-fill" data-vb="AGUAsp" class="bar"><img data-interface="barradesed" alt="" /></div>
+          <div id="food-fill" data-vb="COMIDAsp" class="bar"><img data-interface="barradehambre" alt="" /></div>
+          <span id="hp-text" data-vb="HpBar" class="label">—</span>
+          <span id="mana-text" data-vb="manabar" class="label">—</span>
+          <span id="stamina-text" data-vb="stabar" class="label">—</span>
+          <span id="water-text" data-vb="AGUbar" class="label">—</span>
+          <span id="food-text" data-vb="hambar" class="label">—</span>
+          <span id="gold" data-vb="GldLbl" class="label">—</span>
+          <div id="menu-actions" hidden></div>
+        </section>
+        <form id="login" aria-label="Conectar">
+          <img class="panel-art" data-interface="ventanaconectar" alt="" />
+          <input id="email" data-vb="NameTxt" aria-label="Cuenta" autocomplete="username" required />
+          <input id="password" data-vb="PasswordTxt" aria-label="Contraseña" type="password" autocomplete="current-password" required />
+          <button id="connect" data-vb="cmdIngresar" class="art-button" data-interface="boton-conectar-default" aria-label="Enter world" disabled></button>
+          <p id="mode-note"></p>
+        </form>
+        <div id="asset-note" class="visually-hidden" hidden></div>
+        <div id="session-details" class="visually-hidden"><span id="confirmed">0</span><span id="corrected">0</span><span id="duration">0 s</span></div>
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

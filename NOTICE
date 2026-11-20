@@ -1,0 +1,41 @@
+ao-client M1/M2: TypeScript adaptations made 2026-11-20.
+
+Argentum 20 Game Server and Game Client
+Copyright (C) 2023-2026 Noland Studios LTD.
+Packet IDs: Copyright (C) 2026 Noland Studios LTD.
+Network modules: Copyright (C) 2022 Noland Studios.
+GNU Affero General Public License, version 3 or (at your option) any later version.
+See LICENSE. Distributed without any warranty, including MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.
+Based on Argentum Online 0.11.6, Copyright (C) 2002 Márquez Pablo Ignacio.
+Argentum Online is based on Baronsoft's VB6 Online RPG.
+Original ORE creator: aaron@baronsoft.com; http://www.baronsoft.com/.
+
+M2 local resource readers/rendering adapt Recursos.bas, GameIni.bas, engine.bas,
+TileEngine.bas and clsTexManager.cls from the pinned classic client. Original map
+format credited upstream to Juan Martín Sotuyo Dodero (Maraxus).
+No original map, index, sprite, audio, screenshot or converted asset is distributed.
+
+Classic UI geometry and control behavior adapt frmMain.frm, FrmLogear.frm,
+ModGameplayUI.bas, ModUtils.bas, clsGraphicalList.cls and
+clsGrapchicalInventory.cls from the same pinned classic client. UI packet layouts
+adapt the paired client/server Protocol.bas and Protocol_Writes.bas procedures.
+All original interface bitmaps are supplied separately by the user, never bundled.
+
+Aurora.Network
+Copyright (C) 2018-2022 by Agustin Alvarez. All rights reserved.
+This work is licensed under the terms of the Apache 2.0 license.
+See LICENSES/Apache-2.0.txt.
+Upstream: https://github.com/Wolftein/Aurora.Network
+The adapted binary and framing sources retain this Apache notice; the combined
+ao-client project is distributed under AGPL-3.0-or-later.
+
+The optional server gateway patch targets lambdaclass/argentum, Apache-2.0:
+https://github.com/lambdaclass/argentum
+Revision: 1699a662e6352bfcc9ea5905c6d6f2c0157cb1e7
+Upstream is obtained separately and retains its own LICENSE and notices.
+The added classic_profile.ex adapter is AGPL-3.0-or-later.
+
+No game assets are included. The stand-in is a test fixture. The real community
+server uses the optional classic adapter; the original ao-org VB6 executable
+remains a separate interoperability target that has not yet been verified.
