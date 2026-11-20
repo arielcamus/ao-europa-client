@@ -11,31 +11,31 @@
     "note": "Layout shell on main; chat console on feat/chat, inventory on feat/items, spell list on feat/spells"
    },
    {
-    "ref": "feat/chat",
+    "ref": "main",
     "path": "apps/web/src/chat-box.ts",
     "partial": true,
     "note": "chat console and input"
    },
    {
-    "ref": "feat/items",
+    "ref": "main",
     "path": "apps/web/src/items-ui.ts",
     "partial": true,
     "note": "inventory panel, equipment labels"
    },
    {
-    "ref": "feat/spells",
+    "ref": "main",
     "path": "apps/web/src/spells.ts",
     "partial": true,
     "note": "spell list and casting"
    },
    {
-    "ref": "feat/npcs",
+    "ref": "main",
     "path": "apps/web/src/look-at.ts",
     "partial": true,
     "note": "click to look at tile"
    },
    {
-    "ref": "feat/doors-roofs",
+    "ref": "main",
     "path": "apps/web/src/map-objects.ts",
     "partial": true,
     "note": "doors and roofs in viewport"
@@ -166,7 +166,7 @@
   "group": "items",
   "evidence": [
    {
-    "ref": "feat/items",
+    "ref": "main",
     "path": "apps/web/src/items-ui.ts",
     "partial": false,
     "note": ""
@@ -179,7 +179,7 @@
   "group": "items",
   "evidence": [
    {
-    "ref": "feat/items",
+    "ref": "main",
     "path": "apps/web/src/items-ui.ts",
     "partial": false,
     "note": ""
