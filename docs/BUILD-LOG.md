@@ -550,3 +550,127 @@ from session start; final commit/PR closeout follows this measurement.
 
 ## Decision 2026-11-20 11:07 CET (Ariel): classic UI first
 The client reproduces the VB6 client's own UI (original interface graphics: main window frame, inventory, spells list, console) with no redesign. Reasons: minimise design/dev work and allow screen-by-screen comparison with the original. UI modernisation comes later. Phones use the scaled classic layout until then. The M2 custom dark web frame is to be replaced. AO Forever is a technical reference only (browser client over WebSocket), never a visual one.
+
+## 2026-11-20 Windows VM continuation with supplied ARM64 ISO
+
+Session started **10:47:55 UTC** on `vm-server`, initially clean. Ariel supplied
+`~/Downloads/ao-vm/Win11_ARM64_en-gb.iso` and explicitly changed the host reserve
+to **12 decimal GB**. Initial `df` availability was **36,043,728 KiB**. The ISO's
+8,543,594,496-byte size and SHA-256
+`500bcb6f272b7c455156470ea06816f558f13b885723f84ee9eab7534c7dee61`
+were verified. Its Pro image is index 3, ARM64, build 26300.9457, language en-GB.
+The original ISO is unchanged; `windows.iso` in the bundle is a hard link.
+
+### UTM startup and headless fallback
+
+`open -a UTM`, opening `ao-build.utm`, and help/list/start CLI calls were tried.
+Every `utmctl` call had a 10–20-second timeout; none reached usable VM control.
+A bounded documented AppleScript version query returned `-1712`. Process samples
+showed the UTM app at `_dyld_start`, only 96 KiB resident; system logs reported
+no eligible provisioning profile / launch-policy denial for `utmctl`. Strict
+recursive code-signature verification and notarization assessment both passed.
+A scoped quarantine-metadata removal on the verified app did not fix startup;
+its original quarantine metadata was restored and the stalled app terminated.
+No Computer Use, screenshots, mouse input or keyboard automation was used.
+
+To continue the requested Windows provisioning, installed Homebrew QEMU 11.1.3,
+swtpm 0.10.2_1 and wimlib 1.14.5_2, with automatic Homebrew update and cleanup
+disabled. Homebrew installed/upgraded their declared dependencies. The fallback
+uses **the existing 40 GB thin raw disk**, HVF, **4096 MiB RAM**, four cores,
+NVMe, the original virtio MAC and both loopback TCP forwards. Its optional human
+display is VNC on **127.0.0.1:5905**. UTM must not open the disk concurrently.
+`qemu-backend.json` makes the existing up/down/status wrappers select this backend.
+
+Initial `highmem=off` could not map 4 GiB; corrected to `highmem=on`. The TPM TIS
+device then failed with `HV_BAD_ARGUMENT` in HVF, so the fallback omits that TPM
+and its unused helper was stopped. The answer file explicitly relaxes TPM and
+storage setup checks. Secure Boot is provided by UTM's bundled firmware and
+Microsoft-key variable template; RAM and CPU checks passed without overrides.
+
+The reserve monitor was changed to pause at **14 GB**, polling every 250 ms,
+with a bounded QMP pause and a SIGSTOP fallback for its identified emulator.
+It never saves guest RAM to disk. A simulated low-space / unresponsive-monitor
+check passed without touching the live VM. Other host writers are outside its
+control. The minimum observed space is recorded privately in
+`disk-guard-status.json` and will be reported at closeout.
+
+### Unattended setup fixes and evidence
+
+- Matched all answer-file language fields to en-GB / UK keyboard. Added offline
+  Microsoft ARM64 OpenSSH 10.4.0.0p1-Preview to the seed, avoiding a dependency
+  on Windows Update / Features on Demand. Its release SHA-256 was verified:
+  `d2b1928225479fec9e0c938f527fdb5ed676446cca1bbcc5af84aca1f272842e`.
+- Created an APFS clone of the official ISO and replaced its 1,720,320-byte
+  El Torito EFI image at offset 1,126,400 with the same ISO's
+  `efisys_noprompt.bin`, avoiding the DVD keyboard prompt.
+- Added temporary WinPE diagnostics to that separate copy: exported Setup image
+  2 as its boot image, included Microsoft's native curl from OS image 3, loaded
+  the supplied NetKVM driver and ran Setup with the explicit seed answer file.
+  The original contiguous boot.wim extent at offset 25,886,720 was hash-checked
+  before replacement. The modified boot WIM was 627,252,671 bytes, SHA-256
+  `edbe13808d03066a590daa286f04c861da83c1e6b5ea7abe07cc05c6cd3e0bcc`.
+  A loopback-only receiver collected three private setup logs, capped at 8 MiB.
+  The scratch WIM was removed after embedding it to reclaim host space.
+- Logs proved the initial halt was the empty ProductKey field (`0x80070002`).
+  Added the public Windows Pro installation key, which selects the edition and
+  does not activate Windows. The next halt was missing Secure Boot capability;
+  switched to UTM's Secure Boot firmware and preloaded Microsoft keys.
+- WinPE confirmed **10.0.2.15** and a working host route. Setup then selected
+  Windows 11 Pro, accepted its EULA, partitioned guest disk 0, and began
+  `WIMApplyImage` with Compact OS at **11:10:10 UTC**.
+- A brief paused, read-only disk inspection confirmed the apply phase from
+  `$WINDOWS.~BT\Sources\Panther\setupact.log`. The host's read-only attachment
+  was detached before the guest resumed. It did not change guest files.
+
+The project has not been imported or compiled; those are deliberately human
+steps in the handoff. Final provisioning evidence follows.
+
+At 11:36 UTC, removed inherited macOS background throttling from the QEMU
+process with `taskpolicy -B -p <pid>`; subsequent launches do this automatically.
+The optional request to reset its nice value was denied, so that value remained
+unchanged. Disk growth increased during the following observation interval.
+
+### Completed guest provisioning
+
+Windows booted from its installed disk and SSH became reachable at approximately
+11:47 UTC. `quser` confirms local `aobuilder`, console session 2, Active;
+auto-logon is enabled. Secure Boot was confirmed from Windows. OpenSSH's ARM64
+binary reports 10.4.0.0 and a valid Microsoft signature. A quoted long SFTP
+subsystem path was interpreted by the PowerShell default shell as a string;
+changed it to `C:/PROGRA~1/OpenSSH/sftp-server.exe`, validated the configuration,
+and restarted sshd. Both SSH and SCP/SFTP then worked.
+
+Copied/extracted the staged payload to `C:\ao`, source to `C:\ao\server`, and
+maps/data to `C:\ao\Recursos`. All five signed Microsoft VB6 controls registered.
+Aurora initially failed registration with exit 3: its import table requires
+MSVCP140/VCRUNTIME140, absent from this clean image. Downloaded the official
+[Microsoft x86 Visual C++ redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)
+through `https://aka.ms/vc14/vc_redist.x86.exe`; SHA-256
+`7b0117e6e20e9e349029c000a8a2715a52cf37c15b6bb697b2908e8bc7066cdf`.
+Windows validated Microsoft's signature and installed version **14.52.37029**.
+Added the runtime to the pinned payload manifest and installer.
+
+The resumed installer completed successfully: Aurora and DX8VB registration,
+x86 SQLite ODBC installation, WebView2 availability, and the interactive IDE
+task. **32-bit `Server.Server` COM activation and ADO/SQLite `SELECT 1` passed.**
+twinBASIC process **7796**, session **2**, is responsive. Guest `ready.txt` and
+host `provisioned.json` record completion; source import/build remains false.
+The post-build SSH launcher correctly rejects a missing `server.exe`.
+
+Ejected both installer and seed CDs using QMP, cleared their UTM media entries,
+and removed only the task-created Windows ISO link/APFS clone. The original
+Microsoft ISO remains unchanged. Stopped the temporary diagnostic receiver
+and detached the host's guest-tools ISO. Subsequent starts use the installed
+disk without setup media. UTM itself remains unusable on this Mac; the QEMU
+fallback and its disk guard are left running. No Computer Use was used.
+
+Validation includes Python AST parsing, shell syntax, answer-file XML parsing,
+whitespace checks, source/installer hashes, the disk-guard simulation, and the
+actual guest COM/database/SSH checks above. These changes do not affect the
+web client, so its unrelated test suite was not rerun.
+
+Closeout verification at **11:57:51 UTC**: QEMU running, SSH reachable,
+local console active, twinBASIC responsive; host free **16,936,652,800 bytes
+(16.94 GB)**, minimum observed **16.37 GB**, above the approved
+12 GB floor. The disk guard remains active. Elapsed wall-clock through this
+check: **1 h 9 min 56 s** since 10:47:55 UTC; commit/push follow.

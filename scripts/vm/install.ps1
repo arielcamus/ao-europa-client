@@ -1,9 +1,12 @@
 # Run over SSH AFTER bootstrap. No import, build, compiler command, or F5.
+param([switch]$SkipExtraction)
 $ErrorActionPreference = 'Stop'
 Start-Transcript -Path C:\ao\install.log -Append
 try {
-    Expand-Archive C:\ao\payload.zip C:\ao -Force
-    Expand-Archive C:\ao\deps\twinBASIC_IDE_BETA_1044.zip C:\ao\twinbasic -Force
+    if (-not $SkipExtraction) {
+        Expand-Archive C:\ao\payload.zip C:\ao -Force
+        Expand-Archive C:\ao\deps\twinBASIC_IDE_BETA_1044.zip C:\ao\twinbasic -Force
+    }
     $regsvr32 = "$env:WINDIR\SysWOW64\regsvr32.exe"
     if (-not (Test-Path "$env:WINDIR\SysWOW64\msvbvm60.dll")) {
         throw 'Windows does not provide the x86 VB6 runtime. Stop and obtain an official Microsoft runtime.'
@@ -16,6 +19,14 @@ try {
         $p = Start-Process $regsvr32 -ArgumentList '/s',"$env:WINDIR\SysWOW64\$name" -Wait -PassThru
         if ($p.ExitCode) { throw "Registration failed: $name ($($p.ExitCode))" }
     }
+    # Aurora imports MSVCP140 and VCRUNTIME140; Windows does not include them.
+    $vcRuntime = 'C:\ao\deps\vc_redist.x86.exe'
+    $signature = Get-AuthenticodeSignature $vcRuntime
+    if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'O=Microsoft Corporation') {
+        throw 'Invalid Microsoft signature on the x86 Visual C++ redistributable.'
+    }
+    $p = Start-Process $vcRuntime -ArgumentList '/install','/quiet','/norestart' -Wait -PassThru
+    if ($p.ExitCode -notin 0,3010) { throw "Visual C++ runtime installation failed ($($p.ExitCode))" }
     foreach ($name in 'Aurora.Network.dll','DX8VB.DLL') {
         $p = Start-Process $regsvr32 -ArgumentList '/s',"C:\ao\server\$name" -Wait -PassThru
         if ($p.ExitCode) { throw "Registration failed: $name ($($p.ExitCode))" }

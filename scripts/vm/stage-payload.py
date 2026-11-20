@@ -19,12 +19,13 @@ FILES = {
     'VB60SP6-KB2708437-x86-ENU.msi': (STATE, '350602b2e084b39c97d1394c8594b18e41ef622315d4a9635c5e8ea6aa977b5e', 'https://www.microsoft.com/en-us/download/details.aspx?id=7030', False),
     'sqliteodbc.exe': (DOWNLOADS, '3bce566ecc2545a49c0cad1d0c4c62ddafd529b77bdc147c1dcee8eace8acc70', 'http://www.ch-werner.de/sqliteodbc/sqliteodbc.exe', False),
     'MicrosoftEdgeWebView2RuntimeInstallerX86.exe': (DOWNLOADS, '316965c12d39ebac80976c460c3573a8eea734b3d91fed861b69991a5c15c9e7', 'https://go.microsoft.com/fwlink/?linkid=2099617', False),
+    'vc_redist.x86.exe': (DOWNLOADS, '7b0117e6e20e9e349029c000a8a2715a52cf37c15b6bb697b2908e8bc7066cdf', 'https://aka.ms/vc14/vc_redist.x86.exe', False),
 }
 
 
 def main():
     os.umask(0o077)
-    if shutil.disk_usage(STATE).free < 28 * 1024**3 + 512 * 1024**2:
+    if shutil.disk_usage(STATE).free < 14_000_000_000 + 512 * 1024**2:
         raise SystemExit('Not enough space to stage payload and retain the host reserve.')
     manifest = {'server_revision': REV, 'source': 'https://github.com/ao-org/argentum-online-server-classic',
                 'twinbasic_download_page': 'https://twinbasic.com/licensing',

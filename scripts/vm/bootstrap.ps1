@@ -16,8 +16,17 @@ try {
         Start-Sleep 2
     }
     if (-not $network) { throw 'No network route after installing UTM ARM64 drivers' }
-    $capability = Get-WindowsCapability -Online -Name 'OpenSSH.Server~~~~0.0.1.0'
-    if ($capability.State -ne 'Installed') { Add-WindowsCapability -Online -Name $capability.Name | Out-Null }
+    # Official Microsoft ARM64 package, hash checked by prepare.py. Install
+    # offline so bootstrap does not need Windows Update / Features on Demand.
+    $sshHome = 'C:\Program Files\OpenSSH'
+    if (-not (Get-Service sshd -ErrorAction SilentlyContinue)) {
+        Expand-Archive "$PSScriptRoot\OpenSSH-ARM64.zip" C:\ao\openssh-stage -Force
+        Move-Item C:\ao\openssh-stage\OpenSSH-ARM64 $sshHome
+        if ((Get-AuthenticodeSignature "$sshHome\sshd.exe").Status -ne 'Valid') {
+            throw 'Invalid Microsoft OpenSSH signature'
+        }
+        & "$sshHome\install-sshd.ps1"
+    }
     Set-Service sshd -StartupType Automatic
     Start-Service sshd
     $keys = 'C:\ProgramData\ssh\administrators_authorized_keys'
@@ -31,9 +40,9 @@ PasswordAuthentication no
 KbdInteractiveAuthentication no
 AllowUsers aobuilder
 AuthorizedKeysFile __PROGRAMDATA__/ssh/administrators_authorized_keys
-Subsystem sftp sftp-server.exe
+Subsystem sftp C:/PROGRA~1/OpenSSH/sftp-server.exe
 '@ | Set-Content C:\ProgramData\ssh\sshd_config -Encoding ascii
-    & "$env:WINDIR\System32\OpenSSH\sshd.exe" -t
+    & "$sshHome\sshd.exe" -t
     if ($LASTEXITCODE) { throw 'Invalid sshd_config' }
     New-ItemProperty 'HKLM:\SOFTWARE\OpenSSH' -Name DefaultShell -Value "$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force | Out-Null
     if (-not (Get-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -ErrorAction SilentlyContinue)) {
@@ -42,6 +51,6 @@ Subsystem sftp sftp-server.exe
     Restart-Service sshd
     Set-LocalUser aobuilder -PasswordNeverExpires $true
     Get-NetIPAddress -AddressFamily IPv4 | Format-Table | Out-String | Set-Content C:\ao\network.txt
-    & "$env:WINDIR\System32\OpenSSH\ssh-keygen.exe" -lf C:\ProgramData\ssh\ssh_host_ed25519_key.pub | Set-Content C:\ao\ssh-host-fingerprint.txt
+    & "$sshHome\ssh-keygen.exe" -lf C:\ProgramData\ssh\ssh_host_ed25519_key.pub | Set-Content C:\ao\ssh-host-fingerprint.txt
     'SSH bootstrap completed; dependencies must still be installed over SSH.' | Set-Content C:\ao\bootstrap-complete.txt
 } finally { Stop-Transcript }

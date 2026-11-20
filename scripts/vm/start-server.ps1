@@ -10,7 +10,15 @@ if ($running.State -ne 'Running') {
 }
 foreach ($attempt in 1..30) {
     $listener = Get-NetTCPConnection -State Listen -LocalPort 7667 -ErrorAction SilentlyContinue
-    if ($listener) { $listener | Select-Object LocalAddress,LocalPort,OwningProcess; exit 0 }
+    if ($listener) {
+        foreach ($socket in $listener) {
+            if ((Get-Process -Id $socket.OwningProcess -ErrorAction Stop).Path -ieq $exe) {
+                $socket | Select-Object LocalAddress,LocalPort,OwningProcess
+                exit 0
+            }
+        }
+        throw 'TCP 7667 belongs to another executable, not C:\ao\server\server.exe.'
+    }
     Start-Sleep 1
 }
 throw 'No TCP listener on 7667 after 30 seconds. Inspect the server window and C:\ao\server logs.'

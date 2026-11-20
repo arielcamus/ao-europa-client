@@ -14,7 +14,9 @@ import xml.etree.ElementTree as ET
 
 HERE = Path(__file__).resolve().parent
 STATE = Path(os.environ.get('AO_VM_STATE', '~/Projects/ao-reference/runtime/ao-vm')).expanduser().resolve()
-WIN_SHA256 = '8992f2d2cfd2fa647e579e9eb31fc21f34da8333c29b6170fde17d2ed6623e9c'
+WIN_SHA256 = '500bcb6f272b7c455156470ea06816f558f13b885723f84ee9eab7534c7dee61'
+SSH_SHA256 = 'd2b1928225479fec9e0c938f527fdb5ed676446cca1bbcc5af84aca1f272842e'
+SSH_URL = 'https://github.com/PowerShell/Win32-OpenSSH/releases/download/10.4.0.0p1-Preview/OpenSSH-ARM64.zip'
 
 
 def run(*args):
@@ -28,14 +30,15 @@ def digest(path):
 
 def check_space(extra=0):
     free = shutil.disk_usage(STATE).free
-    if free - extra < 28 * 1024**3:
-        raise SystemExit('Insufficient host space: preserve 28 GiB before starting or staging additional data.')
+    if free - extra < 14_000_000_000:
+        raise SystemExit('Insufficient host space: preserve 14 GB (12 GB floor plus headroom) before starting or staging additional data.')
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--iso', type=Path, help='Official Microsoft English Windows 11 ARM64 ISO')
     parser.add_argument('--sha256', default=WIN_SHA256, help='Hash published by Microsoft for this ISO')
+    parser.add_argument('--locale', choices=['en-GB', 'en-US'], default='en-GB')
     parser.add_argument('--guest-tools-mount', type=Path, default=Path('/Volumes/UTM Guest Tools'))
     args = parser.parse_args()
     os.umask(0o077)
@@ -50,6 +53,11 @@ def main():
     data.mkdir(parents=True, exist_ok=True)
     seed = STATE / 'seed'
     seed.mkdir(exist_ok=True)
+    ssh_zip = seed / 'OpenSSH-ARM64.zip'
+    if not ssh_zip.is_file():
+        run('curl', '-fL', '--max-time', '60', '-o', ssh_zip, SSH_URL)
+    if digest(ssh_zip) != SSH_SHA256:
+        raise SystemExit('Microsoft OpenSSH ARM64 archive does not match the publisher SHA-256.')
     identity = STATE / 'identity.json'
     if identity.exists():
         ident = json.loads(identity.read_text())
@@ -61,6 +69,7 @@ def main():
         run('ssh-keygen', '-q', '-t', 'ed25519', '-N', '', '-C', 'ao-build-only', '-f', key)
     shutil.copyfile(key.with_suffix('.pub'), seed / 'authorized_keys')
     xml = (HERE / 'autounattend.xml.in').read_text().replace('@@PASSWORD@@', ident['password'])
+    xml = xml.replace('@@LOCALE@@', args.locale).replace('@@INPUT_LOCALE@@', '0809:00000809' if args.locale == 'en-GB' else '0409:00000409')
     ET.fromstring(xml)
     (seed / 'autounattend.xml').write_text(xml)
     shutil.copyfile(HERE / 'bootstrap.ps1', seed / 'bootstrap.ps1')
@@ -82,7 +91,7 @@ def main():
         source = args.iso.expanduser().resolve()
         if digest(source) != args.sha256.lower():
             raise SystemExit('Windows ISO does not match the supplied Microsoft SHA-256.')
-        mount = plistlib.loads(subprocess.check_output(['hdiutil', 'attach', '-readonly', '-nobrowse', '-plist', str(source)]))
+        mount = plistlib.loads(run('hdiutil', 'attach', '-readonly', '-nobrowse', '-plist', source).encode())
         volumes = [Path(e['mount-point']) for e in mount['system-entities'] if 'mount-point' in e]
         try:
             if not any((v / 'efi/boot/bootaa64.efi').exists() for v in volumes):
