@@ -31,6 +31,10 @@ has not been inspected or operated in this session.
 1. On the Mac, **Finder → Go → Connect to Server…** (`⌘K`) → enter
    **`vnc://127.0.0.1:5905`** → **Connect**. This opens the running Windows desktop.
    The equivalent Mac command is `open 'vnc://127.0.0.1:5905'`.
+   Enter the VNC password stored in
+   `~/Projects/ao-reference/runtime/ao-vm/vnc-password.txt` (mode `600`, outside Git).
+   The launcher enables VNC password authentication and loads this password via QMP
+   on every start; macOS Screen Sharing requires it.
 2. In twinBASIC's first-run dialogs: review **twinBASIC Licence Agreement →
    I AGREE**; choose **NO** in **Automatic Error Reporting**; choose
    **Save Changes** in **IDE Options**. No twinBASIC account or paid key is needed

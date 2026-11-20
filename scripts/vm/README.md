@@ -93,6 +93,11 @@ for provisioning and is stopped afterward.
 
 The desktop is available for the human through **`vnc://127.0.0.1:5905`**, using
 Mac Screen Sharing. This loopback display is separate from the SSH service.
+`vm-up.sh` starts QEMU with `-vnc 127.0.0.1:5,password=on`, then sets the password
+through QMP. Its random eight-character password is created once in private
+`vnc-password.txt` (mode `600`) and reused on subsequent starts. The launcher
+prints only the file path. A VM started without password authentication needs
+a graceful Windows shutdown and QEMU restart before it can accept a password.
 The agent does not operate it.
 
 ## Install and verify the payload after Windows setup

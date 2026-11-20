@@ -4,9 +4,11 @@ import fcntl
 import json
 import os
 from pathlib import Path
+import secrets
 import shutil
 import signal
 import socket
+import string
 import subprocess
 import sys
 import time
@@ -14,6 +16,7 @@ import time
 STATE = Path(os.environ.get('AO_VM_STATE', '~/Projects/ao-reference/runtime/ao-vm')).expanduser().resolve()
 DATA = STATE / 'ao-build.utm/Data'
 QMP = STATE / 'qmp.sock'
+VNC_PASSWORD = STATE / 'vnc-password.txt'
 PAUSE_AT = 14_000_000_000  # 2 GB headroom above Ariel's 12 GB floor.
 
 
@@ -44,6 +47,30 @@ def running_pid():
     if 'qemu-system-aarch64' in result.stdout and '-name ao-build' in result.stdout:
         return pid
     return None
+
+
+def configure_vnc():
+    if qmp('query-vnc').get('auth') != 'vnc':
+        raise SystemExit('VNC password authentication is disabled. Shut Windows down gracefully, '
+                         'then restart with vm-up.sh to enable it.')
+    # VNC uses only eight characters. Keep the secret out of argv and logs.
+    try:
+        fd = os.open(VNC_PASSWORD, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    except FileExistsError:
+        pass
+    else:
+        with os.fdopen(fd, 'w') as stream:
+            stream.write(''.join(secrets.choice(string.ascii_letters + string.digits)
+                                 for _ in range(8)) + '\n')
+    VNC_PASSWORD.chmod(0o600)
+    password = VNC_PASSWORD.read_text().rstrip('\n')
+    if len(password) != 8 or any(char not in string.ascii_letters + string.digits for char in password):
+        raise SystemExit(f'Expected an eight-character alphanumeric VNC password in {VNC_PASSWORD}.')
+    try:
+        qmp('set_password', {'protocol': 'vnc', 'password': password})
+        qmp('expire_password', {'protocol': 'vnc', 'time': 'never'})
+    except RuntimeError:
+        raise SystemExit('Could not configure the VNC password through QMP.') from None
 
 
 def status():
@@ -100,10 +127,11 @@ def up():
             record = json.loads(paused.read_text())
             if record.get('process_stopped') and record['pid'] == running_pid():
                 os.kill(record['pid'], signal.SIGCONT)
+        configure_vnc()
         if status() == 'paused':
             qmp('cont')
         start_guard()
-        print('ao-build:', status())
+        print('ao-build:', status(), '; VNC password file:', VNC_PASSWORD)
         return
     assert (DATA / 'windows.img').stat().st_size == 40_000_000_000
     for port in (2222, 7667, 5905):
@@ -121,7 +149,7 @@ def up():
         '-drive', f'if=none,id=system,format=raw,discard=unmap,detect-zeroes=unmap,file={DATA / "windows.img"}',
         '-device', 'nvme,drive=system,serial=ao-system,bootindex=1',
         '-device', 'qemu-xhci', '-device', 'usb-kbd', '-device', 'usb-tablet',
-        '-device', 'ramfb', '-display', 'none', '-vnc', '127.0.0.1:5',
+        '-device', 'ramfb', '-display', 'none', '-vnc', '127.0.0.1:5,password=on',
         '-netdev', 'user,id=net0,hostfwd=tcp:127.0.0.1:2222-:22,hostfwd=tcp:127.0.0.1:7667-:7667',
         '-device', 'virtio-net-pci,netdev=net0,mac=52:54:00:a0:b0:01',
         '-device', 'virtio-rng-pci',
@@ -143,7 +171,9 @@ def up():
         if process.poll() is not None:
             raise SystemExit('QEMU failed; see qemu.log')
         if QMP.exists():
+            configure_vnc()
             print('ao-build:', status(), '; SSH 127.0.0.1:2222; VNC 127.0.0.1:5905')
+            print('VNC password file:', VNC_PASSWORD)
             return
         time.sleep(0.1)
     raise SystemExit('QEMU monitor did not become ready; see qemu.log')
