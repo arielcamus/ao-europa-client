@@ -1,9 +1,9 @@
 # ao-client
 
-Lightweight Argentum Online client: TypeScript + PixiJS, web first (desktop and mobile browsers), speaking the
+Lightweight Argentum Online client: TypeScript + PixiJS, web only (desktop and mobile browsers), speaking the
 ao-org classic protocol (PYMMO=0) through a small WebSocket-to-TCP bridge.
 
-Licence: code AGPL-3.0 (parts translated from ao-org VB6 sources keep their notices). Game assets are CC BY-NC-ND
+Licence: code AGPL-3.0-or-later (parts translated from ao-org VB6 sources keep their notices). Game assets are CC BY-NC-ND
 (Noland Studios): never committed, loaded from a local path (`AO_ASSETS`), conversion only.
 
 M1 provides a protocol library, a headless TCP bot, a binary WebSocket bridge, and
@@ -12,6 +12,75 @@ No compiled VB6 server was available for this milestone, so live interoperabilit
 with it remains untested. The stand-in is a deterministic fixture, not a game server.
 
 Requires Node 24 and pnpm 12.21.0. From this repository:
+
+## M2 browser client
+
+```sh
+pnpm install --frozen-lockfile
+export AO_ASSETS="$HOME/Projects/ao-reference/Recursos"
+pnpm dev:web
+```
+
+Open `http://127.0.0.1:5173` and select **Enter world**. The local test credentials
+are prefilled (`standin@local` / `testpass`). This starts the stand-in with real
+map 1 (Ciudad de Ullathorpe), a binary WebSocket bridge, and Vite in one process.
+The TCP and bridge listeners use free loopback ports; Vite proxies `/bridge`, so
+phones connect to the same host as the page. Ctrl-C closes all three listeners.
+
+Use **WASD / arrows**, the **touch d-pad**, or **drag the canvas** to walk. Releasing
+touch, cancelling a pointer, changing tabs or losing focus stops input. Steps are
+predicted on send; blocked steps are corrected by packet 31. Use the view controls
+to zoom or hide roofs. All five map layers and the original body/head frames render;
+there is no placeholder character. The camera follows the player and the canvas
+tracks its element size and devicePixelRatio. No UI framework or Node APIs are
+used in browser code; a separate browser TypeScript check enforces that boundary.
+
+`AO_ASSETS` defaults to `~/Projects/ao-reference/Recursos` for local dev/preview.
+Files stay in place and are served read-only at `/assets` (GET/HEAD, no directory
+listing, traversal or escaping symlinks). The browser reads `Mapas/mapaN.csm`,
+`init/graficos.ini`, `cuerpos.dat`, `moldes.ini`, `cabezas.ind`, and original PNGs
+from `Graficos`. PNG alpha/legacy opaque-black colorkey and texture rectangles are
+converted only in memory. No artwork is edited, copied into `dist`, or committed.
+
+```sh
+# Optional map and LAN access for a physical phone on your network:
+AO_MAP_ID=1 AO_WEB_HOST=0.0.0.0 pnpm dev:web
+# Open http://<this-Mac-LAN-IP>:5173 on the phone.
+
+pnpm build:web       # production app + total gzip size of every JS/CSS chunk
+pnpm size:web        # report the existing build again; excludes game assets
+pnpm preview:web    # local production build + stand-in/bridge + read-only assets
+pnpm typecheck
+AO_ASSETS="$HOME/Projects/ao-reference/Recursos" pnpm test
+pnpm screenshot:web # while dev:web or preview:web is running
+```
+
+`AO_WEB_PORT` changes the web port. `AO_STANDIN_REJECT_WALKS=1` exercises correction
+on every step, and `AO_VERBOSE=1` prints stand-in packet activity. Builds do not
+require AO_ASSETS; asset-backed tests generate excerpts in memory and skip if the
+variable or map 1 is absent. Screenshots are saved to ignored
+`docs/screenshots/m2-desktop.png` (1440×900) and `m2-mobile.png` (390×844).
+The smoke script uses dev-only puppeteer-core and installed
+`/Applications/Google Chrome.app`; `AO_CHROME` and `AO_WEB_URL` can override those.
+It checks real keyboard input, a wall correction, touch tap/drag and release,
+portrait/landscape resizing, DPR 2, and browser/asset errors before capturing.
+
+To target a separately running server, start `AO_TCP_HOST=... AO_TCP_PORT=... pnpm bridge`
+and `pnpm --filter @ao/web dev` in separate terminals. Vite defaults to forwarding
+`/bridge` to `ws://127.0.0.1:7667`; `AO_BRIDGE_TARGET` overrides that target. Enter
+the server account in the form. The connection settings also accept a direct
+`ws://` or `wss://` bridge URL. Production hosting must provide `/assets` and a
+WebSocket bridge separately; the build contains no licensed resources.
+
+M2 limits: the stand-in implements CSM directional blocked tiles, not water,
+navigation, doors, NPCs, persistence or map transitions. The renderer covers map
+layers and the player, not object/NPC simulation, equipment, lighting, particles,
+audio or automatic roof fading. Roof visibility is manual. The legacy graphics
+binary parser is retained, but the active INI is required for current map artwork.
+Real compiled VB6 server compatibility, exact native-renderer pixel parity, and
+physical iOS/Android browsers remain unverified; desktop/mobile Chrome is tested.
+
+## M1 protocol tools
 
 ```sh
 pnpm install --frozen-lockfile
@@ -51,7 +120,9 @@ Standalone stand-in settings: `AO_HOST`, `AO_PORT`, `AO_EMAIL`, `AO_PASSWORD`,
 `AO_STANDIN_DEBUG=1`, `AO_STANDIN_REJECT_WALKS=1`. The fixture has one character,
 one map, coordinates 1..100, and a 300ms walk interval. Accepted walks have no
 self acknowledgement, matching the VB6 path; position request 79 returns packet 31.
-There are no maps, assets, persistence, combat, NPC simulation, or production auth.
+With `AO_ASSETS` set, it reads a real CSM (`AO_MAP_ID`, default 1) and uses its
+blocked tiles; otherwise it keeps the M1 empty coordinate box. There is no
+persistence, combat, NPC simulation, or production auth.
 
 Bridge settings: `AO_WS_HOST`, `AO_WS_PORT`, `AO_TCP_HOST`, `AO_TCP_PORT`.
 Only binary WebSocket messages are accepted (up to 1 MiB per message). AO frames
@@ -65,6 +136,8 @@ Workspace code:
 - `packages/protocol`: dependency-free, browser-compatible Writer/Reader, frame
   accumulator, enums, typed packet codecs, C++-derived golden fixtures.
 - `apps/bot`: raw TCP protocol probe; credentials are never included in its logs.
+- `packages/formats`: browser-compatible CSM, GRH/index and character template parsers.
+- `apps/web`: Vite + Pixi browser client, keyboard/touch controls and local asset middleware.
 - `tools/standin-server`: explicitly labelled fixture using the same wire subset.
 - `packages/bridge`: binary WebSocket ↔ TCP proxy.
 

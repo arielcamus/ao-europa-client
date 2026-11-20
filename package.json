@@ -7,14 +7,21 @@
   "engines": { "node": ">=24 <25" },
   "scripts": {
     "build": "pnpm -r build",
+    "dev:web": "pnpm --filter @ao/standin-server... --filter @ao/bridge... build && node tools/dev-web.mjs",
+    "build:web": "pnpm --filter @ao/web build && node tools/bundle-size.mjs",
+    "size:web": "node tools/bundle-size.mjs",
+    "preview:web": "pnpm --filter @ao/standin-server... --filter @ao/bridge... build && node tools/dev-web.mjs --preview",
+    "screenshot:web": "node tools/screenshot-web.mjs",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p apps/web/tsconfig.json",
     "bot": "pnpm build && node apps/bot/dist/cli.js",
     "standin": "pnpm build && node tools/standin-server/dist/cli.js",
     "bot:standin": "pnpm build && node tools/run-standin.mjs",
     "bridge": "pnpm build && node packages/bridge/dist/cli.js"
   },
   "devDependencies": {
+    "puppeteer-core": "^24.0.0",
+    "vite": "^7.0.0",
     "@types/node": "^24.0.0",
     "@types/ws": "^8.18.1",
     "typescript": "~5.9.3",

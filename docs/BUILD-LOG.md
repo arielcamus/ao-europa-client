@@ -195,3 +195,89 @@ AO_ASSETS=/Users/dev/Projects/ao-reference/Recursos pnpm test
   resource gating, throttle, auth errors, reconnect, and upstream closure.
 - At this checkpoint: **79 tests passed, 7 files**, including formats and the
   read-only asset middleware tests. Typecheck passed.
+
+## 2026-11-20 M2 Pixi browser, touch and local tooling
+
+- Added a framework-free Vite/TypeScript app. Explicit WebGLRenderer and a RAF
+  loop avoid the Application/UI framework overhead. Runtime dependencies in the
+  client are Pixi plus the two dependency-free workspace packages. Browser-only
+  `apps/web/tsconfig.json` excludes Node ambient types; root typecheck runs both.
+- Source order: ground layer 1 uncentered; centered walkable layers 2 and 3;
+  characters and layer 4 in y/x order (character before same-tile layer 4);
+  layer 5 roofs last. Body 1/head 1 use the real PNG frames and offsets, with
+  heading-specific walk animation. **No character or map placeholder art.**
+  Roofs can be manually hidden; automatic trigger-based fading is outside M2.
+- Viewport culling uses full artwork bounds, so tall trees anchored outside the
+  visible tile rectangle still appear. Only visible animation atlases and the
+  character are requested, with four concurrent PNG decodes. Camera follows each
+  predicted/corrected tile; ResizeObserver and devicePixelRatio resize the canvas.
+  Map movement is tile-stepped. Equipment, NPCs/objects, lights, shadows, particles
+  and audio are outside this renderer's scope.
+- Input supports arrows/WASD, held touch d-pad and drag. Pointer capture/release,
+  cancel, blur and hidden-document handlers clear movement. The phone viewport
+  uses dynamic viewport height, safe areas, 48px touch buttons (44px in landscape),
+  and no fixed desktop-width layout. Entering the game moves keyboard focus out
+  of the login form.
+- Vite serves AO_ASSETS read-only at `/assets` from the original files, with
+  path allowlisting, case-insensitive resource filenames, realpath confinement,
+  no listing or writes. `publicDir: false`; compiled JS/CSS live in `dist/static`.
+  No original or converted artwork enters dist. PNG opaque-black colorkey
+  conversion matches the uncompressed clsTexManager loader and is memory-only.
+- Gotcha from Chrome: 11 map-1 frames extend below the 512px atlas 5068.png.
+  Preserve their original UVs and use repeat addressing instead of rejecting or
+  altering artwork. This is inferred from classic Direct3D's default wrap state
+  and the absence of an address-state override in the VB6 renderer; exact DX8
+  pixel parity is **unverified**. Reference for the related Direct3D sampler
+  default: https://learn.microsoft.com/windows/win32/direct3d9/d3dsamplerstatetype.
+- Visual review caught a mobile error missed by the first smoke-script assertion:
+  RAF's sampled timestamp can precede an input event's animation-start timestamp.
+  Clamped elapsed animation time at zero to prevent frame -1. The script now
+  requires the app to still be ready before either final screenshot, as well as
+  checking browser errors and HTTP failures. Retested successfully afterward.
+- `dev:web` owns stand-in, bridge and Vite in one process. Local assets default
+  to `~/Projects/ao-reference/Recursos`; AO_ASSETS overrides. Internal listeners
+  use ephemeral loopback ports; same-origin `/bridge` proxy also works for LAN
+  phones via AO_WEB_HOST. `preview:web` serves the production build locally with
+  the same external assets. `build:web` builds and sums level-9 gzip JS+CSS across
+  **all** chunks (including optional Pixi environment chunks), excluding artwork.
+- Headless screenshots use only dev dependency puppeteer-core and installed
+  `/Applications/Google Chrome.app`, with ephemeral profiles. No chrome-cdp skill
+  or downloaded browser used. Art-bearing screenshots are ignored, never staged.
+- Commands (all from worktree root; network/socket/Chrome escalation as needed):
+
+```sh
+AO_ASSETS=/Users/dev/Projects/ao-reference/Recursos pnpm dev:web
+pnpm build:web
+pnpm typecheck
+pnpm screenshot:web
+pnpm install --frozen-lockfile --offline
+# Offline frozen verification lacked cached chromium-bidi metadata; online succeeds:
+pnpm install --frozen-lockfile
+pnpm typecheck
+pnpm build
+AO_ASSETS=/Users/dev/Projects/ao-reference/Recursos AO_WEB_PORT=5174 pnpm preview:web
+AO_WEB_URL=http://127.0.0.1:5174 pnpm screenshot:web
+pnpm test
+AO_ASSETS=/Users/dev/Projects/ao-reference/Recursos pnpm test
+pnpm size:web
+git diff --check
+git ls-files --stage docs/screenshots assets
+git check-ignore docs/screenshots/m2-desktop.png docs/screenshots/m2-mobile.png
+```
+
+- Final browser run at this checkpoint: Chrome **157.0.8103.79**, production build.
+  Desktop 1440×900: west wall corrected to (50,50), D accepted to (51,50), A returned
+  to (50,50): 3 walks / 1 correction. Mobile 390×844: real touch tap then drag to
+  (51,51): 2 walks / 0 corrections, release stops movement. Rotated to 844×390 at
+  DPR 2: canvas width 1,688 for 844 CSS pixels; restored portrait without reload,
+  horizontal overflow or browser/asset errors. Both final images visually reviewed.
+- Tests: **71 passed + 8 expected local-asset skips** without AO_ASSETS;
+  **79 passed in 7 files** with it. Root + browser typechecks and all six workspace
+  builds passed. Frozen install passed. No assets/screenshots tracked by git.
+- Bundle: **419,761 bytes raw / 120,940 bytes gzip (118.11 KiB)** for four JS/CSS
+  files, excluding assets and HTML. Vite's per-file default gzip display differs
+  slightly from the report's explicit level 9. No source maps in the production build.
+- Limitations: no compiled VB6 server available, so real-server login remains
+  unverified. Headless mobile Chrome emulates touch/viewport, not a physical iOS
+  or Android device. Native renderer pixel parity (including UV wrap and lighting)
+  is not claimed. Stand-in rules cover only map bounds, CSM blocks and walk timing.

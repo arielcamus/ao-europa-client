@@ -3,3 +3,5 @@ packages:
   - apps/*
   - tools/standin-server
 storeDir: node_modules/.pnpm-store
+allowBuilds:
+  esbuild: true

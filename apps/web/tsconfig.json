@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"],
+    "declaration": false,
+    "noEmit": true,
+    "paths": {
+      "@ao/protocol": ["../../packages/protocol/src/index.ts"],
+      "@ao/formats": ["../../packages/formats/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}
