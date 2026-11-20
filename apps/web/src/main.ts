@@ -22,6 +22,7 @@ import { AudioSystem } from './audio-system.js';
 import './bank-trade.css';
 import { BankUI } from './bank-ui.js';
 import { TradeUI } from './trade-ui.js';
+import { QuestWindows } from './quest-window.js';
 
 applyClassicLayout();
 const form = element<HTMLFormElement>('login'), account = element<HTMLInputElement>('email'), password = element<HTMLInputElement>('password');
@@ -64,6 +65,9 @@ const bankUi = new BankUI(element('classic'), ui, report);
 const tradeUi = new TradeUI(element('classic'), viewport, ui, report);
 /** IsDialogOpen: the bank, Goliath and trade windows pause walking. */
 const transacting = () => bankUi.dialogOpen || tradeUi.dialogOpen;
+const questWindows = new QuestWindows(element('classic'), renderer, undefined, report);
+// frmMain QuestBoton_MouseUp: WriteQuestListRequest; the server answers with the quest list.
+ui.bindMenu('Quests', () => { try { session?.requestQuestList(); } catch (error) { close(String(error)); } });
 const clearInput = () => { keys.clear(); touchHeading = undefined; };
 function walk(heading: Heading) {
   try { if (session && !transacting() && renderer.readyMap === session.resourceMap) session.walk(heading); }
@@ -77,7 +81,7 @@ function guard(action: () => unknown) {
   try { action(); } catch (error) { close(error instanceof Error ? error.message : String(error)); }
 }
 function close(message = 'Disconnected') {
-  clearInput(); stoppedAt = performance.now(); chatBox.close(); npcDialog.hide(); audio.detach(); skillsWindows.closeAll();
+  clearInput(); stoppedAt = performance.now(); chatBox.close(); npcDialog.hide(); audio.detach(); skillsWindows.closeAll(); questWindows.closeAll();
   if (session) {
     try { session.finish(message); } catch (error) { message = `${message}; ${String(error)}`; }
   }
@@ -101,7 +105,7 @@ async function boot() {
     ? 'Mundo de prueba local. Objetos y estadísticas de muestra; sin combate ni persistencia.'
     : community ? 'Servidor comunitario · movimiento y persistencia. Chat aún no disponible.' : 'Cliente clásico · movimiento, inventario, hechizos y chat.';
   if (config.mode === 'standin') { account.value = 'standin@local'; password.value = 'testpass'; }
-  await Promise.all([renderer.init(), ui.init(), bubbles.init(), audio.init()]);
+  await Promise.all([renderer.init(), ui.init(), bubbles.init(), audio.init(), questWindows.init().catch(error => report(`Misiones no disponibles: ${String(error)}`))]);
   // Chat text that the server sends as locale ids; the console is redrawn once it arrives.
   void Promise.all([fetchText('init/sp_localindex.dat'), fetchText('init/SP_LocalMsg.dat')])
     .then(([index, messages]) => { sharedLocale.load(index, messages); if (session) session.ui.revision++; })
@@ -123,6 +127,7 @@ async function boot() {
       }
       renderer.render(session, now);
       bubbles.update(session, now);
+      questWindows.update(session);
       combatOverlay.update(session, now);
       audio.tick();
       skillsWindows.update(session);
@@ -304,7 +309,7 @@ viewport.addEventListener('pointerdown', event => {
   }
   // Servers without look-at support (community adapter) keep the old click-to-walk.
   if (chatSupported && event.pointerType === 'mouse' && event.button === 0) {
-    event.preventDefault(); renderer.app.canvas.focus();
+    event.preventDefault(); renderer.app.canvas.focus(); questWindows.closeOffers(); // frmMain.Form_MouseDown unloads FrmQuestInfo
     // One LeftClick per click (VB6 frmMain): on a door the tile follows the server's door rule, anywhere else it is the tile
     // itself. The counter is the session's shared one, so door, look-at, NPC and attack-target clicks never collide.
     const tile = doorAt(event) ?? tileAt(event);

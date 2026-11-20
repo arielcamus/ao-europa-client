@@ -1,0 +1,33 @@
+/* Quest forms (FrmQuests, FrmQuestInfo). Geometry in quest-window.ts; colours are the .frm BackColor/ForeColor values. */
+.quest-form { position: absolute; z-index: 8; background: #000 no-repeat 0 0; color: #fff; font: 11px Tahoma, Verdana, sans-serif; user-select: none; }
+.quest-form[hidden] { display: none; }
+.quest-form > * { position: absolute; box-sizing: border-box; }
+.q-title { text-align: center; font-weight: bold; color: #eba40e; white-space: nowrap; overflow: hidden; }
+#quest-offers .q-title { font-size: 12px; }
+.q-repeatable { text-align: center; color: #c0c0c0; text-decoration: underline; font: 11px Arial, sans-serif; }
+.q-rich { background: rgb(11,11,11); overflow-y: auto; white-space: pre-wrap; padding: 2px 3px; scrollbar-width: thin; }
+.q-center { text-align: center; color: rgb(128,128,128); }
+.q-left { text-align: left; color: rgb(240,240,240); }
+.q-main-list { overflow-y: auto; scrollbar-width: thin; }
+#quest-log .q-main-list { background: #000; }
+#quest-offers .q-main-list { background: #000; }
+.q-row { padding: 0 3px; height: 13px; line-height: 13px; white-space: nowrap; overflow: hidden; cursor: default; color: #fff; }
+.q-row[aria-selected="true"], .q-trow[aria-selected="true"] { background: #0a246a; color: #fff; }
+.q-offer-row[aria-selected="true"] { background: #0a246a; }
+.q-table { background: #000; color: #e0e0e0; overflow-y: auto; scrollbar-width: thin; }
+.q-trow { display: flex; height: 15px; line-height: 15px; padding: 0 2px; gap: 4px; cursor: default; }
+.q-tname { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: clip; }
+.q-tamount { flex: none; text-align: right; }
+.q-small .q-trow { font: 9px Arial, sans-serif; }
+.q-preview { background: rgb(11,11,11); overflow: hidden; }
+.q-preview canvas, .q-reward-icon canvas { display: block; }
+.q-label { text-align: center; white-space: pre-wrap; overflow: hidden; }
+.q-reward-icon { background: rgb(19,14,11); }
+.q-reward-icon[hidden] { display: none; }
+.q-hotspot { background: transparent no-repeat center; border: 0; padding: 0; cursor: pointer; }
+.q-hotspot:focus-visible { outline: 1px solid #eba40e; }
+.q-msgbox { left: 50%; top: 50%; transform: translate(-50%, -50%); width: 300px; background: #d4d0c8; color: #000; border: 2px outset #fff; font: 11px Tahoma, sans-serif; z-index: 2; position: absolute; }
+.q-msg-title { background: #0a246a; color: #fff; padding: 2px 5px; font-weight: bold; }
+.q-msg-text { padding: 12px 10px; white-space: normal; }
+.q-msg-buttons { display: flex; gap: 6px; justify-content: center; padding: 0 0 8px; }
+.q-msg-button { min-width: 64px; font: 11px Tahoma, sans-serif; }

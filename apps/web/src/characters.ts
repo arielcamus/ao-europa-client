@@ -4,7 +4,7 @@
  * Char_Dialog_Set) and Protocol.bas HandleCharacter*. Copyright (C) 2022-2026
  * Noland Studios. AGPL-3.0-or-later; no warranty. See ../../../LICENSE and NOTICE.
  */
-import { NpcsServerPacketId as N, ServerPacketId as S, Heading } from '@ao/protocol';
+import { NpcsServerPacketId as N, QuestServerPacketId as Q, ServerPacketId as S, Heading } from '@ao/protocol';
 import type { CharacterCreate, ServerPacket } from '@ao/protocol';
 import { splitName } from './character-data.js';
 import type { LocaleData } from './character-data.js';
@@ -18,6 +18,8 @@ export interface Character {
   heading: Heading; x: number; y: number; status: number; privileges: number;
   npc: number; npcNumber: number; speeding: number; idle: boolean; sailing: boolean;
   groupIndex: number; clanIndex: number;
+  /** Quest marker over an NPC (HandleCharacterCreate / HandleUpdateNPCSimbolo): 0 none, else grh 5257 + symbol. */
+  symbol: number;
   motion?: CharMotion | undefined; dialog?: CharDialog | undefined;
 }
 export type NpcDescription = { npcNumber: number; charIndex: number };
@@ -66,7 +68,7 @@ export class CharacterTracker {
           heading: packet.heading as Heading, x: packet.x, y: packet.y, status: packet.status,
           privileges: packet.privileges, npc: packet.npc, npcNumber: packet.npcNumber,
           speeding: packet.speeding > 0 ? packet.speeding : 1, idle: (packet.flags & 1) !== 0, sailing: (packet.flags & 2) !== 0,
-          groupIndex: packet.groupIndex, clanIndex: packet.clanIndex,
+          groupIndex: packet.groupIndex, clanIndex: packet.clanIndex, symbol: packet.symbol,
           // A re-create (area change) keeps a pending dialog, nothing else.
           ...(previous?.dialog ? { dialog: previous.dialog } : {}),
         });
@@ -83,6 +85,7 @@ export class CharacterTracker {
         this.revision++;
         break;
       }
+      case Q.UpdateNPCSimbolo: { const char = this.chars.get(packet.charIndex); if (char) { char.symbol = packet.symbol; this.revision++; } break; }
       case S.CharacterMove: this.move(packet.charIndex, packet.x, packet.y, now); break;
       case S.PosUpdateChar:
       case S.PosUpdateUserChar: {
