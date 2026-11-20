@@ -812,3 +812,10 @@ Result: transport, framing and the login handshake match PROTOCOL.md byte for by
 - Other server-side noise at load (Application log): many `404 NPC no existe en los .DAT's ... CargarMapaFormatoCSM` / `OpenNPC FAILED NpcInfoCache entry does not exist: <n>` (maps reference NPC numbers missing from the NPC cache: 944, 994, 1307, ...). Data load continues past them.
 - Browser: `AO_ASSETS=~/Projects/ao-reference/Recursos AO_TCP_PORT=7667 AO_WEB_PORT=5197 node tools/dev-web.mjs` (classic profile) + headless Chrome: login reaches the server, then "Server connection closed"; screenshot of that state `artifacts/screenshots/vb6-real-login-char-load-fails.png` (gitignored). Not a success shot.
 - Housekeeping: IDE session / server process untouched. Host disk 13 GB free at the end (VM image 17 GB).
+
+## 2026-11-20 instrumentation patch for the LoadCharacterFromDB E_FAIL (patch only, human re-import + F5 pending)
+`C:\ao\server\Codigo\CharacterPersistence.bas` (backup `.orig5`, diff `scripts/vm/patches/2026-11-20-characterpersistence-dbgstep.patch`, CRLF/latin-1, already applied in the VM).
+- Module-level `Dim dbgStep As String`; 151 markers `dbgStep = "<Sub> L<line>: <statement text>"` placed before every `RS!field` read, `Query(`/`Set RS`/`Execute(` call and every `Call` in `LoadCharacterFromDB`, in `SetupUserBasicInfo/Flags/FactionInfo/Spells/Pets/BankInventory/Skills/Quests/QuestsDone`, `LoadCharacterBank`, `LoadCharacterInventory`, `GetPatronTierFromAccountID`. No logic changed.
+- The four error handlers (main, Bank, Inventory, Patron tier) now log `... Línea: <Erl> [dbgStep=<last step>]`; the main one also logs `Source=<Err.Source>`.
+- Static suspect: none obvious. Candidates considered and left alone: main recordset `RS` stays open while the `Setup*` routines run other queries on the same connection; fields are read out of select order and some twice (`is_banned`); neither is wrong in VB6.
+- Read the result: `Get-EventLog -LogName Application -Source Argentum20 -Newest 5 | % { $_.Message }` after running `node tools/real-server/vb6-create-account.mjs`-style login (or the bot).
