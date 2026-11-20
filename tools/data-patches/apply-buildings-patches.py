@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # AGPL-3.0-or-later. Re-applies the Ullathorpe building patches (docs/DATA-PATCHES.md) to a server's Recursos folder.
-# Usage: apply-buildings-patches.py <Recursos dir> [--dry-run]. Idempotent; writes <file>.orig-<patch> backups before the first change.
+# Usage: apply-buildings-patches.py <Recursos dir> [--dry-run] [--zero-castle-triggers]. Idempotent; writes <file>.orig-<patch> backups before the first change.
 import re, shutil, struct, sys
 from pathlib import Path
 
@@ -13,7 +13,9 @@ DOOR_1425 = ("Name=Puerta abierta\r\nTexto=Puerta abierta\r\nGrhIndex=26106\r\nO
   "fr_Name=Porte ouverte\r\nfr_Texto=Porte ouverte\r\nit_Name=Porta aperta\r\nit_Texto=Porta aperta\r\n").encode('latin-1')
 # Map-referenced doors that were empty/absent, plus their open/locked partners (all present in `obj - copia.dat`).
 COPIA_IDS = [241, 242, 244, 245, 248, 249, 1235, 3598, 3599, 3600]
-CASTLE_TRIGGERS = {26, 27, 29, 31, 32, 33}  # mapa1.csm building interiors; 21..40 = EMPEROR_CASTLE_ENTRY_n on the server
+# SUPERSEDED by the server fix (vm-server 7b7ecbf, CheckCastleEntryWhiteList): the map keeps its original triggers. Only applied with --zero-castle-triggers,
+# for a server build without that fix. 21..40 = EMPEROR_CASTLE_ENTRY_n on the server.
+CASTLE_TRIGGERS = {26, 27, 29, 31, 32, 33}
 
 def backup(path, tag):
     b = path.with_name(path.name + '.orig-' + tag)
@@ -57,9 +59,11 @@ if new_obj != OBJ.read_bytes():
     print('obj.dat: patching'); backup(OBJ, 'buildings')
     if not dry: OBJ.write_bytes(new_obj)
 else: print('obj.dat: already patched')
-new_map, n = patch_map()
-print(f'mapa1.csm: {n} trigger tiles to zero')
-if n:
-    backup(MAP1, 'buildings')
-    if not dry: MAP1.write_bytes(new_map)
-print('restart the server to load both.')
+if '--zero-castle-triggers' in sys.argv:
+    new_map, n = patch_map()
+    print(f'mapa1.csm: {n} trigger tiles to zero')
+    if n:
+        backup(MAP1, 'buildings')
+        if not dry: MAP1.write_bytes(new_map)
+else: print('mapa1.csm: untouched (castle triggers are handled by the server fix)')
+print('restart the server to load the changes.')
