@@ -1,0 +1,70 @@
+--- a/Codigo/clsIniManager.cls
++++ b/Codigo/clsIniManager.cls
+@@ -194,9 +194,11 @@
+                 max = max - 1
+             Loop
+             If Min <= max Then
+-                Temp = .values(Min)
+-                .values(Min) = .values(max)
+-                .values(max) = Temp
++                If Min <> max Then
++                    Temp = .values(Min)
++                    .values(Min) = .values(max)
++                    .values(max) = Temp
++                End If
+                 Min = Min + 1
+                 max = max - 1
+             End If
+@@ -207,6 +209,33 @@
+     Exit Sub
+ SortChildNodes_Err:
+     Call TraceError(Err.Number, Err.Description, "clsIniManager.SortChildNodes", Erl)
++End Sub
++
++''
++'twinBASIC build: a whole-UDT swap (Temp = fileData(Min) ...) crashes with ACCESS_VIOLATION in ucrtbase when MainNode holds a dynamic array
++'(self-assignment when Min = max, or an unallocated values() array). Swap member by member, skip self swaps, and only copy values() when allocated.
++Private Sub SwapMainNodes(ByVal A As Long, ByVal B As Long)
++    If A = B Then Exit Sub
++    Dim tmpName As String
++    Dim tmpNum As Integer
++    Dim tmpValues() As ChildNode
++    tmpName = fileData(A).name
++    tmpNum = fileData(A).numValues
++    If tmpNum > 0 Then tmpValues = fileData(A).values
++    fileData(A).name = fileData(B).name
++    fileData(A).numValues = fileData(B).numValues
++    If fileData(B).numValues > 0 Then
++        fileData(A).values = fileData(B).values
++    Else
++        Erase fileData(A).values
++    End If
++    fileData(B).name = tmpName
++    fileData(B).numValues = tmpNum
++    If tmpNum > 0 Then
++        fileData(B).values = tmpValues
++    Else
++        Erase fileData(B).values
++    End If
+ End Sub
+ 
+ ''
+@@ -221,7 +250,6 @@
+     Dim Min  As Integer      'First item in the list
+     Dim max  As Integer      'Last item in the list
+     Dim comp As String      'Item used to compare
+-    Dim Temp As MainNode
+     Min = First
+     max = Last
+     comp = fileData((Min + max) \ 2).name
+@@ -233,9 +261,7 @@
+             max = max - 1
+         Loop
+         If Min <= max Then
+-            Temp = fileData(Min)
+-            fileData(Min) = fileData(max)
+-            fileData(max) = Temp
++            Call SwapMainNodes(Min, max)
+             Min = Min + 1
+             max = max - 1
+         End If
