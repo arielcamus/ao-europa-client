@@ -61,10 +61,12 @@ AO_PORT=7667 AO_EMAIL=<feature>@local.test AO_PASSWORD=... AO_CHAR_ID=<id> AO_CH
 Noise ids to ignore when diffing (`name`): `UserOnline`(112), `PlayWave`(55), `FlashScreen`(129), `hora`(117), `RainToggle`(59),
 `NieveToggle`(122), `AntiCheatStartSession`(197). Add to this list in the PR that finds another.
 
-## Why payload-only hex
+## Why the id stays in `hex`
 
-The id is already a field, the length is redundant and framing is covered by `packages/protocol/test/protocol.test.ts`; keeping only
-the payload lets one fixture row be compared with whatever encoder a server uses.
+Every feature's fixtures were recorded this way and decode with each other's codecs, and `hex` is then exactly the body the
+decoders take. The id field repeats it for grepping; the length prefix is redundant and framing is covered by
+`packages/protocol/test/protocol.test.ts`. `packages/protocol/test/fixtures-roundtrip.test.ts` decodes and re-encodes every row of
+every file under `tests/fixtures/vb6/**` and fails when a known packet does not reproduce its bytes.
 
 ## Fixtures
 

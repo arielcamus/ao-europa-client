@@ -8,7 +8,7 @@ import { DoorClientPacketId, DoorServerPacketId as DoorServer } from '@ao/protoc
 import type { CharacterCreate, ClientPacket } from '@ao/protocol';
 import { ClassicState } from './ui-state.js';
 import { MapObjects } from './map-objects.js';
-import { PacketCounters } from './packet-counters.js';
+import { PacketCounters, SEQUENCED_CLIENT_PACKETS } from './packet-counters.js';
 import type { PacketFamily } from './packet-counters.js';
 
 export interface Position { x: number; y: number }
@@ -64,7 +64,22 @@ export class Session {
   }
   get stepMs() { return Math.max(50, Math.ceil((this.walkInterval ?? 300) / (this.self?.speeding || 1))) + 30; }
 
-  private send(packet: ClientPacket) { this.write(encodeClientFrame(packet)); }
+  /**
+   * The one door to the socket. A sequence-checked packet must carry the counter that session.next(family) just issued; a counter
+   * kept anywhere else would drift from the server's per-family counter and get the socket closed, so it is refused here.
+   */
+  private send(packet: ClientPacket) {
+    const family = SEQUENCED_CLIENT_PACKETS[packet.id];
+    if (family !== undefined) {
+      const counter = (packet as { counter?: unknown }).counter;
+      if (counter !== this.counters.current(family) || this.issued.get(family) === counter) {
+        throw new Error(`Packet ${packet.id} must take its counter from session.next('${family}')`);
+      }
+      this.issued.set(family, counter);
+    }
+    this.write(encodeClientFrame(packet));
+  }
+  private readonly issued = new Map<string, number>();
   receive(bytes: Uint8Array): void {
     if (this.phase === 'closed') return;
     for (const body of this.decoder.push(bytes)) {
