@@ -21,7 +21,7 @@ try {
   const standin = standinMode ? await startStandin({ debugging: true, classicUi: true, rejectWalks: process.env.AO_STANDIN_REJECT_WALKS === '1', log: console.log }) : undefined;
   if (standin) cleanup.push(() => standin.close());
   const tcpPort = standin?.port ?? Number(process.env.AO_TCP_PORT ?? 7666);
-  const bridge = await startBridge({ tcpHost: standin?.host ?? process.env.AO_TCP_HOST ?? '127.0.0.1', tcpPort, log: console.log });
+  const bridge = await startBridge({ port: Number(process.env.AO_BRIDGE_PORT ?? 0), tcpHost: standin?.host ?? process.env.AO_TCP_HOST ?? '127.0.0.1', tcpPort, log: console.log });
   cleanup.push(() => bridge.close());
   const configure = server => {
     server.middlewares.use((request, response, next) => {
