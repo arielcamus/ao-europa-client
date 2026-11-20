@@ -114,3 +114,96 @@ AO_STANDIN_DEBUG=0 AO_STANDIN_REJECT_WALKS=1 pnpm bot:standin
 - No implemented layout remains unverified against the paired VB6 source procedures.
   **Unverified limitation:** no real compiled VB6 server exists here; the stand-in
   proves the source-derived subset and transport behavior, not a live game login.
+
+## 2026-11-20 real-server attempt on this Mac (A: blocked)
+
+Session began **07:09:47 UTC**. Read this log, PROTOCOL, draft PR #1, and all three
+port assessments. References already survive outside `/private/tmp` in
+`~/Projects/ao-reference/{argentum-online-server-classic,argentum-online-client-classic,Recursos,Aurora.Network}`.
+The shortened checkout names in earlier notes are aliases, not actual directories.
+
+Host: Apple M1, arm64, 16 GB, macOS 26.6.2 (25G83), Homebrew 7.0.11.
+Rosetta was absent (`arch -x86_64 /usr/bin/uname -m` failed). Installed it with
+`softwareupdate --install-rosetta --agree-to-license`; completed successfully.
+`brew install --cask wine-stable` failed: Homebrew disabled the cask on 2026-09-01
+because it does not pass Gatekeeper. `wine@devel` is also disabled. Used the
+upstream WineHQ macOS package referenced by the cask, without changing Gatekeeper
+or globally installing Wine. Its SHA-256 matched Homebrew's published value.
+
+Exact successful runtime preparation (paths are local, no binaries committed):
+
+```sh
+softwareupdate --install-rosetta --agree-to-license
+brew install --cask wine-stable # fails: disabled cask, see above
+mkdir -p "$HOME/Projects/ao-reference/runtime/downloads"
+cd "$HOME/Projects/ao-reference/runtime"
+curl -fL -o downloads/wine-stable-11.0_1-osx64.tar.xz \
+  https://github.com/Gcenx/macOS_Wine_builds/releases/download/11.0_1/wine-stable-11.0_1-osx64.tar.xz
+shasum -a 256 downloads/wine-stable-11.0_1-osx64.tar.xz
+# b50dc50ec7f41d58b115a6b685d4d1315ba3c797bd3aa0f49213f2703cb82388
+tar -xf downloads/wine-stable-11.0_1-osx64.tar.xz
+export WINEPREFIX="$HOME/Projects/ao-reference/runtime/prefix"
+export WINEDEBUG=-all MVK_CONFIG_LOG_LEVEL=0
+ao_wine='./Wine Stable.app/Contents/Resources/wine/bin/wine'
+"$ao_wine" --version # wine-11.0
+"$ao_wine" wineboot --init
+"$ao_wine" 'C:\windows\syswow64\cmd.exe' /c ver
+# Microsoft Windows 10.0.19045 (32-bit executable through WoW64/Rosetta)
+"$ao_wine" 'C:\windows\syswow64\regsvr32.exe' /s \
+  'Z:\Users\arielcamus\Projects\ao-reference\argentum-online-server-classic\Aurora.Network.dll'
+"$ao_wine" 'C:\windows\syswow64\regsvr32.exe' /s \
+  'Z:\Users\arielcamus\Projects\ao-reference\argentum-online-server-classic\DX8VB.DLL'
+brew install cabextract # 1.12
+curl -fL -o downloads/WindowsXP-KB936929-SP3-x86-ENU.exe \
+  http://www.download.windowsupdate.com/msdownload/update/software/dflt/2008/04/windowsxp-kb936929-sp3-x86-enu_c81472f7eeea2eca421e116cd4c03e2300ebfde4.exe
+shasum -a 256 downloads/WindowsXP-KB936929-SP3-x86-ENU.exe
+# 62e524a552db9f6fd22d469010ea4d7e28ee06fa615a1c34362129f808916654
+cabextract -q -d downloads/vb6 -L -F i386/msvbvm60.dl_ \
+  downloads/WindowsXP-KB936929-SP3-x86-ENU.exe
+cabextract -q -d prefix/drive_c/windows/syswow64 downloads/vb6/i386/msvbvm60.dl_
+"$ao_wine" 'C:\windows\syswow64\regsvr32.exe' /s msvbvm60.dll
+curl -fL -o downloads/sqliteodbc.exe http://www.ch-werner.de/sqliteodbc/sqliteodbc.exe
+shasum -a 256 downloads/sqliteodbc.exe
+# 3bce566ecc2545a49c0cad1d0c4c62ddafd529b77bdc147c1dcee8eace8acc70
+"$ao_wine" downloads/sqliteodbc.exe /S
+"$ao_wine" 'C:\windows\syswow64\reg.exe' query 'HKLM\Software\ODBC\ODBCINST.INI' /s
+```
+
+All three `regsvr32` calls reported success. Aurora's 1.5 type library and x86
+CLSID entries are in the prefix registry. The x86 ODBC registry reports
+`SQLite3 ODBC Driver = Installed`, driver/setup `sqlite3odbc.dll`. `file` confirms
+the extracted `msvbvm60.dll` is PE32/i386. HTTPS variants of the two old download
+hosts failed certificate hostname checks; used their documented HTTP URLs. The
+Microsoft package was verified against the hash in upstream Winetricks `vb6run`.
+The SQLite hash above records the downloaded installer; it is not a signed
+upstream checksum. A supplemental cscript COM/ADO smoke attempt produced no
+output, so **COM activation/ADO queries and application startup are not proven**.
+
+The actual compile attempt:
+
+```sh
+"$ao_wine" 'C:\Program Files (x86)\Microsoft Visual Studio\VB98\vb6.exe' \
+  /make 'Z:\Users\arielcamus\Projects\ao-reference\argentum-online-server-classic\Server.VBP' \
+  /d PYMMO=0:DIRECT_PLAY=0:DEBUGGING=0
+# exit 53: wine: failed to open ...\VB98\vb6.exe
+```
+
+**Exact blocker:** no compiled classic `Server.exe`, and no licensed VB6 compiler
+or installation media in the supplied references/Downloads. Rechecked upstream
+release API: v5.6.77, v5.6.78 and v5.6.79 all have `assets: []`. The upstream
+README requires opening Server.VBP in VB6; Agents.md names that same compiler.
+Wine can execute x86 programs here; the missing compiler is not a Wine execution
+failure. UTM/Windows ARM was therefore **not installed or claimed tested**: changing
+OS does not supply this prerequisite. No cloud resources used.
+
+To unblock A, supply a trusted compiled server for the pinned revision with
+`PYMMO=0,DIRECT_PLAY=0`, or licensed VB6 installation media. Then complete OCX/ADO
+startup validation, copy example INIs/Empty_db.db into an isolated server working
+copy, configure a local test account, and run `pnpm bot` for the required 30 seconds.
+No real-server login, connected-duration or walk claim is made. **PR #1 stays draft.**
+M2 uses the explicitly labelled stand-in, as allowed by the task.
+
+Sources: [Homebrew cask](https://formulae.brew.sh/cask/wine-stable),
+[WineHQ macOS package maintainer](https://github.com/Gcenx/macOS_Wine_builds),
+[Winetricks runtime extraction](https://github.com/Winetricks/winetricks/blob/master/src/winetricks),
+and the pinned server README/Agents.md.
