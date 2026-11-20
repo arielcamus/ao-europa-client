@@ -7,9 +7,12 @@ Licence: code AGPL-3.0 (parts translated from ao-org VB6 sources keep their noti
 (Noland Studios): never committed, loaded from a local path (`AO_ASSETS`), conversion only.
 
 M1 provides a protocol library, a headless TCP bot, a binary WebSocket bridge, and
-a **TEST STAND-IN** server. The real target is the **ao-org classic VB6 server**.
-No compiled VB6 server was available for this milestone, so live interoperability
-with it remains untested. The stand-in is a deterministic fixture, not a game server.
+a **TEST STAND-IN** fixture. A real community AO server now runs natively on this
+Mac: [lambdaclass/argentum](https://github.com/lambdaclass/argentum), with an opt-in
+classic transport adapter. The bot passed 30 seconds and five accepted walks;
+real collision, authentication and PostgreSQL persistence were checked too.
+See [setup and scope](tools/real-server/README.md). Interoperability with the
+original **ao-org VB6 executable** remains untested; no compiled binary was found.
 
 M2 adds a browser client that renders local classic maps and an animated character
 with keyboard/touch walking through the bridge. **The demonstrated backend is the

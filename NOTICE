@@ -24,5 +24,12 @@ Upstream: https://github.com/Wolftein/Aurora.Network
 The adapted binary and framing sources retain this Apache notice; the combined
 ao-client project is distributed under AGPL-3.0-or-later.
 
-No game assets are included. The stand-in is a test fixture, not the AO game
-server; the real interoperability target is the ao-org classic VB6 server.
+The optional server gateway patch targets lambdaclass/argentum, Apache-2.0:
+https://github.com/lambdaclass/argentum
+Revision: 1699a662e6352bfcc9ea5905c6d6f2c0157cb1e7
+Upstream is obtained separately and retains its own LICENSE and notices.
+The added classic_profile.ex adapter is AGPL-3.0-or-later.
+
+No game assets are included. The stand-in is a test fixture. The real community
+server uses the optional classic adapter; the original ao-org VB6 executable
+remains a separate interoperability target that has not yet been verified.

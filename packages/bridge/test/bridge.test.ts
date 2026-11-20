@@ -80,8 +80,8 @@ describe('binary WebSocket to TCP bridge', () => {
       ws.send(expected.subarray(offset, offset + 65537), { binary: true });
     }
     await echoed;
-    expect(Buffer.concat(tcpReceived)).toEqual(expected);
-    expect(Buffer.concat(received)).toEqual(expected);
+    expect(Buffer.concat(tcpReceived).equals(expected)).toBe(true);
+    expect(Buffer.concat(received).equals(expected)).toBe(true);
   });
 
   it('rejects text without forwarding it to TCP', async () => {
