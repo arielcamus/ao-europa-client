@@ -1,0 +1,102 @@
+diff --git a/server/apps/ao_tcp_gateway/lib/ao_tcp_gateway/application.ex b/server/apps/ao_tcp_gateway/lib/ao_tcp_gateway/application.ex
+index 4f92a2a..2f7b059 100644
+--- a/server/apps/ao_tcp_gateway/lib/ao_tcp_gateway/application.ex
++++ b/server/apps/ao_tcp_gateway/lib/ao_tcp_gateway/application.ex
+@@ -28,7 +28,7 @@ defmodule AoTcpGateway.Application do
+         id: :ao_ws_listener,
+         start: {:cowboy, :start_clear, [
+           :ao_ws_listener,
+-          [port: ws_port, max_connections: :infinity],
++          [ip: {127, 0, 0, 1}, port: ws_port, max_connections: :infinity],
+           %{env: %{dispatch: ws_dispatch}}
+         ]},
+         type: :supervisor
+diff --git a/server/apps/ao_tcp_gateway/lib/ao_tcp_gateway/client_handler.ex b/server/apps/ao_tcp_gateway/lib/ao_tcp_gateway/client_handler.ex
+index 201c3ee..3cd52a1 100644
+--- a/server/apps/ao_tcp_gateway/lib/ao_tcp_gateway/client_handler.ex
++++ b/server/apps/ao_tcp_gateway/lib/ao_tcp_gateway/client_handler.ex
+@@ -12,7 +12,7 @@ defmodule AoTcpGateway.ClientHandler do
+ 
+   alias AoProtocol.{Classify, Server.Encoder}
+   alias AoSession.{Egress, Outbound, PressureRegistry}
+-  alias AoTcpGateway.{FloodGuard, PacketCounter, SessionLogic}
++  alias AoTcpGateway.{ClassicProfile, FloodGuard, PacketCounter, SessionLogic}
+ 
+   @backpressure_warn Application.compile_env(:ao_tcp_gateway, :backpressure_warn, 500)
+   @backpressure_disconnect Application.compile_env(:ao_tcp_gateway, :backpressure_disconnect, 1000)
+@@ -29,6 +29,7 @@ defmodule AoTcpGateway.ClientHandler do
+     transport.setopts(socket, active: :once, nodelay: true, send_timeout: 5_000, send_timeout_close: true)
+ 
+     Logger.info("Client connected")
++    if ClassicProfile.enabled?(), do: transport.send(socket, ClassicProfile.wire(Encoder.encode({:connected, %{}})))
+ 
+     loop(%{
+       socket: socket,
+@@ -188,7 +189,7 @@ defmodule AoTcpGateway.ClientHandler do
+   defp write_bins(_state, []), do: :ok
+ 
+   defp write_bins(state, bins) do
+-    state.transport.send(state.socket, Enum.reduce(bins, <<>>, &(&2 <> &1)))
++    state.transport.send(state.socket, Enum.map(bins, &ClassicProfile.wire/1))
+   end
+ 
+   defp update_pressure(state, eg) do
+@@ -287,7 +288,7 @@ defmodule AoTcpGateway.ClientHandler do
+   end
+ 
+   defp decode_loop_inner(state) do
+-    case AoProtocol.Client.Decoder.decode(state.buffer) do
++    case ClassicProfile.decode(state.buffer) do
+       {:ok, command, rest} ->
+         case FloodGuard.check(state.flood_guard) do
+           {:ok, guard} ->
+@@ -321,12 +322,25 @@ defmodule AoTcpGateway.ClientHandler do
+ 
+       {:error, reason} ->
+         Logger.warning("Packet decode error: #{inspect(reason)}")
+-        state
++        if ClassicProfile.enabled?() do
++          SessionLogic.cleanup(state)
++          state.transport.close(state.socket)
++          %{state | buffer: <<>>, character_id: nil, map_id: nil}
++        else
++          state
++        end
+     end
+   end
+ 
+   # ---- Command dispatch ----
+ 
++  defp dispatch_command(state, {:classic_login_account, params}),
++    do: ClassicProfile.login_account(state, params)
++
++  defp dispatch_command(state, {:classic_login_character, params}),
++    do: ClassicProfile.login_character(state, params)
++
++
+   defp dispatch_command(state, {:login_existing_char, %{char_id: char_id, session_token: token}}) do
+     Logger.info("Login attempt: char_id=#{char_id}")
+     SessionLogic.login_existing(state, char_id, token)
+@@ -353,7 +367,7 @@ defmodule AoTcpGateway.ClientHandler do
+   end
+ 
+   defp send_to_client(state, command) do
+-    packet = Encoder.encode(command)
+-    state.transport.send(state.socket, packet)
++    packet = ClassicProfile.encode(command)
++    state.transport.send(state.socket, ClassicProfile.wire(packet))
+   end
+ end
+diff --git a/server/apps/ao_tcp_gateway/lib/ao_tcp_gateway/listener.ex b/server/apps/ao_tcp_gateway/lib/ao_tcp_gateway/listener.ex
+index 089f105..c401cea 100644
+--- a/server/apps/ao_tcp_gateway/lib/ao_tcp_gateway/listener.ex
++++ b/server/apps/ao_tcp_gateway/lib/ao_tcp_gateway/listener.ex
+@@ -10,7 +10,7 @@ defmodule AoTcpGateway.Listener do
+     :ranch.child_spec(
+       __MODULE__,
+       :ranch_tcp,
+-      [port: port, max_connections: :infinity],
++      [ip: {127, 0, 0, 1}, port: port, max_connections: :infinity],
+       AoTcpGateway.ClientHandler,
+       []
+     )
