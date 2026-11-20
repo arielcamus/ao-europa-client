@@ -772,3 +772,13 @@ Result: `C:\ao\server\server.exe` (14,658,048 B, 17:48) starts but never listens
 - Not done on purpose: no licence key was guessed or injected into the registry (licensing is Ariel's call).
 - Cleanup: killed my own server.exe, removed temp scripts in C:\ao. AOClassicServer task left registered (Ready). Undo of nothing else needed; VM state otherwise unchanged. Host disk 22 GB free.
 Options (each needs a human twinBASIC re-import/build): (1) replace the 3 ProgressBars with a PictureBox/Label bar or twinBASIC's native ProgressBar and delete the `Object=` comctl line if nothing else uses it (fastest, no licence issue); (2) Ariel supplies the VB6 licence key/LPK and we add it under `HKCR\Licenses`; (3) check other comctl32 controls (grep showed only ProgressBar in server .frm files).
+
+## 2026-11-20 licence-free ProgressBar patch (option 1, coordinator go)
+Patch only, no GUI, no build. Applied in the VM at `C:\ao\server`; backups `<file>.orig2` (frmCargando.frm, FrmStat.frm, frmDbControl.frm, Server.VBP). Diff: `scripts/vm/patches/2026-11-20-progressbar-replacement.patch` (CRLF, latin-1; already applied in the VM, do not re-apply).
+- New `Codigo/clsProgressBar.cls` (Min/Max/Value/Visible, paints a bar with `Line ... BF` on a PictureBox). Added `Class=clsProgressBar; Codigo\clsProgressBar.cls` to Server.VBP.
+- Each of the 3 forms: ComctlLib.ProgressBar replaced by `VB.PictureBox picCargar / picProgress1 / picPbarDb` (same position/size/TabIndex/Visible), `Public cargar|ProgressBar1|pbarDb As New clsProgressBar` plus `Form_Initialize` that binds `.Host`. All existing `frmCargando.cargar.Min/.max/.value`, `With frmCargando.cargar`, `FrmStat.ProgressBar1.value = .value + 1` and `pbarDb.Visible/.max/.value` call sites stay untouched (FileIO.bas, Admin.bas, frmDbControl.frm). The `Object = ...comctl32.ocx` line removed from the 3 .frm and `Object={6B7E6392...} comctl32.ocx` from Server.VBP.
+- grep of every .frm/.bas/.cls for ComctlLib / MSComctlLib / ProgressBar: only those 3 controls (no TreeView, ListView, ImageList, StatusBar etc.). Nothing else references comctl32.ocx.
+- Licence scan (32-bit PowerShell CreateInstance of every CLSID registered to comctl32.ocx, msinet.ocx, msdatgrd.ocx): ALL fail 0x80040112 (not licensed), including MSINET Internet Transfer {48E59293...} and DataGrid {CDE57A43...}.
+  - MSDATGRD: `frmDbControl.DataGrid1` is used (opened from a frmMain menu item, frmMain.frm:730), NOT at startup. Still a licence risk the first time that form opens; left untouched (not in the brief).
+  - MSINET: `Object=` line in Server.VBP only; no form or code uses Inet. Proposal: delete that VBP line (harmless, avoids a dead dependency).
+- Undo: copy each `.orig2` over its file and delete `Codigo\clsProgressBar.cls`.
