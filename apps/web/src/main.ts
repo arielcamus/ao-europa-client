@@ -17,6 +17,9 @@ import { KeyAction, keyAction } from './keymap.js';
 import { KeysClientPacketId as K, WorkSkill } from '@ao/protocol';
 import { Minimap } from './minimap.js';
 import { AudioSystem } from './audio-system.js';
+import './bank-trade.css';
+import { BankUI } from './bank-ui.js';
+import { TradeUI } from './trade-ui.js';
 
 applyClassicLayout();
 const form = element<HTMLFormElement>('login'), account = element<HTMLInputElement>('email'), password = element<HTMLInputElement>('password');
@@ -46,9 +49,13 @@ const combatOverlay = new CombatOverlay(viewport, renderer);
 const itemsUi = new ItemsUI(ui, element('classic'), report);
 ui.onActivate = slot => guard(() => session?.itemActions.activate(slot));
 const audio = new AudioSystem(element('classic'), renderer, report);
+const bankUi = new BankUI(element('classic'), ui, report);
+const tradeUi = new TradeUI(element('classic'), viewport, ui, report);
+/** IsDialogOpen: the bank, Goliath and trade windows pause walking. */
+const transacting = () => bankUi.dialogOpen || tradeUi.dialogOpen;
 const clearInput = () => { keys.clear(); touchHeading = undefined; };
 function walk(heading: Heading) {
-  try { if (session && renderer.readyMap === session.resourceMap) session.walk(heading); }
+  try { if (session && !transacting() && renderer.readyMap === session.resourceMap) session.walk(heading); }
   catch (error) { close(error instanceof Error ? error.message : String(error)); }
 }
 function attack() {
@@ -95,7 +102,7 @@ async function boot() {
         session.tick();
         if (!session.tracker.locale && renderer.locale) session.tracker.locale = renderer.locale;
         const heading = touchHeading ?? [...keys.values()].at(-1);
-        if (heading && renderer.readyMap === session.resourceMap) session.walk(heading);
+        if (heading && !transacting() && renderer.readyMap === session.resourceMap) session.walk(heading);
         if (session.ready && session.resourceMap !== requestedMap) {
           requestedMap = session.resourceMap;
           const currentSession = session;
@@ -112,7 +119,7 @@ async function boot() {
   });
 }
 function updateUi(now: number) {
-  ui.update(session);
+  ui.update(session); bankUi.update(session); tradeUi.update(session);
   itemsUi.update(session);
   if (!session) return;
   const playing = session.ready && renderer.readyMap === session.resourceMap;
@@ -221,7 +228,9 @@ function gameKey(action: KeyAction) {
   }
 }
 window.addEventListener('keydown', event => {
-  if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); itemsUi.closeDialogs(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
+  if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); itemsUi.closeDialogs(); bankUi.closeDialogs(); tradeUi.closeDialogs(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
+  // IsDialogOpen: while the vault, Goliath or a trade window is up the game keys (attack, use, drop...) do nothing.
+  if (transacting()) return;
   // The inventory slot that was just clicked keeps focus; the game keys must still work from it.
   const inInventory = event.target instanceof HTMLElement && event.target.closest('#inventory') !== null;
   if (event.target instanceof HTMLElement && !inInventory && event.target.closest('input, textarea, select, button, [role="listbox"], dialog')) return;
@@ -269,6 +278,7 @@ const tileAt = (event: PointerEvent) => session ? renderer.tileAt(session, event
 viewport.addEventListener('pointermove', event => { if (event.pointerType === 'mouse') renderer.hoverTile = tileAt(event); });
 viewport.addEventListener('pointerleave', () => { renderer.hoverTile = undefined; });
 viewport.addEventListener('pointerdown', event => {
+  bankUi.closeOnWorldClick(); // frmMain.renderer_MouseDown unloads frmBancoObj and frmGoliath
   if (!event.isPrimary || !session?.ready) return;
   // While the server asked for a target (UsingSkill <> 0) any click or tap is a WorkLeftClick (ModGameplayUI), never a LeftClick.
   if (session.spells.targeting) {

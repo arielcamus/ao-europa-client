@@ -9,18 +9,18 @@
  ],
  "headline": {
   "packets": 523,
-  "packetsCovered": 107,
-  "packetsMerged": 107,
+  "packetsCovered": 136,
+  "packetsMerged": 136,
   "s2c": 207,
   "c2s": 316,
-  "s2cCovered": 69,
-  "c2sCovered": 38,
+  "s2cCovered": 80,
+  "c2sCovered": 56,
   "forms": 86,
   "formsCovered": 2,
   "formsPartial": 2,
-  "fixturePackets": 89,
-  "packetsPct": 20.5,
-  "packetsMergedPct": 20.5,
+  "fixturePackets": 116,
+  "packetsPct": 26,
+  "packetsMergedPct": 26,
   "formsPct": 2.3,
   "formsStartedPct": 4.7
  },
@@ -41,9 +41,9 @@
    "id": "chat",
    "title": "Chat",
    "packets": 28,
-   "packetsCovered": 19,
-   "packetsMerged": 19,
-   "packetsPct": 67.9,
+   "packetsCovered": 21,
+   "packetsMerged": 21,
+   "packetsPct": 75,
    "forms": 0,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -77,9 +77,9 @@
    "id": "items",
    "title": "Items / commerce (NPC shop, inventory)",
    "packets": 27,
-   "packetsCovered": 22,
-   "packetsMerged": 22,
-   "packetsPct": 81.5,
+   "packetsCovered": 23,
+   "packetsMerged": 23,
+   "packetsPct": 85.2,
    "forms": 4,
    "formsCovered": 2,
    "formsPartial": 0,
@@ -101,9 +101,9 @@
    "id": "bank",
    "title": "Bank",
    "packets": 16,
-   "packetsCovered": 0,
-   "packetsMerged": 0,
-   "packetsPct": 0,
+   "packetsCovered": 16,
+   "packetsMerged": 16,
+   "packetsPct": 100,
    "forms": 3,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -113,9 +113,9 @@
    "id": "trade",
    "title": "Trade (player to player)",
    "packets": 8,
-   "packetsCovered": 0,
-   "packetsMerged": 0,
-   "packetsPct": 0,
+   "packetsCovered": 8,
+   "packetsMerged": 8,
+   "packetsPct": 100,
    "forms": 2,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -125,9 +125,9 @@
    "id": "party",
    "title": "Party",
    "packets": 9,
-   "packetsCovered": 0,
-   "packetsMerged": 0,
-   "packetsPct": 0,
+   "packetsCovered": 2,
+   "packetsMerged": 2,
+   "packetsPct": 22.2,
    "forms": 2,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -465,13 +465,18 @@
    "writer": "server Protocol_Writes.bas:WriteBankEnd",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+   ]
   },
   {
    "key": "s2c:10",
@@ -503,13 +508,18 @@
    "writer": "server Protocol_Writes.bas:WriteBankInit",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+   ]
   },
   {
    "key": "s2c:12",
@@ -520,13 +530,28 @@
    "writer": "server Protocol_Writes.bas:WriteUserCommerceInit",
    "group": "trade",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/trade/cancel-initiator.jsonl",
+    "tests/fixtures/vb6/trade/cancel-responder.jsonl",
+    "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
+    "tests/fixtures/vb6/trade/give-back-responder.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-initiator.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl",
+    "tests/fixtures/vb6/trade/reject-initiator.jsonl",
+    "tests/fixtures/vb6/trade/reject-responder.jsonl"
+   ]
   },
   {
    "key": "s2c:13",
@@ -537,13 +562,28 @@
    "writer": "server Protocol_Writes.bas:WriteUserCommerceEnd",
    "group": "trade",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/trade/cancel-initiator.jsonl",
+    "tests/fixtures/vb6/trade/cancel-responder.jsonl",
+    "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
+    "tests/fixtures/vb6/trade/give-back-responder.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-initiator.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl",
+    "tests/fixtures/vb6/trade/reject-initiator.jsonl",
+    "tests/fixtures/vb6/trade/reject-responder.jsonl"
+   ]
   },
   {
    "key": "s2c:14",
@@ -844,8 +884,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl"
+   ]
   },
   {
    "key": "s2c:29",
@@ -1043,8 +1085,12 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/npcs.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/far-from-banker.jsonl",
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+   ]
   },
   {
    "key": "s2c:37",
@@ -1083,7 +1129,10 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl"
    ]
   },
   {
@@ -1177,6 +1226,7 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
@@ -1198,7 +1248,11 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
+    "tests/fixtures/vb6/trade/give-back-responder.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-responder.jsonl"
    ]
   },
   {
@@ -1256,6 +1310,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/bank/deposit-move-extract.jsonl",
+    "tests/fixtures/vb6/bank/far-from-banker.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
@@ -1264,7 +1320,9 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-responder.jsonl"
    ]
   },
   {
@@ -1559,6 +1617,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
@@ -1741,7 +1801,9 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl"
    ]
   },
   {
@@ -1787,6 +1849,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
+    "tests/fixtures/vb6/bank/deposit-move-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
@@ -1807,7 +1871,19 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/trade/cancel-initiator.jsonl",
+    "tests/fixtures/vb6/trade/cancel-responder.jsonl",
+    "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
+    "tests/fixtures/vb6/trade/give-back-responder.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-initiator.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl",
+    "tests/fixtures/vb6/trade/reject-initiator.jsonl",
+    "tests/fixtures/vb6/trade/reject-responder.jsonl"
    ]
   },
   {
@@ -1838,13 +1914,19 @@
    "writer": "server Protocol_Writes.bas:WriteChangeBankSlot",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/deposit-move-extract.jsonl",
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+   ]
   },
   {
    "key": "s2c:66",
@@ -2511,11 +2593,13 @@
    "writer": "server Protocol_Writes.bas:WriteShowUserRequest",
    "group": "trade",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2528,13 +2612,20 @@
    "writer": "server Protocol_Writes.bas:WriteChangeUserTradeSlot",
    "group": "trade",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-responder.jsonl"
+   ]
   },
   {
    "key": "s2c:101",
@@ -2787,6 +2878,10 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
+    "tests/fixtures/vb6/bank/deposit-move-extract.jsonl",
+    "tests/fixtures/vb6/bank/far-from-banker.jsonl",
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
@@ -2810,7 +2905,17 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
+    "tests/fixtures/vb6/trade/give-back-responder.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/invitation-declined-initiator.jsonl",
+    "tests/fixtures/vb6/trade/invitation-declined-responder.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-initiator.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl"
    ]
   },
   {
@@ -3000,6 +3105,7 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
@@ -3021,7 +3127,9 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
+    "tests/fixtures/vb6/trade/give-back-responder.jsonl"
    ]
   },
   {
@@ -3090,13 +3198,18 @@
    "writer": null,
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+   ]
   },
   {
    "key": "s2c:125",
@@ -3445,6 +3558,10 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
+    "tests/fixtures/vb6/bank/deposit-move-extract.jsonl",
+    "tests/fixtures/vb6/bank/far-from-banker.jsonl",
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
@@ -3467,7 +3584,19 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/trade/cancel-responder.jsonl",
+    "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
+    "tests/fixtures/vb6/trade/give-back-responder.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/invitation-declined-initiator.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-initiator.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl",
+    "tests/fixtures/vb6/trade/reject-initiator.jsonl",
+    "tests/fixtures/vb6/trade/reject-responder.jsonl"
    ]
   },
   {
@@ -3479,13 +3608,23 @@
    "writer": null,
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/trade/cancel-responder.jsonl",
+    "tests/fixtures/vb6/trade/give-back-responder.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/invitation-declined-responder.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl",
+    "tests/fixtures/vb6/trade/reject-responder.jsonl"
+   ]
   },
   {
    "key": "s2c:143",
@@ -3969,13 +4108,18 @@
    "writer": "server Protocol_Writes.bas:WriteCommerceRecieveChatMessage",
    "group": "chat",
    "package": "wp01",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/trade/offer-and-accept-initiator.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl"
+   ]
   },
   {
    "key": "s2c:167",
@@ -4122,13 +4266,17 @@
    "writer": "server Protocol_Writes.bas:WriteUpdateBankGld",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl"
+   ]
   },
   {
    "key": "s2c:176",
@@ -4978,13 +5126,18 @@
    "writer": "client Protocol_Writes.bas:WriteBankExtractItem",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/deposit-move-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+   ]
   },
   {
    "key": "c2s:11",
@@ -5016,13 +5169,18 @@
    "writer": "client Protocol_Writes.bas:WriteBankDeposit",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/deposit-move-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+   ]
   },
   {
    "key": "c2s:13",
@@ -5088,13 +5246,22 @@
    "writer": "client Protocol_Writes.bas:WriteUserCommerceOffer",
    "group": "trade",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/trade/give-back-responder.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-initiator.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl",
+    "tests/fixtures/vb6/trade/reject-responder.jsonl"
+   ]
   },
   {
    "key": "c2s:17",
@@ -5515,13 +5682,19 @@
    "writer": "client Protocol_Writes.bas:WriteRequestAccountState",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/far-from-banker.jsonl",
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+   ]
   },
   {
    "key": "c2s:42",
@@ -5731,13 +5904,23 @@
    "writer": "client Protocol_Writes.bas:WriteCommerceStart",
    "group": "items",
    "package": "wp04",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/trade/cancel-initiator.jsonl",
+    "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/invitation-declined-initiator.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-initiator.jsonl",
+    "tests/fixtures/vb6/trade/reject-initiator.jsonl"
+   ]
   },
   {
    "key": "c2s:54",
@@ -5748,13 +5931,19 @@
    "writer": "client Protocol_Writes.bas:WriteBankStart",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/far-from-banker.jsonl",
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+   ]
   },
   {
    "key": "c2s:55",
@@ -6036,13 +6225,19 @@
    "writer": "client Protocol_Writes.bas:WriteBankExtractGold",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/far-from-banker.jsonl",
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+   ]
   },
   {
    "key": "c2s:71",
@@ -6053,13 +6248,19 @@
    "writer": "client Protocol_Writes.bas:WriteBankDepositGold",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/far-from-banker.jsonl",
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+   ]
   },
   {
    "key": "c2s:72",
@@ -6446,13 +6647,17 @@
    "writer": "client Protocol_Writes.bas:WriteUserCommerceEnd",
    "group": "trade",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/trade/cancel-initiator.jsonl"
+   ]
   },
   {
    "key": "c2s:90",
@@ -6463,13 +6668,19 @@
    "writer": "client Protocol_Writes.bas:WriteBankEnd",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/far-from-banker.jsonl",
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+   ]
   },
   {
    "key": "c2s:91",
@@ -6480,13 +6691,24 @@
    "writer": "client Protocol_Writes.bas:WriteUserCommerceOk",
    "group": "trade",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
+    "tests/fixtures/vb6/trade/give-back-responder.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-initiator.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl"
+   ]
   },
   {
    "key": "c2s:92",
@@ -6497,13 +6719,17 @@
    "writer": "client Protocol_Writes.bas:WriteUserCommerceReject",
    "group": "trade",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/trade/reject-responder.jsonl"
+   ]
   },
   {
    "key": "c2s:93",
@@ -6569,13 +6795,20 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
+    "tests/fixtures/vb6/bank/far-from-banker.jsonl",
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
-    "tests/fixtures/vb6/npcs/session-npcdesc.jsonl"
+    "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-responder.jsonl"
    ]
   },
   {
@@ -8911,11 +9144,13 @@
    "writer": "client Protocol_Writes.bas:WriteTraerBoveda",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8962,13 +9197,23 @@
    "writer": "client Protocol_Writes.bas:WriteResponderPregunta",
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/trade/cancel-responder.jsonl",
+    "tests/fixtures/vb6/trade/give-back-responder.jsonl",
+    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/invitation-declined-responder.jsonl",
+    "tests/fixtures/vb6/trade/item-offer-responder.jsonl",
+    "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl",
+    "tests/fixtures/vb6/trade/reject-responder.jsonl"
+   ]
   },
   {
    "key": "c2s:236",
@@ -9268,13 +9513,18 @@
    "writer": null,
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/bank/deposit-move-extract.jsonl",
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+   ]
   },
   {
    "key": "c2s:254",
@@ -9561,11 +9811,13 @@
    "writer": "client Protocol_Writes.bas:WriteCuentaExtractItem",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9578,11 +9830,13 @@
    "writer": "client Protocol_Writes.bas:WriteCuentaDeposit",
    "group": "bank",
    "package": "wp06",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9612,13 +9866,17 @@
    "writer": "client Protocol_Writes.bas:WriteCommerceSendChatMessage",
    "group": "chat",
    "package": "wp01",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/bank-trade.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/trade/offer-and-accept-initiator.jsonl"
+   ]
   },
   {
    "key": "c2s:274",
@@ -11421,7 +11679,6 @@
     "s2c:134",
     "s2c:137",
     "s2c:148",
-    "s2c:166",
     "s2c:173",
     "s2c:181",
     "s2c:194",
@@ -11431,7 +11688,6 @@
     "c2s:74",
     "c2s:183",
     "c2s:264",
-    "c2s:273",
     "c2s:304",
     "c2s:306"
    ],
@@ -11453,7 +11709,6 @@
     "S134 VelocidadToggle",
     "S137 ShowFrmLogear",
     "S148 NadarToggle",
-    "S166 CommerceRecieveChatMessage",
     "S173 AnswerReset",
     "S181 UpdateFlag",
     "S194 UpdateCharValue",
@@ -11463,7 +11718,6 @@
     "C74 LoginNewChar",
     "C183 NavigateToggle",
     "C264 Home",
-    "C273 CommerceSendChatMessage",
     "C304 CreateAccount",
     "C306 DeleteCharacter"
    ],
@@ -11598,14 +11852,12 @@
    "title": "Items and NPC commerce completion",
    "scope": "Inventory moves, key ring, gamble, gold actions, amount prompts, skins",
    "packetIds": [
-    "c2s:53",
     "c2s:209",
     "c2s:225",
     "c2s:285",
     "c2s:300"
    ],
    "packetNames": [
-    "C53 CommerceStart",
     "C209 UseKey",
     "C225 Moveitem",
     "C285 DeleteItem",
@@ -11647,58 +11899,8 @@
    "id": "wp06",
    "title": "Bank and player trade",
    "scope": "Bank vaults (item + gold + account), user-to-user trade window and chat",
-   "packetIds": [
-    "s2c:9",
-    "s2c:11",
-    "s2c:12",
-    "s2c:13",
-    "s2c:65",
-    "s2c:99",
-    "s2c:100",
-    "s2c:124",
-    "s2c:175",
-    "c2s:10",
-    "c2s:12",
-    "c2s:16",
-    "c2s:41",
-    "c2s:54",
-    "c2s:70",
-    "c2s:71",
-    "c2s:89",
-    "c2s:90",
-    "c2s:91",
-    "c2s:92",
-    "c2s:232",
-    "c2s:253",
-    "c2s:270",
-    "c2s:271"
-   ],
-   "packetNames": [
-    "S9 BankEnd",
-    "S11 BankInit",
-    "S12 UserCommerceInit",
-    "S13 UserCommerceEnd",
-    "S65 ChangeBankSlot",
-    "S99 ShowUserRequest",
-    "S100 ChangeUserTradeSlot",
-    "S124 Goliath",
-    "S175 UpdateBankGld",
-    "C10 BankExtractItem",
-    "C12 BankDeposit",
-    "C16 UserCommerceOffer",
-    "C41 RequestAccountState",
-    "C54 BankStart",
-    "C70 BankExtractGold",
-    "C71 BankDepositGold",
-    "C89 UserCommerceEnd",
-    "C90 BankEnd",
-    "C91 UserCommerceOk",
-    "C92 UserCommerceReject",
-    "C232 TraerBoveda",
-    "C253 BovedaMoveItem",
-    "C270 CuentaExtractItem",
-    "C271 CuentaDeposit"
-   ],
+   "packetIds": [],
+   "packetNames": [],
    "forms": [
     "frmBancoObj",
     "frmGoliath",
@@ -11721,7 +11923,6 @@
     "s2c:94",
     "s2c:95",
     "s2c:96",
-    "s2c:142",
     "s2c:143",
     "s2c:149",
     "s2c:152",
@@ -11754,7 +11955,6 @@
     "c2s:65",
     "c2s:84",
     "c2s:234",
-    "c2s:235",
     "c2s:236",
     "c2s:237",
     "c2s:238",
@@ -11771,7 +11971,6 @@
     "S94 GuildLeaderInfo",
     "S95 GuildDetails",
     "S96 ShowGuildFundationForm",
-    "S142 ShowPregunta",
     "S143 DatosGrupo",
     "S149 ShowFundarClanForm",
     "S152 PosLLamadaDeClan",
@@ -11804,7 +12003,6 @@
     "C65 GuildVote",
     "C84 RequestGuildLeaderInfo",
     "C234 InvitarGrupo",
-    "C235 ResponderPregunta",
     "C236 RequestGrupo",
     "C237 AbandonarGrupo",
     "C238 HecharDeGrupo",
