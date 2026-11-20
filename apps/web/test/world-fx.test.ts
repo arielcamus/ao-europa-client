@@ -276,3 +276,23 @@ describe('WorldFx packets', () => {
     expect(world.ambient).toEqual({ r: 190, g: 190, b: 190 });
   });
 });
+
+describe('VB6 recording: login, idle, cross the area border (tests/fixtures/vb6/world-fx)', () => {
+  it('feeds the real packets through the world state', async () => {
+    const { decodeServerPacket } = await import('@ao/protocol');
+    const rows = readFileSync(new URL('../../../tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl', import.meta.url), 'utf8').trim().split('\n')
+      .map(line => JSON.parse(line) as { dir: string; hex: string });
+    const bounds: unknown[] = [], speeds: number[] = [];
+    const world = new WorldFx(() => 0, { areaChanged: b => bounds.push(b), speedToChar: (_c, s) => speeds.push(s) });
+    for (const row of rows) {
+      if (row.dir !== 's2c') continue;
+      const packet = decodeServerPacket(Uint8Array.from(Buffer.from(row.hex, 'hex')));
+      if (!('unknown' in packet)) world.receive(packet);
+    }
+    expect(world.clock.inited).toBe(true);
+    expect(world.clock.time(0).hour).toBeGreaterThanOrEqual(0);
+    expect(bounds).toHaveLength(3);
+    expect(bounds[0]).toMatchObject({ minX: expect.any(Number), maxX: expect.any(Number) });
+    expect(speeds.length).toBeGreaterThan(0);
+  });
+});
