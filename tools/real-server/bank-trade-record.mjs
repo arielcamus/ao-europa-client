@@ -1,8 +1,7 @@
 // Records the bank scenarios against the VB6 server into tests/fixtures/vb6/bank/*.jsonl (TItems: items@local.test / itemspw1).
-// AGPL-3.0-or-later. Ullathorpe's bank hall (the banker Krix, 77,47) cannot be entered on this build: its doorway tiles carry the
-// emperor-castle entry trigger (GameLogic.bas bounces everyone who is not on a castle white list), so the window-opening packets
-// (BankInit, Goliath) cannot be provoked by a level-1 character. From the street (77,56), 9 tiles from Krix, deposit, extract,
-// vault moves and the gold commands still reach the server (distance limit 10) and are what this records.
+// AGPL-3.0-or-later. These two scenarios were recorded from the street (77,56), 9 tiles from the banker Krix (77,47), BEFORE the map patch of
+// docs/DATA-PATCHES.md let a level-1 character into the hall: deposit, extract and vault moves reach the server from there (distance limit 10), the window-opening
+// packets do not. The hall itself is recorded by bank-trade-vault-record.mjs.
 import { Vb6Session, gotoTile, sleep, DC, BC } from './bank-trade-session.mjs';
 const dir = new URL('../../tests/fixtures/vb6/bank/', import.meta.url).pathname;
 const s = new Vb6Session({ email: process.env.AO_EMAIL ?? 'items@local.test', password: process.env.AO_PASSWORD ?? 'itemspw1' });

@@ -1,0 +1,40 @@
+// AGPL-3.0-or-later. Headless Chrome against the REAL VB6 server, inside Ullathorpe's bank hall (needs the map patch of docs/DATA-PATCHES.md and
+// TItems standing in the hall, which tools/real-server/bank-trade-vault-record.mjs leaves it): Goliath, vault, deposit and withdraw through the UI.
+// Usage: AO_WEB_PORT=5743 node tools/bank-trade-real-shot.mjs
+import { chromium } from '@playwright/test';
+import { mkdirSync } from 'node:fs';
+const base = `http://127.0.0.1:${process.env.AO_WEB_PORT ?? 5743}/`;
+const browser = await chromium.launch({ channel: 'chrome', args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader'] }).catch(() => chromium.launch());
+const page = await browser.newPage({ viewport: { width: 1024, height: 768 } });
+const problems = [];
+page.on('pageerror', e => problems.push(e.message));
+await page.goto(base);
+await page.locator('#email').fill('items@local.test'); await page.locator('#password').fill('itemspw1'); await page.locator('#connect').click();
+await page.locator('#viewport[data-rendered="true"]').waitFor({ timeout: 60_000 });
+await page.waitForTimeout(3000);
+mkdirSync('artifacts/screenshots', { recursive: true });
+const shot = name => page.screenshot({ path: `artifacts/screenshots/bank-trade-real-${name}.png` });
+const sel = id => page.locator(id);
+const rect = await sel('#viewport').boundingBox();
+const [px, py] = (await sel('#position').innerText()).split(', ').map(Number);
+console.log('standing at', px, py);
+const at = (tx, ty) => ({ x: rect.x + rect.width / 2 + (tx - px) * 32, y: rect.y + rect.height / 2 + (ty - py) * 32 });
+const k = at(77, 47); await page.mouse.click(k.x, k.y); await page.waitForTimeout(1500);
+console.log('goliath', await sel('#goliath').isVisible(), 'balance', await sel('#goliath-gold').innerText());
+await shot('goliath');
+await sel('#goliath-deposit').click(); await sel('#goliath-amount').fill('50'); await sel('#goliath-accept').click(); await page.waitForTimeout(1200);
+console.log('after a deposit of 50 without gold:', JSON.stringify((await sel('#messages').innerText()).split('\n').slice(-2)));
+await sel('#goliath-vault').click(); await page.waitForTimeout(2000);
+console.log('vault', await sel('#bank').isVisible(), 'goliath still', await sel('#goliath').isVisible());
+const label = async s => sel(s).getAttribute('aria-label');
+await sel('#bank [data-side="user"][data-slot="3"]').click(); await sel('#bank-amount').fill('2'); await sel('#bank-deposit').click(); await page.waitForTimeout(1200);
+console.log('after depositing 2:', await label('#bank [data-side="user"][data-slot="3"]'), '|', await label('#bank [data-side="vault"][data-slot="1"]'));
+await shot('vault');
+await sel('#bank [data-side="vault"][data-slot="1"]').dragTo(sel('#bank [data-side="vault"][data-slot="4"]')); await page.waitForTimeout(1000);
+console.log('after dragging 1 -> 4:', await label('#bank [data-side="vault"][data-slot="1"]'), '|', await label('#bank [data-side="vault"][data-slot="4"]'));
+await sel('#bank [data-side="vault"][data-slot="4"]').dblclick(); await page.waitForTimeout(1200);
+console.log('after double click on 4:', await label('#bank [data-side="vault"][data-slot="4"]'), '|', await label('#bank [data-side="user"][data-slot="3"]'));
+await shot('vault-after');
+await sel('#bank-close').click(); await page.waitForTimeout(1000);
+console.log('closed', !(await sel('#bank').isVisible()), JSON.stringify({ problems }));
+await browser.close();

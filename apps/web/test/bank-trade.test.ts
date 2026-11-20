@@ -169,6 +169,18 @@ describe('real VB6 recordings drive the state', () => {
     const rows = load('bank/deposit-move-extract'); expect(rows.length).toBeGreaterThan(10);
     expect(replay(rows).bankSlots.size).toBe(0);
   });
+  it('bank/goliath-and-vault: Goliath opens the gold window, BankStart fills 42 vault slots then opens the vault, the round trip leaves it empty and BankEnd closes it', () => {
+    const rows = load('bank/goliath-and-vault'); expect(rows.length).toBeGreaterThan(50);
+    const state = new BankTradeState(); const seen: string[] = [];
+    for (const row of rows) if (row.dir === 's2c') {
+      const p = decodeServerPacket(Uint8Array.from(Buffer.from(row.hex, 'hex'))); if ('unknown' in p) continue;
+      state.receive(p);
+      if (p.id === BS.Goliath) seen.push(`goliath:${state.goliathOpen}:${state.bankGold}`);
+      if (p.id === BS.BankInit) seen.push(`init:${state.bankOpen}`);
+      if (p.id === BS.BankEnd) seen.push(`end:${!state.bankOpen}`);
+    }
+    expect(seen).toEqual(['goliath:true:0', 'init:true', 'end:true']); expect(state.bankSlots.size).toBe(0);
+  });
   it('trade/offer-and-accept (responder): the invitation arrives as a question, the window opens, and the trade closes after both accept', () => {
     const rows = load('trade/offer-and-accept-responder'); expect(rows.length).toBeGreaterThan(10);
     const state = new BankTradeState(); const seen: string[] = [];

@@ -4,21 +4,20 @@ Recorded 2026-11-20 with `tools/real-server/bank-trade-record.mjs` (bank, `items
 `tools/real-server/bank-trade-trade-record.mjs` (trade, two sessions: `banktrade@local.test` / Tbank and TItems) against the
 classic VB6 server (127.0.0.1:7667). Format: see `docs/CONFORMANCE.md`. Both characters end each recording as they started.
 
+## Entering the bank hall
+
+Ullathorpe's building interiors carry castle-entry map triggers; until the map patch in `docs/DATA-PATCHES.md` (applied to the server 2026-11-20 22:2x,
+loaded by its restart) a level-1 character was bounced at the doorway (`tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl`). `far-from-banker` and
+`deposit-move-extract` were recorded before that, from the street (77,56), 9 tiles from the banker Krix (77,47): `BankDeposit`, `BankExtractItem`,
+`BovedaMoveItem` and the gold commands reach the server from there (limit 10 tiles; `BovedaMoveItem` has none). `goliath-and-vault` was recorded after, inside the hall
+(77,51) with `tools/real-server/bank-trade-vault-record.mjs`: `Goliath` (124), `BankStart` -> 42 `ChangeBankSlot` + `BankInit` (11), deposit, move, extract, `BankEnd` -> `BankEnd` (9).
+
 ## What could NOT be recorded, and why
 
-- **Opening the vault (`BankInit`, 11) and the Goliath window (`Goliath`, 124), `UpdateBankGld` (175) with a real balance.**
-  The banker Krix (77,47) stands in Ullathorpe's bank hall. Its doorway tiles carry map trigger 26 (`EMPEROR_CASTLE_ENTRY_6`);
-  `GameLogic.bas` bounces every character that is not on a castle white list (`CheckCastleEntryWhiteList`, no castle exists on this
-  build), so a level-1 character cannot come within the 4 tiles `HandleNpcInteractionByType` needs for `Goliath`, nor the 6 that
-  `BankStart` needs. These three are covered by hand-written goldens from the VB6 writers (`WriteGoliathInit`, `WriteBankInit`,
-  `WriteUpdateBankGld`) and by `tools/bank-trade-mock-server.mjs`, which is NOT the oracle.
+- **`UpdateBankGld` (175) with a real balance, a real gold deposit/withdrawal.** The characters are level 1 with no gold (`BankDepositGold` answers `LocaleChatOverHead` 1395) and
+  nothing they can sell is tradeable. The `UpdateBankGld` golden is written from `WriteUpdateBankGld`.
 - **Item and gold offers in a trade (`ChangeUserTradeSlot`, 100).** Every starter item is either newbie (locale 1141) or
-  intransferible (1140) and the characters have no gold (1138), so the server refuses each offer; `fixtures` record those refusals.
-  The `ChangeUserTradeSlot` golden is written from `WriteChangeUserTradeSlot`.
+  intransferible (1140) and the characters have no gold (1138), so the server refuses each offer; the fixtures record those refusals.
+  The `ChangeUserTradeSlot` golden is written from `WriteChangeUserTradeSlot`, and `tools/bank-trade-mock-server.mjs` (NOT the oracle) shows offers in the UI.
 - **The account vault (`frmBancoCuenta`: `TraerBoveda`, `CuentaExtractItem`, `CuentaDeposit`).** The server's `HandleCuentaExtractItem` and
   `HandleCuentaDeposit` are empty stubs and `HandleTraerBoveda` only resends the inventory, so there is nothing to record or show.
-
-## What was verified from the street
-
-From (77,56), 9 tiles from Krix, `BankDeposit`, `BankExtractItem`, `BovedaMoveItem` and the gold commands reach the server (their limit is 10
-tiles, and `BovedaMoveItem` has none), so `ChangeBankSlot` is recorded for real, including the explicit destination slot and a swap.
