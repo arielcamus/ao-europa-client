@@ -1,11 +1,12 @@
 # AO Windows build handoff
 
-**20 November 2026 — VNC desktop visually verified, Windows and SSH running.** Local
-administrator `aobuilder` is logged into the console with auto-logon enabled.
-twinBASIC Community 1044's first-run licence dialog is visible in that session.
-Screenshot: [`artifacts/screenshots/vm-desktop.png`](../artifacts/screenshots/vm-desktop.png)
-(local artifact, ignored by Git). Dependency validation passed;
-the human import/build below is still required and `server.exe` does not yet exist.
+**20 November 2026 — the first human twinBASIC build failed.** The human imported
+`C:\ao\server\Server.VBP` with Option Explicit OFF, saved
+`C:\ao\server\Argentum20Server.twinproj`, and used File → Build in Community
+BETA 1044. The reported result is **7 errors and 220 warnings**, with
+`[LINKER] FAILED due to compilation errors 'C:\ao\server\server.exe'` and
+`[BUILD] failed`. See [twinBASIC compile fixes](#twinbasic-compile-fixes) below.
+Windows, SSH and the VNC desktop are available; dependency validation passed.
 
 The `ao-build` disk is running through a **headless QEMU fallback**, because UTM
 5.0.9-2 and `utmctl` hang before application startup on this Mac. Opening UTM,
@@ -28,8 +29,9 @@ saving RAM to disk. Other host programs can consume space; this is not a quota.
 
 ## Open the desktop and build manually
 
-The desktop and twinBASIC licence dialog have been visually verified. The
-remaining import/build instructions use the publisher's documented IDE labels.
+These instructions cover initial setup and subsequent human re-imports. The
+licence dialogs and first import have already been completed on this VM. The
+import/build instructions use the publisher's documented IDE labels.
 
 1. On the Mac, **Finder → Go → Connect to Server…** (`⌘K`) → enter
    **`vnc://127.0.0.1:5905`** → **Connect**. This opens the running Windows desktop.
@@ -46,7 +48,7 @@ remaining import/build instructions use the publisher's documented IDE labels.
    In **New Project Options**, untick **Option Explicit ON** to retain the
    source files' own declaration rules, then click **Continue**.
    Choose **File → Save Project** →
-   **`C:\ao\server\Server.twinproj`**. Press `Ctrl+S` once more.
+   **`C:\ao\server\Argentum20Server.twinproj`**. Press `Ctrl+S` once more.
 4. Select **win32** in the build-configuration toolbar. In Project Explorer,
    click the **Project Settings gear**. Search **Conditional Compilation Args**
    and confirm **`PYMMO=0`, `DIRECT_PLAY=0`, `UNIT_TEST=0`**. The staged upstream
@@ -64,6 +66,68 @@ Sources: [first launch](https://docs.twinbasic.com/tB/IDE/Starting/First-Launch)
 [output setting](https://docs.twinbasic.com/tB/IDE/Building/Build-Output), and
 [Community licensing](https://twinbasic.com/licensing). No compiler, import or
 build automation is included.
+
+## twinBASIC compile fixes
+
+Read-only investigation started **20 November 2026 at 13:10:02 UTC**. No
+twinBASIC executable, import, compiler restart, build command or IDE automation
+was invoked. The running IDE and saved project were left untouched.
+
+The seven compile diagnostics were **not found in the persisted data inspected**:
+
+- `C:\ao\server`, `C:\ao\twinbasic`, `%APPDATA%\twinBASIC`, `%TEMP%` and
+  `C:\Windows\Temp` had no readable compile-error log. The exact directory
+  `%LOCALAPPDATA%\twinBASIC` does not exist. The actual `twinBASIC_Admin` and
+  `twinBASIC_WebPanel_Admin` profiles contain WebView storage/maintenance logs;
+  their readable logs had no AO compile diagnostics. Two recent nonempty
+  `.tmp` files were read using shared read access: they are PNG/JPEG background
+  images, visually inspected, with no diagnostic text.
+- A local copy of `Argentum20Server.twinproj` was parsed as a binary container,
+  without running twinBASIC. All **214 entries / 5,489,314 bytes** were consumed.
+  Its SHA-256 is
+  `f6c48722ef6259ae048dfb0bc4f673a33e3d5f52e1355e52b252bd689b110261`.
+  Neither its `.meta` nor its other entries contain a compile-error report.
+- The embedded `Sources/__IMPORT_LOG.md` ends with **5 ERRORS/WARNINGS**. All
+  five are reference-path conversion warnings for ADO, Scripting Runtime,
+  MSXML, Aurora.Network and DX8VB; they are unrelated to the reported count of
+  seven compile errors. The log explicitly directs the reader to DIAGNOSTICS.
+- The registry value under
+  `HKCU\Software\VB and VBA Program Settings\twinBASIC_IDE\ProjectState`
+  for this project contains editor/layout state, no diagnostics, and an empty
+  `debugConsoleEntryHistory` (console command history). Both that state and
+  `.meta` have `problemsPanelOptions.showErrors=false`, so the human may need
+  to click the red error counter to display the error rows.
+
+This agrees with the publisher's [diagnostic-tool documentation](https://docs.twinbasic.com/tB/IDE/Troubleshooting/Diagnostic-Tools):
+the build/debug console is held in memory and is not written to a log file.
+The [container format](https://docs.twinbasic.com/Features/Packages/File-Format)
+describes `.meta` as editor state. Inspection of BETA 1044's installed
+`ide/main.js` also confirms that diagnostics are cached in memory and omitted
+from the saved project-state object.
+
+**Exact error list and source patch: pending the existing DIAGNOSTICS report.**
+The human can right-click in DIAGNOSTICS → **Copy All Errors** and paste the
+report; this requires no new build. The [diagnostics documentation](https://docs.twinbasic.com/tB/IDE/Code/Diagnostics)
+describes the report's file, position, code and message fields. The seven
+messages must be captured before claiming seven diagnosed or fixed errors.
+
+The reported `UserMod.GetNextAvailableUserSlot at line #1` maps to
+`C:\ao\server\Codigo\Modulo_UsUaRiOs.bas`, whose function starts on physical
+file line **93**. Physical line **97** is a bare `Return`, and the procedure has
+no `GoSub`. The original file and its saved imported copy are byte-identical.
+This is a candidate requiring the actual diagnostic, not an extracted error.
+The current [Return reference](https://docs.twinbasic.com/tB/Core/Return)
+reserves bare `Return` for `GoSub`; [warning TB0027](https://docs.twinbasic.com/Features/Compiler-IDE/Compiler-Warnings)
+covers a return without a preceding `GoSub`. Historical [issue #1344](https://github.com/twinbasic/twinbasic/issues/1344)
+reported import errors for `Return` in BETA 170; it does not establish a BETA
+1044 defect. Replacing it blindly with `Exit Function` would remove VB6's
+runtime error-3 path, so no such change has been applied without the report.
+
+No original source files have been changed and no `.orig` backups or source
+patch have yet been created. Once confirmed fixes are applied to the original
+VB6 files, a **human re-import of `Server.VBP` is required**: the existing
+`.twinproj` embeds its own copies. A successful re-import/build remains
+unverified and must be performed by the human under the Community licence.
 
 ## Start the server after the human build
 
@@ -107,7 +171,8 @@ The fallback has no TPM: Homebrew QEMU's TPM TIS device failed with
 Installed and verified:
 
 - **twinBASIC Community 1044**, extracted at `C:\ao\twinbasic` and opened in the
-  logged-in console. First-run dialogs remain for the human.
+  logged-in console. The human has completed its first-run dialogs and build
+  attempt; see the compile-fix investigation above.
 - Microsoft's built-in x86 VB6 runtime and five signed controls/libraries from
   KB2708437: `comctl32.ocx`, `msinet.ocx`, `msdatgrd.ocx`, `msstdfmt.dll`,
   `msbind.dll`. All five registered successfully with x86 `regsvr32`.
@@ -125,8 +190,9 @@ Installed and verified:
 
 `C:\ao\ready.txt` and private host `provisioned.json` record successful
 provisioning. The post-build launcher was tested with the missing executable
-and correctly refused to start. No source import, compiler invocation, server
-launch, or live client test has occurred. UTM's macOS startup failure remains;
+and correctly refused to start. At provisioning closeout no source import,
+compiler invocation, server launch or live client test had occurred; the later
+human build attempt is recorded above. UTM's macOS startup failure remains;
 the working fallback is QEMU. The guest remains unactivated.
 
 See [the provisioning notes](../scripts/vm/README.md) and
