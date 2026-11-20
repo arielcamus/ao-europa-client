@@ -14,6 +14,7 @@ import { CharacterTracker, characterChange } from './characters.js';
 import { NpcsServerPacketId as NS } from '@ao/protocol';
 import { CombatState } from './combat.js';
 import { SpellState } from './spells.js';
+import { CraftingController, CraftingState } from './crafting.js';
 import { ItemsState } from './items-state.js';
 import { ItemsController } from './items.js';
 import type { ObjectCatalog } from './object-catalog.js';
@@ -38,6 +39,12 @@ export class Session {
   readonly items = new ItemsState();
   /** Time of day, light, weather, particles and projectiles (feat/world-fx). */
   readonly world: WorldFx;
+  readonly craftingState = new CraftingState();
+  /** Smith, carpenter, alchemy and tailor windows, the crafting station and the work macro (feat/crafting). */
+  readonly crafting = new CraftingController({
+    send: packet => this.send(packet), ready: () => this.ready, now: () => this.clock(), stamina: () => this.ui.stats.stamina,
+    message: (text, font) => this.ui.message(text, font),
+  }, this.craftingState);
   /** Set by the UI once Dat/Obj.dat is loaded; item actions that need object types wait for it. */
   catalog: ObjectCatalog | undefined;
   readonly itemActions = new ItemsController({
@@ -135,6 +142,7 @@ export class Session {
       this.items.receive(packet);
       this.bankTrade.receive(packet);
       this.world.receive(packet);
+      this.crafting.receive(packet);
       switch (packet.id) {
         case S.Connected:
           if (this.phase !== 'connecting' || !this.credentials) throw new Error('Unexpected Connected');

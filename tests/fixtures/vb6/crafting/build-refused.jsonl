@@ -1,0 +1,12 @@
+{"t_ms":9056,"dir":"c2s","id":100,"name":"CraftBlacksmith","hex":"6400a500"}
+{"t_ms":9057,"dir":"s2c","id":141,"name":"LocaleMsg","hex":"8d007f02002000"}
+{"t_ms":9057,"dir":"s2c","id":135,"name":"MacroTrabajoToggle","hex":"870000"}
+{"t_ms":9680,"dir":"s2c","id":112,"name":"UserOnline","hex":"70000100"}
+{"t_ms":10257,"dir":"c2s","id":228,"name":"CraftAlquimista","hex":"e4006d17"}
+{"t_ms":10258,"dir":"s2c","id":141,"name":"LocaleMsg","hex":"8d007801002000"}
+{"t_ms":11458,"dir":"c2s","id":230,"name":"CraftSastre","hex":"e600fa0d"}
+{"t_ms":12659,"dir":"c2s","id":1,"name":"CraftCarpenter","hex":"0100a30001000000"}
+{"t_ms":12660,"dir":"s2c","id":135,"name":"MacroTrabajoToggle","hex":"870001"}
+{"t_ms":15789,"dir":"s2c","id":141,"name":"LocaleMsg","hex":"8d007801002000"}
+{"t_ms":15789,"dir":"s2c","id":135,"name":"MacroTrabajoToggle","hex":"870000"}
+{"t_ms":17160,"dir":"c2s","id":229,"name":"FlagTrabajar","hex":"e500"}

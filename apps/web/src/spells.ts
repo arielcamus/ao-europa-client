@@ -5,7 +5,7 @@
  * HandleCreateFX and HandleFxPiso. Spell console tokens (HECINF, HecMSG...) are expanded by chat-console.ts.
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty. See NOTICE.
  */
-import { ServerPacketId as S, SpellClientPacketId as SC, SpellServerPacketId as SS, MAGIC_SKILL } from '@ao/protocol';
+import { ServerPacketId as S, SpellClientPacketId as SC, SpellServerPacketId as SS, MAGIC_SKILL, CraftingClientPacketId as CC, ExtractionSkill } from '@ao/protocol';
 import type { ClientPacket, ServerPacket } from '@ao/protocol';
 import { fetchText, parseIni } from './assets.js';
 import type { Ini } from './assets.js';
@@ -31,6 +31,12 @@ const EMPTY = '(Vacío)';
 /** Languages/1.json MENSAJE_LANZAMIENTO_RAPIDO and MENSAJE_TRABAJO_MAGIA, Spanish. */
 export const MSG_TOO_FAST = 'No puedes lanzar hechizos tan rápido.';
 export const MSG_CLICK_TARGET = 'Haz click sobre el objetivo...';
+/** Languages/1.json MENSAJE_CLICK_DONDE_DESEAS_TRABAJAR and MENSAJE_TRABAJO_FUNDIRMETAL (HandleWorkRequestTarget). */
+export const MSG_CLICK_WORK = 'Haz click donde deseas trabajar...';
+export const MSG_CLICK_FORGE = 'Haz click sobre la fragua...';
+/** Skills whose click is WriteStartAutomatedAction (ModGameplayUI.OnClick), not WorkLeftClick: the server then repeats the work itself. */
+const AUTOMATED_SKILLS: readonly number[] = [ExtractionSkill.Talar, ExtractionSkill.Mineria, ExtractionSkill.Pescar, ExtractionSkill.Smelting];
+const WORK_PROMPT_SKILLS: readonly number[] = [ExtractionSkill.Talar, ExtractionSkill.Alquimia, ExtractionSkill.Carpinteria, ExtractionSkill.Herreria, ExtractionSkill.Mineria, ExtractionSkill.Pescar];
 const MAX_FX = 64;
 
 /** Data tables read from the local resource mount: Dat/Hechizos.dat and init/FXs.ini. Console text is chat's (ChatLocale). */
@@ -70,6 +76,12 @@ export class SpellState {
   click(x: number, y: number): boolean {
     if (!this.targeting) return false;
     const { skill } = this.targeting;
+    if (AUTOMATED_SKILLS.includes(skill)) {
+      // No counter: StartAutomatedAction is not sequence checked. UsaLanzar = False, UsingSkill = 0 as for every click.
+      this.send({ id: CC.StartAutomatedAction, x, y, skill });
+      this.targeting = undefined; this.revision++;
+      return true;
+    }
     const now = this.clock();
     // SinBloqueo mode (the classic default) still sends but tells the player they are too fast.
     if (skill === MAGIC_SKILL && now - this.lastMagic < this.magicInterval) this.message(MSG_TOO_FAST);
@@ -92,6 +104,8 @@ export class SpellState {
         else if (!this.targeting || this.targeting.skill !== packet.skill) {
           this.targeting = { skill: packet.skill, area: packet.area, radius: packet.radius };
           if (packet.skill === MAGIC_SKILL) this.message(MSG_CLICK_TARGET);
+          else if (packet.skill === ExtractionSkill.Smelting) this.message(MSG_CLICK_FORGE);
+          else if (WORK_PROMPT_SKILLS.includes(packet.skill)) this.message(MSG_CLICK_WORK);
         }
         this.revision++; break;
       }
