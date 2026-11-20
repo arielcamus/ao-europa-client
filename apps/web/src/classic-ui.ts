@@ -9,6 +9,8 @@ import type { Session } from './session.js';
 import type { WorldRenderer } from './renderer.js';
 import { loadInterface, loadedInterfaceUrl } from './interface-assets.js';
 import { renderMessage } from './chat-console.js';
+import { loadSpellTables, swapSpellSlots } from './spells.js';
+import { ObjectCatalog, loadObjectIni } from './object-catalog.js';
 
 export const element = <T extends HTMLElement = HTMLElement>(id: string) => {
   const node = document.getElementById(id);
@@ -28,6 +30,9 @@ export class ClassicUI {
   private selectedItem = 0;
   private selectedSpell = 0;
   private slotButtons: HTMLButtonElement[] = [];
+  /** Double click on an inventory item (picInv_DblClick -> UserItemClick); set by main.ts. */
+  onActivate: ((slot: number) => void) | undefined;
+  private catalog: ObjectCatalog | undefined;
 
   constructor(private readonly renderer: WorldRenderer, private readonly report: (message: string) => void) {
     for (let i = 0; i < 42; i++) {
@@ -41,22 +46,28 @@ export class ClassicUI {
         this.selectedItem = item ? i + 1 : 0; this.markItem();
         if (item) this.session?.ui.message(this.objects.get(`obj${item.object}`)?.get('texto') ?? button.title);
       });
+      button.addEventListener('dblclick', () => { if (this.session?.ui.inventory.has(i + 1)) { this.selectedItem = i + 1; this.markItem(); this.onActivate?.(i + 1); } });
       element('inventory').append(button); this.slotButtons.push(button);
     }
     element('inventory-tab').onclick = () => this.showSpells(false);
     element('spells-tab').onclick = () => this.showSpells(true);
-    element('spell-up').onclick = () => this.selectSpell(this.selectedSpell - 1);
-    element('spell-down').onclick = () => this.selectSpell(this.selectedSpell + 1);
+    element('spell-up').onclick = () => this.moveSpell(true);
+    element('spell-down').onclick = () => this.moveSpell(false);
     element('spells').addEventListener('keydown', event => {
       if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
         event.preventDefault(); this.selectSpell(this.selectedSpell + (event.key === 'ArrowDown' ? 1 : -1));
       }
     });
+    // imgSpellInfo_Click: ask the server (WriteSpellInfo); it answers with a HECINF console line.
     element('spell-info').onclick = () => {
       const spell = this.session?.ui.spells.get(this.selectedSpell);
-      if (spell && spell.index > 0) this.session?.ui.message(this.spells.get(`hechizo${spell.index}`)?.get('desc') ?? 'Sin descripción.');
+      if (this.session?.ready && spell && spell.index > 0) this.session.spells.info(this.selectedSpell);
     };
-    element('cast').onclick = () => this.session?.ui.message('El lanzamiento de hechizos aún no está disponible.');
+    // cmdLanzar_Click -> UseSpell: WriteCastSpell, then the server asks for a target (WorkRequestTarget).
+    element('cast').onclick = () => {
+      const spell = this.session?.ui.spells.get(this.selectedSpell);
+      if (this.session?.ready && spell && spell.index > 0) this.session.spells.cast(this.selectedSpell, this.spellName(spell.index));
+    };
     for (const id of ['settings', 'manual']) element(id).onclick = () => {
       this.session?.ui.message('Flechas / WASD: caminar. En el teléfono, mantén pulsado el mapa en la dirección deseada. Enter: chat. Escape: cerrar chat.');
       this.session?.ui.message('Gráficos originales © AO / Noland Studios · CC BY-NC-ND · cargados localmente. Combate y uso de objetos aún no disponibles.');
@@ -81,11 +92,12 @@ export class ClassicUI {
       else node.style.backgroundImage = `url("${url}")`;
     });
     const [objects, spells] = await Promise.all([
-      fetchText('Dat/Obj.dat'), fetchText('Dat/Hechizos.dat'), ...imageTasks,
+      loadObjectIni(), fetchText('Dat/Hechizos.dat'), ...imageTasks,
       this.sheet(135), this.renderer.graphic(47743),
       ...['centrohechizo', 'centroinventario', 'ventanaprincipal_info'].map(name => loadInterface(name)),
     ]);
-    this.objects = parseIni(objects); this.spells = parseIni(spells);
+    this.objects = objects; this.catalog = new ObjectCatalog(objects); this.spells = parseIni(spells);
+    await loadSpellTables(this.spells).catch(error => this.report(String(error)));
     await this.renderInventory();
     element('classic').dataset.uiReady = 'true';
   }
@@ -96,6 +108,24 @@ export class ClassicUI {
       pending = image.decode().then(() => image); this.sheets.set(file, pending);
     }
     return pending;
+  }
+  /** Slot selected in the main inventory; 200 is the gold pseudo-slot (FLAGORO). */
+  get selectedSlot() { return this.selectedItem; }
+  selectGold() { this.selectedItem = 200; this.markItem(); }
+  /** The 32x32 item picture the inventory draws, shared with the shop window. */
+  async itemArt(grh: number): Promise<HTMLCanvasElement> {
+    const frame = await this.renderer.graphic(grh), sheet = await this.sheet(frame.file);
+    const canvas = document.createElement('canvas'); canvas.width = 32; canvas.height = 32; canvas.className = 'item-art';
+    const ctx = canvas.getContext('2d')!;
+    ctx.drawImage(sheet, frame.x, frame.y, frame.width, frame.height, Math.floor((32 - frame.width) / 2), 32 - frame.height, frame.width, frame.height);
+    const pixels = ctx.getImageData(0, 0, 32, 32);
+    for (let j = 0; j < pixels.data.length; j += 4) if (!pixels.data[j] && !pixels.data[j + 1] && !pixels.data[j + 2]) pixels.data[j + 3] = 0;
+    ctx.putImageData(pixels, 0, 0);
+    return canvas;
+  }
+  async slotBackground(grh: number): Promise<{ image: string; position: string }> {
+    const frame = await this.renderer.graphic(grh);
+    return { image: `url("/ao-assets/Graficos/${frame.file}.png")`, position: `-${frame.x}px -${frame.y}px` };
   }
   private markItem() {
     this.slotButtons.forEach((button, i) => button.setAttribute('aria-pressed', String(i + 1 === this.selectedItem)));
@@ -111,6 +141,16 @@ export class ClassicUI {
     element<HTMLImageElement>('stats-art').src = loadedInterfaceUrl(show ? 'ventanaprincipal_info' : 'ventanaprincipal_stats');
     element('stats-panel').querySelectorAll<HTMLElement>('.bar, .label').forEach(node => { node.hidden = show; });
     element('menu-actions').hidden = !show;
+  }
+  private spellName(index: number) { return this.spells.get(`hechizo${index}`)?.get('nombre') ?? `Hechizo ${index}`; }
+  /** cmdMoverHechi_Click: swap the entries locally and tell the server (WriteMoveSpell). */
+  private moveSpell(up: boolean) {
+    const session = this.session;
+    if (!session?.ready || !session.ui.spells.has(this.selectedSpell)) return;
+    const slot = this.selectedSpell, target = swapSpellSlots(session.ui.spells, slot, up);
+    if (target === slot) return;
+    session.spells.move(up, slot);
+    this.selectedSpell = target; session.ui.revision++;
   }
   private selectSpell(slot: number) {
     const rows = [...element('spells').children] as HTMLElement[];
@@ -160,7 +200,9 @@ export class ClassicUI {
       this.session = session; this.revision = -1; this.selectedItem = 0; this.selectedSpell = 0; this.showSpells(false); this.showMenu(false);
     }
     if (!session) return;
+    if (this.catalog) session.catalog ??= this.catalog;
     const ui = session.ui, stats = ui.stats;
+    element('cast').setAttribute('aria-disabled', String(!session.ready));
     const hp = stats.hp ?? session.self?.minHp, maxHp = stats.maxHp ?? session.self?.maxHp;
     const mana = stats.mana ?? session.self?.minMana, maxMana = stats.maxMana ?? session.self?.maxMana;
     const shield = stats.shield ?? 0;
@@ -189,7 +231,7 @@ export class ClassicUI {
       const spell = ui.spells.get(slot), row = document.createElement('div');
       row.className = 'spell'; row.dataset.slot = String(slot); row.id = `spell-${slot}`;
       row.setAttribute('role', 'option'); row.setAttribute('aria-selected', String(slot === this.selectedSpell));
-      row.textContent = spell && spell.index > 0 ? this.spells.get(`hechizo${spell.index}`)?.get('nombre') ?? `Hechizo ${spell.index}` : '(Vacío)';
+      row.textContent = spell && spell.index > 0 ? this.spellName(spell.index) : '(Vacío)';
       row.onclick = () => this.selectSpell(slot); list.append(row);
     }
     list.scrollTop = scroll;

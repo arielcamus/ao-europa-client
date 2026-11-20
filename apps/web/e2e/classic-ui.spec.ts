@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { readForm, referenceHTML } from './form-reference.js';
+import { classicScale } from '../src/classic-layout.js';
 
 async function checkGeometry(page: Page) {
   const expected = (await readForm()).rectangles;
@@ -18,7 +19,7 @@ async function checkGeometry(page: Page) {
   }
   const frame = (await page.locator('#classic').boundingBox())!;
   const viewport = page.viewportSize()!;
-  expect(frame.width).toBeCloseTo(1024 * Math.min(1, viewport.width / 1024, viewport.height / 768), 2);
+  expect(frame.width).toBeCloseTo(1024 * classicScale(viewport.width, viewport.height), 2);
   expect(frame.height / frame.width).toBeCloseTo(768 / 1024, 4);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   return measured;

@@ -35,10 +35,13 @@ describe('recorded VB6 sessions: why Ullathorpe buildings stay closed', () => {
     const last = positions(rows).slice(-2);
     expect(last.every(p => p.x === 77 && p.y === 56)).toBe(true);
   });
+<<<<<<< HEAD
   it('Nix building (trigger 24) under the server fix: the walk north is accepted and never bounced', () => {
     const rows = load('nix-building-castle-trigger-enters');
     expect(castleBounces(rows)).toHaveLength(0);
     const ys = positions(rows).map(p => p.y);
     expect(Math.min(...ys)).toBeLessThanOrEqual(45);
   });
+=======
+>>>>>>> origin/main
 });

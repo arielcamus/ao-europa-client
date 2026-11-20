@@ -4,15 +4,19 @@
  * See ../../../LICENSE and ../../../NOTICE.
  */
 import { ClientPacketId as C, CombatClientPacketId as CC, ServerPacketId as S, Heading, FrameDecoder, decodeServerPacket, encodeClientFrame } from '@ao/protocol';
-import { DoorClientPacketId, DoorServerPacketId as DoorServer } from '@ao/protocol';
-import type { CharacterCreate, ClientPacket } from '@ao/protocol';
+import { DoorClientPacketId, DoorServerPacketId as DoorServer, KeysServerPacketId as KS } from '@ao/protocol';
+import type { CharacterCreate, ClientPacket, ServerPacket } from '@ao/protocol';
 import { ClassicState } from './ui-state.js';
 import { MapObjects } from './map-objects.js';
 import { PacketCounters, SEQUENCED_CLIENT_PACKETS } from './packet-counters.js';
 import type { PacketFamily } from './packet-counters.js';
-import { CharacterTracker } from './characters.js';
+import { CharacterTracker, characterChange } from './characters.js';
 import { NpcsServerPacketId as NS } from '@ao/protocol';
 import { CombatState } from './combat.js';
+import { SpellState } from './spells.js';
+import { ItemsState } from './items-state.js';
+import { ItemsController } from './items.js';
+import type { ObjectCatalog } from './object-catalog.js';
 
 export interface Position { x: number; y: number }
 const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
@@ -27,6 +31,16 @@ export class Session {
   /** Everybody on the map, with names, equipment, slides and overhead text (feat/npcs). */
   readonly tracker = new CharacterTracker();
   readonly combat = new CombatState();
+  readonly spells: SpellState;
+  readonly items = new ItemsState();
+  /** Set by the UI once Dat/Obj.dat is loaded; item actions that need object types wait for it. */
+  catalog: ObjectCatalog | undefined;
+  readonly itemActions = new ItemsController({
+    send: packet => this.send(packet), now: () => this.clock(), ready: () => this.ready, position: () => this.position,
+    ui: this.ui, state: this.items, catalog: () => this.catalog, next: family => this.next(family),
+  });
+  /** Observer called with every decoded server packet once the session state has applied it (audio). */
+  onPacket: ((packet: ServerPacket) => void) | undefined;
   characterLevel: number | undefined;
   phase: Phase = 'connecting';
   map: number | undefined;
@@ -64,6 +78,7 @@ export class Session {
     this.credentials = { ...credentials };
     this.ui.chat.clock = clock; this.ui.chat.characters = index => this.characters.get(index);
     this.connectedAt = clock();
+    this.spells = new SpellState(packet => this.send(packet), clock, (text, font) => this.ui.message(text, font), family => this.next(family));
     this.placementDeadline = this.connectedAt + 10_000;
   }
   get self() { return this.charIndex === undefined ? undefined : this.characters.get(this.charIndex); }
@@ -95,7 +110,13 @@ export class Session {
       if ('unknown' in packet) { this.unknownFrames++; continue; }
       this.ui.receive(packet);
       this.tracker.receive(packet, this.clock());
-      this.combat.receive(packet, { ui: this.ui, characters: this.characters, charIndex: this.charIndex, clock: this.clock });
+      this.combat.receive(packet, {
+        ui: this.ui, characters: this.characters, charIndex: this.charIndex, clock: this.clock,
+        // CharAtaca blood goes into the one spell FX list; VB6 skips it when the victim is sailing.
+        bleed: (charIndex, fx) => { if (!this.tracker.chars.get(charIndex)?.sailing) this.spells.addFx({ fx, charIndex, x: 0, y: 0, loops: 0, startedAt: this.clock() }); },
+      });
+      this.spells.receive(packet);
+      this.items.receive(packet);
       switch (packet.id) {
         case S.Connected:
           if (this.phase !== 'connecting' || !this.credentials) throw new Error('Unexpected Connected');
@@ -126,6 +147,11 @@ export class Session {
           this.characters.set(packet.charIndex, packet);
           if (this.charIndex === packet.charIndex) this.place(packet.x, packet.y);
           break;
+        case NS.CharacterChange: { // death (ghost), revival, equipping: the tracker's rule, applied to this copy too
+          const character = this.characters.get(packet.charIndex);
+          if (character) this.characters.set(packet.charIndex, { ...character, ...characterChange(character, packet), cart: packet.cart, backpack: packet.backpack, fx: packet.fx, fxLoops: packet.fxLoops });
+          break;
+        }
         case S.UserCharIndexInServer:
           this.charIndex = packet.charIndex;
           if (this.self) this.place(this.self.x, this.self.y);
@@ -160,9 +186,12 @@ export class Session {
         // The tracker owns appearance; this store (positions for the door rule, chat bubbles) only forgets who left.
         case NS.CharacterRemove: if (packet.charIndex !== this.charIndex) this.characters.delete(packet.charIndex); break;
         // LocaleMsg (141) reaches the console through ui.receive -> ChatState (one print, chat's pipeline).
+        case KS.SafeModeOn: this.safeMode = true; break;
+        case KS.SafeModeOff: this.safeMode = false; break;
         case S.ErrorMsg: throw new Error(`Server: ${packet.message}`);
         case S.Disconnect: throw new Error('The server disconnected this character');
       }
+      this.onPacket?.(packet);
     }
   }
   private validPosition(position: Position) {
@@ -223,7 +252,8 @@ export class Session {
   private lastClick = -Infinity;
   private canClick(x: number, y: number): boolean {
     const now = this.clock();
-    if (!this.ready || now - this.lastClick < this.clickInterval || x < 1 || y < 1 || x > 100 || y > 100) return false;
+    // While an NPC shop is open (frmComerciar is modal in VB6) the map takes no clicks.
+    if (!this.ready || this.items.shopOpen || now - this.lastClick < this.clickInterval || x < 1 || y < 1 || x > 100 || y > 100) return false;
     this.lastClick = now; return true;
   }
   clickInterval = 200;
@@ -239,6 +269,17 @@ export class Session {
     if (!message.trim() || message.length > 160 || new TextEncoder().encode(message).length > 255) return false;
     this.send({ id: C.Talk, message, counter: this.next('talk') });
     this.lastTalk = this.clock();
+    return true;
+  }
+  /** SafeModeOn/SafeModeOff (HandleSafeModeOn/Off: SeguroGame); undefined until the server says. */
+  safeMode: boolean | undefined;
+  /** A game-key packet (keymap.ts): same door as chat, counters filled from PacketCounters for sequenced ids (Work). */
+  sendAction(packet: ClientPacket): boolean { return this.sendChat(packet); }
+  /** The RefreshPosition key (WriteRequestPositionUpdate): one outstanding position probe at a time, like tick(). */
+  refreshPosition(): boolean {
+    if (!this.ready || this.pending) return false;
+    this.pending = { since: this.clock() }; this.lastQuery = this.clock();
+    this.send({ id: C.RequestPositionUpdate });
     return true;
   }
   /** Send a chat packet that is not Say (yell, whisper, guild, group, global...). */

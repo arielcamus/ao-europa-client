@@ -30,6 +30,22 @@ const headingOf = (dx: number, dy: number): Heading | undefined =>
 /** vbColor_2_Long: VB colours are 0x00BBGGRR. */
 export const vbColor = (value: number) => ({ r: value & 255, g: (value >> 8) & 255, b: (value >> 16) & 255 });
 
+type ChangePacket = { body: number; head: number; heading: number; weapon: number; shield: number; helmet: number };
+/**
+ * HandleCharacterChange, the ONE appearance rule for every character, self included (death: ghost body 829; revival; equipping).
+ * VB6 ignores weapon/shield/helmet 0 on change ("TempInt <> 0") and keeps the previous set. Used by the tracker (what the
+ * renderer draws) and by Session for its own character copy, so both always agree.
+ */
+export function characterChange<T extends ChangePacket>(previous: T, packet: ChangePacket): Pick<T, keyof ChangePacket> {
+  return {
+    body: packet.body, head: packet.head,
+    heading: (packet.heading >= 1 && packet.heading <= 4 ? packet.heading : previous.heading) as T['heading'],
+    weapon: (packet.weapon !== 0 ? packet.weapon : previous.weapon) as T['weapon'],
+    shield: (packet.shield !== 0 ? packet.shield : previous.shield) as T['shield'],
+    helmet: (packet.helmet !== 0 ? packet.helmet : previous.helmet) as T['helmet'],
+  } as Pick<T, keyof ChangePacket>;
+}
+
 export class CharacterTracker {
   readonly chars = new Map<number, Character>();
   /** Fires once per NPCDESC overhead message (the VB6 mostrarCartel NPC dialog window). */
@@ -63,14 +79,7 @@ export class CharacterTracker {
       case N.CharacterChange: {
         const char = this.chars.get(packet.charIndex);
         if (!char) break;
-        // VB6 ignores weapon/shield/helmet 0 on change ("TempInt <> 0"): keeps the previous set.
-        Object.assign(char, {
-          body: packet.body, head: packet.head, heading: packet.heading as Heading,
-          idle: (packet.flags & 1) !== 0, sailing: (packet.flags & 2) !== 0,
-          ...(packet.weapon !== 0 ? { weapon: packet.weapon } : {}),
-          ...(packet.shield !== 0 ? { shield: packet.shield } : {}),
-          ...(packet.helmet !== 0 ? { helmet: packet.helmet } : {}),
-        });
+        Object.assign(char, characterChange(char, packet), { idle: (packet.flags & 1) !== 0, sailing: (packet.flags & 2) !== 0 });
         this.revision++;
         break;
       }

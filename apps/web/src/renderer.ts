@@ -7,11 +7,13 @@ import { Application, Container, Rectangle, Sprite, Text, Texture } from 'pixi.j
 import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
 import type { Session } from './session.js';
-import { DOOR_OBJECT_TYPE, ObjType, RoofLights, TreeFade, fixedObjects, nearRoof, objectDraws, parseObjectGraphics, treeCoversPlayer } from './map-objects.js';
+import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, TreeFade, fixedObjects, nearRoof, objectDraws, parseObjectGraphics, treeCoversPlayer } from './map-objects.js';
 import type { GroundObject, ObjectGraphic } from './map-objects.js';
 import { CharacterSprites } from './character-render.js';
 import { NPC_NAME_COLOR, parseColors, parseLocale, playerNameColor, privilegeTitle } from './character-data.js';
 import type { LocaleData, Rgb } from './character-data.js';
+import { spellTables } from './spells.js';
+import type { ActiveFx } from './spells.js';
 
 class SpritePool {
   private sprites: Sprite[] = [];
@@ -65,6 +67,8 @@ export class WorldRenderer {
   locale: LocaleData | undefined;
   /** Tile under the mouse: NPC names are only drawn there, as in Char_Render (TX, TY). */
   hoverTile: { x: number; y: number } | undefined;
+  /** The HideNames key (binding 7, VB6 `Nombres`): names and titles over characters on or off. */
+  showNames = true;
   /** Top-left of the visible world in native pixels, from the last frame (combat overlay, hover tile).*/
   camera = { x: 0, y: 0 };
 
@@ -80,7 +84,7 @@ export class WorldRenderer {
     this.app.canvas.setAttribute('aria-label', 'Argentum map. Use arrow keys or W A S D to walk.');
     this.host.prepend(this.app.canvas);
     this.app.stage.addChild(this.world);
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 9; i++) {
       const container = new Container(); this.world.addChild(container); this.pools.push(new SpritePool(container));
     }
     this.world.addChild(this.labelLayer);
@@ -196,6 +200,25 @@ export class WorldRenderer {
     const y = Math.floor((py + position.y * 32 + 16 - this.app.screen.height / 2) / 32);
     return x >= 1 && y >= 1 && x <= 100 && y <= 100 ? { x, y } : undefined;
   }
+  /** Sound data of the loaded map (tMapDat music, ambient, weather flags). */
+  get mapAudio() { return this.map?.audio; }
+  /** TileEngine.HayTecho at a tile: the player is under a roof (indoor rain sounds). */
+  roofAt(x: number, y: number) { return hayTecho(this.map?.triggers[(y - 1) * 100 + x - 1] ?? 0); }
+  /**
+   * What DoPasosFx reads under a character: the file number of layer 1 (GrhData(Graphic(1)).FileNum; an animation uses its first
+   * frame's file) and the layer-3 (else layer-2) graphic that covers it.
+   */
+  terrainAt(x: number, y: number): { file: number; overlay: number } | undefined {
+    if (!this.map || x < 1 || y < 1 || x > 100 || y > 100) return undefined;
+    const tile = (y - 1) * 100 + x - 1;
+    return { file: this.grhFile(this.map.layers[0]![tile] ?? 0), overlay: this.map.layers[2]![tile] || this.map.layers[1]![tile] || 0 };
+  }
+  /** GrhData(grh).FileNum; an animation reports the file of its first frame. */
+  grhFile(grh: number): number {
+    const entry = grh ? this.graphics.get(grh) : undefined;
+    const first = entry && 'ids' in entry ? this.graphics.get(entry.ids[0] ?? 0) : entry;
+    return first && 'file' in first ? first.file : 0;
+  }
   isDoor(objIndex: number) { return this.objectGraphics.get(objIndex)?.type === DOOR_OBJECT_TYPE; }
   render(session: Session | undefined, now: number) {
     const position = session?.visualPosition(now);
@@ -240,6 +263,7 @@ export class WorldRenderer {
     }
     this.camera = { x: cameraX, y: cameraY };
     this.drawCharacters(session, position, now, cameraX, cameraY, width, height);
+    this.drawEffects(session, now, position);
     this.pools.forEach(item => item.finish());
   }
   /** Sprites of a stationary south-facing character, for the NPC dialog portrait. */
@@ -280,7 +304,7 @@ export class WorldRenderer {
       for (const layer of sprites.layers(char, heading)) {
         this.draw(pool, layer.animation, px + layer.x, py + layer.y, layer.walks && moving ? elapsed : 0);
       }
-      if (char.npc) {
+      if (!this.showNames) { /* HideNames */ } else if (char.npc) {
         // NPC names appear only under the cursor, in (0,129,195).
         if (this.hoverTile && this.hoverTile.x === char.x && this.hoverTile.y === char.y && char.name) {
           this.label(char.name, NPC_NAME_COLOR, px + 16, py + 31);
@@ -296,6 +320,42 @@ export class WorldRenderer {
       // Overhead speech is drawn once, by ChatBubbles from ChatState (chat #7); the tracker's dialog only feeds the NPC window.
     }
     for (let i = this.labelsUsed; i < this.labels.length; i++) this.labels[i]!.visible = false;
+  }
+  private selfBodyY(session: Session) {
+    const id = session.self?.body ?? 0;
+    let body = this.bodyCache.get(id);
+    if (!body && id > 0) { try { body = readBody(this.bodies, this.molds, this.graphics, id); this.bodyCache.set(id, body); } catch { return 0; } }
+    return body?.bodyY ?? 0;
+  }
+  /**
+   * Spell FX (CreateFX / FxPiso), engine.bas Char_Render FxList: a Grh from FXs.ini drawn at the
+   * character's tile plus the FX offsets, 20px down, over the body. Pool 7 is additive (IsPNG=0,
+   * the VB6 blended draw), pool 8 plain alpha (IsPNG=1). One pass lasts frameMs * frames.
+   */
+  private drawEffects(session: Session, now: number, self: { x: number; y: number }) {
+    const spells = session.spells;
+    if (!spells.effects.length) return;
+    const info = (fx: ActiveFx) => {
+      const section = fx.grh ? undefined : spellTables.fx.get(`fx${fx.fx}`);
+      const grh = fx.grh ?? Number(section?.get('animacion') ?? 0);
+      if (!grh || !this.graphics.has(grh)) return undefined;
+      return { animation: this.animation(grh), offsetX: Number(section?.get('offsetx') ?? 0), offsetY: Number(section?.get('offsety') ?? 0), png: section?.get('ispng') === '1' || fx.grh !== undefined };
+    };
+    spells.prune(now, fx => { const a = info(fx); return a ? a.animation.frameMs * a.animation.frames.length : 0; });
+    this.pools[7]!.container.blendMode = 'add'; this.pools[8]!.container.alpha = 220 / 255; this.pools[7]!.container.alpha = 220 / 255;
+    for (const fx of spells.effects) {
+      const data = info(fx);
+      if (!data) continue;
+      let x = fx.x, y = fx.y, body = 0;
+      if (fx.charIndex !== undefined) {
+        // Other characters use the tracker's slide position so an FX follows a walking NPC (npcs #8).
+        const character = session.tracker.chars.get(fx.charIndex);
+        if (fx.charIndex === session.charIndex) { x = self.x; y = self.y; body = this.selfBodyY(session); }
+        else if (character) { const view = session.tracker.visualPosition(character, now); x = view.x; y = view.y; }
+        else if (!x || !y) continue;
+      }
+      this.draw(this.pools[data.png ? 8 : 7]!, data.animation, x * 32 + data.offsetX, y * 32 + data.offsetY + 20 + body, now - fx.startedAt);
+    }
   }
   destroy() {
     this.epoch++; this.observer?.disconnect();
