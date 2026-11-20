@@ -1,0 +1,125 @@
+--- a/Codigo/DisconnectDiagnostics.bas
++++ b/Codigo/DisconnectDiagnostics.bas
+@@ -13,7 +13,7 @@
+     ByVal Reason As String, _
+     Optional ByVal PacketId As Long = -1, _
+     Optional ByVal PacketName As String = vbNullString, _
+-    Optional ByVal PacketCount As Long = -1, _
++    Optional ByVal diagnosticPacketCount As Long = -1, _
+     Optional ByVal Extra As String = vbNullString)
+ 
+     On Error Resume Next
+@@ -38,7 +38,7 @@
+ 
+     If PacketId >= 0 Then message = message & " packetId=" & CStr(PacketId)
+     If PacketName <> vbNullString Then message = message & " packetName=" & CleanDisconnectDiagValue(PacketName)
+-    If PacketCount >= 0 Then message = message & " packetCount=" & CStr(PacketCount)
++    If diagnosticPacketCount >= 0 Then message = message & " packetCount=" & CStr(diagnosticPacketCount)
+ 
+     If UserIndex > 0 Then
+         With UserList(UserIndex)
+--- a/Codigo/Modulo_UsUaRiOs.bas
++++ b/Codigo/Modulo_UsUaRiOs.bas
+@@ -94,7 +94,7 @@
+     On Error GoTo ErrHandler
+     If (AvailableUserSlot.currentIndex = 0) Then
+         GetNextAvailableUserSlot = -1
+-        Return
++        Exit Function
+     End If
+     GetNextAvailableUserSlot = AvailableUserSlot.IndexInfo(AvailableUserSlot.currentIndex)
+     AvailableUserSlot.currentIndex = AvailableUserSlot.currentIndex - 1
+--- a/Codigo/Protocol_Writes.bas
++++ b/Codigo/Protocol_Writes.bas
+@@ -3219,10 +3219,10 @@
+     Call TraceError(Err.Number, Err.Description, "Argentum20Server.Protocol_Writes.WriteCommerceRecieveChatMessage", Erl)
+ End Sub
+ 
+-Sub WriteInvasionInfo(ByVal UserIndex As Integer, ByVal Invasion As Integer, ByVal PorcentajeVida As Byte, ByVal PorcentajeTiempo As Byte)
++Sub WriteInvasionInfo(ByVal UserIndex As Integer, ByVal invasionId As Integer, ByVal PorcentajeVida As Byte, ByVal PorcentajeTiempo As Byte)
+     On Error GoTo WriteInvasionInfo_Err
+     Call Writer.WriteInt16(ServerPacketID.eInvasionInfo)
+-    Call Writer.WriteInt8(Invasion)
++    Call Writer.WriteInt8(invasionId)
+     Call Writer.WriteInt8(PorcentajeVida)
+     Call Writer.WriteInt8(PorcentajeTiempo)
+     Call modSendData.SendData(ToIndex, UserIndex)
+--- a/Codigo/TCP.bas
++++ b/Codigo/TCP.bas
+@@ -399,9 +399,9 @@
+     Call TraceError(Err.Number, Err.Description, "TCP.ConnectNewUser", Erl)
+ End Function
+ 
+-Sub CloseSocket(ByVal UserIndex As Integer, Optional ByVal Reason As String = vbNullString, Optional ByVal Source As String = "TCP.CloseSocket", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal PacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
++Sub CloseSocket(ByVal UserIndex As Integer, Optional ByVal Reason As String = vbNullString, Optional ByVal Source As String = "TCP.CloseSocket", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal diagnosticPacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
+     On Error GoTo ErrHandler
+-    Call LogDisconnectDiag(Source, "CloseSocket", UserIndex, UserList(UserIndex).ConnectionDetails.ConnID, Reason, PacketId, PacketName, PacketCount, Extra)
++    Call LogDisconnectDiag(Source, "CloseSocket", UserIndex, UserList(UserIndex).ConnectionDetails.ConnID, Reason, PacketId, PacketName, diagnosticPacketCount, Extra)
+     If UserIndex = LastUser Then
+         Do Until UserList(LastUser).flags.UserLogged
+             LastUser = LastUser - 1
+@@ -409,7 +409,7 @@
+         Loop
+     End If
+     With UserList(UserIndex)
+-        If .ConnectionDetails.ConnIDValida Then Call CloseSocketSL(UserIndex, Reason, Source, PacketId, PacketName, PacketCount, Extra)
++        If .ConnectionDetails.ConnIDValida Then Call CloseSocketSL(UserIndex, Reason, Source, PacketId, PacketName, diagnosticPacketCount, Extra)
+         'mato los comercios seguros
+         If IsValidUserRef(.ComUsu.DestUsu) Then
+             If UserList(.ComUsu.DestUsu.ArrayIndex).flags.UserLogged Then
+@@ -434,11 +434,11 @@
+     Call TraceError(Err.Number, Err.Description, "TCP.CloseSocket", Erl)
+ End Sub
+ 
+-Sub CloseSocketSL(ByVal UserIndex As Integer, Optional ByVal Reason As String = vbNullString, Optional ByVal Source As String = "TCP.CloseSocketSL", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal PacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
++Sub CloseSocketSL(ByVal UserIndex As Integer, Optional ByVal Reason As String = vbNullString, Optional ByVal Source As String = "TCP.CloseSocketSL", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal diagnosticPacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
+     On Error GoTo CloseSocketSL_Err
+     If UserList(UserIndex).ConnectionDetails.ConnIDValida Then
+-        Call LogDisconnectDiag(Source, "CloseSocketSL", UserIndex, UserList(UserIndex).ConnectionDetails.ConnID, Reason, PacketId, PacketName, PacketCount, Extra)
+-        Call modNetwork.Kick(UserList(UserIndex).ConnectionDetails.ConnID, Reason, Source, PacketId, PacketName, PacketCount, Extra)
++        Call LogDisconnectDiag(Source, "CloseSocketSL", UserIndex, UserList(UserIndex).ConnectionDetails.ConnID, Reason, PacketId, PacketName, diagnosticPacketCount, Extra)
++        Call modNetwork.Kick(UserList(UserIndex).ConnectionDetails.ConnID, Reason, Source, PacketId, PacketName, diagnosticPacketCount, Extra)
+         UserList(UserIndex).ConnectionDetails.ConnIDValida = False
+     End If
+     Exit Sub
+--- a/Codigo/modNetwork.bas
++++ b/Codigo/modNetwork.bas
+@@ -97,7 +97,7 @@
+     Call Server.Flush(UserList(UserIndex).ConnectionDetails.ConnID)
+ End Sub
+ 
+-Public Sub Kick(ByVal Connection As Long, Optional ByVal Message As String = vbNullString, Optional ByVal Source As String = "modNetwork.Kick", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal PacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
++Public Sub Kick(ByVal Connection As Long, Optional ByVal Message As String = vbNullString, Optional ByVal Source As String = "modNetwork.Kick", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal diagnosticPacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
+     On Error GoTo Kick_ErrHandler:
+     If IsFeatureEnabled("debug_connections") Then
+         If (Message <> vbNullString) Then
+@@ -109,9 +109,9 @@
+     Dim UserRef As t_UserReference
+     UserRef = Mapping(Connection).UserRef
+     If IsValidUserRef(UserRef) And UserList(UserRef.ArrayIndex).flags.UserLogged Then
+-        Call LogDisconnectDiag(Source, "Kick", UserRef.ArrayIndex, Connection, Message, PacketId, PacketName, PacketCount, Extra)
++        Call LogDisconnectDiag(Source, "Kick", UserRef.ArrayIndex, Connection, Message, PacketId, PacketName, diagnosticPacketCount, Extra)
+     Else
+-        Call LogDisconnectDiag(Source, "Kick", 0, Connection, Message, PacketId, PacketName, PacketCount, Extra)
++        Call LogDisconnectDiag(Source, "Kick", 0, Connection, Message, PacketId, PacketName, diagnosticPacketCount, Extra)
+     End If
+     If (Message <> vbNullString) Then
+         If UserRef.ArrayIndex > 0 Then
+@@ -272,14 +272,14 @@
+     Call TraceError(Err.Number, Err.Description, "modNetwork.ForcedClose", Erl)
+ End Sub
+ 
+-Public Sub KickConnection(ByVal Connection As Long, Optional ByVal Reason As String = vbNullString, Optional ByVal Source As String = "modNetwork.KickConnection", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal PacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
++Public Sub KickConnection(ByVal Connection As Long, Optional ByVal Reason As String = vbNullString, Optional ByVal Source As String = "modNetwork.KickConnection", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal diagnosticPacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
+     On Error GoTo ForcedClose_Err:
+     Dim UserRef As t_UserReference
+     UserRef = Mapping(Connection).UserRef
+     If IsValidUserRef(UserRef) Then
+-        Call LogDisconnectDiag(Source, "KickConnection", UserRef.ArrayIndex, Connection, Reason, PacketId, PacketName, PacketCount, Extra)
++        Call LogDisconnectDiag(Source, "KickConnection", UserRef.ArrayIndex, Connection, Reason, PacketId, PacketName, diagnosticPacketCount, Extra)
+     Else
+-        Call LogDisconnectDiag(Source, "KickConnection", 0, Connection, Reason, PacketId, PacketName, PacketCount, Extra)
++        Call LogDisconnectDiag(Source, "KickConnection", 0, Connection, Reason, PacketId, PacketName, diagnosticPacketCount, Extra)
+     End If
+     Call Server.Flush(Connection)
+     Call Server.Kick(Connection, True)

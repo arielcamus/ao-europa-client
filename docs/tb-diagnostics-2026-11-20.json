@@ -1,0 +1,211 @@
+{
+  "recordedAtUtc": "2026-11-20T16:41:14.458369+00:00",
+  "project": "C:\\ao\\server\\Argentum20Server.twinproj",
+  "projectSha256": "f6c48722ef6259ae048dfb0bc4f673a33e3d5f52e1355e52b252bd689b110261",
+  "clipboard": {
+    "path": "C:\\ao\\tb-errors.txt",
+    "localCopy": "docs/tb-errors-2026-11-20.txt",
+    "bytes": 63,
+    "sha256": "591997c86da6b749ee3c2d5ac1382c0950f8a738803b06138aca34a5ba4e6a62",
+    "contents": "Report header only; no diagnostic rows.",
+    "session": 1,
+    "apartment": "STA",
+    "taskExitCode": 0
+  },
+  "recovery": {
+    "method": "ReadProcessMemory of the existing twinBASIC WebView renderer; no process writes, injected execution, debugger attachment, GUI actions or compiler requests.",
+    "rendererProcessId": 9232,
+    "evidence": "Seven cached severity-1 diagnostic objects. Verified start/end range pointers, message pointers and severity tags; read TB codes through their string pointers. Each decoded range uniquely matches the original source. Two modNetwork diagnostics also match intact cached textDocument/publishDiagnostics JSON.",
+    "rangeConvention": "Zero-based LSP line and character; the handoff uses one-based physical file lines.",
+    "rawMemoryCommitted": false
+  },
+  "diagnostics": [
+    {
+      "processId": 9232,
+      "messageAddress": "0x25d01b49294",
+      "codeAddress": "0x25d01082fc8",
+      "file": "Codigo/Modulo_UsUaRiOs.bas",
+      "range": {
+        "start": {
+          "line": 96,
+          "character": 14
+        },
+        "end": {
+          "line": 96,
+          "character": 14
+        }
+      },
+      "severity": 1,
+      "message": "Return statement is missing an expression",
+      "code": "TB5075",
+      "fix": "Replace bare Return with Exit Function after assigning -1."
+    },
+    {
+      "processId": 9232,
+      "messageAddress": "0x25d01b49b38",
+      "codeAddress": "0x25d01083034",
+      "file": "Codigo/TCP.bas",
+      "range": {
+        "start": {
+          "line": 401,
+          "character": 250
+        },
+        "end": {
+          "line": 401,
+          "character": 261
+        }
+      },
+      "severity": 1,
+      "message": "duplicate definition in the current scope [PacketCount]",
+      "code": "TB5134",
+      "fix": "Rename parameter PacketCount to diagnosticPacketCount and update its uses within the procedure."
+    },
+    {
+      "processId": 9232,
+      "messageAddress": "0x25d01b49bd4",
+      "codeAddress": "0x25d01083034",
+      "file": "Codigo/TCP.bas",
+      "range": {
+        "start": {
+          "line": 436,
+          "character": 254
+        },
+        "end": {
+          "line": 436,
+          "character": 265
+        }
+      },
+      "severity": 1,
+      "message": "duplicate definition in the current scope [PacketCount]",
+      "code": "TB5134",
+      "fix": "Rename parameter PacketCount to diagnosticPacketCount and update its uses within the procedure."
+    },
+    {
+      "processId": 9232,
+      "messageAddress": "0x25d01b4e904",
+      "codeAddress": "0x25d01083034",
+      "file": "Codigo/Protocol_Writes.bas",
+      "range": {
+        "start": {
+          "line": 3221,
+          "character": 56
+        },
+        "end": {
+          "line": 3221,
+          "character": 64
+        }
+      },
+      "severity": 1,
+      "message": "duplicate definition in the current scope [Invasion]",
+      "code": "TB5134",
+      "fix": "Rename parameter Invasion to invasionId and update its uses within the procedure."
+    },
+    {
+      "processId": 9232,
+      "messageAddress": "0x25d01b53314",
+      "codeAddress": "0x25d01083034",
+      "file": "Codigo/modNetwork.bas",
+      "range": {
+        "start": {
+          "line": 99,
+          "character": 249
+        },
+        "end": {
+          "line": 99,
+          "character": 260
+        }
+      },
+      "severity": 1,
+      "message": "duplicate definition in the current scope [PacketCount]",
+      "code": "TB5134",
+      "fix": "Rename parameter PacketCount to diagnosticPacketCount and update its uses within the procedure."
+    },
+    {
+      "processId": 9232,
+      "messageAddress": "0x25d01b533b0",
+      "codeAddress": "0x25d01083034",
+      "file": "Codigo/modNetwork.bas",
+      "range": {
+        "start": {
+          "line": 274,
+          "character": 268
+        },
+        "end": {
+          "line": 274,
+          "character": 279
+        }
+      },
+      "severity": 1,
+      "message": "duplicate definition in the current scope [PacketCount]",
+      "code": "TB5134",
+      "fix": "Rename parameter PacketCount to diagnosticPacketCount and update its uses within the procedure."
+    },
+    {
+      "processId": 9232,
+      "messageAddress": "0x25d01b53de4",
+      "codeAddress": "0x25d01083034",
+      "file": "Codigo/DisconnectDiagnostics.bas",
+      "range": {
+        "start": {
+          "line": 15,
+          "character": 19
+        },
+        "end": {
+          "line": 15,
+          "character": 30
+        }
+      },
+      "severity": 1,
+      "message": "duplicate definition in the current scope [PacketCount]",
+      "code": "TB5134",
+      "fix": "Rename parameter PacketCount to diagnosticPacketCount and update its uses within the procedure."
+    }
+  ],
+  "files": [
+    {
+      "path": "Codigo/DisconnectDiagnostics.bas",
+      "originalSha256": "d5e2fdc677a6afe77ad0ec72a15f05816193a79069e5123ef366d665793b73dd",
+      "patchedSha256": "6db229706c58b4739e33ef766175a7e187e154374c8cb3c75789f9f3b2e32b48",
+      "originalBytes": 3540,
+      "patchedBytes": 3570
+    },
+    {
+      "path": "Codigo/Modulo_UsUaRiOs.bas",
+      "originalSha256": "14cd6c3c444e99362a8e6d37acc1e85e69ad4197a999592b91ee86c0d01d1415",
+      "patchedSha256": "91bcd9d099dbd0627162f8721029d3152d4ad44b3ceadeee50e1eb3f1fa346af",
+      "originalBytes": 185926,
+      "patchedBytes": 185933
+    },
+    {
+      "path": "Codigo/Protocol_Writes.bas",
+      "originalSha256": "a02916c765955464ec2e22dfd017b14f8a6b3fddba538b4a3988c7a8c99746ab",
+      "patchedSha256": "11d80918e6f16fc711ec40bfcd4c62dffc95bd8c1f8d07afc7574b5b68d98c5a",
+      "originalBytes": 216455,
+      "patchedBytes": 216459
+    },
+    {
+      "path": "Codigo/TCP.bas",
+      "originalSha256": "247f9e399f9f192763756ed390b573c17f2184d260b2ea305eeff6e8df89acf3",
+      "patchedSha256": "5d605bcf4dead8fffb4e520fd976e34bd604fa0767ced48f75a5d42b33b3fbb4",
+      "originalBytes": 53737,
+      "patchedBytes": 53797
+    },
+    {
+      "path": "Codigo/modNetwork.bas",
+      "originalSha256": "dce2a7d1a60f9d00245d444947e402ea95749cd3e0f4be22701f17c1e5518b36",
+      "patchedSha256": "4f047f4c437544b06c57fe276333b53a6bf9cd6892dc9913e363d58592387b95",
+      "originalBytes": 29300,
+      "patchedBytes": 29360
+    }
+  ],
+  "validation": {
+    "remotePatchedAndBackupHashesVerified": true,
+    "patchApplyAndReverseByteExact": true,
+    "lineEndingsAndEncodingPreserved": true,
+    "stringLiteralsPreserved": true,
+    "namedArgumentCallsForRenamedParametersFound": false,
+    "savedProjectUnchanged": true,
+    "buildRun": false,
+    "compileSuccessVerified": false
+  }
+}

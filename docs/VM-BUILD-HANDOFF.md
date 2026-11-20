@@ -6,7 +6,9 @@
 BETA 1044. The reported result is **7 errors and 220 warnings**, with
 `[LINKER] FAILED due to compilation errors 'C:\ao\server\server.exe'` and
 `[BUILD] failed`. See [twinBASIC compile fixes](#twinbasic-compile-fixes) below.
-Windows, SSH and the VNC desktop are available; dependency validation passed.
+Source fixes for all seven diagnostics are now applied; human re-import/build
+remains pending. Windows, SSH and the VNC desktop are available; dependency
+validation passed.
 
 The `ao-build` disk is running through a **headless QEMU fallback**, because UTM
 5.0.9-2 and `utmctl` hang before application startup on this Mac. Opening UTM,
@@ -69,65 +71,91 @@ build automation is included.
 
 ## twinBASIC compile fixes
 
-Read-only investigation started **20 November 2026 at 13:10:02 UTC**. No
-twinBASIC executable, import, compiler restart, build command or IDE automation
-was invoked. The running IDE and saved project were left untouched.
+**20 November 2026 — fixes for all seven recovered diagnostics are applied** to
+five files in `C:\ao\server\Codigo`. Each changed file has a byte-identical
+pre-edit backup named `<filename>.orig`. No GUI clicks, project import,
+compiler restart or twinBASIC build were performed. Compilation after these
+changes remains **unverified**; a human must re-import `Server.VBP` and build.
 
-The seven compile diagnostics were **not found in the persisted data inspected**:
+The clipboard export is [tb-errors-2026-11-20.txt](tb-errors-2026-11-20.txt),
+copied byte-for-byte from `C:\ao\tb-errors.txt`. Contrary to the initial
+expectation, **the clipboard contained only the 63-byte report header**, with
+no error rows. The seven diagnostics were recovered separately from the
+running IDE's cached diagnostic objects, without changing its state. The
+[diagnostic evidence and source hashes](tb-diagnostics-2026-11-20.json) retain
+that distinction; the clipboard file has not been replaced with a synthetic
+report.
 
-- `C:\ao\server`, `C:\ao\twinbasic`, `%APPDATA%\twinBASIC`, `%TEMP%` and
-  `C:\Windows\Temp` had no readable compile-error log. The exact directory
-  `%LOCALAPPDATA%\twinBASIC` does not exist. The actual `twinBASIC_Admin` and
-  `twinBASIC_WebPanel_Admin` profiles contain WebView storage/maintenance logs;
-  their readable logs had no AO compile diagnostics. Two recent nonempty
-  `.tmp` files were read using shared read access: they are PNG/JPEG background
-  images, visually inspected, with no diagnostic text.
-- A local copy of `Argentum20Server.twinproj` was parsed as a binary container,
-  without running twinBASIC. All **214 entries / 5,489,314 bytes** were consumed.
-  Its SHA-256 is
-  `f6c48722ef6259ae048dfb0bc4f673a33e3d5f52e1355e52b252bd689b110261`.
-  Neither its `.meta` nor its other entries contain a compile-error report.
-- The embedded `Sources/__IMPORT_LOG.md` ends with **5 ERRORS/WARNINGS**. All
-  five are reference-path conversion warnings for ADO, Scripting Runtime,
-  MSXML, Aurora.Network and DX8VB; they are unrelated to the reported count of
-  seven compile errors. The log explicitly directs the reader to DIAGNOSTICS.
-- The registry value under
-  `HKCU\Software\VB and VBA Program Settings\twinBASIC_IDE\ProjectState`
-  for this project contains editor/layout state, no diagnostics, and an empty
-  `debugConsoleEntryHistory` (console command history). Both that state and
-  `.meta` have `problemsPanelOptions.showErrors=false`, so the human may need
-  to click the red error counter to display the error rows.
+All locations below are **one-based physical source lines**, including the
+VB6 `Attribute` line. No source lines were added or removed.
 
-This agrees with the publisher's [diagnostic-tool documentation](https://docs.twinbasic.com/tB/IDE/Troubleshooting/Diagnostic-Tools):
-the build/debug console is held in memory and is not written to a log file.
-The [container format](https://docs.twinbasic.com/Features/Packages/File-Format)
-describes `.meta` as editor state. Inspection of BETA 1044's installed
-`ide/main.js` also confirms that diagnostics are cached in memory and omitted
-from the saved project-state object.
+| File under `C:\ao\server\Codigo` | Line | Code and exact message | Applied VB6-compatible fix |
+| --- | ---: | --- | --- |
+| `Modulo_UsUaRiOs.bas` | 97 | **TB5075** — Return statement is missing an expression | In `GetNextAvailableUserSlot`, replace bare `Return` with `Exit Function` after assigning `-1`. |
+| `TCP.bas` | 402 | **TB5134** — duplicate definition in the current scope [PacketCount] | In `CloseSocket`, rename the parameter and its uses to `diagnosticPacketCount`. |
+| `TCP.bas` | 437 | **TB5134** — duplicate definition in the current scope [PacketCount] | In `CloseSocketSL`, rename the parameter and its uses to `diagnosticPacketCount`. |
+| `Protocol_Writes.bas` | 3222 | **TB5134** — duplicate definition in the current scope [Invasion] | In `WriteInvasionInfo`, rename the parameter to `invasionId` and pass it to `Writer.WriteInt8`. |
+| `modNetwork.bas` | 100 | **TB5134** — duplicate definition in the current scope [PacketCount] | In `Kick` under `DIRECT_PLAY = 0`, rename the parameter and its uses to `diagnosticPacketCount`. |
+| `modNetwork.bas` | 275 | **TB5134** — duplicate definition in the current scope [PacketCount] | In `KickConnection` under `DIRECT_PLAY = 0`, rename the parameter and its uses to `diagnosticPacketCount`. |
+| `DisconnectDiagnostics.bas` | 16 | **TB5134** — duplicate definition in the current scope [PacketCount] | In `LogDisconnectDiag`, rename the parameter and its uses to `diagnosticPacketCount`; retain the `" packetCount="` log key. |
 
-**Exact error list and source patch: pending the existing DIAGNOSTICS report.**
-The human can right-click in DIAGNOSTICS → **Copy All Errors** and paste the
-report; this requires no new build. The [diagnostics documentation](https://docs.twinbasic.com/tB/IDE/Code/Diagnostics)
-describes the report's file, position, code and message fields. The seven
-messages must be captured before claiming seven diagnosed or fixed errors.
+The parameter changes retain types, defaults, argument order, packet encoding
+and log text. Inspection of all 195 VB6 source files found no calls using the
+renamed parameters as named arguments. The inactive `DIRECT_PLAY` implementations
+were left as they were. The empty-slot fix returns the already assigned `-1`
+without executing the subsequent slot access. It deliberately replaces the old
+invalid bare-`Return` path, which has no corresponding `GoSub`, with the intended
+early function exit. See the publisher's [Return reference](https://docs.twinbasic.com/tB/Core/Return)
+and Microsoft's [Exit Function reference](https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/exit-statement).
 
-The reported `UserMod.GetNextAvailableUserSlot at line #1` maps to
-`C:\ao\server\Codigo\Modulo_UsUaRiOs.bas`, whose function starts on physical
-file line **93**. Physical line **97** is a bare `Return`, and the procedure has
-no `GoSub`. The original file and its saved imported copy are byte-identical.
-This is a candidate requiring the actual diagnostic, not an extracted error.
-The current [Return reference](https://docs.twinbasic.com/tB/Core/Return)
-reserves bare `Return` for `GoSub`; [warning TB0027](https://docs.twinbasic.com/Features/Compiler-IDE/Compiler-Warnings)
-covers a return without a preceding `GoSub`. Historical [issue #1344](https://github.com/twinbasic/twinbasic/issues/1344)
-reported import errors for `Return` in BETA 170; it does not establish a BETA
-1044 defect. Replacing it blindly with `Exit Function` would remove VB6's
-runtime error-3 path, so no such change has been applied without the report.
+The committed [source patch](../scripts/vm/patches/2026-11-20-twinbasic-compile.patch)
+contains all five file changes, relative to the original server root. Its hunk
+lines retain CRLF so applying it preserves the original Windows-1252 files.
+On a pristine copy of the staged server source, run `git apply --check` with
+this patch, then `git apply` to reproduce the changes. The VM already has the
+changes; do not apply it again there. Original and patched SHA-256 values are
+recorded per file in the evidence JSON. Restore a VM file by copying its `.orig`
+backup over it if needed.
 
-No original source files have been changed and no `.orig` backups or source
-patch have yet been created. Once confirmed fixes are applied to the original
-VB6 files, a **human re-import of `Server.VBP` is required**: the existing
-`.twinproj` embeds its own copies. A successful re-import/build remains
-unverified and must be performed by the human under the Community licence.
+Clipboard recovery and diagnosis:
+
+- The original `dumpclip` task exited with code **1**. Its command omitted
+  `-ExecutionPolicy Bypass`, and the effective policy is **Restricted**.
+  Replaying the original invocation over SSH reproduced
+  `running scripts is disabled on this system` / `UnauthorizedAccess` before
+  its script could execute. The user was already logged on and the task already
+  used an Interactive principal, so the bare username was not the observed fault.
+- A temporary on-demand task used principal **`AO-BUILD\aobuilder`** and
+  `LogonType Interactive`, equivalent to [`schtasks /IT`](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create).
+  Its action was
+  `powershell.exe -NoProfile -NonInteractive -STA -WindowStyle Hidden -ExecutionPolicy Bypass -File C:\ao\capture-tb-clipboard.ps1`.
+  The script used `Get-Clipboard -Raw` and UTF-8 without a BOM. At
+  **16:26:42 UTC**, its log confirmed **session 1**, **STA**, and exit code **0**.
+  The temporary task was removed. `C:\ao\tb-clipboard-capture.log` and the capture
+  script remain available on the VM.
+- UnicodeText, Text and OEMText all held the same 63 characters; no HTML error
+  report was present. The saved IDE settings have
+  `problemsPanelOptions.showErrors=false`. Installed BETA 1044 `ide/main.js`
+  shows that **Copy All Errors** traverses `getNextVisibleNode2`, so hidden
+  error rows can produce a header-only report. A future human clipboard export
+  should first show errors and expand their file groups; no build is needed.
+- The read-only fallback used [ReadProcessMemory](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory)
+  on the IDE's existing WebView renderer, PID **9232**. Seven cached diagnostic
+  objects had severity **1**. Their range/message pointers and numeric positions
+  were checked, and their error codes were read through the code-string pointers.
+  Every range matched a unique original source location. The two `modNetwork`
+  records also matched intact cached `textDocument/publishDiagnostics` JSON.
+  Only decoded diagnostic evidence is committed, not process-memory dumps.
+
+Verification completed without a compiler: the patch applies to a pristine
+source copy and reverses to the original bytes; all five VM source hashes and
+all five `.orig` hashes match the recorded values. CRLF line endings,
+non-ASCII source bytes and every string literal were preserved. The existing
+IDE remains in session **1**, PID **8496**. Its saved `.twinproj` is unchanged,
+SHA-256 `f6c48722ef6259ae048dfb0bc4f673a33e3d5f52e1355e52b252bd689b110261`.
+It embeds the old sources, so these disk edits require **human re-import** before
+any subsequent human build can validate the fixes. The 220 warnings and runtime
+server behavior have not been validated or changed by this work.
 
 ## Start the server after the human build
 
