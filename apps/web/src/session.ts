@@ -5,7 +5,7 @@
  */
 import { ClientPacketId as C, CombatClientPacketId as CC, ServerPacketId as S, Heading, FrameDecoder, decodeServerPacket, encodeClientFrame } from '@ao/protocol';
 import { DoorClientPacketId, DoorServerPacketId as DoorServer, KeysServerPacketId as KS } from '@ao/protocol';
-import type { CharacterCreate, ClientPacket } from '@ao/protocol';
+import type { CharacterCreate, ClientPacket, ServerPacket } from '@ao/protocol';
 import { ClassicState } from './ui-state.js';
 import { MapObjects } from './map-objects.js';
 import { PacketCounters, SEQUENCED_CLIENT_PACKETS } from './packet-counters.js';
@@ -39,6 +39,8 @@ export class Session {
     send: packet => this.send(packet), now: () => this.clock(), ready: () => this.ready, position: () => this.position,
     ui: this.ui, state: this.items, catalog: () => this.catalog, next: family => this.next(family),
   });
+  /** Observer called with every decoded server packet once the session state has applied it (audio). */
+  onPacket: ((packet: ServerPacket) => void) | undefined;
   characterLevel: number | undefined;
   phase: Phase = 'connecting';
   map: number | undefined;
@@ -189,6 +191,7 @@ export class Session {
         case S.ErrorMsg: throw new Error(`Server: ${packet.message}`);
         case S.Disconnect: throw new Error('The server disconnected this character');
       }
+      this.onPacket?.(packet);
     }
   }
   private validPosition(position: Position) {

@@ -14,6 +14,8 @@ export interface WorldMap {
    * (trees, signs, deposits, decorations; ModAreas.EsObjetoFijo), so the map file is the only source for them.
    */
   objects: MapFileObject[];
+  /** The sound-related part of tMapDat (Recursos.bas): the map's music number, the "night-day" ambient wave and its weather flags. */
+  audio: { music: number; ambient: string; rain: boolean; snow: boolean; fog: boolean };
   /** The NPC and tile-exit sections after the objects stay opaque. */
   trailingBytes: number;
 }
@@ -73,9 +75,9 @@ export function parseMap(bytes: Uint8Array): WorldMap {
   const [triggerCount, lightCount, particleCount, , objectCount] = Array.from({ length: 6 }, () => count(r.i32())) as [number, number, number, number, number, number];
   r.take(8); // tMapSize is often all zero; the classic world bounds are 1..100.
   const name = r.text();
-  r.u8(); r.text(); r.take(9); // backup, restrict, two music IDs, safe
-  r.text(); r.text(); r.text(); // zone, terrain, ambient
-  r.take(16); r.text(); r.take(3); // light, letter, extras, weather
+  r.u8(); r.text(); const musicAt = r.take(9); // backup, restrict, then music_numberHi, music_numberLow (Int32 each) and safe
+  r.text(); r.text(); const ambient = r.text(); // zone, terrain, ambient
+  r.take(16); r.text(); const weatherAt = r.take(3); // light, letter, extras, then rain, snow, fog flags
   const blocked = new Uint8Array(10_000);
   for (let i = 0; i < blockedCount; i++) {
     const index = tileIndex(r.i16(), r.i16());
@@ -104,7 +106,11 @@ export function parseMap(bytes: Uint8Array): WorldMap {
     const x = r.i16(), y = r.i16(), objIndex = r.i16(), amount = r.i16();
     if (objIndex > 0 && x >= 1 && y >= 1 && x <= 100 && y <= 100) objects.push({ x, y, objIndex, amount });
   }
-  return { name, layers, blocked, triggers, objects, trailingBytes: bytes.length - r.offset };
+  const audio = {
+    music: r.view.getInt32(musicAt + 4, true), ambient,
+    rain: bytes[weatherAt] === 1, snow: bytes[weatherAt + 1] === 1, fog: bytes[weatherAt + 2] !== 0,
+  };
+  return { name, layers, blocked, triggers, objects, audio, trailingBytes: bytes.length - r.offset };
 }
 
 export function parseIni(text: string): Ini {

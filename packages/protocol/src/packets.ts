@@ -18,6 +18,7 @@ import { combatClientCodecs, combatServerCodecs } from './packets/combat.js';
 import { spellClientCodecs, spellServerCodecs } from './packets/spells.js';
 import { itemsClientCodecs, itemsServerCodecs } from './packets/items.js';
 import { keysClientCodecs, keysServerCodecs } from './packets/keys.js';
+import { audioServerCodecs } from './packets/audio.js';
 
 export enum ServerPacketId {
   Connected = 1,
@@ -250,10 +251,10 @@ const chatClientTable = {
  * A new feature table is added here AND to the spread below (test/codec-tables.test.ts fails if the two disagree).
  */
 export const codecTables = {
-  server: { core: coreServerCodecs, doors: doorServerCodecs, npcs: npcsServerCodecs, chat: chatServerTable, combat: combatServerCodecs, spells: spellServerCodecs, items: itemsServerCodecs, keys: keysServerCodecs },
+  server: { core: coreServerCodecs, doors: doorServerCodecs, npcs: npcsServerCodecs, chat: chatServerTable, combat: combatServerCodecs, spells: spellServerCodecs, items: itemsServerCodecs, keys: keysServerCodecs, audio: audioServerCodecs },
   client: { core: coreClientCodecs, doors: doorClientCodecs, chat: chatClientTable, combat: combatClientCodecs, spells: spellClientCodecs, items: itemsClientCodecs, keys: keysClientCodecs },
 } as const;
-const serverCodecs = { ...coreServerCodecs, ...doorServerCodecs, ...npcsServerCodecs, ...chatServerTable, ...combatServerCodecs, ...spellServerCodecs, ...itemsServerCodecs, ...keysServerCodecs };
+const serverCodecs = { ...coreServerCodecs, ...doorServerCodecs, ...npcsServerCodecs, ...chatServerTable, ...combatServerCodecs, ...spellServerCodecs, ...itemsServerCodecs, ...keysServerCodecs, ...audioServerCodecs };
 const clientCodecs = { ...coreClientCodecs, ...doorClientCodecs, ...chatClientTable, ...combatClientCodecs, ...spellClientCodecs, ...itemsClientCodecs, ...keysClientCodecs };
 
 /** Throws when two tables register the same id or a merged table holds an id no listed table owns. */

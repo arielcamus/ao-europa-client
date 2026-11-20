@@ -7,7 +7,7 @@ import { Application, Container, Rectangle, Sprite, Text, Texture } from 'pixi.j
 import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
 import type { Session } from './session.js';
-import { DOOR_OBJECT_TYPE, ObjType, RoofLights, TreeFade, fixedObjects, nearRoof, objectDraws, parseObjectGraphics, treeCoversPlayer } from './map-objects.js';
+import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, TreeFade, fixedObjects, nearRoof, objectDraws, parseObjectGraphics, treeCoversPlayer } from './map-objects.js';
 import type { GroundObject, ObjectGraphic } from './map-objects.js';
 import { CharacterSprites } from './character-render.js';
 import { NPC_NAME_COLOR, parseColors, parseLocale, playerNameColor, privilegeTitle } from './character-data.js';
@@ -199,6 +199,25 @@ export class WorldRenderer {
     const x = Math.floor((px + position.x * 32 + 16 - this.app.screen.width / 2) / 32);
     const y = Math.floor((py + position.y * 32 + 16 - this.app.screen.height / 2) / 32);
     return x >= 1 && y >= 1 && x <= 100 && y <= 100 ? { x, y } : undefined;
+  }
+  /** Sound data of the loaded map (tMapDat music, ambient, weather flags). */
+  get mapAudio() { return this.map?.audio; }
+  /** TileEngine.HayTecho at a tile: the player is under a roof (indoor rain sounds). */
+  roofAt(x: number, y: number) { return hayTecho(this.map?.triggers[(y - 1) * 100 + x - 1] ?? 0); }
+  /**
+   * What DoPasosFx reads under a character: the file number of layer 1 (GrhData(Graphic(1)).FileNum; an animation uses its first
+   * frame's file) and the layer-3 (else layer-2) graphic that covers it.
+   */
+  terrainAt(x: number, y: number): { file: number; overlay: number } | undefined {
+    if (!this.map || x < 1 || y < 1 || x > 100 || y > 100) return undefined;
+    const tile = (y - 1) * 100 + x - 1;
+    return { file: this.grhFile(this.map.layers[0]![tile] ?? 0), overlay: this.map.layers[2]![tile] || this.map.layers[1]![tile] || 0 };
+  }
+  /** GrhData(grh).FileNum; an animation reports the file of its first frame. */
+  grhFile(grh: number): number {
+    const entry = grh ? this.graphics.get(grh) : undefined;
+    const first = entry && 'ids' in entry ? this.graphics.get(entry.ids[0] ?? 0) : entry;
+    return first && 'file' in first ? first.file : 0;
   }
   isDoor(objIndex: number) { return this.objectGraphics.get(objIndex)?.type === DOOR_OBJECT_TYPE; }
   render(session: Session | undefined, now: number) {
