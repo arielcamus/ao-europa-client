@@ -44,11 +44,8 @@ test('real community server: account login, walking, 30 seconds and reconnect pe
   let attempts = 0;
   const walk = async (step: { key?: string; dx: number; dy: number }) => {
     const before = Number(await page.locator('#confirmed').innerText());
-    if (step.key) await page.keyboard.press(step.key, { delay: 80 });
-    else {
-      const rect = (await page.locator('#viewport').boundingBox())!;
-      await page.mouse.click(rect.x + rect.width * .8, rect.y + rect.height / 2);
-    }
+    // Always a key: a desktop mouse click means "look at" on servers that support it.
+    await page.keyboard.press(step.key ?? 'ArrowRight', { delay: 80 });
     // A real map may block a direction. A correction must restore the old
     // position; an accepted step must match its server-authoritative delta.
     await expect.poll(async () => Number(await page.locator('#confirmed').innerText())

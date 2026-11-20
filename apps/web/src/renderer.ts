@@ -3,12 +3,16 @@
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty.
  * See ../../../LICENSE and ../../../NOTICE.
  */
-import { Application, Container, Rectangle, Sprite, Texture } from 'pixi.js';
+import { Application, Container, Rectangle, Sprite, Text, Texture } from 'pixi.js';
 import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
 import type { Session } from './session.js';
 import { DOOR_OBJECT_TYPE, ObjType, RoofLights, TreeFade, fixedObjects, nearRoof, objectDraws, parseObjectGraphics, treeCoversPlayer } from './map-objects.js';
 import type { GroundObject, ObjectGraphic } from './map-objects.js';
+import { CharacterSprites } from './character-render.js';
+import { NPC_NAME_COLOR, parseColors, parseLocale, playerNameColor, privilegeTitle } from './character-data.js';
+import type { LocaleData, Rgb } from './character-data.js';
+import { vbColor } from './characters.js';
 
 class SpritePool {
   private sprites: Sprite[] = [];
@@ -53,6 +57,17 @@ export class WorldRenderer {
   /** The map-file object on a tile, if any (the server sees these too). */
   fixedObjectAt(x: number, y: number): GroundObject | undefined { return this.fixed.get((y - 1) * 100 + x - 1); }
   private lastRender = 0;
+  private readonly labelLayer = new Container();
+  private labels: Text[] = [];
+  private labelsUsed = 0;
+  private sprites: CharacterSprites | undefined;
+  private colors = new Map<string, Rgb>();
+  /** Spanish locale + NPC names (sp_localindex.dat); set once the metadata has loaded. */
+  locale: LocaleData | undefined;
+  /** Tile under the mouse: NPC names are only drawn there, as in Char_Render (TX, TY). */
+  hoverTile: { x: number; y: number } | undefined;
+  /** Camera of the last frame, for hit testing screen pixels back to tiles. */
+  camera = { x: 0, y: 0 };
 
   constructor(private readonly host: HTMLElement, private readonly report: (message: string) => void) {}
   get settled() { return this.readyMap !== undefined && this.loadedSheets > 0 && this.pending.size === 0; }
@@ -69,18 +84,31 @@ export class WorldRenderer {
     for (let i = 0; i < 7; i++) {
       const container = new Container(); this.world.addChild(container); this.pools.push(new SpritePool(container));
     }
+    this.world.addChild(this.labelLayer);
     this.observer = new ResizeObserver(() => this.app.renderer.resize(this.host.clientWidth, this.host.clientHeight));
     this.observer.observe(this.host);
     this.app.ticker.maxFPS = 60;
   }
   private loadMetadata(): Promise<void> {
+    // Character extras degrade to "no equipment / no names" with one report, never block the map.
+    const optional = <T>(load: Promise<T>, name: string) => load.catch(error => { this.report(`${name}: ${String(error)}`); return undefined; });
     return this.metadata ??= Promise.all([
       fetchText('init/graficos.ini'), fetchText('init/cuerpos.dat'), fetchText('init/moldes.ini'), fetchBytes('init/cabezas.ind'),
       fetchText('Dat/Obj.dat').catch(() => ''),
-    ]).then(([graphics, bodies, molds, heads, objects]) => {
+      optional(fetchText('init/armas.dat'), 'armas.dat'), optional(fetchText('init/escudos.dat'), 'escudos.dat'),
+      optional(fetchBytes('init/cascos.ind'), 'cascos.ind'), optional(fetchText('init/colores.dat'), 'colores.dat'),
+      optional(fetchText('init/sp_localindex.dat'), 'sp_localindex.dat'),
+    ]).then(([graphics, bodies, molds, heads, objects, weapons, shields, helmets, colors, locale]) => {
       this.objectGraphics = parseObjectGraphics(objects);
       this.graphics = parseGraphics(graphics); this.bodies = parseIni(bodies);
       this.molds = parseIni(molds); this.heads = parseHeads(heads);
+      this.colors = colors ? parseColors(colors) : new Map();
+      this.locale = locale ? parseLocale(parseIni(locale)) : undefined;
+      this.sprites = new CharacterSprites({
+        graphics: this.graphics, bodies: this.bodies, molds: this.molds, heads: this.heads,
+        helmets: helmets ? parseHeads(helmets) : [], weapons: weapons ? parseIni(weapons) : new Map(),
+        shields: shields ? parseIni(shields) : new Map(), animation: id => this.animation(id),
+      });
     }).catch(error => { this.metadata = undefined; throw error; });
   }
   async loadMap(id: number) {
@@ -206,18 +234,67 @@ export class WorldRenderer {
         } else this.draw(pool, this.animation(id), x * 32, y * 32, now, layer !== 0);
       }
     }
-    let body = this.bodyCache.get(session.self.body);
-    if (!body) { body = readBody(this.bodies, this.molds, this.graphics, session.self.body); this.bodyCache.set(session.self.body, body); }
-    const moving = session.motion && now < session.motion.started + session.motion.duration;
-    // Held input may start a walk after this tick captured `now`.
-    // Like visualPosition, clamp that first frame to the animation's start.
-    const time = moving ? Math.max(0, now - session.motion!.started) : 0;
-    const heading = session.self.heading - 1;
-    const pool = this.pools[4]!;
-    this.draw(pool, body.walk[heading]!, position.x * 32 + body.bodyX + (session.self.body < 488 ? 1 : 0), position.y * 32 + body.bodyY, time);
-    const head = this.heads[session.self.head]?.[heading];
-    if (head) this.draw(pool, this.animation(head), position.x * 32 + body.headX, position.y * 32 + body.headY, 0);
+    this.camera = { x: cameraX, y: cameraY };
+    this.drawCharacters(session, position, now, cameraX, cameraY, width, height);
     this.pools.forEach(item => item.finish());
+  }
+  /** Sprites of a stationary south-facing character, for the NPC dialog portrait. */
+  portraitLayers(body: number, head: number) {
+    return this.sprites?.layers({ body, head, weapon: 0, shield: 0, helmet: 0 } as never, 3) ?? [];
+  }
+  private label(text: string, color: Rgb, x: number, y: number, size = 11, bottom = false) {
+    let label = this.labels[this.labelsUsed++];
+    if (!label) {
+      label = new Text({ text, style: { fontFamily: 'Tahoma, Verdana, sans-serif', fontSize: size, fontWeight: 'bold', fill: '#ffffff', stroke: { color: '#000000', width: 3 }, align: 'center', wordWrap: true, wordWrapWidth: 170 } });
+      label.resolution = 2;
+      this.labels.push(label); this.labelLayer.addChild(label);
+    }
+    if (label.text !== text) label.text = text;
+    label.anchor.set(0.5, bottom ? 1 : 0);
+    label.style.fill = `rgb(${color.r},${color.g},${color.b})`;
+    label.position.set(Math.round(x), Math.round(y)); label.visible = true;
+  }
+  /** Everybody on screen, drawn bottom row first so nearer characters cover farther ones. */
+  private drawCharacters(session: Session, selfPosition: { x: number; y: number }, now: number, cameraX: number, cameraY: number, width: number, height: number) {
+    const sprites = this.sprites; this.labelsUsed = 0;
+    if (!sprites) { this.labels.forEach(label => { label.visible = false; }); return; }
+    const tracker = session.tracker;
+    tracker.expireDialogs(now);
+    const chars = [...tracker.chars.values()]; // self included: its CharacterCreate passes through the tracker too
+    const placed = chars.map(char => {
+      if (char.charIndex === session.charIndex) {
+        const moving = !!session.motion && now < session.motion.started + session.motion.duration;
+        return { char, heading: session.self!.heading as number, x: selfPosition.x, y: selfPosition.y, moving, elapsed: moving ? Math.max(0, now - session.motion!.started) : 0 };
+      }
+      const view = tracker.visualPosition(char, now);
+      return { char, heading: char.heading as number, ...view };
+    }).filter(({ x, y }) => x * 32 > cameraX - 96 && x * 32 < cameraX + width + 96 && y * 32 > cameraY - 96 && y * 32 < cameraY + height + 96)
+      .sort((a, b) => a.y - b.y || a.x - b.x);
+    const pool = this.pools[4]!;
+    for (const { char, heading, x, y, moving, elapsed } of placed) {
+      const px = x * 32, py = y * 32;
+      let top = py + 32;
+      for (const layer of sprites.layers(char, heading)) {
+        const frame = layer.animation.frames[0]!;
+        this.draw(pool, layer.animation, px + layer.x, py + layer.y, layer.walks && moving ? elapsed : 0);
+        top = Math.min(top, py + layer.y + 32 - frame.height);
+      }
+      if (char.npc) {
+        // NPC names appear only under the cursor, in (0,129,195).
+        if (this.hoverTile && this.hoverTile.x === char.x && this.hoverTile.y === char.y && char.name) {
+          this.label(char.name, NPC_NAME_COLOR, px + 16, py + 31);
+          if (char.clan) this.label(char.clan, NPC_NAME_COLOR, px + 16, py + 43);
+        }
+      } else if (char.name) {
+        const self = session.self;
+        const color = playerNameColor(this.colors, char.status, char.privileges, char.groupIndex > 0 && self !== undefined && self.groupIndex === char.groupIndex);
+        this.label(char.name, color, px + 16, py + 31);
+        const title = privilegeTitle(Math.round(char.privileges ? Math.log2(char.privileges) : 0)) ?? char.clan;
+        if (title) this.label(title, color, px + 16, py + 43);
+      }
+      if (char.dialog) this.label(char.dialog.text, vbColor(char.dialog.color), px + 16, top - 3, 11, true);
+    }
+    for (let i = this.labelsUsed; i < this.labels.length; i++) this.labels[i]!.visible = false;
   }
   destroy() {
     this.epoch++; this.observer?.disconnect();

@@ -12,6 +12,7 @@ import { ProtocolError, Reader, Writer } from './binary.js';
 import type { SafeArrayInt8 } from './binary.js';
 import { encodeFrame } from './frame.js';
 import { doorClientCodecs, doorServerCodecs } from './packets/doors.js';
+import { npcsServerCodecs } from './packets/npcs.js';
 
 export enum ServerPacketId {
   Connected = 1,
@@ -216,10 +217,10 @@ const coreClientCodecs = {
  * A new feature table is added here AND to the spread below (test/codec-tables.test.ts fails if the two disagree).
  */
 export const codecTables = {
-  server: { core: coreServerCodecs, doors: doorServerCodecs },
+  server: { core: coreServerCodecs, doors: doorServerCodecs, npcs: npcsServerCodecs },
   client: { core: coreClientCodecs, doors: doorClientCodecs },
 } as const;
-const serverCodecs = { ...coreServerCodecs, ...doorServerCodecs };
+const serverCodecs = { ...coreServerCodecs, ...doorServerCodecs, ...npcsServerCodecs };
 const clientCodecs = { ...coreClientCodecs, ...doorClientCodecs };
 
 /** Throws when two tables register the same id or a merged table holds an id no listed table owns. */

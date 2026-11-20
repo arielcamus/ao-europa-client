@@ -1,0 +1,77 @@
+/*
+ * NPC dialog window for talking NPCs, adapted 2026-11-20 from client Protocol.bas
+ * HandleChatOverHeadImpl ("NPCDESC" -> mostrarCartel with the NPC's name, text and face)
+ * and Carteles.bas. Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no
+ * warranty. See NOTICE. Artwork is read only from the local mount.
+ */
+import type { LocaleData } from './character-data.js';
+import type { WorldRenderer } from './renderer.js';
+
+/** mostrarCartel is shown for 200 + 30 * Len(text) ms. */
+export const dialogLifeMs = (text: string) => 200 + 30 * text.length;
+
+export class NpcDialog {
+  private readonly root: HTMLElement;
+  private timer: number | undefined;
+  private sheets = new Map<number, Promise<HTMLCanvasElement>>();
+  private generation = 0;
+  constructor(parent: HTMLElement, private readonly renderer: WorldRenderer) {
+    this.root = document.createElement('div');
+    this.root.id = 'npc-dialog'; this.root.hidden = true;
+    this.root.setAttribute('role', 'dialog'); this.root.setAttribute('aria-label', 'Diálogo del NPC');
+    this.root.addEventListener('click', () => this.hide());
+    parent.append(this.root);
+  }
+  get visible() { return !this.root.hidden; }
+  hide() { this.generation++; this.root.hidden = true; if (this.timer !== undefined) window.clearTimeout(this.timer); this.timer = undefined; }
+
+  async show(npcNumber: number, locale: LocaleData | undefined) {
+    const npc = locale?.npcs.get(npcNumber);
+    if (!npc?.desc) return;
+    const generation = ++this.generation;
+    const portrait = await this.portrait(npc.body, npc.head).catch(() => undefined);
+    if (generation !== this.generation) return;
+    const title = document.createElement('div'); title.className = 'npc-title'; title.textContent = npc.name.split(' <')[0]!;
+    const text = document.createElement('div'); text.className = 'npc-text'; text.textContent = npc.desc;
+    const body = document.createElement('div'); body.className = 'npc-body'; body.append(title, text);
+    this.root.replaceChildren(...(portrait ? [portrait] : []), body);
+    this.root.hidden = false;
+    if (this.timer !== undefined) window.clearTimeout(this.timer);
+    this.timer = window.setTimeout(() => this.hide(), dialogLifeMs(npc.desc));
+  }
+
+  private sheet(file: number) {
+    let pending = this.sheets.get(file);
+    if (!pending) {
+      pending = new Promise<HTMLCanvasElement>((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => {
+          const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = image.height;
+          const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+          ctx.drawImage(image, 0, 0);
+          const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          // Same black colour key as the world renderer.
+          for (let i = 0; i < pixels.data.length; i += 4) if (!pixels.data[i] && !pixels.data[i + 1] && !pixels.data[i + 2]) pixels.data[i + 3] = 0;
+          ctx.putImageData(pixels, 0, 0); resolve(canvas);
+        };
+        image.onerror = () => reject(new Error(`Missing local graphic ${file}`));
+        image.src = `/ao-assets/Graficos/${file}.png`;
+      });
+      this.sheets.set(file, pending);
+    }
+    return pending;
+  }
+  private async portrait(body: number, head: number): Promise<HTMLCanvasElement | undefined> {
+    await this.renderer.graphic(1); // metadata (bodies, heads) must be loaded first
+    const layers = this.renderer.portraitLayers(body, head);
+    if (!layers.length) return undefined;
+    const canvas = document.createElement('canvas'); canvas.width = 64; canvas.height = 96; canvas.className = 'npc-portrait';
+    const ctx = canvas.getContext('2d')!;
+    for (const layer of layers) {
+      const frame = layer.animation.frames[0]!;
+      ctx.drawImage(await this.sheet(frame.file), frame.x, frame.y, frame.width, frame.height,
+        Math.floor((64 - 32) / 2) + layer.x + Math.floor((32 - frame.width) / 2), 90 - 32 + layer.y + 32 - frame.height, frame.width, frame.height);
+    }
+    return canvas;
+  }
+}

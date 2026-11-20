@@ -48,3 +48,8 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1
 #mode-note { position: absolute; left: 43px; top: 171px; width: 270px; margin: 0; font-size: 11px; color: #c8bebe; }
 #connect:disabled { opacity: .5; cursor: wait; }
 .visually-hidden { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* NPC dialog (mostrarCartel): bottom of the 736x608 viewport. */
+#npc-dialog { position: absolute; left: 20px; top: 645px; width: 716px; min-height: 100px; display: flex; gap: 10px; padding: 6px 10px; background: #0b1a2fe6; border: 2px solid #164b8a; color: #fff; z-index: 5; cursor: pointer; }
+.npc-portrait { flex: none; width: 64px; height: 96px; }
+.npc-title { font: bold 14px Tahoma, Arial, sans-serif; color: #ffd75e; margin-bottom: 4px; }
+.npc-text { font: 13px/16px Tahoma, Arial, sans-serif; }

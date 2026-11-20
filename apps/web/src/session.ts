@@ -10,6 +10,9 @@ import { ClassicState } from './ui-state.js';
 import { MapObjects } from './map-objects.js';
 import { PacketCounters, SEQUENCED_CLIENT_PACKETS } from './packet-counters.js';
 import type { PacketFamily } from './packet-counters.js';
+import { CharacterTracker } from './characters.js';
+import { localeText } from './look-at.js';
+import { NpcsServerPacketId as NS } from '@ao/protocol';
 
 export interface Position { x: number; y: number }
 const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
@@ -21,6 +24,8 @@ export class Session {
   readonly ui = new ClassicState();
   /** Ground objects (doors included) and server block overrides for the current map. */
   readonly mapObjects = new MapObjects();
+  /** Everybody on the map, with names, equipment, slides and overhead text (feat/npcs). */
+  readonly tracker = new CharacterTracker();
   characterLevel: number | undefined;
   phase: Phase = 'connecting';
   map: number | undefined;
@@ -86,6 +91,7 @@ export class Session {
       const packet = decodeServerPacket(body);
       if ('unknown' in packet) { this.unknownFrames++; continue; }
       this.ui.receive(packet);
+      this.tracker.receive(packet, this.clock());
       switch (packet.id) {
         case S.Connected:
           if (this.phase !== 'connecting' || !this.credentials) throw new Error('Unexpected Connected');
@@ -146,6 +152,10 @@ export class Session {
           break;
         case DoorServer.ObjectDelete: if (inMap(packet)) this.mapObjects.delete(packet.x, packet.y); break;
         case DoorServer.BlockPosition: if (inMap(packet)) this.mapObjects.block(packet.x, packet.y, packet.sides); break;
+        case NS.LocaleMsg:
+          // Look-at replies (1105 user, 1621/1622 NPC, 1106 nothing) and every other localized line.
+          this.ui.message(this.tracker.locale ? localeText(packet.messageId, packet.text, this.tracker.locale) : '', packet.font);
+          break;
         case S.ErrorMsg: throw new Error(`Server: ${packet.message}`);
         case S.Disconnect: throw new Error('The server disconnected this character');
       }

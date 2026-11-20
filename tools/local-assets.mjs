@@ -7,7 +7,7 @@ export async function localAssets(directory) {
   if (!directory) throw new Error('Set AO_ASSETS to your local ao-reference/Recursos directory. Assets are never bundled.');
   const root = await realpath(directory);
   const files = new Map();
-  const allowed = /^(Mapas\/mapa\d+\.csm|Graficos\/\d+\.png|init\/(graficos\.ini|cuerpos\.dat|moldes\.ini|cabezas\.ind)|interface\/[a-z0-9_-]+\.bmp|Dat\/(Obj|Hechizos)\.dat)$/i;
+  const allowed = /^(Mapas\/mapa\d+\.csm|Graficos\/\d+\.png|init\/(graficos\.ini|cuerpos\.dat|moldes\.ini|cabezas\.ind|armas\.dat|escudos\.dat|cascos\.ind|colores\.dat|sp_localindex\.dat)|interface\/[a-z0-9_-]+\.bmp|Dat\/(Obj|Hechizos)\.dat)$/i;
   const folders = await readdir(root);
   for (const folder of ['Mapas', 'Graficos', 'init', 'interface', 'Dat']) {
     const actual = folders.find(name => name.toLowerCase() === folder.toLowerCase());

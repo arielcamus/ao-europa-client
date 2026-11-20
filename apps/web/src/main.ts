@@ -6,6 +6,7 @@ import { WorldRenderer } from './renderer.js';
 import { applyClassicLayout } from './classic-layout.js';
 import { ClassicUI, element } from './classic-ui.js';
 import { doorClickTile } from './map-objects.js';
+import { NpcDialog } from './npc-dialog.js';
 
 applyClassicLayout();
 const form = element<HTMLFormElement>('login'), account = element<HTMLInputElement>('email'), password = element<HTMLInputElement>('password');
@@ -27,13 +28,14 @@ const report = (message: string) => {
 };
 const renderer = new WorldRenderer(viewport, report);
 const ui = new ClassicUI(renderer, report);
+const npcDialog = new NpcDialog(element('classic'), renderer);
 const clearInput = () => { keys.clear(); touchHeading = undefined; };
 function walk(heading: Heading) {
   try { if (session && renderer.readyMap === session.resourceMap) session.walk(heading); }
   catch (error) { close(error instanceof Error ? error.message : String(error)); }
 }
 function close(message = 'Disconnected') {
-  clearInput(); stoppedAt = performance.now(); chatForm.hidden = true;
+  clearInput(); stoppedAt = performance.now(); chatForm.hidden = true; npcDialog.hide();
   if (session) {
     try { session.finish(message); } catch (error) { message = `${message}; ${String(error)}`; }
   }
@@ -63,6 +65,7 @@ async function boot() {
     try {
       if (session && session.phase !== 'closed') {
         session.tick();
+        if (!session.tracker.locale && renderer.locale) session.tracker.locale = renderer.locale;
         const heading = touchHeading ?? [...keys.values()].at(-1);
         if (heading && renderer.readyMap === session.resourceMap) session.walk(heading);
         if (session.ready && session.resourceMap !== requestedMap) {
@@ -111,6 +114,9 @@ form.addEventListener('submit', event => {
     ws.send(bytes.slice().buffer);
   });
   password.value = '';
+  npcDialog.hide();
+  const owner = session;
+  session.tracker.onNpcDescription = ({ npcNumber }) => { if (session === owner) void npcDialog.show(npcNumber, renderer.locale); };
   ws.onmessage = event => {
     if (socket !== ws) return;
     try {
@@ -139,7 +145,7 @@ chatForm.addEventListener('submit', event => {
 });
 const directions: Record<string, Heading> = { ArrowUp: Heading.North, KeyW: Heading.North, ArrowRight: Heading.East, KeyD: Heading.East, ArrowDown: Heading.South, KeyS: Heading.South, ArrowLeft: Heading.West, KeyA: Heading.West };
 window.addEventListener('keydown', event => {
-  if (event.key === 'Escape') { chatForm.hidden = true; clearInput(); renderer.app.canvas.focus(); return; }
+  if (event.key === 'Escape') { npcDialog.hide(); chatForm.hidden = true; clearInput(); renderer.app.canvas.focus(); return; }
   if (event.target instanceof HTMLElement && event.target.closest('input, textarea, select, button, [role="listbox"], dialog')) return;
   if (event.ctrlKey || event.metaKey || event.altKey) return;
   if (event.key === 'Enter') { event.preventDefault(); openChat(); return; }
@@ -169,7 +175,22 @@ function doorAt(event: PointerEvent | MouseEvent) {
   const occupied = (x: number, y: number) => [...session!.characters.values()].some(c => c.x === x && c.y === y);
   return doorClickTile(session.mapObjects, objIndex => renderer.isDoor(objIndex), tile, occupied, (x, y) => renderer.fixedObjectAt(x, y));
 }
+// frmMain renderer MouseDown, left button: look at the tile (WriteLeftClick). The server answers
+// with LocaleMsg (who/what you see) or an NPCDESC overhead; the mouse tile also reveals NPC names.
+// One click-to-tile for doors, look-at and hover: the renderer's, which uses the camera of render().
+const tileAt = (event: PointerEvent) => session ? renderer.tileAt(session, event.clientX, event.clientY, performance.now()) : undefined;
+viewport.addEventListener('pointermove', event => { if (event.pointerType === 'mouse') renderer.hoverTile = tileAt(event); });
+viewport.addEventListener('pointerleave', () => { renderer.hoverTile = undefined; });
 viewport.addEventListener('pointerdown', event => {
+  // Servers without look-at support (community adapter) keep the old click-to-walk.
+  if (chatSupported && event.pointerType === 'mouse' && event.button === 0 && session?.ready) {
+    event.preventDefault(); renderer.app.canvas.focus();
+    // One LeftClick per click (VB6 frmMain): on a door the tile follows the server's door rule, anywhere else it is the tile
+    // itself. The counter is the session's shared one, so door, look-at, NPC and attack-target clicks never collide.
+    const tile = doorAt(event) ?? tileAt(event);
+    try { if (tile) session.leftClick(tile.x, tile.y); } catch (error) { close(String(error)); }
+    return;
+  }
   if (!event.isPrimary || !session?.ready) return;
   const door = doorAt(event);
   if (door) { event.preventDefault(); clearInput(); session.leftClick(door.x, door.y); renderer.app.canvas.focus(); return; }
