@@ -10,6 +10,7 @@ import { NpcDialog } from './npc-dialog.js';
 import { ChatBox } from './chat-box.js';
 import { ChatBubbles } from './chat-bubbles.js';
 import { sharedLocale } from './chat-locale.js';
+import { CombatOverlay } from './combat-overlay.js';
 import { fetchText } from './assets.js';
 
 applyClassicLayout();
@@ -35,10 +36,14 @@ const ui = new ClassicUI(renderer, report);
 const npcDialog = new NpcDialog(element('classic'), renderer);
 const bubbles = new ChatBubbles(element('chat-bubbles'));
 const chatBox = new ChatBox(chatForm, chat, element('messages'), () => renderer.app.canvas.focus(), error => close(String(error)));
+const combatOverlay = new CombatOverlay(viewport, renderer, report);
 const clearInput = () => { keys.clear(); touchHeading = undefined; };
 function walk(heading: Heading) {
   try { if (session && renderer.readyMap === session.resourceMap) session.walk(heading); }
   catch (error) { close(error instanceof Error ? error.message : String(error)); }
+}
+function attack() {
+  try { session?.attack(); } catch (error) { close(error instanceof Error ? error.message : String(error)); }
 }
 function close(message = 'Disconnected') {
   clearInput(); stoppedAt = performance.now(); chatBox.close(); npcDialog.hide();
@@ -65,7 +70,7 @@ async function boot() {
     ? 'Mundo de prueba local. Objetos y estadísticas de muestra; sin combate ni persistencia.'
     : community ? 'Servidor comunitario · movimiento y persistencia. Chat aún no disponible.' : 'Cliente clásico · movimiento, inventario, hechizos y chat.';
   if (config.mode === 'standin') { account.value = 'standin@local'; password.value = 'testpass'; }
-  await Promise.all([renderer.init(), ui.init(), bubbles.init()]);
+  await Promise.all([renderer.init(), ui.init(), bubbles.init(), combatOverlay.init().catch(error => report(`Efectos de combate no disponibles: ${String(error)}`))]);
   // Chat text that the server sends as locale ids; the console is redrawn once it arrives.
   void Promise.all([fetchText('init/sp_localindex.dat'), fetchText('init/SP_LocalMsg.dat')])
     .then(([index, messages]) => { sharedLocale.load(index, messages); if (session) session.ui.revision++; })
@@ -87,6 +92,7 @@ async function boot() {
       }
       renderer.render(session, now);
       bubbles.update(session, now);
+      combatOverlay.update(session, now);
     } catch (error) { if (session?.phase !== 'closed') close(error instanceof Error ? error.message : String(error)); }
     if (now - lastUi > 100) { updateUi(now); lastUi = now; }
   });
@@ -151,6 +157,8 @@ const directions: Record<string, Heading> = { ArrowUp: Heading.North, KeyW: Head
 window.addEventListener('keydown', event => {
   if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); clearInput(); renderer.app.canvas.focus(); return; }
   if (event.target instanceof HTMLElement && event.target.closest('input, textarea, select, button, [role="listbox"], dialog')) return;
+  // Control is the classic attack key (DefaultKey.ini binding 1, modBindKeys.Accionar); key repeat is paced by Intervals.hit.
+  if ((event.code === 'ControlLeft' || event.code === 'ControlRight') && !event.altKey && !event.metaKey) { event.preventDefault(); attack(); return; }
   if (event.ctrlKey || event.metaKey || event.altKey) return;
   if (event.key === 'Enter') { event.preventDefault(); openChat(); return; }
   if (event.key === 'Delete') { event.preventDefault(); openChat(true); return; }
