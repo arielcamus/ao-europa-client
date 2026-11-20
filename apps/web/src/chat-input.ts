@@ -5,7 +5,7 @@
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; see NOTICE.
  * GM and gameplay slash commands belong to other features: they get an explicit "not available" line.
  */
-import { CombatClientPacketId as CC, ClientPacketId as C } from '@ao/protocol';
+import { CombatClientPacketId as CC, ClientPacketId as C, BankTradeClientPacketId as BC } from '@ao/protocol';
 import type { ClientPacket } from '@ao/protocol';
 import { FONTTYPE } from './chat-fonts.js';
 
@@ -26,6 +26,8 @@ export interface ChatContext {
   level?: number | undefined;
   /** UserStats.estado = 1. */
   dead?: boolean;
+  /** Comerciando: a shop, the vault or a trade window holds the player. */
+  trading?: boolean;
 }
 
 /** SendTxt_Change: keep only characters the VB6 box accepts (space..250). */
@@ -42,6 +44,10 @@ const MESSAGES = {
   deadGlobal: '¡¡Estás muerto!! No puedes comunicarte con el mundo de los vivos.',
   level: '¡¡Debes ser nivel 5 o superior para usar el global!!!',
   unsupported: 'Ese comando aún no está disponible.',
+  alreadyTrading: 'Ya estás comerciando',
+  withdrawAmount: 'Ingrese la cantidad que desea retirar',
+  badDepositAmount: 'Cantidad incorrecta. Utilice /depositar CANTIDAD.',
+  missingParameters: 'Faltan parámetros. Utilice /depositar CANTIDAD.',
 };
 
 /** Holds what the VB6 client keeps between messages: SendingType and sndPrivateTo. The guild counter is the session's (PacketCounters). */
@@ -126,6 +132,30 @@ export class ChatInput {
           else if (context.level !== undefined && context.level < 5) note(MESSAGES.level, FONTTYPE.GLOBAL);
           else if (hasArguments) outcome.packet = { id: C.GlobalMessage, message: args.replaceAll('~', '') };
           else note(MESSAGES.empty);
+          return;
+        // Bank and trade (feat/bank-trade): ProtocolCmdParse.bas /BALANCE, /COMERCIAR, /BOVEDA, /RETIRAR n, /DEPOSITAR n.
+        case '/BALANCE':
+          if (context.dead) note(MESSAGES.dead, FONTTYPE.INFO); else outcome.packet = { id: BC.RequestAccountState };
+          return;
+        case '/COMERCIAR': case '/TRADE':
+          if (context.dead) note(MESSAGES.dead, FONTTYPE.INFO);
+          else if (context.trading) note(MESSAGES.alreadyTrading, FONTTYPE.INFO);
+          else outcome.packet = { id: BC.CommerceStart };
+          return;
+        case '/BOVEDA': case '/VAULT':
+          if (context.dead) note(MESSAGES.dead, FONTTYPE.INFO); else outcome.packet = { id: BC.BankStart };
+          return;
+        case '/RETIRAR': case '/WITHDRAW':
+          if (context.dead) note(MESSAGES.dead, FONTTYPE.INFO);
+          else if (!filled) note(MESSAGES.withdrawAmount);
+          else if (/^\d{1,10}$/.test(args.trim()) && Number(args.trim()) <= 2147483647) outcome.packet = { id: BC.BankExtractGold, amount: Number(args.trim()) };
+          else note(MESSAGES.badDepositAmount.replace('depositar', 'retirar'));
+          return;
+        case '/DEPOSITAR': case '/DEPOSIT':
+          if (context.dead) note(MESSAGES.dead, FONTTYPE.INFO);
+          else if (!filled) note(MESSAGES.missingParameters);
+          else if (/^\d{1,10}$/.test(args.trim()) && Number(args.trim()) <= 2147483647) outcome.packet = { id: BC.BankDepositGold, amount: Number(args.trim()) };
+          else note(MESSAGES.badDepositAmount);
           return;
         default: note(MESSAGES.unsupported, FONTTYPE.INFO); return;
       }

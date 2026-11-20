@@ -17,6 +17,8 @@ import { SpellState } from './spells.js';
 import { ItemsState } from './items-state.js';
 import { ItemsController } from './items.js';
 import type { ObjectCatalog } from './object-catalog.js';
+import { BankTradeState } from './bank-trade-state.js';
+import { BankTradeController } from './bank-trade.js';
 
 export interface Position { x: number; y: number }
 const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
@@ -41,6 +43,9 @@ export class Session {
   });
   /** Observer called with every decoded server packet once the session state has applied it (audio). */
   onPacket: ((packet: ServerPacket) => void) | undefined;
+  /** Bank vault, Goliath and player-to-player trade (feat/bank-trade). */
+  readonly bankTrade = new BankTradeState();
+  readonly bankTradeActions = new BankTradeController({ send: packet => this.send(packet), ready: () => this.ready }, this.bankTrade);
   characterLevel: number | undefined;
   phase: Phase = 'connecting';
   map: number | undefined;
@@ -117,6 +122,7 @@ export class Session {
       });
       this.spells.receive(packet);
       this.items.receive(packet);
+      this.bankTrade.receive(packet);
       switch (packet.id) {
         case S.Connected:
           if (this.phase !== 'connecting' || !this.credentials) throw new Error('Unexpected Connected');
