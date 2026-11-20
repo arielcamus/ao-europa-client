@@ -73,6 +73,12 @@ describe('Aurora C++ primitive goldens', () => {
 });
 
 describe('VB6 paired writer/reader field layouts against C++ goldens', () => {
+  it('accepts the classic optional console channel and rejects additional bytes', () => {
+    const packet = { ...serverFixtures.ConsoleMsg, channel: 3 };
+    expect(hex(encodeServerFrame(packet))).toBe(goldens.ConsoleMsgChannel);
+    expect(decodeServerPacket(golden('ConsoleMsgChannel').slice(2))).toEqual(packet);
+    expect(() => decodeServerPacket(bytes(goldens.ConsoleMsgChannel! + '00').slice(2))).toThrow();
+  });
   for (const [name, packet] of Object.entries(clientFixtures)) {
     it(`client ${name}`, () => {
       expect(hex(encodeClientFrame(packet))).toBe(goldens[name]);

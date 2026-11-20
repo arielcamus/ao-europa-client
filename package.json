@@ -9,6 +9,7 @@
     "build": "pnpm -r build",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
+    "size:web": "node tools/bundle-size.mjs",
     "bot": "pnpm build && node apps/bot/dist/cli.js",
     "standin": "pnpm build && node tools/standin-server/dist/cli.js",
     "bot:standin": "pnpm build && node tools/run-standin.mjs",

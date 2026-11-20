@@ -45,9 +45,10 @@ export class WorldRenderer {
   private readonly world = new Container();
 
   constructor(private readonly host: HTMLElement, private readonly report: (message: string) => void) {}
+  get settled() { return this.readyMap !== undefined && this.loadedSheets > 0 && this.pending.size === 0; }
   async init() {
     await this.app.init({
-      background: '#141d1c', antialias: false, preference: 'webgl',
+      background: '#000000', antialias: false, preference: 'webgl',
       resolution: Math.min(devicePixelRatio || 1, 2), autoDensity: true,
       width: this.host.clientWidth, height: this.host.clientHeight,
     });
@@ -55,7 +56,7 @@ export class WorldRenderer {
     this.app.canvas.setAttribute('aria-label', 'Argentum map. Use arrow keys or W A S D to walk.');
     this.host.prepend(this.app.canvas);
     this.app.stage.addChild(this.world);
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 7; i++) {
       const container = new Container(); this.world.addChild(container); this.pools.push(new SpritePool(container));
     }
     this.observer = new ResizeObserver(() => this.app.renderer.resize(this.host.clientWidth, this.host.clientHeight));
@@ -86,6 +87,10 @@ export class WorldRenderer {
     let animation = this.animations.get(id);
     if (!animation) { animation = graphicAnimation(this.graphics, id); this.animations.set(id, animation); }
     return animation;
+  }
+  async graphic(id: number): Promise<GraphicFrame> {
+    await this.loadMetadata();
+    return this.animation(id).frames[0]!;
   }
   private texture(frame: GraphicFrame): Texture {
     const key = `${frame.file}/${frame.x}/${frame.y}/${frame.width}/${frame.height}`;
@@ -138,18 +143,22 @@ export class WorldRenderer {
   render(session: Session | undefined, now: number) {
     const position = session?.visualPosition(now);
     if (!this.map || !position || !session?.self || this.readyMap !== session.resourceMap) return;
-    const zoom = 2;
+    // frmMain's 736×608 viewport is 23×19 native 32px tiles. The DOM scales
+    // the entire classic window on phones, never the map independently.
+    const zoom = 1;
     const width = this.app.screen.width / zoom, height = this.app.screen.height / zoom;
     this.world.scale.set(zoom);
     const cameraX = position.x * 32 + 16 - width / 2;
-    const cameraY = position.y * 32 + 8 - height / 2;
+    const cameraY = position.y * 32 + 16 - height / 2;
     this.world.position.set(-Math.round(cameraX * zoom), -Math.round(cameraY * zoom));
     this.pools.forEach(pool => pool.reset());
     const minX = Math.max(1, Math.floor(cameraX / 32) - 10), maxX = Math.min(100, Math.ceil((cameraX + width) / 32) + 10);
     const minY = Math.max(1, Math.floor(cameraY / 32) - 2), maxY = Math.min(100, Math.ceil((cameraY + height) / 32) + 10);
     for (let layer = 0; layer < 5; layer++) {
-      const pool = this.pools[layer < 3 ? layer : layer + 1]!;
       for (let y = minY; y <= maxY; y++) for (let x = minX; x <= maxX; x++) {
+        // VB6 finishes characters in a row, then draws that row's layer 4.
+        // Split that layer around the self row; roofs remain above everything.
+        const pool = this.pools[layer < 3 ? layer : layer === 4 ? 6 : y < session.position!.y ? 3 : 5]!;
         const id = this.map.layers[layer]![(y - 1) * 100 + x - 1]!;
         if (id) this.draw(pool, this.animation(id), x * 32, y * 32, now, layer !== 0);
       }
@@ -157,12 +166,14 @@ export class WorldRenderer {
     let body = this.bodyCache.get(session.self.body);
     if (!body) { body = readBody(this.bodies, this.molds, this.graphics, session.self.body); this.bodyCache.set(session.self.body, body); }
     const moving = session.motion && now < session.motion.started + session.motion.duration;
-    const time = moving ? now - session.motion!.started : 0;
+    // Held input may start a walk after this tick captured `now`.
+    // Like visualPosition, clamp that first frame to the animation's start.
+    const time = moving ? Math.max(0, now - session.motion!.started) : 0;
     const heading = session.self.heading - 1;
-    const pool = this.pools[3]!;
-    this.draw(pool, body.walk[heading]!, position.x * 32 + body.bodyX, position.y * 32 + body.bodyY, time);
+    const pool = this.pools[4]!;
+    this.draw(pool, body.walk[heading]!, position.x * 32 + body.bodyX + (session.self.body < 488 ? 1 : 0), position.y * 32 + body.bodyY, time);
     const head = this.heads[session.self.head]?.[heading];
-    if (head) this.draw(pool, this.animation(head), position.x * 32 + body.headX, position.y * 32 + body.headY - 1, 0);
+    if (head) this.draw(pool, this.animation(head), position.x * 32 + body.headX, position.y * 32 + body.headY, 0);
     this.pools.forEach(item => item.finish());
   }
   destroy() {

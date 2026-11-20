@@ -16,6 +16,12 @@ TileEngine.bas and clsTexManager.cls from the pinned classic client. Original ma
 format credited upstream to Juan Martín Sotuyo Dodero (Maraxus).
 No original map, index, sprite, audio, screenshot or converted asset is distributed.
 
+Classic UI geometry and control behavior adapt frmMain.frm, FrmLogear.frm,
+ModGameplayUI.bas, ModUtils.bas, clsGraphicalList.cls and
+clsGrapchicalInventory.cls from the same pinned classic client. UI packet layouts
+adapt the paired client/server Protocol.bas and Protocol_Writes.bas procedures.
+All original interface bitmaps are supplied separately by the user, never bundled.
+
 Aurora.Network
 Copyright (C) 2018-2022 by Agustin Alvarez. All rights reserved.
 This work is licensed under the terms of the Apache 2.0 license.

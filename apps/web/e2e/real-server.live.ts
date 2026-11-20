@@ -30,7 +30,10 @@ test('real community server: account login, four walks, 30 seconds and reconnect
   ]) {
     const before = Number(await page.locator('#confirmed').innerText());
     if (step.key) await page.keyboard.press(step.key, { delay: 80 });
-    else await page.getByRole('button', { name: 'Walk east' }).click();
+    else {
+      const rect = (await page.locator('#viewport').boundingBox())!;
+      await page.mouse.click(rect.x + rect.width * .8, rect.y + rect.height / 2);
+    }
     // A real map may block a direction. A correction must restore the old
     // position; an accepted step must match its server-authoritative delta.
     await expect.poll(async () => Number(await page.locator('#confirmed').innerText())
@@ -55,11 +58,11 @@ test('real community server: account login, four walks, 30 seconds and reconnect
     duration: await page.locator('#duration').innerText(), capturedAt: new Date().toISOString(),
   };
   await mkdir('artifacts/screenshots', { recursive: true });
-  await page.screenshot({ path: 'artifacts/screenshots/m2-real-community-desktop.png', fullPage: true });
+  await page.screenshot({ path: 'artifacts/screenshots/classic-real-community-desktop.png', fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.locator('#connection')).toHaveText('Connected');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.screenshot({ path: 'artifacts/screenshots/m2-real-community-mobile.png', fullPage: true });
+  await page.screenshot({ path: 'artifacts/screenshots/classic-real-community-mobile.png', fullPage: true });
   await page.getByRole('button', { name: 'Leave world' }).click();
   await expect(page.locator('#connection')).toHaveText('Disconnected');
   // Persistence completes through the server's normal logout cleanup.

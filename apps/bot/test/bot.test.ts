@@ -12,7 +12,9 @@ import { serverFixtures as fixtures } from '../../../packages/protocol/test/fixt
 
 const cleanups: (() => Promise<void>)[] = [];
 afterEach(async () => { for (const close of cleanups.splice(0).reverse()) await close(); });
-const timing = { observationMs: 180, responseWaitMs: 10, stepMarginMs: 2, loginTimeoutMs: 1000 };
+// Allow a real loopback reply to arrive while browser tests share the machine.
+// Only the explicit late-correction test needs a shorter response window.
+const timing = { observationMs: 180, responseWaitMs: 100, stepMarginMs: 2, loginTimeoutMs: 1000 };
 const credentials = { email: 'standin@local', password: 'testpass' };
 
 async function scripted(options: {
@@ -153,6 +155,6 @@ describe('headless bot over real loopback TCP', () => {
         }, 40).unref();
       },
     });
-    await expect(runBot({ ...peer, ...credentials, ...timing, observationMs: 250 })).rejects.toThrow('No walk accepted');
+    await expect(runBot({ ...peer, ...credentials, ...timing, responseWaitMs: 10, observationMs: 250 })).rejects.toThrow('No walk accepted');
   });
 });

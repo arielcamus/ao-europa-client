@@ -3,39 +3,42 @@ import './style.css';
 import { Heading } from '@ao/protocol';
 import { Session } from './session.js';
 import { WorldRenderer } from './renderer.js';
+import { applyClassicLayout } from './classic-layout.js';
+import { ClassicUI, element } from './classic-ui.js';
 
-function element<T extends HTMLElement>(id: string): T {
-  const value = document.getElementById(id);
-  if (!value) throw new Error(`Missing element ${id}`);
-  return value as T;
-}
+applyClassicLayout();
 const form = element<HTMLFormElement>('login'), account = element<HTMLInputElement>('email'), password = element<HTMLInputElement>('password');
 const connect = element<HTMLButtonElement>('connect'), disconnect = element<HTMLButtonElement>('disconnect');
 const errorBox = element('error'), viewport = element('viewport'), connection = element('connection');
+const chatForm = element<HTMLFormElement>('chat-form'), chat = element<HTMLInputElement>('chat');
 const keys = new Map<string, Heading>();
 let touchHeading: Heading | undefined;
 let session: Session | undefined;
 let socket: WebSocket | undefined;
 let requestedMap: number | undefined;
-let mode: 'standin' | 'classic';
 let wsPath = '/bridge';
 let lastUi = 0;
 let stoppedAt: number | undefined;
-const report = (message: string) => { errorBox.textContent = message; errorBox.hidden = false; };
+let chatSupported = true;
+const report = (message: string) => {
+  errorBox.textContent = message; errorBox.hidden = false;
+  element('console').scrollTop = element('console').scrollHeight;
+};
 const renderer = new WorldRenderer(viewport, report);
+const ui = new ClassicUI(renderer, report);
 const clearInput = () => { keys.clear(); touchHeading = undefined; };
 function walk(heading: Heading) {
   try { if (session && renderer.readyMap === session.resourceMap) session.walk(heading); }
   catch (error) { close(error instanceof Error ? error.message : String(error)); }
 }
 function close(message = 'Disconnected') {
-  clearInput(); stoppedAt = performance.now();
+  clearInput(); stoppedAt = performance.now(); chatForm.hidden = true;
   if (session) {
     try { session.finish(message); } catch (error) { message = `${message}; ${String(error)}`; }
   }
   const old = socket; socket = undefined; old?.close();
   form.hidden = false; connect.disabled = false; disconnect.hidden = true;
-  element('dpad').hidden = true; connection.textContent = message;
+  connection.textContent = message;
   if (message !== 'Disconnected') report(message);
 }
 async function boot() {
@@ -44,19 +47,16 @@ async function boot() {
   const config: { mode: string; serverProfile?: string; wsPath: string } = await response.json();
   if (!['standin', 'classic'].includes(config.mode) || config.wsPath !== '/bridge') throw new Error('Invalid local server configuration');
   if (config.serverProfile && !['classic', 'elixir-classic'].includes(config.serverProfile)) throw new Error('Invalid server profile');
-  mode = config.mode as typeof mode; wsPath = config.wsPath;
-  const community = mode === 'classic' && config.serverProfile === 'elixir-classic';
-  element('mode').textContent = mode === 'standin' ? 'TEST STAND-IN' : community ? 'AO COMMUNITY SERVER' : 'CLASSIC · UNVERIFIED';
-  element('mode-note').textContent = mode === 'standin'
-    ? 'A local test world with fixture accounts.'
-    : community ? 'Community server with the classic protocol adapter. The first character is selected.'
-    : 'Connect to your configured classic server with an existing account. The first character is selected.';
-  element('scope-note').textContent = mode === 'standin'
-    ? 'Protocol fixture only. No collision rules, NPCs, combat or persistence.'
-    : community ? 'Real map collision and character persistence. This client preview supports login and movement.'
-    : 'Map and character movement preview. Live compatibility is not yet verified.';
-  if (mode === 'standin') { account.value = 'standin@local'; password.value = 'testpass'; }
-  await renderer.init();
+  wsPath = config.wsPath;
+  const community = config.mode === 'classic' && config.serverProfile === 'elixir-classic';
+  chatSupported = !community; // The current opt-in community adapter only supports login/movement.
+  element('mode').textContent = config.mode === 'standin' ? 'TEST STAND-IN' : community ? 'AO COMMUNITY SERVER' : 'CLASSIC · UNVERIFIED';
+  element('mode-note').textContent = config.mode === 'standin' ? 'Prueba local · standin@local / testpass' : 'Conecta con tu cuenta. Se seleccionará el primer personaje.';
+  element('scope-note').textContent = config.mode === 'standin'
+    ? 'Mundo de prueba local. Objetos y estadísticas de muestra; sin combate ni persistencia.'
+    : community ? 'Servidor comunitario · movimiento y persistencia. Chat aún no disponible.' : 'Cliente clásico · movimiento, inventario, hechizos y chat.';
+  if (config.mode === 'standin') { account.value = 'standin@local'; password.value = 'testpass'; }
+  await Promise.all([renderer.init(), ui.init()]);
   renderer.app.ticker.add(() => {
     const now = performance.now();
     try {
@@ -77,28 +77,32 @@ async function boot() {
   });
 }
 function updateUi(now: number) {
+  ui.update(session);
   if (!session) return;
   const playing = session.ready && renderer.readyMap === session.resourceMap;
   if (playing) {
-    element('welcome').hidden = true; element('location').hidden = false; element('session-details').hidden = false;
-    element('dpad').hidden = false; form.hidden = true; disconnect.hidden = false;
-    element('map-name').textContent = renderer.mapName;
+    form.hidden = true; disconnect.hidden = false;
+    element('map-name').textContent = renderer.mapName; element('map-name').title = renderer.mapName;
     element('character-name').textContent = session.self!.name;
     connection.textContent = 'Connected';
     element('map-number').textContent = String(session.map);
   } else if (session.phase !== 'closed') connection.textContent = session.ready ? 'Loading map…' : 'Connecting…';
-  if (session.position) element('position').textContent = `${session.position.x}, ${session.position.y}`;
+  if (session.position) {
+    element('position').textContent = `${session.position.x}, ${session.position.y}`;
+    const dot = element('minimap-dot'); dot.hidden = !playing;
+    dot.style.left = `${session.position.x - 2.5}px`; dot.style.top = `${session.position.y - 2.5}px`;
+  }
   element('confirmed').textContent = String(session.confirmedWalks);
   element('corrected').textContent = String(session.correctedWalks);
   element('duration').textContent = `${Math.floor(((stoppedAt ?? now) - (session.loggedAt ?? session.connectedAt)) / 1000)} s`;
+  viewport.dataset.rendered = String(playing && renderer.settled);
   element('asset-note').hidden = renderer.clippedFrames === 0;
-  element('asset-note').textContent = `Local artwork has ${renderer.clippedFrames} regions extending beyond their image. Missing pixels are left transparent.`;
+  element('asset-note').textContent = `El recurso local contiene ${renderer.clippedFrames} regiones fuera de su imagen. Los píxeles ausentes quedan transparentes.`;
 }
 form.addEventListener('submit', event => {
   event.preventDefault();
   if (socket) return;
   clearInput(); errorBox.hidden = true; connect.disabled = true; stoppedAt = undefined; requestedMap = undefined;
-  element('welcome').hidden = false; element('welcome').querySelector('p')!.textContent = 'Connecting to your local world…';
   const url = new URL(wsPath, location.href); url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
   const ws = new WebSocket(url); socket = ws; ws.binaryType = 'arraybuffer';
   session = new Session({ email: account.value, password: password.value }, bytes => {
@@ -118,23 +122,49 @@ form.addEventListener('submit', event => {
   renderer.app.canvas.focus();
 });
 disconnect.addEventListener('click', () => close());
+const openChat = () => {
+  if (!session?.ready) return;
+  if (!chatSupported) { session.ui.message('Este servidor aún no admite chat.'); return; }
+  clearInput(); chatForm.hidden = false; chat.focus();
+};
+element('chat-open').onclick = openChat;
+chatForm.addEventListener('submit', event => {
+  event.preventDefault();
+  try {
+    if (!chat.value.trim() || session?.talk(chat.value)) {
+      chat.value = ''; chatForm.hidden = true; renderer.app.canvas.focus();
+    } else session?.ui.message('Espera un momento o acorta el mensaje (máximo 255 bytes).');
+  } catch (error) { close(String(error)); }
+});
 const directions: Record<string, Heading> = { ArrowUp: Heading.North, KeyW: Heading.North, ArrowRight: Heading.East, KeyD: Heading.East, ArrowDown: Heading.South, KeyS: Heading.South, ArrowLeft: Heading.West, KeyA: Heading.West };
 window.addEventListener('keydown', event => {
-  if (event.target instanceof HTMLInputElement || event.ctrlKey || event.metaKey || event.altKey) return;
+  if (event.key === 'Escape') { chatForm.hidden = true; clearInput(); renderer.app.canvas.focus(); return; }
+  if (event.target instanceof HTMLElement && event.target.closest('input, textarea, select, button, [role="listbox"], dialog')) return;
+  if (event.ctrlKey || event.metaKey || event.altKey) return;
+  if (event.key === 'Enter') { event.preventDefault(); openChat(); return; }
   const heading = directions[event.code];
   if (heading) { event.preventDefault(); keys.set(event.code, heading); walk(heading); }
 });
 window.addEventListener('keyup', event => { keys.delete(event.code); });
 window.addEventListener('blur', clearInput);
-document.addEventListener('visibilitychange', () => { if (document.hidden) clearInput(); });
-document.querySelectorAll<HTMLButtonElement>('[data-heading]').forEach(button => {
-  button.addEventListener('pointerdown', event => {
-    event.preventDefault(); clearInput(); touchHeading = Number(button.dataset.heading) as Heading;
-    walk(touchHeading);
-    button.setPointerCapture(event.pointerId);
-  });
-  for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) button.addEventListener(name, clearInput);
+window.addEventListener('resize', clearInput);
+document.addEventListener('focusin', event => {
+  if (event.target instanceof HTMLElement && event.target.closest('input, button, [role="listbox"]')) clearInput();
 });
+document.addEventListener('visibilitychange', () => { if (document.hidden) clearInput(); });
+// A phone keeps the exact classic layout. Touch the map in a direction from the
+// character to walk; hit testing uses the scaled rectangle, not native pixels.
+const aim = (event: PointerEvent) => {
+  const rect = viewport.getBoundingClientRect();
+  const x = event.clientX - rect.left - rect.width / 2, y = event.clientY - rect.top - rect.height / 2;
+  touchHeading = Math.abs(x) > Math.abs(y) ? (x > 0 ? Heading.East : Heading.West) : (y > 0 ? Heading.South : Heading.North);
+};
+viewport.addEventListener('pointerdown', event => {
+  if (!event.isPrimary || !session?.ready) return;
+  event.preventDefault(); clearInput(); aim(event); walk(touchHeading!);
+  viewport.setPointerCapture(event.pointerId); renderer.app.canvas.focus();
+});
+viewport.addEventListener('pointermove', event => { if (viewport.hasPointerCapture(event.pointerId)) aim(event); });
+for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) viewport.addEventListener(name, clearInput);
 window.addEventListener('pagehide', () => { close(); renderer.destroy(); });
-connect.disabled = true;
 void boot().then(() => { connect.disabled = false; }).catch(error => report(String(error)));

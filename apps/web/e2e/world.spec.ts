@@ -23,8 +23,10 @@ test('local artwork, login, 30 seconds connected, four directions and touch cont
     }
   } else {
     for (const [direction, position] of [['east', '51, 50'], ['south', '51, 51'], ['west', '50, 51'], ['north', '50, 50']]) {
-      const button = page.getByRole('button', { name: `Walk ${direction}` });
-      await button.tap();
+      const rect = (await page.locator('#viewport').boundingBox())!;
+      const x = rect.x + rect.width * (direction === 'east' ? .8 : direction === 'west' ? .2 : .5);
+      const y = rect.y + rect.height * (direction === 'south' ? .8 : direction === 'north' ? .2 : .5);
+      await page.touchscreen.tap(x, y);
       await expect(page.locator('#position')).toHaveText(position!);
       await page.waitForTimeout(350);
     }
@@ -37,7 +39,8 @@ test('local artwork, login, 30 seconds connected, four directions and touch cont
   await expect(page.locator('#connection')).toHaveText('Connected');
   await page.evaluate(() => window.scrollTo(0, 0));
   await mkdir('artifacts/screenshots', { recursive: true });
-  await page.screenshot({ path: `artifacts/screenshots/m2-${info.project.name}.png`, fullPage: true });
+  await expect(page.locator('#viewport')).toHaveAttribute('data-rendered', 'true');
+  await page.screenshot({ path: `artifacts/screenshots/classic-${info.project.name}.png`, fullPage: true, scale: 'css' });
   expect(failures).toEqual([]);
   if (info.project.name === 'desktop-chrome') {
     await page.keyboard.down('ArrowRight');
@@ -48,16 +51,19 @@ test('local artwork, login, 30 seconds connected, four directions and touch cont
     const stoppedPosition = await page.locator('#position').textContent();
     await page.waitForTimeout(700);
     await expect(page.locator('#position')).toHaveText(stoppedPosition!);
+    await expect(page.locator('#connection')).toHaveText('Connected');
+    await expect(page.locator('#error')).toBeHidden();
   } else {
     await page.setViewportSize({ width: 844, height: 390 });
-    await page.getByRole('button', { name: 'Walk south' }).tap();
+    const rect = (await page.locator('#viewport').boundingBox())!;
+    await page.touchscreen.tap(rect.x + rect.width / 2, rect.y + rect.height * .8);
     await expect(page.locator('#position')).toHaveText('50, 51');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
   const leave = page.getByRole('button', { name: 'Leave world' });
   if (info.project.use.hasTouch) await leave.tap(); else await leave.click();
   await expect(page.locator('#connection')).toHaveText('Disconnected');
-  await expect(page.locator('#dpad')).toBeHidden();
+  await expect(page.locator('#chat-form')).toBeHidden();
   // A new connection starts with clean counters, fresh placement and a new map load.
   await page.locator('#password').fill('testpass');
   if (info.project.use.hasTouch) await enter.tap(); else await enter.click();
@@ -76,7 +82,9 @@ test('bad credentials are visible and local asset mount does not expose other fi
   if (info.project.use.hasTouch) await enter.tap(); else await enter.click();
   await expect(page.getByRole('alert')).toContainText('Invalid stand-in credentials');
   await expect(page.locator('#connect')).toBeEnabled();
-  for (const path of ['/ao-assets/%2e%2e%2flicense.txt', '/ao-assets/.git/config', '/ao-assets/init/Server.ini']) {
+  const artwork = await request.get('/ao-assets/interface/es_ventanaprincipal.bmp');
+  expect(artwork.status()).toBe(200); expect(artwork.headers()['content-type']).toBe('image/bmp');
+  for (const path of ['/ao-assets/%2e%2e%2flicense.txt', '/ao-assets/.git/config', '/ao-assets/init/Server.ini', '/ao-assets/Dat/Users.dat', '/ao-assets/interface/%2e%2e%2fDat/Users.dat']) {
     expect((await request.get(path)).status()).toBe(404);
   }
 });

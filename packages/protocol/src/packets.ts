@@ -16,12 +16,23 @@ export enum ServerPacketId {
   Connected = 1,
   Logged = 2,
   Disconnect = 7,
+  UpdateSta = 25,
+  UpdateMana = 26,
+  UpdateHP = 27,
+  UpdateGold = 28,
+  UpdateExp = 29,
   ChangeMap = 30,
   PosUpdate = 31,
+  ConsoleMsg = 37,
   CharacterCreate = 42,
   CharacterMove = 44,
   UserCharIndexInServer = 47,
+  UpdateUserStats = 61,
+  ChangeInventorySlot = 63,
+  InventoryUnlockSlots = 64,
+  ChangeSpellSlot = 66,
   ErrorMsg = 73,
+  UpdateHungerAndThirst = 78,
   Intervals = 158,
   PosUpdateUserChar = 186,
   PosUpdateChar = 187,
@@ -30,6 +41,7 @@ export enum ServerPacketId {
 
 export enum ClientPacketId {
   LoginExistingChar = 73,
+  Talk = 75,
   Walk = 78,
   RequestPositionUpdate = 79,
   LoginAccount = 305,
@@ -135,10 +147,47 @@ const intervals = struct({
 });
 export type Intervals = Value<typeof intervals>;
 
+// Classic UI subset: paired client Handle* and server Write*/PrepareMessage*
+// procedures are recorded in docs/PROTOCOL.md. No gameplay packet guessing.
+const userStats = struct({
+  maxHp: int16, hp: int16, shield: int32, maxMana: int16, mana: int16,
+  maxStamina: int16, stamina: int16, gold: int32, goldPerLevel: int32,
+  level: byte, nextLevel: int32, experience: int32, characterClass: byte,
+});
+const inventorySlot = struct({
+  slot: byte, object: int16, amount: int16, equipped: bool, value: real32,
+  canUse: byte, elementalTags: int32, bindable: bool,
+});
+const spellSlot = struct({ slot: byte, spell: int16, index: int16, bindable: bool });
+export type UserStats = Value<typeof userStats>;
+export type InventorySlot = Value<typeof inventorySlot>;
+export type SpellSlot = Value<typeof spellSlot>;
+const consoleMessage: Codec<{ message: string; font: number; channel?: number }> = {
+  read(reader) {
+    const message = reader.readString(), font = reader.readInt8();
+    return reader.remaining ? { message, font, channel: reader.readInt8() } : { message, font };
+  },
+  write(writer, value) {
+    writer.writeString(value.message); writer.writeInt8(value.font);
+    if (value.channel !== undefined) writer.writeInt8(value.channel);
+  },
+};
+
 const serverCodecs = {
   [ServerPacketId.Connected]: connected,
   [ServerPacketId.Logged]: struct({ newUser: bool }),
   [ServerPacketId.Disconnect]: struct({ fullLogout: bool }),
+  [ServerPacketId.UpdateSta]: struct({ stamina: int16 }),
+  [ServerPacketId.UpdateMana]: struct({ mana: int16 }),
+  [ServerPacketId.UpdateHP]: struct({ hp: int16, shield: int32 }),
+  [ServerPacketId.UpdateGold]: struct({ gold: int32, goldPerLevel: int32 }),
+  [ServerPacketId.UpdateExp]: struct({ experience: int32 }),
+  [ServerPacketId.ConsoleMsg]: consoleMessage,
+  [ServerPacketId.UpdateUserStats]: userStats,
+  [ServerPacketId.ChangeInventorySlot]: inventorySlot,
+  [ServerPacketId.InventoryUnlockSlots]: struct({ rows: byte }),
+  [ServerPacketId.ChangeSpellSlot]: spellSlot,
+  [ServerPacketId.UpdateHungerAndThirst]: struct({ maxWater: byte, water: byte, maxFood: byte, food: byte }),
   [ServerPacketId.ChangeMap]: struct({ map: int16, resourceMap: int16 }),
   [ServerPacketId.PosUpdate]: struct({ x: byte, y: byte }),
   [ServerPacketId.CharacterCreate]: characterCreate,
@@ -155,6 +204,7 @@ const serverCodecs = {
 const clientCodecs = {
   [ClientPacketId.LoginAccount]: struct({ email: string, password: string }),
   [ClientPacketId.LoginExistingChar]: struct({ charId: int32, name: string }),
+  [ClientPacketId.Talk]: struct({ message: string, counter: int32 }),
   [ClientPacketId.Walk]: struct({ heading, counter: int32 }),
   [ClientPacketId.RequestPositionUpdate]: struct({}),
 };

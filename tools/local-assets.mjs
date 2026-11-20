@@ -7,10 +7,13 @@ export async function localAssets(directory) {
   if (!directory) throw new Error('Set AO_ASSETS to your local ao-reference/Recursos directory. Assets are never bundled.');
   const root = await realpath(directory);
   const files = new Map();
-  const allowed = /^(Mapas\/mapa\d+\.csm|Graficos\/\d+\.png|init\/(graficos\.ini|cuerpos\.dat|moldes\.ini|cabezas\.ind))$/i;
-  for (const folder of ['Mapas', 'Graficos', 'init']) {
-    for (const name of await readdir(join(root, folder))) {
-      const path = `${folder}/${name}`;
+  const allowed = /^(Mapas\/mapa\d+\.csm|Graficos\/\d+\.png|init\/(graficos\.ini|cuerpos\.dat|moldes\.ini|cabezas\.ind)|interface\/[a-z0-9_-]+\.bmp|Dat\/(Obj|Hechizos)\.dat)$/i;
+  const folders = await readdir(root);
+  for (const folder of ['Mapas', 'Graficos', 'init', 'interface', 'Dat']) {
+    const actual = folders.find(name => name.toLowerCase() === folder.toLowerCase());
+    if (!actual) throw new Error(`Missing local asset directory: ${folder}`);
+    for (const name of await readdir(join(root, actual))) {
+      const path = `${actual}/${name}`;
       if (allowed.test(path)) files.set(path.toLowerCase(), join(root, path));
     }
   }
@@ -29,7 +32,7 @@ export async function localAssets(directory) {
       if (child.startsWith('..') || isAbsolute(child)) { response.writeHead(403).end(); return; }
       const info = await stat(resolved);
       response.writeHead(200, {
-        'Content-Type': key.toLowerCase().endsWith('.png') ? 'image/png' : 'application/octet-stream',
+        'Content-Type': key.toLowerCase().endsWith('.png') ? 'image/png' : key.toLowerCase().endsWith('.bmp') ? 'image/bmp' : 'application/octet-stream',
         'Content-Length': info.size, 'Cache-Control': 'private, max-age=60', 'X-Content-Type-Options': 'nosniff',
       });
       if (request.method === 'HEAD') { response.end(); return; }

@@ -5,6 +5,7 @@
  */
 import { ClientPacketId as C, ServerPacketId as S, Heading, FrameDecoder, decodeServerPacket, encodeClientFrame } from '@ao/protocol';
 import type { CharacterCreate, ClientPacket } from '@ao/protocol';
+import { ClassicState } from './ui-state.js';
 
 export interface Position { x: number; y: number }
 export interface Motion { from: Position; to: Position; started: number; duration: number }
@@ -12,6 +13,8 @@ export type Phase = 'connecting' | 'account' | 'login' | 'playing' | 'closed';
 
 /** Transport-independent state. Only one position query/walk may be outstanding. */
 export class Session {
+  readonly ui = new ClassicState();
+  characterLevel: number | undefined;
   phase: Phase = 'connecting';
   map: number | undefined;
   resourceMap: number | undefined;
@@ -31,6 +34,9 @@ export class Session {
   private pending: { expected?: Position; since: number } | undefined;
   private lastWalk = -Infinity;
   private lastQuery = 0;
+  private talkCounter = 0;
+  private lastTalk = -Infinity;
+  private talkInterval = 500;
   private placementDeadline: number;
   private credentials: { email: string; password: string } | undefined;
 
@@ -55,6 +61,7 @@ export class Session {
     for (const body of this.decoder.push(bytes)) {
       const packet = decodeServerPacket(body);
       if ('unknown' in packet) { this.unknownFrames++; continue; }
+      this.ui.receive(packet);
       switch (packet.id) {
         case S.Connected:
           if (this.phase !== 'connecting' || !this.credentials) throw new Error('Unexpected Connected');
@@ -67,6 +74,7 @@ export class Session {
           const first = packet.characters[0];
           if (!first || first.id <= 0 || !first.name) throw new Error('This account has no character');
           this.phase = 'login';
+          this.characterLevel = first.level;
           this.send({ id: C.LoginExistingChar, charId: first.id, name: first.name });
           break;
         }
@@ -95,6 +103,7 @@ export class Session {
         case S.Intervals:
           if (packet.walk < 0 || packet.walk > 60_000) throw new Error('Invalid walk interval');
           this.walkInterval = packet.walk;
+          this.talkInterval = Math.max(500, packet.talk);
           break;
         case S.PosUpdate: this.place(packet.x, packet.y); break;
         case S.PosUpdateUserChar:
@@ -155,6 +164,13 @@ export class Session {
       this.pending = { since: now }; this.lastQuery = now;
       this.send({ id: C.RequestPositionUpdate });
     }
+  }
+  talk(message: string): boolean {
+    if (!this.ready || this.clock() - this.lastTalk < this.talkInterval) return false;
+    if (!message.trim() || message.length > 160 || new TextEncoder().encode(message).length > 255) return false;
+    this.send({ id: C.Talk, message, counter: ++this.talkCounter });
+    this.lastTalk = this.clock();
+    return true;
   }
   finish(message = 'Disconnected'): void {
     this.phase = 'closed'; this.error = message; this.credentials = undefined;

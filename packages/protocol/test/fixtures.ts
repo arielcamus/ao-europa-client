@@ -7,9 +7,22 @@ export const clientFixtures = {
   LoginExistingChar: { id: C.LoginExistingChar, charId: 300, name: 'Añ' },
   Walk: { id: C.Walk, heading: Heading.East, counter: 0x01020304 },
   RequestPositionUpdate: { id: C.RequestPositionUpdate },
+  Talk: { id: C.Talk, message: 'Hola ñ', counter: 3 },
 } satisfies Record<string, ClientPacket>;
 
 export const serverFixtures = {
+  UpdateSta: { id: S.UpdateSta, stamina: 90 },
+  UpdateMana: { id: S.UpdateMana, mana: 60 },
+  UpdateHP: { id: S.UpdateHP, hp: 80, shield: 123456 },
+  UpdateGold: { id: S.UpdateGold, gold: 1200, goldPerLevel: 1000 },
+  UpdateExp: { id: S.UpdateExp, experience: 25 },
+  ConsoleMsg: { id: S.ConsoleMsg, message: 'Hola ñ', font: 2 },
+  UpdateUserStats: { id: S.UpdateUserStats, maxHp: 100, hp: 80, shield: 123456, maxMana: 80, mana: 60,
+    maxStamina: 100, stamina: 90, gold: 1200, goldPerLevel: 1000, level: 12, nextLevel: 200, experience: 25, characterClass: 3 },
+  ChangeInventorySlot: { id: S.ChangeInventorySlot, slot: 42, object: 2, amount: 3, equipped: true, value: 1.5, canUse: 1, elementalTags: 0x01020304, bindable: false },
+  InventoryUnlockSlots: { id: S.InventoryUnlockSlots, rows: 3 },
+  ChangeSpellSlot: { id: S.ChangeSpellSlot, slot: 40, spell: 0, index: -1, bindable: false },
+  UpdateHungerAndThirst: { id: S.UpdateHungerAndThirst, maxWater: 100, water: 75, maxFood: 100, food: 85 },
   Connected: { id: S.Connected, debugging: false },
   ConnectedDebug: { id: S.Connected, debugging: true },
   Logged: { id: S.Logged, newUser: false },

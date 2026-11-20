@@ -1,0 +1,206 @@
+/*
+ * Classic controls adapted from frmMain.frm, clsGraphicalList and
+ * clsGrapchicalInventory. Copyright (C) 2022-2026 Noland Studios.
+ * AGPL-3.0-or-later; see NOTICE. Artwork is read only from the local mount.
+ */
+import { fetchText, parseIni } from './assets.js';
+import type { Ini } from './assets.js';
+import type { Session } from './session.js';
+import type { WorldRenderer } from './renderer.js';
+import { loadInterface, loadedInterfaceUrl } from './interface-assets.js';
+
+export const element = <T extends HTMLElement = HTMLElement>(id: string) => {
+  const node = document.getElementById(id);
+  if (!node) throw new Error(`Missing element ${id}`);
+  return node as T;
+};
+const text = (id: string, value: string | number) => { element(id).textContent = String(value); };
+const ratio = (value: number | undefined, max: number | undefined) => max && value !== undefined ? Math.min(1, Math.max(0, value / max)) : 0;
+
+export class ClassicUI {
+  private objects: Ini = new Map();
+  private spells: Ini = new Map();
+  private sheets = new Map<number, Promise<HTMLImageElement>>();
+  private revision = -1;
+  private session: Session | undefined;
+  private generation = 0;
+  private selectedItem = 0;
+  private selectedSpell = 0;
+  private slotButtons: HTMLButtonElement[] = [];
+
+  constructor(private readonly renderer: WorldRenderer, private readonly report: (message: string) => void) {
+    for (let i = 0; i < 42; i++) {
+      const button = document.createElement('button');
+      button.className = 'inventory-slot'; button.type = 'button';
+      button.style.left = `${i % 6 * 35}px`;
+      button.style.top = `${Math.floor(i / 6) * 35 + (i >= 24 ? 9 : 0)}px`;
+      button.setAttribute('aria-label', `Casilla ${i + 1}`);
+      button.addEventListener('click', () => {
+        const item = this.session?.ui.inventory.get(i + 1);
+        this.selectedItem = item ? i + 1 : 0; this.markItem();
+        if (item) this.session?.ui.message(this.objects.get(`obj${item.object}`)?.get('texto') ?? button.title);
+      });
+      element('inventory').append(button); this.slotButtons.push(button);
+    }
+    element('inventory-tab').onclick = () => this.showSpells(false);
+    element('spells-tab').onclick = () => this.showSpells(true);
+    element('spell-up').onclick = () => this.selectSpell(this.selectedSpell - 1);
+    element('spell-down').onclick = () => this.selectSpell(this.selectedSpell + 1);
+    element('spells').addEventListener('keydown', event => {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault(); this.selectSpell(this.selectedSpell + (event.key === 'ArrowDown' ? 1 : -1));
+      }
+    });
+    element('spell-info').onclick = () => {
+      const spell = this.session?.ui.spells.get(this.selectedSpell);
+      if (spell && spell.index > 0) this.session?.ui.message(this.spells.get(`hechizo${spell.index}`)?.get('desc') ?? 'Sin descripción.');
+    };
+    element('cast').onclick = () => this.session?.ui.message('El lanzamiento de hechizos aún no está disponible.');
+    for (const id of ['settings', 'manual']) element(id).onclick = () => {
+      this.session?.ui.message('Flechas / WASD: caminar. En el teléfono, mantén pulsado el mapa en la dirección deseada. Enter: chat. Escape: cerrar chat.');
+      this.session?.ui.message('Gráficos originales © AO / Noland Studios · CC BY-NC-ND · cargados localmente. Combate y uso de objetos aún no disponibles.');
+    };
+    element('menu-tab').onclick = () => this.showMenu(true);
+    element('stats-tab').onclick = () => this.showMenu(false);
+    // Image controls inside panelInf, frmMain.frm. Their artwork is already
+    // present in ventanaprincipal_info.bmp; unsupported actions stay explicit.
+    for (const [name, x, y] of [['Skins', 9, 37], ['Grupo', 9, 75], ['Clanes', 9, 113], ['Retos', 9, 151], ['Llavero', 135, 37], ['Quests', 136, 75], ['Hogar', 135, 113], ['Estadísticas', 135, 151]] as const) {
+      const button = document.createElement('button'); button.className = 'hotspot'; button.type = 'button';
+      button.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:36px;height:33px`;
+      button.setAttribute('aria-label', name); button.setAttribute('aria-disabled', 'true');
+      button.onclick = () => this.session?.ui.message(`${name} aún no está disponible.`);
+      element('menu-actions').append(button);
+    }
+    for (const id of ['hp', 'mana', 'stamina', 'water', 'food', 'experience']) element(`${id}-fill`).style.width = '0px';
+  }
+  async init() {
+    const imageTasks = [...document.querySelectorAll<HTMLElement>('[data-interface]')].map(async node => {
+      const url = await loadInterface(node.dataset.interface!, !node.hasAttribute('data-unlocalized'));
+      if (node instanceof HTMLImageElement) { node.src = url; await node.decode(); }
+      else node.style.backgroundImage = `url("${url}")`;
+    });
+    const [objects, spells] = await Promise.all([
+      fetchText('Dat/Obj.dat'), fetchText('Dat/Hechizos.dat'), ...imageTasks,
+      this.sheet(135), this.renderer.graphic(47743),
+      ...['centrohechizo', 'centroinventario', 'ventanaprincipal_info'].map(name => loadInterface(name)),
+    ]);
+    this.objects = parseIni(objects); this.spells = parseIni(spells);
+    await this.renderInventory();
+    element('classic').dataset.uiReady = 'true';
+  }
+  private sheet(file: number) {
+    let pending = this.sheets.get(file);
+    if (!pending) {
+      const image = new Image(); image.src = `/ao-assets/Graficos/${file}.png`;
+      pending = image.decode().then(() => image); this.sheets.set(file, pending);
+    }
+    return pending;
+  }
+  private markItem() {
+    this.slotButtons.forEach((button, i) => button.setAttribute('aria-pressed', String(i + 1 === this.selectedItem)));
+  }
+  private showSpells(show: boolean) {
+    element<HTMLImageElement>('panel-art').src = loadedInterfaceUrl(show ? 'centrohechizo' : 'centroinventario');
+    element('inventory').hidden = show;
+    for (const id of ['spells', 'cast', 'spell-info', 'spell-up', 'spell-down']) element(id).hidden = !show;
+    element('inventory-tab').setAttribute('aria-selected', String(!show));
+    element('spells-tab').setAttribute('aria-selected', String(show));
+  }
+  private showMenu(show: boolean) {
+    element<HTMLImageElement>('stats-art').src = loadedInterfaceUrl(show ? 'ventanaprincipal_info' : 'ventanaprincipal_stats');
+    element('stats-panel').querySelectorAll<HTMLElement>('.bar, .label').forEach(node => { node.hidden = show; });
+    element('menu-actions').hidden = !show;
+  }
+  private selectSpell(slot: number) {
+    const rows = [...element('spells').children] as HTMLElement[];
+    if (!rows.length) return;
+    this.selectedSpell = Math.min(rows.length, Math.max(1, slot));
+    element('spells').setAttribute('aria-activedescendant', `spell-${this.selectedSpell}`);
+    for (const row of rows) row.setAttribute('aria-selected', String(Number(row.dataset.slot) === this.selectedSpell));
+    rows[this.selectedSpell - 1]?.scrollIntoView({ block: 'nearest' });
+  }
+  private async renderInventory() {
+    const generation = ++this.generation;
+    const state = this.session?.ui;
+    await Promise.all(this.slotButtons.map(async (button, i) => {
+      const slot = i + 1;
+      const locked = slot > 24 + (state?.unlockedRows ?? 0) * 6;
+      const background = await this.renderer.graphic(locked ? 1122 : slot > 24 ? 47742 : 47743);
+      const item = state?.inventory.get(slot);
+      const object = item ? this.objects.get(`obj${item.object}`) : undefined;
+      let canvas: HTMLCanvasElement | undefined;
+      if (item && object) {
+        const frame = await this.renderer.graphic(Number(object.get('grhindex')));
+        const sheet = await this.sheet(frame.file);
+        canvas = document.createElement('canvas'); canvas.width = 32; canvas.height = 32; canvas.className = 'item-art';
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(sheet, frame.x, frame.y, frame.width, frame.height, Math.floor((32 - frame.width) / 2), 32 - frame.height, frame.width, frame.height);
+        const pixels = ctx.getImageData(0, 0, 32, 32);
+        for (let j = 0; j < pixels.data.length; j += 4) if (!pixels.data[j] && !pixels.data[j + 1] && !pixels.data[j + 2]) pixels.data[j + 3] = 0;
+        ctx.putImageData(pixels, 0, 0);
+      }
+      if (generation !== this.generation) return;
+      button.style.backgroundImage = `url("/ao-assets/Graficos/${background.file}.png")`;
+      button.style.backgroundPosition = `-${background.x}px -${background.y}px`;
+      const name = item ? object?.get('name') ?? `Objeto ${item.object}` : locked ? 'Bloqueada' : 'Vacía';
+      button.title = name; button.setAttribute('aria-label', `Casilla ${slot}: ${name}${item ? ` × ${item.amount}` : ''}`);
+      button.setAttribute('aria-disabled', String(locked));
+      button.replaceChildren();
+      if (canvas) button.append(canvas);
+      if (item) {
+        const amount = document.createElement('span'); amount.className = 'quantity'; amount.textContent = String(item.amount); button.append(amount);
+        if (item.equipped) { const equipped = document.createElement('span'); equipped.className = 'equipped'; equipped.textContent = '+'; button.append(equipped); }
+      }
+    }));
+    this.markItem();
+  }
+  update(session: Session | undefined) {
+    if (this.session !== session) {
+      this.session = session; this.revision = -1; this.selectedItem = 0; this.selectedSpell = 0; this.showSpells(false); this.showMenu(false);
+    }
+    if (!session) return;
+    const ui = session.ui, stats = ui.stats;
+    const hp = stats.hp ?? session.self?.minHp, maxHp = stats.maxHp ?? session.self?.maxHp;
+    const mana = stats.mana ?? session.self?.minMana, maxMana = stats.maxMana ?? session.self?.maxMana;
+    const shield = stats.shield ?? 0;
+    const fullHp = Math.max(maxHp ?? 0, (hp ?? 0) + shield);
+    this.bar('hp', hp, fullHp, 216, maxHp);
+    const hpWidth = ratio(hp, fullHp) * 216;
+    element('shield-fill').style.left = `${35.2 + hpWidth}px`;
+    element('shield-fill').style.width = `${ratio(shield, fullHp) * 216}px`;
+    if (shield > 0) text('hp-text', `${hp} / ${maxHp} + ${shield}`);
+    this.bar('mana', mana, maxMana, 216);
+    this.bar('stamina', stats.stamina, stats.maxStamina, 89);
+    this.bar('water', ui.food?.water, ui.food?.maxWater, 32);
+    this.bar('food', ui.food?.food, ui.food?.maxFood, 32);
+    this.bar('experience', stats.experience, stats.nextLevel, 235);
+    text('gold', stats.gold === undefined ? '—' : stats.gold.toLocaleString('es-AR'));
+    text('level', `Nivel ${stats.level ?? session.characterLevel ?? '—'}`);
+    // The classic clock is server time; leave it blank until that packet is supported.
+    if (ui.revision === this.revision) return;
+    this.revision = ui.revision;
+    void this.renderInventory().catch(error => this.report(String(error)));
+    const list = element('spells'), scroll = list.scrollTop;
+    list.replaceChildren();
+    const count = Math.max(0, ...ui.spells.keys());
+    if (count && !this.selectedSpell) this.selectedSpell = 1;
+    for (let slot = 1; slot <= count; slot++) {
+      const spell = ui.spells.get(slot), row = document.createElement('div');
+      row.className = 'spell'; row.dataset.slot = String(slot); row.id = `spell-${slot}`;
+      row.setAttribute('role', 'option'); row.setAttribute('aria-selected', String(slot === this.selectedSpell));
+      row.textContent = spell && spell.index > 0 ? this.spells.get(`hechizo${spell.index}`)?.get('nombre') ?? `Hechizo ${spell.index}` : '(Vacío)';
+      row.onclick = () => this.selectSpell(slot); list.append(row);
+    }
+    list.scrollTop = scroll;
+    const messages = element('messages'); messages.replaceChildren();
+    for (const message of ui.messages) {
+      const row = document.createElement('div'); row.textContent = message.text; messages.append(row);
+    }
+    element('console').scrollTop = element('console').scrollHeight;
+  }
+  private bar(name: string, value: number | undefined, max: number | undefined, width: number, labelMax = max) {
+    element(`${name}-fill`).style.width = `${ratio(value, max) * width}px`;
+    const label = value === undefined || labelMax === undefined ? '—' : ['water', 'food'].includes(name) ? String(value) : `${value} / ${labelMax}`;
+    text(`${name}-text`, label);
+  }
+}

@@ -117,5 +117,22 @@ int main() {
     for (int value : {6,3,7,8,9}) w.byte(value);
     w.i16(0x506); w.byte(10);
     emit("CharacterCreate", w, true);
+    w = packet(75); w.string("Hola \xc3\xb1"); w.i32(3); emit("Talk", w, true);
+    w = packet(25); w.i16(90); emit("UpdateSta", w, true);
+    w = packet(26); w.i16(60); emit("UpdateMana", w, true);
+    w = packet(27); w.i16(80); w.i32(123456); emit("UpdateHP", w, true);
+    w = packet(28); w.i32(1200); w.i32(1000); emit("UpdateGold", w, true);
+    w = packet(29); w.i32(25); emit("UpdateExp", w, true);
+    w = packet(37); w.string("Hola \xc3\xb1"); w.byte(2); emit("ConsoleMsg", w, true);
+    w.byte(3); emit("ConsoleMsgChannel", w, true);
+    w = packet(61); w.i16(100); w.i16(80); w.i32(123456);
+    for (int16_t value : {80,60,100,90}) w.i16(value);
+    w.i32(1200); w.i32(1000); w.byte(12); w.i32(200); w.i32(25); w.byte(3);
+    emit("UpdateUserStats", w, true);
+    w = packet(63); w.byte(42); w.i16(2); w.i16(3); w.byte(1); w.real(1.5f);
+    w.byte(1); w.i32(0x01020304); w.byte(0); emit("ChangeInventorySlot", w, true);
+    w = packet(64); w.byte(3); emit("InventoryUnlockSlots", w, true);
+    w = packet(66); w.byte(40); w.i16(0); w.i16(-1); w.byte(0); emit("ChangeSpellSlot", w, true);
+    w = packet(78); for (int value : {100,75,100,85}) w.byte(value); emit("UpdateHungerAndThirst", w, true);
     std::cout << "\n}\n";
 }

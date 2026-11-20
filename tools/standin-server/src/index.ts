@@ -25,6 +25,8 @@ export interface StandinOptions {
   walkIntervalMs?: number;
   /** Test failure path: every walk is corrected to the unchanged position. */
   rejectWalks?: boolean;
+  /** Synthetic classic UI data, only for explicit browser fixture launches. */
+  classicUi?: boolean;
   log?: (message: string) => void;
 }
 
@@ -66,6 +68,7 @@ export async function startStandin(options: StandinOptions = {}) {
     const decoder = new FrameDecoder();
     let phase: 'account' | 'character' | 'playing' | 'closed' = 'account';
     let counter = 0;
+    let talkCounter = 0;
     let lastWalk = -Infinity;
     let x = character.x;
     let y = character.y;
@@ -108,6 +111,22 @@ export async function startStandin(options: StandinOptions = {}) {
                 { id: S.UserCharIndexInServer, charIndex: 1 },
                 { id: S.Logged, newUser: false },
               ] satisfies ServerPacket[]).map(encodeServerFrame)));
+              if (options.classicUi) {
+                send({ id: S.UpdateUserStats, maxHp: 100, hp: 80, shield: 0, maxMana: 80, mana: 60,
+                  maxStamina: 100, stamina: 90, gold: 1200, goldPerLevel: 1000, level: 1, nextLevel: 100, experience: 25, characterClass: 1 });
+                send({ id: S.UpdateHungerAndThirst, maxWater: 100, water: 75, maxFood: 100, food: 85 });
+                send({ id: S.InventoryUnlockSlots, rows: 0 });
+                for (const [slot, object, amount] of [[1, 1, 5], [2, 2, 1]] as const) send({
+                  id: S.ChangeInventorySlot, slot, object, amount, equipped: false, value: 0, canUse: 1, elementalTags: 0, bindable: false,
+                });
+                for (const slot of [1, 2, 3]) send({ id: S.ChangeSpellSlot, slot, spell: slot, index: slot, bindable: false });
+                send({ id: S.ConsoleMsg, message: 'Bienvenido a Ullathorpe. Inventario y hechizos de prueba local.', font: 0, channel: 0 });
+              }
+              break;
+            case C.Talk:
+              if (phase !== 'playing' || !options.classicUi) throw new Error('Talk unavailable in this fixture');
+              if (packet.counter !== ++talkCounter) throw new Error('Non-increasing talk counter');
+              send({ id: S.ConsoleMsg, message: packet.message, font: 0, channel: 0 });
               break;
             case C.Walk: {
               if (phase !== 'playing') throw new Error('Walk before login');

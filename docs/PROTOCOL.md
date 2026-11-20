@@ -135,3 +135,45 @@ diff -u packages/protocol/test/goldens.json /private/tmp/ao-goldens.json
 
 All implemented layouts were verified on both ends. Still unverified: runtime
 behavior of a compiled VB6 server and any packet outside this explicit subset.
+
+## Classic UI subset (2026-11-20)
+
+The following additions use the same framing/codec package and unchanged bridge.
+Both pinned `PacketId.bas` enums were counted independently; the procedures below
+were read on both ends. Types: `b` = unsigned byte, `i16`/`i32` = fixed signed LE,
+`f32` = IEEE single, `bool` = byte 0/1, `s` = Aurora UTF-8 String8.
+
+| Direction / ID | Ordered fields | Paired source procedures |
+| --- | --- | --- |
+| S→C 25 | stamina:i16 | WriteUpdateSta / HandleUpdateSta |
+| S→C 26 | mana:i16 | WriteUpdateMana / HandleUpdateMana |
+| S→C 27 | hp:i16, shield:i32 | WriteUpdateHP / HandleUpdateHP |
+| S→C 28 | gold:i32, goldPerLevel:i32 | WriteUpdateGold / HandleUpdateGold |
+| S→C 29 | experience:i32 | WriteUpdateExp / HandleUpdateExp |
+| S→C 37 | message:s, font:b, channel:b (optional for older senders) | PrepareMessageConsoleMsg / HandleConsoleMessage |
+| S→C 61 | maxHp:i16, hp:i16, shield:i32, maxMana:i16, mana:i16, maxStamina:i16, stamina:i16, gold:i32, goldPerLevel:i32, level:b, nextLevel:i32, experience:i32, class:b | WriteUpdateUserStats / HandleUpdateUserStats |
+| S→C 63 | slot:b, object:i16, amount:i16, equipped:bool, value:f32, canUse:b, elementalTags:i32, bindable:bool | WriteChangeInventorySlot / HandleChangeInventorySlot |
+| S→C 64 | unlockedRows:b | WriteInventoryUnlockSlots / HandleInventoryUnlockSlots |
+| S→C 66 | slot:b, spell:i16, index:i16, bindable:bool | WriteChangeSpellSlot / HandleChangeSpellSlot |
+| S→C 78 | maxWater:b, water:b, maxFood:b, food:b | WriteUpdateHungerAndThirst / HandleUpdateHungerAndThirst |
+| C→S 75 | message:s, counter:i32 | WriteTalk / HandleTalk |
+
+The spell index can be -1 for an empty slot. Inventory has 42 slots, with 24 normal
+slots and three unlockable rows of six. The server's MAXUSERHECHIZOS is 40.
+Object graphics/names and spell names come from the user's local data files, not
+these packets. Console text is rendered literally; localized message substitution
+and other chat channels/overhead bubbles remain outside this subset. Font/channel
+metadata is decoded but the console currently uses one readable classic text style.
+
+Talk has its own increasing counter and is paced independently from walking using
+Intervals.talk, with a 500ms floor. The UI accepts at most 160 characters / 255 UTF-8
+bytes. The existing community adapter rejects unsupported commands, so chat is
+explicitly disabled under `elixir-classic`; no new community-server support is
+claimed here. The stand-in's opt-in `classicUi` fixture supplies synthetic state and
+local-only echo for browser verification. Default bot/transport fixtures are unchanged.
+
+The C++ oracle now includes independent frozen UI packet goldens, including
+multibyte chat, a signed empty-spell index, inventory bool/float/int fields, and
+both console variants. Existing golden bytes are unchanged. Session tests cover
+partial stat updates, slot removal/bounds, bounded console history, chat pacing,
+UTF-8 limits and new-session reset. No live compiled-VB6 proof is claimed.

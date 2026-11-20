@@ -1,5 +1,127 @@
 # Build log
 
+## Decision 2026-11-20 11:07 CET (Ariel): classic UI first
+
+The client reproduces the VB6 client's own UI (original interface graphics: main
+window frame, inventory, spells list, console) with no redesign. Reasons: minimise
+design/dev work and allow screen-by-screen comparison with the original. UI
+modernisation comes later. Phones use the scaled classic layout until then. The
+M2 custom dark web frame is to be replaced. AO Forever is a technical reference
+only (browser client over WebSocket), never a visual one.
+
+## 2026-11-20 classic UI: independent base decision
+
+Session started **10:10:50 UTC / 11:10:50 CET**. Compared `m2-browser@01b5415`
+(draft PR #2) and `m2-render@39f6266` by reading both implementations and running
+their typechecks, unit/transport tests and production builds. Chosen base:
+**m2-browser**; `classic-ui` branches directly from that commit. Neither original
+branch is deleted, rewritten or merged into the other.
+
+| Criterion | m2-browser | m2-render |
+| --- | --- | --- |
+| Browser/formats source, including HTML/CSS | 6 files; 1,328 lines; 47,435 bytes | 13 files; 1,057 lines; 62,346 bytes |
+| Clarity | Small resource reader and transport-independent Session; UI CSS accounts for 539 lines | Better formats/input separation, but denser source and socket lifecycle coupled to GameClient |
+| VB6 render fidelity | Four/five-layer maps, original bodies/heads, color key, smooth movement; fixed 2× zoom and actor-before-entire-layer-4 ordering need attention | Native zoom, artwork-bound culling, actor interleaved with layer 4, legacy body offset; camera snaps each tile |
+| Fresh tests | 77/77; typecheck/build pass; committed Playwright desktop Chrome + 390px Chrome/WebKit suite, plus opt-in real community server test | 71 pass + 8 local-resource tests skipped without AO_ASSETS; **79/79 with local resources**; typecheck/build pass; Chrome Puppeteer smoke script |
+| Fresh bundle: all JS, raw / gzip level 9 | 557,917 / 163,228 bytes | 411,184 / 118,281 bytes |
+| Fresh CSS, raw / gzip level 9 | 6,586 / 2,201 bytes | 8,577 / 2,659 bytes |
+| Shared protocol reuse | @ao/protocol + byte-transparent bridge | Same: protocol and bridge source have zero diff |
+
+The decisive advantage is the browser Session's one-outstanding-walk/position
+probe, explicit confirmation/correction, silence timeout, warp/reconnect handling,
+and broader browser regression coverage. The competing branch has valuable render
+details and a smaller bundle; those do not outweigh the risk of rebuilding session
+correctness. Native 1× map rendering is required for the original 736×608 viewport.
+Asset bytes are excluded from every bundle measurement; all chunks are counted.
+Source line counts are not used as a proxy for clarity (the renderer branch packs
+more bytes into fewer lines). No new UI framework is needed.
+
+UI source: local classic client `b648c1a9b14903884393a7194e9faa0bc275633b`,
+resources `89615f34162d9fa0bf0fae4242cd6639edbf772f`.
+`frmMain.frm` stores positions in twips (15 per pixel at 96 DPI), including
+renderer (10,150,736,608), panel (768,160,247,325), panelInf
+(756,521,266,245), console (16,32,612,85), and chat (40,120,545.6,24).
+Its design-time 1332×928 form is not the runtime window: `SetupGameplayUI` uses
+the 1024×768 backbuffer (`dx_utils.bas`/`clsRenderer.cls`), matching the original
+1024×768 `es_ventanaprincipal.bmp`. `FormParser` changes cursors, not geometry.
+Inventory: 6 columns × 7 rows, 35px pitch, 9px gap after 24 normal slots,
+original indexed slot graphics 47743 / 47742 / 1122. Stats use the runtime
+bar maxima from frmMain (216px HP/mana, 89px stamina, 32px food/water, 235px XP).
+All licensed artwork and rendered screenshots stay local and ignored.
+
+### Classic UI implementation and local evidence
+
+- Replaced the custom dark frame with the original Spanish main-window, inventory,
+  spells, stats/menu, login and bar bitmaps, loaded through the local `AO_ASSETS`
+  allowlist. Added only `interface/*.bmp` and `Dat/{Obj,Hechizos}.dat` to the
+  existing resource mount. No artwork, reference forms or screenshots are committed.
+- Native form geometry is recorded in `classic-layout.ts`; phones uniformly scale
+  the whole window, including its 736×608 world. Inventory uses the original slot
+  graphics and object names/icons; the spells list uses original names/descriptions.
+  Unknown server values remain blank/dashes. Casting, item use/equipment changes,
+  and other unimplemented menu actions are explicitly unavailable.
+- Added verified classic stats, inventory, spell, food/water and console packets,
+  plus paced client chat, to the existing protocol package. Paired VB6 procedures
+  are in `docs/PROTOCOL.md`; independent C++ oracle bytes cover the new packets.
+  The byte-transparent bridge is unchanged. The explicit browser stand-in supplies
+  labelled synthetic UI data; the community adapter still supports login/movement
+  only, so its chat action reports that limitation without sending a packet.
+- Checked render details directly against VB6: native 1× tiles, half-tile camera
+  center, classic body/head offsets, and layer-4 ordering around the character's
+  row. Kept the chosen base's session, smooth interpolation and five-layer parser.
+- WebKit rejected several original uncompressed true-color BMPs because their
+  headers declare important palette colors despite having no palette. On native
+  decode failure, a browser-local copy clears only those unused header fields.
+  The source files and every pixel byte stay unchanged; synthetic unit fixtures
+  verify this behavior and reject unsupported/truncated input.
+- The full browser run exposed a held-input timing bug: a new walk could start
+  after the current tick captured its timestamp, indexing animation frame -1.
+  Clamp the first animation frame to zero, matching position interpolation. The
+  held-key/blur regression also asserts that the session remains connected.
+- Fresh comparison smoke for `m2-render` passed its Chrome desktop/mobile script,
+  including accepted/blocked movement, touch drag, resize and DPR changes. This
+  does not change the base decision: both original branches remain available.
+- Another task switched the shared checkout to `vm-server` while this work was
+  running. Moved only this task's changes into the isolated worktree
+  `~/Projects/ao-client-classic-ui` on `classic-ui`, restored the shared checkout
+  to its clean VM state, and repeated verification in the isolated worktree.
+
+### Classic UI verification (2026-11-20 11:42 CET)
+
+- `pnpm install --frozen-lockfile`, `pnpm typecheck`, all five workspace builds,
+  and `git diff --check` pass. Final unit/transport run: **97/97 tests, 7 files**.
+  One earlier concurrent run exposed the existing bot fixture's 10ms reply-window
+  flake (four confirmed steps instead of five). Normal fixture replies now have
+  100ms; the intentional late-correction test explicitly retains 10ms. Production
+  bot timing is unchanged. Final unit verification passed after that adjustment.
+- `AO_ASSETS=~/Projects/ao-reference/Recursos pnpm test:browser`: **9/9 pass**,
+  desktop Chrome, 390px mobile Chrome and 390px mobile WebKit. Each connects through
+  the actual WS/TCP bridge, walks four directions, stays connected 30 seconds,
+  rejects bad credentials and reconnects. Checks also cover held-key/blur stopping,
+  landscape resize/touch, the resource allowlist, 42 slots, inventory/spell/menu
+  controls, packet-driven bar widths, and literal chat text without HTML execution.
+- The geometry oracle reads the local original `.frm` independently of production
+  layout constants. Visible controls agree within 0.08 native pixels; every phone
+  panel uses the same scale and the page has no horizontal overflow.
+- `pnpm size:web` counts every emitted chunk with gzip level 9: **JS 572,483 raw /
+  168,538 gzip bytes** (9 files), **CSS 3,462 / 1,322 bytes** (1 file), HTML
+  6,595 / 1,855 bytes. JS + CSS: **169,860 bytes gzip (169.9 kB / 165.9 KiB)**.
+  Licensed artwork is excluded and still comes only from the local mount.
+- Locally inspected screenshots under
+  `/Users/dev/Projects/ao-client-classic-ui/artifacts/screenshots/`:
+  `classic-desktop-chrome.png`, `classic-mobile-chrome.png`,
+  `classic-mobile-webkit.png`, and `classic-spells-*.png`.
+  `vb6-reference-{inventory,spells}-{desktop,native,390}.png` reconstruct the
+  source layout with the original bitmaps. `comparison-desktop.png` and
+  `comparison-390.png` place the browser and reference side by side.
+  These references are **not captures of a running VB6 executable**; dynamic
+  reference labels are the form defaults and the world is blank. No claim of
+  native Win32 font parity or physical-phone testing.
+- The opt-in real community-server test was adapted to the classic controls but
+  was not rerun in this session (no credentials supplied). Earlier M2 real-server
+  evidence remains separate. New classic UI state/chat is verified against source
+  procedures, independent oracle bytes, and the explicitly labelled stand-in.
+
 ## 2026-11-20 setup and server finding
 - Reference clones copied to ~/Projects/ao-reference (server-classic @ caac313, client-classic, Recursos, Aurora.Network).
 - Scope (Ariel 07:33): WEB FIRST. No Capacitor, no Tauri. Desktop + mobile browsers (touch, small screens), report bundle size.

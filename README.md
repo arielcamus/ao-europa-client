@@ -15,17 +15,24 @@ See [setup and scope](tools/real-server/README.md). Interoperability with the
 original **ao-org VB6 executable** remains untested; no compiled binary was found.
 
 M2 adds a browser client that renders local classic maps and an animated character
-with keyboard/touch walking through the bridge. **Verified against the real
-community server**: 30 seconds connected, accepted movement, collision correction
+with keyboard/touch walking through the bridge. The `m2-browser` base was **verified
+against the real community server**: 30 seconds connected, accepted movement, collision correction
 and position persistence after reconnect. The original VB6 executable remains
 unverified. Route attempts and evidence are in [the build log](docs/BUILD-LOG.md).
 
-## Browser preview (M2)
+## Classic browser UI
+
+`classic-ui` uses `m2-browser` as its base; the independent comparison with
+`m2-render` is in [BUILD-LOG](docs/BUILD-LOG.md). The browser now uses the original
+1024×768 VB6 interface, with its 736×608 world, 42-slot inventory, spells list,
+console/chat, stats/menu panels and bitmap bars. Phones scale this entire layout
+uniformly to fit; panels never rearrange. Positions come from `frmMain.frm` and
+`FrmLogear.frm`, with runtime sizes checked against the classic source.
 
 ```sh
 pnpm install --frozen-lockfile
 AO_ASSETS="$HOME/Projects/ao-reference/Recursos" pnpm dev:standin
-# Open http://127.0.0.1:5173 and choose Enter world.
+# Open http://127.0.0.1:5173 and choose CONECTAR.
 
 # Use a free port if 5173 is occupied:
 AO_ASSETS="$HOME/Projects/ao-reference/Recursos" AO_WEB_PORT=5187 pnpm dev:standin
@@ -41,13 +48,22 @@ AO_ASSETS="$HOME/Projects/ao-reference/Recursos" AO_TCP_PORT=17666 \
 AO_ASSETS="$HOME/Projects/ao-reference/Recursos" pnpm web:preview
 ```
 
-Use arrows/WASD or the on-screen direction buttons. Quick taps and held input work;
+Use arrows/WASD or touch the map in a direction from the character. Quick taps and held input work;
 releasing, cancelling a touch, switching tabs or losing focus stops held movement.
 The client picks the first account character, waits for server placement/intervals,
 predicts one step, then requests the server position. Only a matching reply adds a
 confirmed step. Rejections immediately restore server coordinates. Silence is a
 timeout, never proof of a move. Credentials are not stored and the password input
 is cleared when connecting. A disconnected session can be connected again.
+
+Click Inventario/Hechizos to switch panels; Stats/Menú switches the original lower
+panel. Click an item or the spell information control to read its local description.
+Enter or the speech bubble opens chat; Enter sends, Escape closes. The console
+renders server strings as text. Inventory, spells and bars consume verified classic
+packets; unknown values remain blank/dashes. Combat, casting and using/equipping
+items are not implemented. The explicit stand-in supplies sample UI data and echoes
+chat locally. The current `elixir-classic` adapter supports login/movement only, so
+chat is disabled for that profile rather than sending an unsupported packet.
 
 The launcher binds to loopback by default, starts the bridge on a free port, and
 proxies `/bridge` through the web origin. For a phone on your **local network**, set
@@ -56,7 +72,8 @@ uses that same origin automatically. This is a local development launcher, not a
 public hosting setup. No native wrappers or cloud services are involved.
 
 `AO_ASSETS` must point to an existing `Recursos` directory. Only numeric PNGs,
-numbered CSM maps and four required index files are served. Assets are neither
+numbered CSM maps, four index files, `interface/*.bmp`, and `Dat/{Obj,Hechizos}.dat`
+are served. Assets are neither
 copied nor imported into the build; screenshots and build output are gitignored.
 Code-only checkout/build/tests need no game assets. The browser runtime dependency
 is PixiJS 8.23.0 plus the dependency-free protocol package; no UI framework.
@@ -67,23 +84,33 @@ WebKit. They exercise the built app through the actual WebSocket→TCP→stand-i
 ```sh
 pnpm exec playwright install webkit
 AO_ASSETS="$HOME/Projects/ao-reference/Recursos" pnpm test:browser
+# If the client reference clone lives elsewhere, also set:
+# AO_CLIENT_REFERENCE=/absolute/path/to/argentum-online-client-classic
+pnpm size:web
 ```
 
 Desktop Chrome, mobile Chrome and mobile WebKit each verify login, four directions,
 30 seconds connected, confirmed coordinates, credential rejection and disconnect.
-Screenshots are written to `artifacts/screenshots/m2-{desktop-chrome,mobile-chrome,mobile-webkit}.png`.
+They also check original form geometry, inventory/spell switching and selection,
+stat widths, literal chat text, and scaling at 390px. Reference screenshots are
+assembled independently from the local `.frm` files and original bitmaps; they
+are **not screenshots of a running VB6 executable**.
+Screenshots are written to `artifacts/screenshots/classic-{desktop-chrome,mobile-chrome,mobile-webkit}.png`,
+`classic-spells-*.png`, and `vb6-reference-{inventory,spells}-{desktop,native,390}.png`.
 These are browser emulations on the Mac, not physical-phone testing.
+The classic UI changes were verified with the stand-in; the opt-in community-server
+test was adapted to the new controls but was not rerun in this session.
 
 For a running real community server/preview on port 5191, supply the local
 `AO_EMAIL`/`AO_PASSWORD` and run `pnpm test:browser:real`. This opt-in test requires
 the `elixir-classic` profile, checks accepted and blocked movement, and reconnects
-to verify persistence. It saves `m2-real-community-{desktop,mobile}.png` and a
+to verify persistence. It saves `classic-real-community-{desktop,mobile}.png` and a
 credential-free proof JSON under `artifacts/screenshots/`. Its mobile image is
 a responsive viewport check; the regression suite above tests touch emulation.
 
 M2 supports four/five-layer CSM render prefixes, `graficos.ini`, `cabezas.ind` and
 `cuerpos.dat`/`moldes.ini` character animations. It is a movement/rendering preview:
-equipment, NPC rendering, chat, combat, map collision prediction, roof fading,
+equipment rendering, NPC rendering, combat, map collision prediction, roof fading,
 lighting, particles and full gameplay remain out of scope. The stand-in has no
 collision rules. See [the asset contract and limitations](docs/ASSETS.md).
 
