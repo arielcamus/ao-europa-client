@@ -17,6 +17,7 @@ STATE = Path(os.environ.get('AO_VM_STATE', '~/Projects/ao-reference/runtime/ao-v
 DATA = STATE / 'ao-build.utm/Data'
 QMP = STATE / 'qmp.sock'
 VNC_PASSWORD = STATE / 'vnc-password.txt'
+DISPLAY_CONFIG = STATE / 'qemu-display.json'
 PAUSE_AT = 14_000_000_000  # 2 GB headroom above Ariel's 12 GB floor.
 
 
@@ -139,7 +140,19 @@ def start_guard():
         subprocess.Popen([sys.executable, str(Path(__file__).resolve()), 'guard'], stdout=log, stderr=log, start_new_session=True)
 
 
+def display_args():
+    # ramfb needs no guest driver. Opt into virtio only after confirming that
+    # the ARM64 viogpudo driver is in this guest's Windows Driver Store.
+    device = json.loads(DISPLAY_CONFIG.read_text())['device'] if DISPLAY_CONFIG.exists() else 'ramfb'
+    if device not in ('ramfb', 'virtio-gpu-pci'):
+        raise SystemExit(f'Unsupported display device in {DISPLAY_CONFIG}: {device}')
+    # The first graphical console is the default VNC/QMP screen. Keep ramfb
+    # as a secondary firmware framebuffer when using the installed GPU driver.
+    return (['-device', device] if device != 'ramfb' else []) + ['-device', 'ramfb']
+
+
 def up():
+    display = display_args()
     if shutil.disk_usage(STATE).free < PAUSE_AT:
         raise SystemExit('Refusing start: 14 GB host free required to protect the approved 12 GB floor.')
     if running_pid():
@@ -168,6 +181,9 @@ def up():
     assert (DATA / 'windows.img').stat().st_size == 40_000_000_000
     for port in (2222, 7667, 5905):
         with socket.socket() as sock:
+            # A graceful restart can leave client connections in TIME_WAIT.
+            # Match QEMU's reusable listeners while still rejecting a live one.
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             sock.bind(('127.0.0.1', port))
     vars_path = DATA / 'efi_vars.fd'
     if not vars_path.exists():
@@ -181,10 +197,11 @@ def up():
         '-drive', f'if=none,id=system,format=raw,discard=unmap,detect-zeroes=unmap,file={DATA / "windows.img"}',
         '-device', 'nvme,drive=system,serial=ao-system,bootindex=1',
         '-device', 'qemu-xhci', '-device', 'usb-kbd', '-device', 'usb-tablet',
-        '-device', 'ramfb', '-display', 'none', '-vnc', '127.0.0.1:5,password=on',
+        '-display', 'none', '-vnc', '127.0.0.1:5,password=on',
         '-netdev', 'user,id=net0,hostfwd=tcp:127.0.0.1:2222-:22,hostfwd=tcp:127.0.0.1:7667-:7667',
         '-device', 'virtio-net-pci,netdev=net0,mac=52:54:00:a0:b0:01',
         '-device', 'virtio-rng-pci',
+        *display,
         '-qmp', f'unix:{QMP},server=on,wait=off', '-serial', f'file:{STATE / "serial.log"}',
         '-rtc', 'base=localtime', '-no-shutdown',
     ]

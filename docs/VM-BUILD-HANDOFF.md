@@ -1,14 +1,17 @@
 # AO Windows build handoff
 
-**20 November 2026 — Windows installed, running, and SSH reachable.** Local
+**20 November 2026 — VNC desktop visually verified, Windows and SSH running.** Local
 administrator `aobuilder` is logged into the console with auto-logon enabled.
-twinBASIC Community 1044 is running in that session. Dependency validation passed;
+twinBASIC Community 1044's first-run licence dialog is visible in that session.
+Screenshot: [`artifacts/screenshots/vm-desktop.png`](../artifacts/screenshots/vm-desktop.png)
+(local artifact, ignored by Git). Dependency validation passed;
 the human import/build below is still required and `server.exe` does not yet exist.
 
 The `ao-build` disk is running through a **headless QEMU fallback**, because UTM
 5.0.9-2 and `utmctl` hang before application startup on this Mac. Opening UTM,
 its documented scripting API, and bounded CLI retries did not resolve it.
-No Computer Use, screenshots, mouse clicks or keyboard automation were used.
+The original installation used no GUI automation. The subsequent display repair
+was verified by inspecting screenshots of QEMU's VNC framebuffer.
 The same `ao-build.utm/Data/windows.img` remains the **40,000,000,000-byte thin
 disk**, with **4096 MiB RAM / four CPUs**. Do not open this bundle in UTM while
 its disk is in use by the fallback.
@@ -25,8 +28,8 @@ saving RAM to disk. Other host programs can consume space; this is not a quota.
 
 ## Open the desktop and build manually
 
-These IDE labels were checked against the publisher's documentation; the GUI
-has not been inspected or operated in this session.
+The desktop and twinBASIC licence dialog have been visually verified. The
+remaining import/build instructions use the publisher's documented IDE labels.
 
 1. On the Mac, **Finder → Go → Connect to Server…** (`⌘K`) → enter
    **`vnc://127.0.0.1:5905`** → **Connect**. This opens the running Windows desktop.
@@ -144,3 +147,22 @@ SSH works, `aobuilder` is active in console session **1**, and twinBASIC process
 **3772** is responsive with its **twinBASIC IDE** window present. The window
 check ran in that interactive session; no project import or build was performed.
 QEMU and the disk guard remain running with more than **22 GB** host space free.
+
+Display repair visually verified at **12:58:56 UTC**: the old process already
+had `ramfb`, but its screenshot showed only "Guest has not initialized the
+display (yet)" and Windows enumerated no video controller. The guest already
+contained ARM64 **viogpudo 22.7.38.43** (`oem1.inf`). After a graceful SSH
+shutdown, QEMU restarted with **`virtio-gpu-pci` as the primary display** and
+ramfb retained. Private `qemu-display.json` persists this selection; an absent
+configuration still defaults to ramfb. Existing PCI device order, USB keyboard
+and absolute tablet, firmware, disk, memory, CPUs, forwards and VNC password
+authentication were retained. QMP reloaded the same private password.
+
+Windows reports **Red Hat VirtIO GPU DOD controller**, **Status OK**, error code
+**0**, at **1024×768**. Auto-logon and SSH succeeded; `AOTwinBASIC` was started
+with its existing interactive principal. The saved screenshot shows the Windows
+taskbar and twinBASIC licence agreement, ready for the human to continue step 2.
+No licence acceptance, project import or build was performed. QEMU PID **45351**
+and disk guard PID **45353** remain running; host free space at verification was
+**22,620,073,984 bytes (22.62 GB)**. The guard's historical minimum is **14.01 GB**,
+above the 12 GB floor. See the [display configuration notes](../scripts/vm/README.md).

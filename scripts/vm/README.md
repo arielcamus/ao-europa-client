@@ -102,7 +102,35 @@ The launcher verifies that the VNC handshake offers only security type 2.
 After `shutdown /s /t 0` over SSH, wait for `host.py status` to report `shutdown`,
 then run `vm-up.sh`; it exits the already-shut-down QEMU process and starts a new
 one. Installed guests do not attach installer or seed media on subsequent boots.
-The agent does not operate it.
+
+The launcher defaults to `ramfb`, with `qemu-xhci`, `usb-kbd`, and an absolute
+`usb-tablet`. On this installed guest, ramfb alone remained uninitialized and
+Windows reported no display controller. Before enabling VirtIO, SSH confirmed
+the ARM64 `viogpudo.inf` driver **22.7.38.43** in the Windows Driver Store
+(`oem1.inf`, matching `PCI\VEN_1AF4&DEV_1050&SUBSYS_11001AF4&REV_01`). The private
+state file `qemu-display.json` now selects:
+
+```json
+{"device": "virtio-gpu-pci"}
+```
+
+Only select this device after verifying that guest driver; otherwise leave the
+file absent or select `ramfb`. The GPU is added after the existing PCI devices
+but before ramfb, making it the primary VNC/QMP console while retaining ramfb.
+A selection change requires a graceful Windows shutdown and `vm-up.sh` restart.
+The port preflight tolerates old connections in TIME_WAIT but rejects live
+listeners. The existing VNC password and the disk guard remain in use.
+
+After auto-logon and SSH return, open twinBASIC on the console with:
+
+```sh
+scripts/vm-ssh.sh 'powershell.exe -NoProfile -Command "Start-ScheduledTask -TaskName AOTwinBASIC"'
+```
+
+The existing task uses `aobuilder` with `LogonType Interactive`. The repaired
+desktop and twinBASIC's first-run licence dialog were visually verified from a
+QMP `screendump` of the primary VNC framebuffer, saved to
+`artifacts/screenshots/vm-desktop.png`. Project import and build remain manual.
 
 ## Install and verify the payload after Windows setup
 

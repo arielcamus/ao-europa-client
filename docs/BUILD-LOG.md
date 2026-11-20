@@ -715,3 +715,50 @@ Verification at **12:52:25 UTC**:
 
 Elapsed wall-clock through this verification: **7 min 46 s** for this resumed
 task; the commit and push follow.
+
+## 20 November 2026 — VNC framebuffer repair
+
+Started at **12:55:02 UTC**. The existing QEMU command already included ramfb,
+qemu-xhci, usb-kbd and usb-tablet. A QMP screenshot confirmed the reported
+"Guest has not initialized the display (yet)" message; Windows enumerated no
+video controller. The earlier process/window checks had not established a
+working display.
+
+Before selecting a VirtIO GPU, queried the Windows Driver Store over SSH and
+confirmed Red Hat ARM64 **viogpudo 22.7.38.43** (`oem1.inf`) and its matching
+PCI hardware ID. Added a private `qemu-display.json` selection of
+`virtio-gpu-pci`. The launcher keeps ramfb as the default for unconfigured guests
+and a secondary framebuffer for this guest. It creates the GPU's console first
+so both VNC and QMP screendump select the Windows display. Existing PCI devices
+retain their allocation order. No new driver installation was needed.
+
+Requested `shutdown.exe /s /t 0` over SSH and waited for QMP's `shutdown` state.
+The first restart exposed a port preflight failure after the old QEMU process
+exited, with no listeners remaining. Enabled `SO_REUSEADDR` for the preflight,
+allowing TIME_WAIT connections while still refusing occupied listening ports.
+`vm-up.sh` then started QEMU with the same firmware, disk, RAM, CPUs, networking,
+USB devices and password-authenticated loopback VNC, plus the primary GPU.
+The existing private password was loaded through QMP without printing it.
+
+Verification at **12:58:56 UTC**:
+
+- Auto-logon returned to console session 1; SSH works. Windows reports
+  **Red Hat VirtIO GPU DOD controller**, **Status OK**, error code **0**, driver
+  **22.7.38.43**, resolution **1024×768**.
+- Started the existing `AOTwinBASIC` scheduled task, whose principal is
+  `aobuilder`, `LogonType Interactive`. Inspected a PNG from QMP `screendump`
+  showing the Windows taskbar and twinBASIC's licence dialog. Saved the final
+  image at `artifacts/screenshots/vm-desktop.png` (local artifact, ignored by Git).
+  Licence acceptance, project import and compilation remain human steps.
+- VNC is **127.0.0.1:5905**, `auth: vnc`; the RFB handshake offers only security
+  type **2**. The password file remains mode **600**. QMP reports the USB tablet
+  as current and absolute.
+- QEMU PID **45351** and disk guard PID **45353** are running. Host free space
+  is **22,620,073,984 bytes (22.62 GB)**; the guard heartbeat is current and its
+  historical minimum is **14.01 GB**, above the **12 GB** floor.
+- Python syntax and focused checks passed for ramfb default selection, VirtIO
+  primary-console ordering, invalid-device rejection and live-port rejection.
+  The actual restart and framebuffer inspection verified the complete path.
+
+Elapsed wall-clock through visual/runtime verification: **3 min 54 s**;
+documentation, final checks, commit and push follow.
