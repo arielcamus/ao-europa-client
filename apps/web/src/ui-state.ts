@@ -1,6 +1,9 @@
 // AGPL-3.0-or-later. UI state follows the classic Handle* procedures; see NOTICE.
 import { ServerPacketId as S } from '@ao/protocol';
 import type { InventorySlot, ServerPacket, SpellSlot, UserStats } from '@ao/protocol';
+import { ChatState } from './chat-state.js';
+import { formatLine, plainText } from './chat-console.js';
+import type { ChatLine } from './chat-console.js';
 
 export class ClassicState {
   revision = 0;
@@ -9,10 +12,18 @@ export class ClassicState {
   inventory = new Map<number, InventorySlot>();
   spells = new Map<number, SpellSlot>();
   unlockedRows = 0;
-  messages: { text: string; font: number }[] = [];
+  /** Console history. `line` is the raw server line; it is formatted when drawn, once locale data is loaded. */
+  messages: { text: string; font: number; line?: ChatLine }[] = [];
+  readonly chat = new ChatState(line => this.line(line));
 
   message(text: string, font = 0) {
     this.messages.push({ text, font });
+    if (this.messages.length > 200) this.messages.shift();
+    this.revision++;
+  }
+  private line(line: ChatLine) {
+    const segments = formatLine(line, this.chat.locale);
+    this.messages.push({ text: plainText(segments), font: line.kind === 'console' || line.kind === 'locale' ? line.font : 0, line });
     if (this.messages.length > 200) this.messages.shift();
     this.revision++;
   }
@@ -35,8 +46,7 @@ export class ClassicState {
         if (packet.slot < 1 || packet.slot > 40) throw new Error('Invalid spell slot');
         this.spells.set(packet.slot, packet);
         break;
-      case S.ConsoleMsg: this.message(packet.message, packet.font); return;
-      default: return;
+      default: this.chat.receive(packet); return;
     }
     this.revision++;
   }

@@ -11,7 +11,6 @@ import { MapObjects } from './map-objects.js';
 import { PacketCounters, SEQUENCED_CLIENT_PACKETS } from './packet-counters.js';
 import type { PacketFamily } from './packet-counters.js';
 import { CharacterTracker } from './characters.js';
-import { localeText } from './look-at.js';
 import { NpcsServerPacketId as NS } from '@ao/protocol';
 
 export interface Position { x: number; y: number }
@@ -60,6 +59,7 @@ export class Session {
     private readonly clock: () => number = () => performance.now(),
   ) {
     this.credentials = { ...credentials };
+    this.ui.chat.clock = clock; this.ui.chat.characters = index => this.characters.get(index);
     this.connectedAt = clock();
     this.placementDeadline = this.connectedAt + 10_000;
   }
@@ -152,10 +152,7 @@ export class Session {
           break;
         case DoorServer.ObjectDelete: if (inMap(packet)) this.mapObjects.delete(packet.x, packet.y); break;
         case DoorServer.BlockPosition: if (inMap(packet)) this.mapObjects.block(packet.x, packet.y, packet.sides); break;
-        case NS.LocaleMsg:
-          // Look-at replies (1105 user, 1621/1622 NPC, 1106 nothing) and every other localized line.
-          this.ui.message(this.tracker.locale ? localeText(packet.messageId, packet.text, this.tracker.locale) : '', packet.font);
-          break;
+        // LocaleMsg (141) reaches the console through ui.receive -> ChatState (one print, chat's pipeline).
         case S.ErrorMsg: throw new Error(`Server: ${packet.message}`);
         case S.Disconnect: throw new Error('The server disconnected this character');
       }
@@ -228,6 +225,14 @@ export class Session {
     if (!message.trim() || message.length > 160 || new TextEncoder().encode(message).length > 255) return false;
     this.send({ id: C.Talk, message, counter: this.next('talk') });
     this.lastTalk = this.clock();
+    return true;
+  }
+  /** Send a chat packet that is not Say (yell, whisper, guild, group, global...). */
+  sendChat(packet: ClientPacket): boolean {
+    if (!this.ready) return false;
+    // A sequence-checked chat packet (GuildMessage) takes the session's shared counter, never one of its own.
+    const family = SEQUENCED_CLIENT_PACKETS[packet.id];
+    this.send(family ? { ...packet, counter: this.next(family) } as ClientPacket : packet);
     return true;
   }
   finish(message = 'Disconnected'): void {

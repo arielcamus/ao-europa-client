@@ -13,6 +13,7 @@ import type { SafeArrayInt8 } from './binary.js';
 import { encodeFrame } from './frame.js';
 import { doorClientCodecs, doorServerCodecs } from './packets/doors.js';
 import { npcsServerCodecs } from './packets/npcs.js';
+import { chatClientCodecs, chatServerCodecs } from './packets/chat.js';
 
 export enum ServerPacketId {
   Connected = 1,
@@ -26,6 +27,8 @@ export enum ServerPacketId {
   ChangeMap = 30,
   PosUpdate = 31,
   ConsoleMsg = 37,
+  ConsoleFactionMessage = 38,
+  GuildChat = 39,
   CharacterCreate = 42,
   CharacterMove = 44,
   UserCharIndexInServer = 47,
@@ -35,6 +38,7 @@ export enum ServerPacketId {
   ChangeSpellSlot = 66,
   ErrorMsg = 73,
   UpdateHungerAndThirst = 78,
+  ConsoleCharText = 128,
   Intervals = 158,
   PosUpdateUserChar = 186,
   PosUpdateChar = 187,
@@ -42,10 +46,18 @@ export enum ServerPacketId {
 }
 
 export enum ClientPacketId {
+  GroupMessage = 45,
+  GuildMessage = 59,
+  GuildOnline = 60,
+  CouncilMessage = 61,
+  FactionMessage = 62,
   LoginExistingChar = 73,
   Talk = 75,
+  Yell = 76,
+  Whisper = 77,
   Walk = 78,
   RequestPositionUpdate = 79,
+  GlobalMessage = 207,
   LoginAccount = 305,
 }
 
@@ -211,17 +223,34 @@ const coreClientCodecs = {
   [ClientPacketId.RequestPositionUpdate]: struct({}),
 };
 
+/** Chat codecs; 3, 4, 35, 36 and 141 are the npcs table's (one codec per id). */
+const chatServerTable = {
+  [ServerPacketId.ConsoleFactionMessage]: chatServerCodecs.consoleFactionMessage,
+  [ServerPacketId.GuildChat]: chatServerCodecs.guildChat,
+  [ServerPacketId.ConsoleCharText]: chatServerCodecs.consoleCharText,
+};
+const chatClientTable = {
+  [ClientPacketId.GroupMessage]: chatClientCodecs.groupMessage,
+  [ClientPacketId.GuildMessage]: chatClientCodecs.guildMessage,
+  [ClientPacketId.GuildOnline]: chatClientCodecs.guildOnline,
+  [ClientPacketId.CouncilMessage]: chatClientCodecs.councilMessage,
+  [ClientPacketId.FactionMessage]: chatClientCodecs.factionMessage,
+  [ClientPacketId.Yell]: chatClientCodecs.yell,
+  [ClientPacketId.Whisper]: chatClientCodecs.whisper,
+  [ClientPacketId.GlobalMessage]: chatClientCodecs.globalMessage,
+};
+
 /**
  * Every codec table, by feature. ONE codec per packet id: an object spread silently keeps the LAST duplicate, so the merged
  * tables below are checked at load time and a second registration of an id throws instead of shadowing the first.
  * A new feature table is added here AND to the spread below (test/codec-tables.test.ts fails if the two disagree).
  */
 export const codecTables = {
-  server: { core: coreServerCodecs, doors: doorServerCodecs, npcs: npcsServerCodecs },
-  client: { core: coreClientCodecs, doors: doorClientCodecs },
+  server: { core: coreServerCodecs, doors: doorServerCodecs, npcs: npcsServerCodecs, chat: chatServerTable },
+  client: { core: coreClientCodecs, doors: doorClientCodecs, chat: chatClientTable },
 } as const;
-const serverCodecs = { ...coreServerCodecs, ...doorServerCodecs, ...npcsServerCodecs };
-const clientCodecs = { ...coreClientCodecs, ...doorClientCodecs };
+const serverCodecs = { ...coreServerCodecs, ...doorServerCodecs, ...npcsServerCodecs, ...chatServerTable };
+const clientCodecs = { ...coreClientCodecs, ...doorClientCodecs, ...chatClientTable };
 
 /** Throws when two tables register the same id or a merged table holds an id no listed table owns. */
 export function assertDisjointCodecTables(tables: Record<string, object>, merged: object, side: string): void {

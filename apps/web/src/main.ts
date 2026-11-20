@@ -7,6 +7,10 @@ import { applyClassicLayout } from './classic-layout.js';
 import { ClassicUI, element } from './classic-ui.js';
 import { doorClickTile } from './map-objects.js';
 import { NpcDialog } from './npc-dialog.js';
+import { ChatBox } from './chat-box.js';
+import { ChatBubbles } from './chat-bubbles.js';
+import { sharedLocale } from './chat-locale.js';
+import { fetchText } from './assets.js';
 
 applyClassicLayout();
 const form = element<HTMLFormElement>('login'), account = element<HTMLInputElement>('email'), password = element<HTMLInputElement>('password');
@@ -29,13 +33,15 @@ const report = (message: string) => {
 const renderer = new WorldRenderer(viewport, report);
 const ui = new ClassicUI(renderer, report);
 const npcDialog = new NpcDialog(element('classic'), renderer);
+const bubbles = new ChatBubbles(element('chat-bubbles'));
+const chatBox = new ChatBox(chatForm, chat, element('messages'), () => renderer.app.canvas.focus(), error => close(String(error)));
 const clearInput = () => { keys.clear(); touchHeading = undefined; };
 function walk(heading: Heading) {
   try { if (session && renderer.readyMap === session.resourceMap) session.walk(heading); }
   catch (error) { close(error instanceof Error ? error.message : String(error)); }
 }
 function close(message = 'Disconnected') {
-  clearInput(); stoppedAt = performance.now(); chatForm.hidden = true; npcDialog.hide();
+  clearInput(); stoppedAt = performance.now(); chatBox.close(); npcDialog.hide();
   if (session) {
     try { session.finish(message); } catch (error) { message = `${message}; ${String(error)}`; }
   }
@@ -59,7 +65,11 @@ async function boot() {
     ? 'Mundo de prueba local. Objetos y estadísticas de muestra; sin combate ni persistencia.'
     : community ? 'Servidor comunitario · movimiento y persistencia. Chat aún no disponible.' : 'Cliente clásico · movimiento, inventario, hechizos y chat.';
   if (config.mode === 'standin') { account.value = 'standin@local'; password.value = 'testpass'; }
-  await Promise.all([renderer.init(), ui.init()]);
+  await Promise.all([renderer.init(), ui.init(), bubbles.init()]);
+  // Chat text that the server sends as locale ids; the console is redrawn once it arrives.
+  void Promise.all([fetchText('init/sp_localindex.dat'), fetchText('init/SP_LocalMsg.dat')])
+    .then(([index, messages]) => { sharedLocale.load(index, messages); if (session) session.ui.revision++; })
+    .catch(error => report(String(error)));
   renderer.app.ticker.add(() => {
     const now = performance.now();
     try {
@@ -76,6 +86,7 @@ async function boot() {
         }
       }
       renderer.render(session, now);
+      bubbles.update(session, now);
     } catch (error) { if (session?.phase !== 'closed') close(error instanceof Error ? error.message : String(error)); }
     if (now - lastUi > 100) { updateUi(now); lastUi = now; }
   });
@@ -117,6 +128,7 @@ form.addEventListener('submit', event => {
   npcDialog.hide();
   const owner = session;
   session.tracker.onNpcDescription = ({ npcNumber }) => { if (session === owner) void npcDialog.show(npcNumber, renderer.locale); };
+  chatBox.attach(session);
   ws.onmessage = event => {
     if (socket !== ws) return;
     try {
@@ -129,26 +141,19 @@ form.addEventListener('submit', event => {
   renderer.app.canvas.focus();
 });
 disconnect.addEventListener('click', () => close());
-const openChat = () => {
+const openChat = (guild = false) => {
   if (!session?.ready) return;
   if (!chatSupported) { session.ui.message('Este servidor aún no admite chat.'); return; }
-  clearInput(); chatForm.hidden = false; chat.focus();
+  clearInput(); chatBox.open(guild);
 };
-element('chat-open').onclick = openChat;
-chatForm.addEventListener('submit', event => {
-  event.preventDefault();
-  try {
-    if (!chat.value.trim() || session?.talk(chat.value)) {
-      chat.value = ''; chatForm.hidden = true; renderer.app.canvas.focus();
-    } else session?.ui.message('Espera un momento o acorta el mensaje (máximo 255 bytes).');
-  } catch (error) { close(String(error)); }
-});
+element('chat-open').onclick = () => openChat();
 const directions: Record<string, Heading> = { ArrowUp: Heading.North, KeyW: Heading.North, ArrowRight: Heading.East, KeyD: Heading.East, ArrowDown: Heading.South, KeyS: Heading.South, ArrowLeft: Heading.West, KeyA: Heading.West };
 window.addEventListener('keydown', event => {
-  if (event.key === 'Escape') { npcDialog.hide(); chatForm.hidden = true; clearInput(); renderer.app.canvas.focus(); return; }
+  if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); clearInput(); renderer.app.canvas.focus(); return; }
   if (event.target instanceof HTMLElement && event.target.closest('input, textarea, select, button, [role="listbox"], dialog')) return;
   if (event.ctrlKey || event.metaKey || event.altKey) return;
   if (event.key === 'Enter') { event.preventDefault(); openChat(); return; }
+  if (event.key === 'Delete') { event.preventDefault(); openChat(true); return; }
   const heading = directions[event.code];
   if (heading) { event.preventDefault(); keys.set(event.code, heading); walk(heading); }
 });

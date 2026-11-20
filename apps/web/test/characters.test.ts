@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { ClientPacketId as C, DoorClientPacketId as NC, NpcsServerPacketId as N, ServerPacketId as S, Heading, FrameDecoder, decodeClientPacket, encodeServerFrame } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
+import { ChatLocale } from '../src/chat-locale.js';
 import { Session } from '../src/session.js';
 import { CharacterTracker, TILE_MS, vbColor } from '../src/characters.js';
 import { parseColors, parseLocale, playerNameColor, privilegeTitle, splitName, readEquipment, NPC_NAME_COLOR } from '../src/character-data.js';
@@ -16,6 +17,11 @@ const locale = () => parseLocale(parseIni([
   '[SP_MSG]', 'Msg1105=Ves a ¬1', 'Msg1106=No ves nada interesante.', 'Msg1622=¬1 ¬2',
   '[NPC1]', 'BODY=117', 'DESC=Hola, hijo mio!', 'HEAD=3', 'NAME=Sacerdote <Iglesia>',
 ].join('\n')));
+
+const chatLocale = () => { const l = new ChatLocale(); l.load([
+  '[SP_MSG]', 'Msg1105=Ves a ¬1', 'Msg1106=No ves nada interesante.', 'Msg1622=¬1 ¬2',
+  '[NPC1]', 'BODY=117', 'DESC=Hola, hijo mio!', 'HEAD=3', 'NAME=Sacerdote <Iglesia>',
+].join('\n')); return l; };
 
 describe('character tracker', () => {
   it('creates, moves (with the heading from the delta and a one-tile slide), changes and removes characters', () => {
@@ -149,9 +155,12 @@ describe('session click and tracker wiring', () => {
   });
   it('shows LocaleMsg look-at replies in the console using the loaded locale', () => {
     const h = harness();
-    h.session.tracker.locale = locale();
+    h.session.ui.chat.locale = chatLocale();
     h.recv({ id: N.LocaleMsg, messageId: 1106, text: '', font: 3, channel: 0 });
     expect(h.session.ui.messages.at(-1)?.text).toBe('No ves nada interesante.');
+    h.recv({ id: N.LocaleMsg, messageId: 1622, text: '1¬¬100-1-1-1-1-16', font: 3, channel: 0 });
+    expect(h.session.ui.messages.filter(m => m.font === 3).length).toBe(2); // one print per LocaleMsg
+    expect(h.session.ui.messages.at(-1)?.text).toBe('Sacerdote <Iglesia> ') // the NPC number became its name;
   });
 });
 

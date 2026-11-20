@@ -26,7 +26,10 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1
 #console strong { color: #fff3aa; font-weight: normal; }
 #error { color: #ff8c7b; }
 #messages > div { white-space: pre-wrap; overflow-wrap: anywhere; }
-#chat { width: 100%; height: 100%; padding: 1px 2px; border: 0; background: #400000; color: #ccc; font-size: 13px; font-weight: bold; }
+#chat { width: 100%; height: 100%; padding: 1px 2px; border: 0; background: #202020; color: #808080; font: bold 13px Tahoma, Arial, sans-serif; }
+#chat-form.guild #chat { background: #400000; }
+#chat-bubbles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.chat-bubble { position: absolute; left: 0; top: 0; width: max-content; max-width: 230px; text-align: center; font: bold 12px/14px Tahoma, Arial, sans-serif; overflow-wrap: anywhere; will-change: transform; text-shadow: 1px 0 #000, -1px 0 #000, 0 1px #000, 0 -1px #000; }
 #viewport { overflow: hidden; background: #000; touch-action: none; }
 #viewport canvas { width: 100%; height: 100%; display: block; touch-action: none; }
 #minimap { background: #000; overflow: hidden; }

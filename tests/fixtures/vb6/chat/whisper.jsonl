@@ -1,0 +1,7 @@
+{"t_ms":17877,"dir":"c2s","id":77,"name":"Whisper","hex":"4d000554436861740d707373742c207365637265746f"}
+{"t_ms":17886,"dir":"s2c","id":128,"name":"ConsoleCharText","hex":"80000d707373742c207365637265746f9de2140005544368617401000100"}
+{"t_ms":17886,"dir":"s2c","id":128,"name":"ConsoleCharText","hex":"80000d707373742c207365637265746f9de2140005544368617401000100"}
+{"t_ms":19515,"dir":"c2s","id":77,"name":"Whisper","hex":"4d000d4e6f4578697374654e6164696504686f6c61"}
+{"t_ms":19523,"dir":"s2c","id":141,"name":"LocaleMsg","hex":"8d005e04000300"}
+{"t_ms":20052,"dir":"c2s","id":79,"name":"RequestPositionUpdate","hex":"4f00"}
+{"t_ms":20056,"dir":"s2c","id":31,"name":"S31","hex":"1f00392b"}
