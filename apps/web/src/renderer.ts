@@ -65,7 +65,7 @@ export class WorldRenderer {
   locale: LocaleData | undefined;
   /** Tile under the mouse: NPC names are only drawn there, as in Char_Render (TX, TY). */
   hoverTile: { x: number; y: number } | undefined;
-  /** Camera of the last frame, for hit testing screen pixels back to tiles. */
+  /** Top-left of the visible world in native pixels, from the last frame (combat overlay, hover tile).*/
   camera = { x: 0, y: 0 };
 
   constructor(private readonly host: HTMLElement, private readonly report: (message: string) => void) {}
@@ -126,6 +126,11 @@ export class WorldRenderer {
     let animation = this.animations.get(id);
     if (!animation) { animation = graphicAnimation(this.graphics, id); this.animations.set(id, animation); }
     return animation;
+  }
+  /** Frames of a Grh animation (effects such as the hit splash need every frame, graphic() only the first). */
+  async frames(id: number): Promise<Animation> {
+    await this.loadMetadata();
+    return this.animation(id);
   }
   async graphic(id: number): Promise<GraphicFrame> {
     await this.loadMetadata();

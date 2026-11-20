@@ -3,7 +3,7 @@
  * Copyright (C) 2023-2026 Noland Studios. AGPL-3.0-or-later; no warranty.
  * See ../../../LICENSE and ../../../NOTICE.
  */
-import { ClientPacketId as C, ServerPacketId as S, Heading, FrameDecoder, decodeServerPacket, encodeClientFrame } from '@ao/protocol';
+import { ClientPacketId as C, CombatClientPacketId as CC, ServerPacketId as S, Heading, FrameDecoder, decodeServerPacket, encodeClientFrame } from '@ao/protocol';
 import { DoorClientPacketId, DoorServerPacketId as DoorServer } from '@ao/protocol';
 import type { CharacterCreate, ClientPacket } from '@ao/protocol';
 import { ClassicState } from './ui-state.js';
@@ -12,6 +12,7 @@ import { PacketCounters, SEQUENCED_CLIENT_PACKETS } from './packet-counters.js';
 import type { PacketFamily } from './packet-counters.js';
 import { CharacterTracker } from './characters.js';
 import { NpcsServerPacketId as NS } from '@ao/protocol';
+import { CombatState } from './combat.js';
 
 export interface Position { x: number; y: number }
 const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
@@ -25,6 +26,7 @@ export class Session {
   readonly mapObjects = new MapObjects();
   /** Everybody on the map, with names, equipment, slides and overhead text (feat/npcs). */
   readonly tracker = new CharacterTracker();
+  readonly combat = new CombatState();
   characterLevel: number | undefined;
   phase: Phase = 'connecting';
   map: number | undefined;
@@ -50,6 +52,7 @@ export class Session {
   private lastQuery = 0;
   private lastTalk = -Infinity;
   private talkInterval = 500;
+  private hitInterval = 0;
   private placementDeadline: number;
   private credentials: { email: string; password: string } | undefined;
 
@@ -92,6 +95,7 @@ export class Session {
       if ('unknown' in packet) { this.unknownFrames++; continue; }
       this.ui.receive(packet);
       this.tracker.receive(packet, this.clock());
+      this.combat.receive(packet, { ui: this.ui, characters: this.characters, charIndex: this.charIndex, clock: this.clock });
       switch (packet.id) {
         case S.Connected:
           if (this.phase !== 'connecting' || !this.credentials) throw new Error('Unexpected Connected');
@@ -135,6 +139,7 @@ export class Session {
           this.walkInterval = packet.walk;
           this.talkInterval = Math.max(500, packet.talk);
           this.clickInterval = Math.max(100, packet.leftClick);
+          this.hitInterval = packet.hit;
           break;
         case S.PosUpdate: this.place(packet.x, packet.y); break;
         case S.PosUpdateUserChar:
@@ -152,6 +157,8 @@ export class Session {
           break;
         case DoorServer.ObjectDelete: if (inMap(packet)) this.mapObjects.delete(packet.x, packet.y); break;
         case DoorServer.BlockPosition: if (inMap(packet)) this.mapObjects.block(packet.x, packet.y, packet.sides); break;
+        // The tracker owns appearance; this store (positions for the door rule, chat bubbles) only forgets who left.
+        case NS.CharacterRemove: if (packet.charIndex !== this.charIndex) this.characters.delete(packet.charIndex); break;
         // LocaleMsg (141) reaches the console through ui.receive -> ChatState (one print, chat's pipeline).
         case S.ErrorMsg: throw new Error(`Server: ${packet.message}`);
         case S.Disconnect: throw new Error('The server disconnected this character');
@@ -220,6 +227,13 @@ export class Session {
     this.lastClick = now; return true;
   }
   clickInterval = 200;
+  /** UserStats.estado = 1: HandleUpdateHP / HandleUpdateUserStats set it when HP reaches 0. */
+  get dead() { return this.ui.stats.hp === 0; }
+  /** Control key / attack action: WriteAttack (id 80, counter from the shared PacketCounters) paced by Intervals.hit. */
+  attack(): boolean {
+    if (!this.ready) return false;
+    return this.combat.attack(this.clock(), this.hitInterval, this.dead, this.ui, () => this.send({ id: CC.Attack, counter: this.next('attack') }));
+  }
   talk(message: string): boolean {
     if (!this.ready || this.clock() - this.lastTalk < this.talkInterval) return false;
     if (!message.trim() || message.length > 160 || new TextEncoder().encode(message).length > 255) return false;

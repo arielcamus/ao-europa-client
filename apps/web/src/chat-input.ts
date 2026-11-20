@@ -5,7 +5,7 @@
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; see NOTICE.
  * GM and gameplay slash commands belong to other features: they get an explicit "not available" line.
  */
-import { ClientPacketId as C } from '@ao/protocol';
+import { CombatClientPacketId as CC, ClientPacketId as C } from '@ao/protocol';
 import type { ClientPacket } from '@ao/protocol';
 import { FONTTYPE } from './chat-fonts.js';
 
@@ -112,6 +112,9 @@ export class ChatInput {
           if (hasArguments) outcome.packet = { id: C.GroupMessage, message: args }; else note(MESSAGES.empty);
           return;
         case '/ONLINECLAN': outcome.packet = { id: C.GuildOnline }; return;
+        // Combat (#11): act on the priest selected with a left click (WriteResucitate / WriteHeal, no fields).
+        case '/RESUCITAR': case '/RESURRECT': outcome.packet = { id: CC.Resucitate }; return;
+        case '/CURAR': case '/CURE': outcome.packet = { id: CC.Heal }; return;
         case '/BMSG':
           if (filled) outcome.packet = { id: C.CouncilMessage, message: args }; else note(MESSAGES.empty);
           return;

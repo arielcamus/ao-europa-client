@@ -14,6 +14,7 @@ import { encodeFrame } from './frame.js';
 import { doorClientCodecs, doorServerCodecs } from './packets/doors.js';
 import { npcsServerCodecs } from './packets/npcs.js';
 import { chatClientCodecs, chatServerCodecs } from './packets/chat.js';
+import { combatClientCodecs, combatServerCodecs } from './packets/combat.js';
 
 export enum ServerPacketId {
   Connected = 1,
@@ -246,11 +247,11 @@ const chatClientTable = {
  * A new feature table is added here AND to the spread below (test/codec-tables.test.ts fails if the two disagree).
  */
 export const codecTables = {
-  server: { core: coreServerCodecs, doors: doorServerCodecs, npcs: npcsServerCodecs, chat: chatServerTable },
-  client: { core: coreClientCodecs, doors: doorClientCodecs, chat: chatClientTable },
+  server: { core: coreServerCodecs, doors: doorServerCodecs, npcs: npcsServerCodecs, chat: chatServerTable, combat: combatServerCodecs },
+  client: { core: coreClientCodecs, doors: doorClientCodecs, chat: chatClientTable, combat: combatClientCodecs },
 } as const;
-const serverCodecs = { ...coreServerCodecs, ...doorServerCodecs, ...npcsServerCodecs, ...chatServerTable };
-const clientCodecs = { ...coreClientCodecs, ...doorClientCodecs, ...chatClientTable };
+const serverCodecs = { ...coreServerCodecs, ...doorServerCodecs, ...npcsServerCodecs, ...chatServerTable, ...combatServerCodecs };
+const clientCodecs = { ...coreClientCodecs, ...doorClientCodecs, ...chatClientTable, ...combatClientCodecs };
 
 /** Throws when two tables register the same id or a merged table holds an id no listed table owns. */
 export function assertDisjointCodecTables(tables: Record<string, object>, merged: object, side: string): void {
