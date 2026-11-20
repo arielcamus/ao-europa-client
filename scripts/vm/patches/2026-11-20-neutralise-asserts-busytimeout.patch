@@ -1,0 +1,273 @@
+--- a/Codigo/clsIniManager.cls
++++ b/Codigo/clsIniManager.cls
+@@ -107,7 +107,7 @@
+     On Error GoTo Initialize_Err
+     If Not FileExist(File) Then
+         Debug.Print "Missing file : " & File
+-        Debug.Assert False ' You must create the .Dat file
++        'Debug.Assert False [neutralised: IDE debugger stop] ' You must create the .Dat file
+         Exit Sub
+     End If
+     
+--- a/Codigo/EffectsOverTime.bas
++++ b/Codigo/EffectsOverTime.bas
+@@ -308,7 +308,7 @@
+                 Call AddEffect(NpcList(TargetIndex).EffectOverTime, BonusDamage)
+             End If
+         Case Else
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+     End Select
+     Exit Sub
+ CreateEffect_Err:
+@@ -419,7 +419,7 @@
+         Case e_EffectOverTimeType.eBonusDamage
+             Set InstantiateEOT = New BonusDamageEffect
+         Case Else
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+     End Select
+ End Function
+ 
+--- a/Codigo/FileIO.bas
++++ b/Codigo/FileIO.bas
+@@ -995,7 +995,7 @@
+     End If
+ 
+     If Not HomeCostTiersValid Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+     End If
+ 
+     Exit Sub
+@@ -2198,7 +2198,7 @@
+ 
+             Call LogError(ErrorMessage)
+             Debug.Print ErrorMessage
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+         End If
+     Next CityIndex
+ End Sub
+--- a/Codigo/LocaleDef.bas
++++ b/Codigo/LocaleDef.bas
+@@ -137,6 +137,6 @@
+         Case e_WeaponType.eFist
+             GetRequiredWeaponLocaleId = 474
+         Case Else
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+     End Select
+ End Function
+--- a/Codigo/ModAutomatedActions.bas
++++ b/Codigo/ModAutomatedActions.bas
+@@ -49,7 +49,7 @@
+                         Case e_Skill.Smelting
+                             Call SmeltMinerals(UserIndex)
+                         Case Else
+-                            Debug.Assert False
++                            'Debug.Assert False [neutralised: IDE debugger stop]
+                     End Select
+                 End If
+             End If
+--- a/Codigo/ModCastle.bas
++++ b/Codigo/ModCastle.bas
+@@ -194,7 +194,7 @@
+     Dim RS As ADODB.Recordset
+     Set RS = Query(COUNT_ALL_CASTLES)
+     If RS Is Nothing Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         Exit Sub
+     End If
+     ReDim CastleData(1 To CLng(RS.Fields(0).value))
+@@ -204,7 +204,7 @@
+     Set RS = Query(SELECT_ALL_CASTLES)
+     If RS Is Nothing Or RS.RecordCount = 0 Then Exit Sub
+     If RS.RecordCount <> UBound(CastleData) Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         Exit Sub
+     End If
+ 
+@@ -257,7 +257,7 @@
+     i = 1
+     Do While Not RS.EOF
+         If i <> (RS!castle_id) Then
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+         End If
+         CastleData(i).castle_coordinates.outside.map = (RS!outside_map)
+         CastleData(i).castle_coordinates.outside.x = (RS!outside_x)
+@@ -750,13 +750,13 @@
+         Dim CastleIndex As Integer
+         If Not IsEmperorCastleCreated(UserIndex, 0, CastleIndex) Then
+             Call LogError("Couldn't find the castle for user: " & .name)
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+             Exit Sub
+         End If
+     
+         If CastleIndex <= -1 Then
+             Call LogError("Couldn't find the castle for user: " & .name)
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+         End If
+         
+         Select Case operation
+@@ -801,7 +801,7 @@
+                         'Delete char from db
+                         Set RS2 = Query(DELETE_CHAR_IN_CASTLE_WHITELIST, CLng(RS!id))
+                         If RS2 Is Nothing Then
+-                            Debug.Assert False
++                            'Debug.Assert False [neutralised: IDE debugger stop]
+                             Call LogInfoServidor("Error while deleting whitelisted character in db charname: " & RS!character_name & " for castle: " & RS!castle_id)
+                         End If
+                     'if he is, check if he is saved in db
+@@ -841,7 +841,7 @@
+ 
+ Public Sub SendCastleInfo(ByVal UserIndex As Integer, ByVal CastleSlot As Integer)
+     If CastleSlot <= 0 Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+     End If
+ 
+     With CastleData(CastleSlot)
+--- a/Codigo/modDatabase.bas
++++ b/Codigo/modDatabase.bas
+@@ -50,6 +50,7 @@
+         Call Connection_async(i).Open
+         ' SQLite enforces foreign keys per connection, so enable cascades immediately after opening each ADO connection.
+         Call Connection_async(i).Execute("PRAGMA foreign_keys = ON")
++        Call Connection_async(i).Execute("PRAGMA busy_timeout = 5000") ' wait instead of failing when another connection holds the write lock
+     Next i
+     Current_async = 1
+     Set Builder = New cStringBuilder
+@@ -75,6 +76,7 @@
+     Call Connection.Open
+     ' SQLite enforces foreign keys per connection, so enable cascades immediately after opening the ADO connection.
+     Call Connection.Execute("PRAGMA foreign_keys = ON")
++    Call Connection.Execute("PRAGMA busy_timeout = 5000") ' wait instead of failing when an async connection holds the write lock
+     Exit Sub
+ Database_Connect_Err:
+     Call LogDatabaseError("Database Error: " & Err.Number & " - " & Err.Description & " - Database_Connect")
+@@ -123,7 +125,7 @@
+     End If
+     Exit Function
+ Query_Err:
+-    Debug.Assert False
++    'Debug.Assert False [neutralised: IDE debugger stop]
+     DBError = Err.Description
+     Call LogDatabaseError("Database Error: " & Err.Number & " - " & Err.Description & " - " & vbCrLf & Text)
+ End Function
+@@ -167,7 +169,7 @@
+     Execute = (Err.Number = 0)
+     Exit Function
+ Execute_Err:
+-    Debug.Assert False
++    'Debug.Assert False [neutralised: IDE debugger stop]
+     If (Err.Number <> 0) Then
+         Call LogDatabaseError("Database Error: " & Err.Number & " - " & Err.Description & " - " & vbCrLf & Text)
+     End If
+--- a/Codigo/modFishing.bas
++++ b/Codigo/modFishing.bas
+@@ -449,7 +449,7 @@
+                     Exit Function
+                 End If
+             Case Else
+-                Debug.Assert False
++                'Debug.Assert False [neutralised: IDE debugger stop]
+                 Call TraceError(0, "Invalid fishing tool subtipo: " & ObjData(.invent.EquippedWorkingToolObjIndex).Subtipo & " (ObjIndex: " & .invent.EquippedWorkingToolObjIndex & ", UserIndex: " & UserIndex & ")", "modFishing.ValidateFishingPosition", Erl)
+                 Exit Function
+         End Select
+--- a/Codigo/ModGlobalQuests.bas
++++ b/Codigo/ModGlobalQuests.bas
+@@ -114,7 +114,7 @@
+     On Error GoTo LoadGlobalQuests_Err
+     Dim MaxGlobalQuests
+     If Not FileExist(DatPath & "GlobalQuests.dat", vbArchive) Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         Exit Sub
+     End If
+     Dim GlobalQuest As Integer
+--- a/Codigo/ModPhoenix.bas
++++ b/Codigo/ModPhoenix.bas
+@@ -55,7 +55,7 @@
+ Public Sub LoadPhoenixModule()
+     m_LastPhoenixSpawnAttempt = GetTickCountRaw()
+     If Not FileExist(DatPath & "PhoenixMapPool.dat", vbArchive) Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         Call LogError("Missing file PhoenixMapPool.Dat")
+         Exit Sub
+     End If
+--- a/Codigo/ModUnderworld.bas
++++ b/Codigo/ModUnderworld.bas
+@@ -74,7 +74,7 @@
+     Dim HomeCityId As e_City
+     For i = 1 To UBound(UnderworldMapPool)
+         If Not MapaValido(UnderworldMapPool(i).Map) Then
+-            Debug.Assert False 'invalid map shouldn't happen
++            'Debug.Assert False [neutralised: IDE debugger stop] 'invalid map shouldn't happen
+             Call TraceError(1, UnderworldMapPool(i).map & " is invalid", "KickUsersFromUnderworld()", 1)
+         End If
+         For LoopC = 1 To ConnGroups(UnderworldMapPool(i).Map).CountEntrys
+@@ -87,7 +87,7 @@
+     Next i
+     
+     If Not MapaValido(UNDERWORLD_CENTER_MAP_NUMBER) Then
+-        Debug.Assert False 'invalid map shouldn't happen
++        'Debug.Assert False [neutralised: IDE debugger stop] 'invalid map shouldn't happen
+         Call TraceError(1, "Center of the underworld is invalid", "KickUsersFromUnderworld()", 1)
+     End If
+     
+@@ -102,7 +102,7 @@
+ 
+ Public Sub DestroyUnderworldTp(ByRef Source As t_WorldPos, ByRef Dest As t_WorldPos)
+     If Not MapaValido(Source.Map) Or Not InMapBounds(Source.Map, Source.x, Source.y) Or Not InMapBounds(Source.Map, Source.x, Source.y - 4) Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         Exit Sub
+     End If
+     If MapData(Source.x, Source.y, Source.Map).ObjInfo.ObjIndex <> UNDERWORLD_PORTAL_OBJ_IDX Then Exit Sub
+@@ -114,7 +114,7 @@
+ 
+ Public Sub CreateUnderworldTp(ByRef Source As t_WorldPos, ByRef Dest As t_WorldPos)
+     If Not MapaValido(Source.Map) Or Not InMapBounds(Source.Map, Source.x, Source.y) Or Not InMapBounds(Source.Map, Source.x, Source.y - 4) Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         Exit Sub
+     End If
+     If Not MapaValido(Dest.Map) Or Not InMapBounds(Dest.Map, Dest.x, Dest.y) Then Exit Sub
+@@ -164,7 +164,7 @@
+     IsUnderworldInitialized = True
+     m_UnderworldLastSpawnTimestamp = GetTickCountRaw()
+     If Not FileExist(DatPath & "UnderworldMapPool.dat", vbArchive) Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         IsUnderworldInitialized = False
+         Call LogError("Missing file UnderworldMapPool.Dat")
+         Exit Sub
+@@ -177,18 +177,18 @@
+     UnderworldUpperLimitOfTime = val(IniFile.GetValue("INIT", "UnderworldUpperLimitOfTime"))
+     UnderworldLowerLimitOfTime = val(IniFile.GetValue("INIT", "UnderworldLowerLimitOfTime"))
+     If MaxUnderworldMaps <= 0 Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         MaxUnderworldMaps = 0
+         IsUnderworldInitialized = False
+         Exit Sub
+     End If
+     If UnderworldUpperLimitOfTime < DAY_START Or UnderworldUpperLimitOfTime > DAY_END Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         UnderworldUpperLimitOfTime = DAY_MAX_OUT_OF_BOUNDS
+         IsUnderworldInitialized = False
+     End If
+     If UnderworldLowerLimitOfTime < DAY_START Or UnderworldLowerLimitOfTime > DAY_END Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         UnderworldLowerLimitOfTime = DAY_MIN_OUT_OF_BOUNDS
+         IsUnderworldInitialized = False
+     End If
