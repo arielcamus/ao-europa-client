@@ -762,3 +762,13 @@ Verification at **12:58:56 UTC**:
 
 Elapsed wall-clock through visual/runtime verification: **3 min 54 s**;
 documentation, final checks, commit and push follow.
+
+## 2026-11-20 18:00-18:25 CET first run of the twinBASIC-built classic server (BLOCKED: unlicensed OCX)
+Result: `C:\ao\server\server.exe` (14,658,048 B, 17:48) starts but never listens on 7667. M1 bot / M2 browser client were NOT run (nothing to connect to).
+- `scripts/vm-ssh.sh 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:/ao/start-server.ps1'` -> task AOClassicServer runs, process `server` alive (~42 MB, 0.17 s CPU, idle), no listener after 30 s. `Server.ini` StartPort=7667 (matches QEMU hostfwd). No logs written except `Logs/recordusers.log`.
+- Cause found by enumerating the process's windows from an interactive scheduled task (EnumWindows, principal aobuilder/Interactive, task removed after): a visible modal `#32770 'ActiveX error'` owned by server.exe: "instance creation failed for control ComctlLib.ProgressBar (name: cargar)". Startup is blocked on `frmCargando`.
+- Probe from 32-bit PowerShell: `[Activator]::CreateInstance(GetTypeFromCLSID 0713E8D2-850A-101B-AFC0-4210102A8DA7)` -> **0x80040112 CLASS_E_NOT_LICENSED**. The KB2708437 comctl32.ocx 5.0 is registered (WOW6432Node CLSID ok) but `HKCR\Licenses` has no key; VB6 exes embed the licence, twinBASIC-built exes do not. `regsvr32` of `C:\ao\server\MSCOMCTL.OCX` (repo-supplied) exits 3 and is not the typelib the VBP references anyway (VBP uses `{6B7E6392-...}#1.3 comctl32.ocx`).
+- Only 3 ProgressBars use it: `frmCargando.cargar`, `frmDbControl.pbarDb`, `FrmStat.ProgressBar1` (all `ComctlLib.ProgressBar`).
+- Not done on purpose: no licence key was guessed or injected into the registry (licensing is Ariel's call).
+- Cleanup: killed my own server.exe, removed temp scripts in C:\ao. AOClassicServer task left registered (Ready). Undo of nothing else needed; VM state otherwise unchanged. Host disk 22 GB free.
+Options (each needs a human twinBASIC re-import/build): (1) replace the 3 ProgressBars with a PictureBox/Label bar or twinBASIC's native ProgressBar and delete the `Object=` comctl line if nothing else uses it (fastest, no licence issue); (2) Ariel supplies the VB6 licence key/LPK and we add it under `HKCR\Licenses`; (3) check other comctl32 controls (grep showed only ProgressBar in server .frm files).
