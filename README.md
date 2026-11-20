@@ -6,6 +6,9 @@ ao-org classic protocol (PYMMO=0) through a small WebSocket-to-TCP bridge.
 Licence: code AGPL-3.0 (parts translated from ao-org VB6 sources keep their notices). Game assets are CC BY-NC-ND
 (Noland Studios): never committed, loaded from a local path (`AO_ASSETS`), conversion only.
 
+Start with the [project hub](docs/PROJECT.md) for goals, decisions, repository links,
+current work and instructions for continuing with Codex. See also the [build log](docs/BUILD-LOG.md).
+
 M1 provides a protocol library, a headless TCP bot, a binary WebSocket bridge, and
 a **TEST STAND-IN** fixture. A real community AO server now runs natively on this
 Mac: [lambdaclass/argentum](https://github.com/lambdaclass/argentum), with an opt-in
