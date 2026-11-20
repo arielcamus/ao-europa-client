@@ -23,7 +23,8 @@ export interface SafeArrayInt8 {
 }
 
 const utf8Encoder = new TextEncoder();
-const utf8Decoder = new TextDecoder('utf-8', { fatal: true });
+// Windows String8 conversion preserves a leading U+FEFF instead of consuming it.
+const utf8Decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
 
 export class Writer {
   private buffer = new Uint8Array(128);

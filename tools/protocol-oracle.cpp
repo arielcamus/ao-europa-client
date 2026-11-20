@@ -4,6 +4,10 @@
 // See ../LICENSES/Apache-2.0.txt and ../NOTICE.
 // Independent C++ golden-byte oracle. No TS encoder or game assets are used.
 // Packet field sequences follow the paired VB6 procedures in docs/PROTOCOL.md.
+// VB6 sequence adaptation: Copyright (C) 2023-2026 Noland Studios LTD,
+// AGPL-3.0-or-later. Based on Argentum Online 0.11.6, Copyright (C) 2002
+// Márquez Pablo Ignacio, and Baronsoft's VB6 Online RPG. WITHOUT ANY WARRANTY.
+// See ../LICENSE. Aurora's algorithm retains the Apache notice above.
 #include <bit>
 #include <cstdint>
 #include <iomanip>
@@ -67,6 +71,7 @@ int main() {
     primitive.real(1.5f); primitive.string(""); primitive.string(std::string(1, '\0'));
     primitive.string("\xc3\xb1\xf0\x9f\x99\x82");
     emit("primitives", primitive);
+    Writer bom; bom.string("\xef\xbb\xbf" "A"); emit("utf8BOM", bom);
     Writer array;
     array.varint<uint16_t>(2);
     array.varint<uint32_t>(uint32_t(-1)); array.varint<uint32_t>(2);

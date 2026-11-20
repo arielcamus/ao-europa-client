@@ -43,6 +43,11 @@ describe('Aurora C++ primitive goldens', () => {
     expect(new Reader(value).readString()).toBe('ñ'.repeat(64));
   });
 
+  it('preserves a leading UTF-8 BOM as string content, matching Windows conversion', () => {
+    expect(hex(new Writer().writeString('\uFEFFA').toBytes())).toBe(goldens.utf8BOM);
+    expect(new Reader(golden('utf8BOM')).readString()).toBe('\uFEFFA');
+  });
+
   it('preserves raw COM dimension order and unsigned lower-bound casts', () => {
     const value = { bounds: [{ lowerBound: -1, count: 2 }, { lowerBound: 7, count: 3 }], data: bytes('090807060504') };
     expect(hex(new Writer().writeSafeArrayInt8(value).toBytes())).toBe(goldens.safeArray);

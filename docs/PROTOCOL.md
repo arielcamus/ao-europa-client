@@ -39,7 +39,8 @@ in Aurora's `DoConfiguration` and in our TCP applications.
   -1 → `7f`, -128 → `00`, -129 → `7f`. Writer preserves that lossy behavior;
   callers must use fixed Int16/Int32 when negative values must round trip.
 - `String8`: UTF-8 conversion, varint **byte** length, then bytes. Empty strings
-  and embedded NUL are valid. Lengths use the unsigned template specialization.
+  and embedded NUL are valid. A leading U+FEFF is string content, so the decoder
+  uses `ignoreBOM: true` to preserve it. Lengths use the unsigned specialization.
 - `Real32`: little endian IEEE-754 float (CharacterCreate.speeding).
 - `COM_Writer.cpp:232` SAFEARRAY: varint dimension count; for each raw `rgsabound`
   entry, unsigned varint lower bound then unsigned varint element count; finally

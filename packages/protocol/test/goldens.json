@@ -16,6 +16,7 @@
   "int:-129": "7f",
   "int:-2147483648": "00",
   "primitives": "0001ff0080ff7f00000080ffffff7f0000c03f00010006c3b1f09f9982",
+  "utf8BOM": "04efbbbf41",
   "safeArray": "02ffffffff0f020703090807060504",
   "Connected": "02000100",
   "ConnectedDebug": "0f00010001010a0102030405060708090a",
