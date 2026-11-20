@@ -8,6 +8,7 @@ import type { Ini } from './assets.js';
 import type { Session } from './session.js';
 import type { WorldRenderer } from './renderer.js';
 import { loadInterface, loadedInterfaceUrl } from './interface-assets.js';
+import { renderMessage } from './chat-console.js';
 
 export const element = <T extends HTMLElement = HTMLElement>(id: string) => {
   const node = document.getElementById(id);
@@ -193,9 +194,7 @@ export class ClassicUI {
     }
     list.scrollTop = scroll;
     const messages = element('messages'); messages.replaceChildren();
-    for (const message of ui.messages) {
-      const row = document.createElement('div'); row.textContent = message.text; messages.append(row);
-    }
+    for (const message of ui.messages) messages.append(renderMessage(message, ui.chat.locale));
     element('console').scrollTop = element('console').scrollHeight;
   }
   private bar(name: string, value: number | undefined, max: number | undefined, width: number, labelMax = max) {

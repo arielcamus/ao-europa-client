@@ -13,10 +13,13 @@ import type { SafeArrayInt8 } from './binary.js';
 import { encodeFrame } from './frame.js';
 import { doorClientCodecs, doorServerCodecs } from './packets/doors.js';
 import { npcsServerCodecs } from './packets/npcs.js';
+import { chatClientCodecs, chatServerCodecs } from './packets/chat.js';
 
 export enum ServerPacketId {
   Connected = 1,
   Logged = 2,
+  RemoveDialogs = 3,
+  RemoveCharDialog = 4,
   Disconnect = 7,
   UpdateSta = 25,
   UpdateMana = 26,
@@ -25,7 +28,11 @@ export enum ServerPacketId {
   UpdateExp = 29,
   ChangeMap = 30,
   PosUpdate = 31,
+  ChatOverHead = 35,
+  LocaleChatOverHead = 36,
   ConsoleMsg = 37,
+  ConsoleFactionMessage = 38,
+  GuildChat = 39,
   CharacterCreate = 42,
   CharacterMove = 44,
   UserCharIndexInServer = 47,
@@ -35,6 +42,8 @@ export enum ServerPacketId {
   ChangeSpellSlot = 66,
   ErrorMsg = 73,
   UpdateHungerAndThirst = 78,
+  ConsoleCharText = 128,
+  LocaleMsg = 141,
   Intervals = 158,
   PosUpdateUserChar = 186,
   PosUpdateChar = 187,
@@ -42,10 +51,18 @@ export enum ServerPacketId {
 }
 
 export enum ClientPacketId {
+  GroupMessage = 45,
+  GuildMessage = 59,
+  GuildOnline = 60,
+  CouncilMessage = 61,
+  FactionMessage = 62,
   LoginExistingChar = 73,
   Talk = 75,
+  Yell = 76,
+  Whisper = 77,
   Walk = 78,
   RequestPositionUpdate = 79,
+  GlobalMessage = 207,
   LoginAccount = 305,
 }
 
@@ -178,13 +195,19 @@ const consoleMessage: Codec<{ message: string; font: number; channel?: number }>
 const coreServerCodecs = {
   [ServerPacketId.Connected]: connected,
   [ServerPacketId.Logged]: struct({ newUser: bool }),
+  [ServerPacketId.RemoveDialogs]: chatServerCodecs.removeDialogs,
+  [ServerPacketId.RemoveCharDialog]: chatServerCodecs.removeCharDialog,
   [ServerPacketId.Disconnect]: struct({ fullLogout: bool }),
   [ServerPacketId.UpdateSta]: struct({ stamina: int16 }),
   [ServerPacketId.UpdateMana]: struct({ mana: int16 }),
   [ServerPacketId.UpdateHP]: struct({ hp: int16, shield: int32 }),
   [ServerPacketId.UpdateGold]: struct({ gold: int32, goldPerLevel: int32 }),
   [ServerPacketId.UpdateExp]: struct({ experience: int32 }),
+  [ServerPacketId.ChatOverHead]: chatServerCodecs.chatOverHead,
+  [ServerPacketId.LocaleChatOverHead]: chatServerCodecs.localeChatOverHead,
   [ServerPacketId.ConsoleMsg]: consoleMessage,
+  [ServerPacketId.ConsoleFactionMessage]: chatServerCodecs.consoleFactionMessage,
+  [ServerPacketId.GuildChat]: chatServerCodecs.guildChat,
   [ServerPacketId.UpdateUserStats]: userStats,
   [ServerPacketId.ChangeInventorySlot]: inventorySlot,
   [ServerPacketId.InventoryUnlockSlots]: struct({ rows: byte }),
@@ -196,6 +219,8 @@ const coreServerCodecs = {
   [ServerPacketId.CharacterMove]: struct({ charIndex: int16, x: byte, y: byte }),
   [ServerPacketId.UserCharIndexInServer]: struct({ charIndex: int16 }),
   [ServerPacketId.ErrorMsg]: struct({ message: string }),
+  [ServerPacketId.ConsoleCharText]: chatServerCodecs.consoleCharText,
+  [ServerPacketId.LocaleMsg]: chatServerCodecs.localeMsg,
   [ServerPacketId.Intervals]: intervals,
   // These two position packets intentionally have DIFFERENT field order.
   [ServerPacketId.PosUpdateUserChar]: struct({ x: byte, y: byte, charIndex: int16 }),
@@ -206,7 +231,15 @@ const coreServerCodecs = {
 const coreClientCodecs = {
   [ClientPacketId.LoginAccount]: struct({ email: string, password: string }),
   [ClientPacketId.LoginExistingChar]: struct({ charId: int32, name: string }),
+  [ClientPacketId.GroupMessage]: chatClientCodecs.groupMessage,
+  [ClientPacketId.GuildMessage]: chatClientCodecs.guildMessage,
+  [ClientPacketId.GuildOnline]: chatClientCodecs.guildOnline,
+  [ClientPacketId.CouncilMessage]: chatClientCodecs.councilMessage,
+  [ClientPacketId.FactionMessage]: chatClientCodecs.factionMessage,
   [ClientPacketId.Talk]: struct({ message: string, counter: int32 }),
+  [ClientPacketId.Yell]: chatClientCodecs.yell,
+  [ClientPacketId.Whisper]: chatClientCodecs.whisper,
+  [ClientPacketId.GlobalMessage]: chatClientCodecs.globalMessage,
   [ClientPacketId.Walk]: struct({ heading, counter: int32 }),
   [ClientPacketId.RequestPositionUpdate]: struct({}),
 };

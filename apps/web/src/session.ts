@@ -60,6 +60,7 @@ export class Session {
     private readonly clock: () => number = () => performance.now(),
   ) {
     this.credentials = { ...credentials };
+    this.ui.chat.clock = clock; this.ui.chat.characters = index => this.characters.get(index);
     this.connectedAt = clock();
     this.placementDeadline = this.connectedAt + 10_000;
   }
@@ -228,6 +229,12 @@ export class Session {
     if (!message.trim() || message.length > 160 || new TextEncoder().encode(message).length > 255) return false;
     this.send({ id: C.Talk, message, counter: this.next('talk') });
     this.lastTalk = this.clock();
+    return true;
+  }
+  /** Send a chat packet that is not Say (yell, whisper, guild, group, global...). */
+  sendChat(packet: ClientPacket): boolean {
+    if (!this.ready) return false;
+    this.send(packet);
     return true;
   }
   finish(message = 'Disconnected'): void {

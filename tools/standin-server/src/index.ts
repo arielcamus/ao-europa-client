@@ -126,7 +126,24 @@ export async function startStandin(options: StandinOptions = {}) {
             case C.Talk:
               if (phase !== 'playing' || !options.classicUi) throw new Error('Talk unavailable in this fixture');
               if (packet.counter !== ++talkCounter) throw new Error('Non-increasing talk counter');
-              send({ id: S.ConsoleMsg, message: packet.message, font: 0, channel: 0 });
+              // The VB6 server answers Talk with a ChatOverHead to the area (the client copies it to the console).
+              send({ id: S.ChatOverHead, chat: packet.message, charIndex: 1, color: 0xffffff, isSpell: false, x, y, minTime: 0, maxTime: 0 });
+              break;
+            case C.Yell:
+              if (phase !== 'playing' || !options.classicUi) throw new Error('Yell unavailable in this fixture');
+              send({ id: S.ChatOverHead, chat: packet.message, charIndex: 1, color: 0x0000ff, isSpell: false, x, y, minTime: 0, maxTime: 0 });
+              break;
+            case C.Whisper:
+              if (phase !== 'playing' || !options.classicUi) throw new Error('Whisper unavailable in this fixture');
+              send({ id: S.ConsoleCharText, message: packet.message, color: 0x14e29d, sourceName: character.name, sourceStatus: 1, privileges: 0 });
+              break;
+            case C.GroupMessage:
+              if (phase !== 'playing' || !options.classicUi) throw new Error('Group chat unavailable in this fixture');
+              send({ id: S.ConsoleMsg, message: `${character.name}> ${packet.message}`, font: 31, channel: 6 });
+              break;
+            case C.GuildMessage:
+              if (phase !== 'playing' || !options.classicUi) throw new Error('Guild chat unavailable in this fixture');
+              send({ id: S.GuildChat, status: 1, message: `${character.name}> ${packet.message}` });
               break;
             case C.Walk: {
               if (phase !== 'playing') throw new Error('Walk before login');
