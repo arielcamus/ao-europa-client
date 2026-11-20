@@ -16,6 +16,7 @@ import { ItemsUI } from './items-ui.js';
 import { KeyAction, keyAction } from './keymap.js';
 import { KeysClientPacketId as K, WorkSkill } from '@ao/protocol';
 import { Minimap } from './minimap.js';
+import { AudioSystem } from './audio-system.js';
 
 applyClassicLayout();
 const form = element<HTMLFormElement>('login'), account = element<HTMLInputElement>('email'), password = element<HTMLInputElement>('password');
@@ -44,6 +45,7 @@ const chatBox = new ChatBox(chatForm, chat, element('messages'), () => renderer.
 const combatOverlay = new CombatOverlay(viewport, renderer);
 const itemsUi = new ItemsUI(ui, element('classic'), report);
 ui.onActivate = slot => guard(() => session?.itemActions.activate(slot));
+const audio = new AudioSystem(element('classic'), renderer, report);
 const clearInput = () => { keys.clear(); touchHeading = undefined; };
 function walk(heading: Heading) {
   try { if (session && renderer.readyMap === session.resourceMap) session.walk(heading); }
@@ -57,7 +59,7 @@ function guard(action: () => unknown) {
   try { action(); } catch (error) { close(error instanceof Error ? error.message : String(error)); }
 }
 function close(message = 'Disconnected') {
-  clearInput(); stoppedAt = performance.now(); chatBox.close(); npcDialog.hide();
+  clearInput(); stoppedAt = performance.now(); chatBox.close(); npcDialog.hide(); audio.detach();
   if (session) {
     try { session.finish(message); } catch (error) { message = `${message}; ${String(error)}`; }
   }
@@ -81,7 +83,7 @@ async function boot() {
     ? 'Mundo de prueba local. Objetos y estadísticas de muestra; sin combate ni persistencia.'
     : community ? 'Servidor comunitario · movimiento y persistencia. Chat aún no disponible.' : 'Cliente clásico · movimiento, inventario, hechizos y chat.';
   if (config.mode === 'standin') { account.value = 'standin@local'; password.value = 'testpass'; }
-  await Promise.all([renderer.init(), ui.init(), bubbles.init()]);
+  await Promise.all([renderer.init(), ui.init(), bubbles.init(), audio.init()]);
   // Chat text that the server sends as locale ids; the console is redrawn once it arrives.
   void Promise.all([fetchText('init/sp_localindex.dat'), fetchText('init/SP_LocalMsg.dat')])
     .then(([index, messages]) => { sharedLocale.load(index, messages); if (session) session.ui.revision++; })
@@ -104,6 +106,7 @@ async function boot() {
       renderer.render(session, now);
       bubbles.update(session, now);
       combatOverlay.update(session, now);
+      audio.tick();
     } catch (error) { if (session?.phase !== 'closed') close(error instanceof Error ? error.message : String(error)); }
     if (now - lastUi > 100) { updateUi(now); lastUi = now; }
   });
@@ -147,6 +150,7 @@ form.addEventListener('submit', event => {
   const owner = session;
   session.tracker.onNpcDescription = ({ npcNumber }) => { if (session === owner) void npcDialog.show(npcNumber, renderer.locale); };
   chatBox.attach(session);
+  audio.attach(session);
   ws.onmessage = event => {
     if (socket !== ws) return;
     try {
@@ -159,6 +163,8 @@ form.addEventListener('submit', event => {
   renderer.app.canvas.focus();
 });
 disconnect.addEventListener('click', () => close());
+// frmMain OpcionesBoton opens frmOpciones; here its sound part. The classic help lines stay on the same button.
+element('settings').addEventListener('click', () => audio.options.toggle());
 const openChat = (guild = false) => {
   if (!session?.ready) return;
   if (!chatSupported) { session.ui.message('Este servidor aún no admite chat.'); return; }
