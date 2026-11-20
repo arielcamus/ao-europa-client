@@ -1,10 +1,11 @@
 // TEST STAND-IN, not a game server. Real target: ao-org VB6 server. AGPL-3.0-or-later.
-import { startStandin } from './index.js';
+import { startStandin, loadWorld } from './index.js';
 
 async function main(): Promise<void> {
   const port = Number(process.env.AO_PORT ?? 7666);
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('Invalid AO_PORT');
   const standin = await startStandin({
+    ...(process.env.AO_ASSETS ? { world: await loadWorld(process.env.AO_ASSETS, Number(process.env.AO_MAP_ID ?? 1)) } : {}),
     host: process.env.AO_HOST ?? '127.0.0.1', port,
     debugging: process.env.AO_STANDIN_DEBUG === '1',
     rejectWalks: process.env.AO_STANDIN_REJECT_WALKS === '1',

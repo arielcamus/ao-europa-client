@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   BinaryReader, FormatError, parseCsm, parseGraphics, grhFrame, graphicOffset,
-  bodyFromIni, parseIni, parseHeads, canEnter, tileIndex, FIVE_LAYER_SIGNATURE,
+  bodyFromIni, parseIni, parseHeads, canEnter, tileIndex, FIVE_LAYER_SIGNATURE, parseGraphicsIni,
 } from '../src/index.js';
 import { mapExcerpt, graphicsExcerpt } from './local-fixtures.js';
 
@@ -26,6 +26,17 @@ describe('resource bounds without licensed fixtures', () => {
 });
 
 describe.skipIf(!available)('local resource excerpts (set AO_ASSETS; no artwork in git)', () => {
+  it('resolves every map-1 animation frame with the current INI index used by CargarRecursos', () => {
+    const index = parseGraphicsIni(readFileSync(join(root, 'init/graficos.ini'), 'latin1'));
+    const map = parseCsm(readFileSync(join(root, 'Mapas/mapa1.csm')));
+    expect(index.unresolvedAnimations).toEqual([]);
+    for (const layer of map.layers) for (const { grh } of layer) {
+      const entry = index.entries.get(grh);
+      expect(entry).toBeDefined();
+      if (entry?.kind === 'animation') for (const id of entry.frames) expect(grhFrame(index, id).file).toBeGreaterThan(0);
+      else expect(grhFrame(index, grh).file).toBeGreaterThan(0);
+    }
+  });
   it('reads original map metadata, sparse layers, blockers and exact section boundaries', () => {
     const fixture = mapExcerpt(root), map = parseCsm(fixture.bytes);
     expect(map.layers).toHaveLength(5);

@@ -10,6 +10,9 @@
  */
 import { createServer } from 'node:net';
 import type { Socket } from 'node:net';
+import { canEnter } from '@ao/formats';
+import type { StandinWorld } from './world.js';
+export { loadWorld } from './world.js';
 import {
   ClientPacketId as C, ServerPacketId as S, Heading, FrameDecoder,
   decodeClientPacket, encodeServerFrame,
@@ -26,14 +29,16 @@ export interface StandinOptions {
   /** Test failure path: every walk is corrected to the unchanged position. */
   rejectWalks?: boolean;
   log?: (message: string) => void;
+  /** Optional real resource map. M1 protocol fixtures retain their empty 100x100 box. */
+  world?: StandinWorld;
 }
 
-const character: AccountCharacter = {
+const defaultCharacter: AccountCharacter = {
   id: 1, name: 'STANDIN', body: 1, head: 1, characterClass: 1, map: 1,
   x: 50, y: 50, level: 1, status: 1, helmet: 0, shield: 0, weapon: 0, backpack: 0,
 };
 
-function placement(): CharacterCreate {
+function placement(character: AccountCharacter): CharacterCreate {
   return {
     charIndex: 1, body: 1, head: 1, heading: Heading.South, x: character.x, y: character.y,
     weapon: 0, shield: 0, helmet: 0, cart: 0, backpack: 0, fx: 0, fxLoops: 0,
@@ -55,6 +60,8 @@ function intervals(walk: number): Intervals {
 
 export async function startStandin(options: StandinOptions = {}) {
   const log = options.log ?? (() => {});
+  const character = { ...defaultCharacter, ...(options.world ? { map: options.world.id, ...options.world.spawn } : {}) };
+  if (options.world) log(`real map ${character.map}: ${options.world.map.metadata.name}; spawn ${character.x},${character.y}; blocked-tile rules only`);
   const walkInterval = options.walkIntervalMs ?? 300;
   if (!Number.isInteger(walkInterval) || walkInterval < 0 || walkInterval > 60_000) {
     throw new Error('walkIntervalMs must be an integer in 0..60000');
@@ -103,8 +110,8 @@ export async function startStandin(options: StandinOptions = {}) {
               // Real login order, coalesced in one TCP write but still ONE message per frame.
               socket.write(Buffer.concat(([
                 { id: S.Intervals, ...intervals(walkInterval) },
-                { id: S.ChangeMap, map: 1, resourceMap: 1 },
-                { id: S.CharacterCreate, ...placement() },
+                { id: S.ChangeMap, map: character.map, resourceMap: character.map },
+                { id: S.CharacterCreate, ...placement(character) },
                 { id: S.UserCharIndexInServer, charIndex: 1 },
                 { id: S.Logged, newUser: false },
               ] satisfies ServerPacket[]).map(encodeServerFrame)));
@@ -116,7 +123,8 @@ export async function startStandin(options: StandinOptions = {}) {
               const nextX = x + (packet.heading === Heading.East ? 1 : packet.heading === Heading.West ? -1 : 0);
               const nextY = y + (packet.heading === Heading.South ? 1 : packet.heading === Heading.North ? -1 : 0);
               const now = performance.now();
-              if (options.rejectWalks || now - lastWalk < walkInterval || nextX < 1 || nextX > 100 || nextY < 1 || nextY > 100) {
+              const blocked = options.world && !canEnter(options.world.map, nextX, nextY, packet.heading);
+              if (options.rejectWalks || blocked || now - lastWalk < walkInterval || nextX < 1 || nextX > 100 || nextY < 1 || nextY > 100) {
                 log(`walk ${counter} corrected to ${x},${y}`);
                 send({ id: S.PosUpdate, x, y });
               } else {

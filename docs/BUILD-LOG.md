@@ -155,3 +155,43 @@ pnpm typecheck
   installed for subsequent work: Vite 7.3.8, Pixi 8.23.0, puppeteer-core 24.43.1
   (dev-only, uses installed Chrome; no browser download). No optional package
   agent skills activated. Build setting documented at https://pnpm.io/settings/build.
+
+## 2026-11-20 M2 real-map transport and prediction
+
+- Followed the actual CargarRecursos entry point: it calls **LoadGrhIni**, not
+  LoadGrhData. The older binary index lacks 47 GRHs used by map 1; implemented
+  the active `graficos.ini` loader too. Repeated INI GRHs use the last definition,
+  matching VB6; surplus static fields are ignored as in LoadGrhIni. The current
+  INI resolves every frame of every map-1 animation with no missing references.
+- Stand-in accepts an optional parsed resource world. Its account list, ChangeMap,
+  CharacterCreate and corrections share the same map ID/spawn. Nearest completely
+  unblocked ground to (50,50) is selected; map 1 uses (50,50). AO_ASSETS activates
+  this in the standalone CLI. M1 fixture tests retain their empty coordinate box.
+- New Node-only world adapter reads original CSMs, including case-insensitive
+  filename lookup. Collision is exactly the directional blocked-bit subset;
+  water/navigation, triggers, doors, NPCs and map exits are not game rules here.
+- Browser GameClient uses native binary WebSocket + M1 FrameDecoder/codecs, the
+  account → first character → Logged handshake, authoritative CharacterCreate
+  placement, server intervals/speeding, and a separate map-resource-ready gate.
+  Walk updates local coordinates synchronously after send. Packet 31 replaces
+  speculative coordinates; it has no acknowledgement sequence, so no invented
+  replay/ack semantics. Unknown complete frames skip; errors/EOF disable input.
+  Reconnection resets counters and state; credentials never enter logs/storage.
+- Commands:
+
+```sh
+pnpm install --offline
+pnpm --filter @ao/formats --filter @ao/protocol --filter @ao/standin-server --filter @ao/bridge build
+pnpm typecheck
+AO_ASSETS=/Users/dev/Projects/ao-reference/Recursos pnpm exec vitest run tools/standin-server/test/world.test.ts
+AO_ASSETS=/Users/dev/Projects/ao-reference/Recursos pnpm exec vitest run packages/formats/test/formats.test.ts
+AO_ASSETS=/Users/dev/Projects/ao-reference/Recursos pnpm test
+```
+
+- Socket tests run with sandbox escalation (loopback otherwise gives EPERM).
+  Real-map TCP test proves a blocked step corrects and a free step succeeds on
+  the same counter stream. Browser session tests use Node's native WebSocket
+  through the real bridge and stand-in: synchronous prediction, packet 31,
+  resource gating, throttle, auth errors, reconnect, and upstream closure.
+- At this checkpoint: **79 tests passed, 7 files**, including formats and the
+  read-only asset middleware tests. Typecheck passed.
