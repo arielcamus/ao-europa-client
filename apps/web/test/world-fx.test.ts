@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { WorldServerPacketId as W, ServerPacketId as S, SpellServerPacketId as SS } from '@ao/protocol';
+import { WorldServerPacketId as W, ServerPacketId as S, SpellServerPacketId as SS, AudioServerPacketId as AU } from '@ao/protocol';
 import { ParticleGroup, averageTint, groupTint, parseParticles, randomNumber } from '../src/fx-particles.js';
 import type { Stream } from '../src/fx-particles.js';
 import { DAY_COLORS, LightGrid, WorldClock, ambientLight } from '../src/fx-lights.js';
@@ -184,22 +184,22 @@ describe('WorldFx packets', () => {
 
   it('rain: the toggle is remembered, a map with the flag starts it, and ChangeMap re-applies it (SwitchMap)', () => {
     world.setMap(map(), [], []);
-    world.receive({ id: W.RainToggle, raining: true });
+    world.receive({ id: AU.RainToggle, raining: true });
     expect(world.raining).toBe(true); expect(world.meteo).toBeDefined();
-    world.receive({ id: W.RainToggle, raining: false });
+    world.receive({ id: AU.RainToggle, raining: false });
     expect(world.meteo!.destruir).toBe(true);
     world.receive({ id: S.ChangeMap, map: 2, resourceMap: 2 } as never);
     expect(world.meteo).toBeUndefined(); expect(world.generation).toBe(1);
-    world.receive({ id: W.RainToggle, raining: true });          // map not applied yet: no particles, flag kept
+    world.receive({ id: AU.RainToggle, raining: true });          // map not applied yet: no particles, flag kept
     expect(world.meteo).toBeUndefined();
     world.setMap(map(), [], []);
     expect(world.meteo).toBeDefined();
   });
   it('rain on a map without the flag only records bRain; snow replaces rain', () => {
     world.setMap(map(false, true), [], []);
-    world.receive({ id: W.RainToggle, raining: true });
+    world.receive({ id: AU.RainToggle, raining: true });
     expect(world.raining).toBe(true); expect(world.meteo).toBeUndefined();
-    world.receive({ id: W.NieveToggle, snowing: true });
+    world.receive({ id: AU.NieveToggle, snowing: true });
     expect(world.meteo?.streamId).toBe(57);
   });
   it('fog fades in one alpha step per 100 ms up to MaxAlphaNiebla, and out again on the second toggle', () => {

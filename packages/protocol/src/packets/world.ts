@@ -15,13 +15,11 @@ import { Reader, Writer } from '../binary.js';
 export enum WorldServerPacketId {
   AreaChanged = 57,   // WriteAreaChanged / HandleAreaChanged: the new area's reference tile
   PauseToggle = 58,   // WritePauseToggle / HandlePauseToggle (no payload)
-  RainToggle = 59,    // PrepareMessageRainToggle / HandleRainToggle
   Hora = 117,         // PrepareMessageHora / HandleHora
   Light = 118,        // WriteLight / HandleLight (the map's base light, read and ignored by the client)
   AuraToChar = 119,   // PrepareMessageAuraToChar / HandleAuraToChar
   SpeedToChar = 120,  // PrepareMessageSpeedingACT / HandleSpeedToChar
   LightToFloor = 121, // PrepareMessageLightFXToFloor / HandleLightToFloor
-  NieveToggle = 122,  // PrepareMessageNevarToggle / HandleNieveToggle
   NieblaToggle = 123, // PrepareMessageNieblandoToggle / HandleNieblaToggle
 }
 
@@ -51,11 +49,11 @@ const int32: WorldCodec<number> = { read: r => r.readInt32(), write: (w, v) => {
 const real32: WorldCodec<number> = { read: r => r.readReal32(), write: (w, v) => { w.writeReal32(v); } };
 const string: WorldCodec<string> = { read: r => r.readString(), write: (w, v) => { w.writeString(v); } };
 const bool: WorldCodec<boolean> = { read: r => r.readBool(), write: (w, v) => { w.writeBool(v); } };
+// RainToggle (59) and NieveToggle (122) are the audio feature's codecs (packets/audio.ts): one codec per id.
 
 export const worldServerCodecs = {
   [WorldServerPacketId.AreaChanged]: struct({ x: byte, y: byte }),
   [WorldServerPacketId.PauseToggle]: struct({}),
-  [WorldServerPacketId.RainToggle]: struct({ raining: bool }),
   /** elapsedMs into the in-game day (0..dayLenMs-1) and the day length in ms, both Int32 (WorldTime_PrepareHora). */
   [WorldServerPacketId.Hora]: struct({ elapsedMs: int32, dayLenMs: int32 }),
   [WorldServerPacketId.Light]: struct({ baseLight: string }),
@@ -64,7 +62,6 @@ export const worldServerCodecs = {
   [WorldServerPacketId.SpeedToChar]: struct({ charIndex: int16, speeding: real32 }),
   /** color is the RGBA Long as stored (B, G, R, A bytes little endian); 0 removes the light. range < 100 square, else round (range - 99). */
   [WorldServerPacketId.LightToFloor]: struct({ x: byte, y: byte, color: int32, range: byte }),
-  [WorldServerPacketId.NieveToggle]: struct({ snowing: bool }),
   /** The packet carries only the maximum fog alpha; the client flips bNiebla itself (HandleNieblaToggle). */
   [WorldServerPacketId.NieblaToggle]: struct({ maxAlpha: byte }),
 };

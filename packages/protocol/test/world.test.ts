@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { decodeClientPacket, decodeServerPacket, encodeClientPacket, encodeServerPacket, WorldClientPacketId as C, WorldServerPacketId as S } from '../src/index.js';
+import { decodeClientPacket, decodeServerPacket, encodeClientPacket, encodeServerPacket, AudioServerPacketId as A, WorldClientPacketId as C, WorldServerPacketId as S } from '../src/index.js';
 
 const bytes = (hex: string) => Uint8Array.from(Buffer.from(hex, 'hex'));
 const hex = (value: Uint8Array) => Buffer.from(value).toString('hex');
@@ -19,8 +19,8 @@ describe('world FX packets (VB6 writer field order)', () => {
     expect(roundTrip('7700' + 'e913' + '0130' + '01' + '02')).toEqual({ id: S.AuraToChar, charIndex: 5097, aura: '0', remove: true, type: 2 });
   });
   it('RainToggle / NieveToggle are one Boolean; PauseToggle has no payload', () => {
-    expect(roundTrip('3b00' + '01')).toEqual({ id: S.RainToggle, raining: true });
-    expect(roundTrip('7a00' + '00')).toEqual({ id: S.NieveToggle, snowing: false });
+    expect(roundTrip('3b00' + '01')).toEqual({ id: A.RainToggle, raining: true });
+    expect(roundTrip('7a00' + '00')).toEqual({ id: A.NieveToggle, snowing: false });
     expect(roundTrip('3a00')).toEqual({ id: S.PauseToggle });
   });
   it('LightToFloor is x, y, colour Int32, range; Light is the map base light as String8', () => {

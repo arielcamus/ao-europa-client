@@ -8,7 +8,7 @@
  *
  * Pure logic with an injected clock and random source, so the behaviour is testable without a browser. Drawing is fx-render.ts.
  */
-import { ServerPacketId as S, SpellServerPacketId as SS, WorldServerPacketId as W, NpcsServerPacketId as NS } from '@ao/protocol';
+import { ServerPacketId as S, SpellServerPacketId as SS, WorldServerPacketId as W, NpcsServerPacketId as NS, AudioServerPacketId as AU } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import type { MapInfo, MapLight, MapParticle, Ini } from './assets.js';
 import { ENGINE_BASE_SPEED, ParticleGroup } from './fx-particles.js';
@@ -205,11 +205,11 @@ export class WorldFx {
       case W.Hora: this.clock.onHora(packet.elapsedMs, packet.dayLenMs, now); this.lights.dirty = true; break;
       case W.PauseToggle: this.paused = !this.paused; break;
       case W.AreaChanged: this.hooks.areaChanged?.(areaBounds(packet.x, packet.y)); break;
-      case W.RainToggle:
+      case AU.RainToggle:
         this.raining = packet.raining;
         if (this.info.rain) { if (packet.raining) this.setMeteo(RAIN_STREAM, false); else this.removeMeteo(); }
         break;
-      case W.NieveToggle:
+      case AU.NieveToggle:
         this.snowing = packet.snowing;
         if (this.info.snow) { if (packet.snowing) this.setMeteo(SNOW_STREAM, false); else this.removeMeteo(); }
         break;

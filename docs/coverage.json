@@ -9,18 +9,18 @@
  ],
  "headline": {
   "packets": 523,
-  "packetsCovered": 136,
-  "packetsMerged": 136,
+  "packetsCovered": 147,
+  "packetsMerged": 147,
   "s2c": 207,
   "c2s": 316,
-  "s2cCovered": 80,
-  "c2sCovered": 56,
+  "s2cCovered": 88,
+  "c2sCovered": 59,
   "forms": 86,
   "formsCovered": 2,
   "formsPartial": 2,
   "fixturePackets": 116,
-  "packetsPct": 26,
-  "packetsMergedPct": 26,
+  "packetsPct": 28.1,
+  "packetsMergedPct": 28.1,
   "formsPct": 2.3,
   "formsStartedPct": 4.7
  },
@@ -29,9 +29,9 @@
    "id": "core",
    "title": "Core movement / world / session",
    "packets": 68,
-   "packetsCovered": 36,
-   "packetsMerged": 36,
-   "packetsPct": 52.9,
+   "packetsCovered": 47,
+   "packetsMerged": 47,
+   "packetsPct": 69.1,
    "forms": 21,
    "formsCovered": 0,
    "formsPartial": 2,
@@ -280,7 +280,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -320,7 +321,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -730,7 +732,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -947,7 +950,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -982,7 +986,8 @@
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
-    "tests/fixtures/vb6/npcs/session-npcdesc.jsonl"
+    "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -1132,7 +1137,8 @@
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
-    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl"
+    "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -1252,7 +1258,8 @@
     "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
     "tests/fixtures/vb6/trade/give-back-responder.jsonl",
     "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
-    "tests/fixtures/vb6/trade/item-offer-responder.jsonl"
+    "tests/fixtures/vb6/trade/item-offer-responder.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -1377,7 +1384,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -1417,7 +1425,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -1498,7 +1507,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -1576,7 +1586,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -1662,11 +1673,13 @@
    "writer": "server Protocol_Writes.bas:WriteAreaChanged",
    "group": "core",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -1688,7 +1701,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -1700,11 +1714,13 @@
    "writer": null,
    "group": "core",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -1722,7 +1738,7 @@
    "merged": true,
    "branches": [],
    "codecFiles": [
-    "main:packages/protocol/src/packets/audio.ts"
+    "main:packages/protocol/src/packets/world.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -1803,7 +1819,8 @@
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
-    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl"
+    "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -1883,7 +1900,8 @@
     "tests/fixtures/vb6/trade/offer-and-accept-initiator.jsonl",
     "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl",
     "tests/fixtures/vb6/trade/reject-initiator.jsonl",
-    "tests/fixtures/vb6/trade/reject-responder.jsonl"
+    "tests/fixtures/vb6/trade/reject-responder.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -1965,7 +1983,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -2199,7 +2218,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -2254,7 +2274,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -2394,7 +2415,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -2684,7 +2706,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -2739,7 +2762,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -2915,7 +2939,8 @@
     "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
     "tests/fixtures/vb6/trade/item-offer-responder.jsonl",
     "tests/fixtures/vb6/trade/offer-and-accept-initiator.jsonl",
-    "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl"
+    "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -3020,11 +3045,13 @@
    "writer": "server Protocol_Writes.bas:WriteHora",
    "group": "core",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -3046,7 +3073,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -3058,11 +3086,13 @@
    "writer": "server Protocol_Writes.bas:WriteLight",
    "group": "core",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -3075,11 +3105,13 @@
    "writer": null,
    "group": "core",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/chat/channels.jsonl",
@@ -3097,11 +3129,13 @@
    "writer": null,
    "group": "core",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -3129,7 +3163,8 @@
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
     "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
-    "tests/fixtures/vb6/trade/give-back-responder.jsonl"
+    "tests/fixtures/vb6/trade/give-back-responder.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -3141,11 +3176,13 @@
    "writer": null,
    "group": "core",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -3163,7 +3200,7 @@
    "merged": true,
    "branches": [],
    "codecFiles": [
-    "main:packages/protocol/src/packets/audio.ts"
+    "main:packages/protocol/src/packets/world.ts"
    ],
    "fixture": false,
    "fixtureFiles": []
@@ -3177,11 +3214,13 @@
    "writer": null,
    "group": "core",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -3413,7 +3452,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -3468,7 +3508,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -3596,7 +3637,8 @@
     "tests/fixtures/vb6/trade/offer-and-accept-initiator.jsonl",
     "tests/fixtures/vb6/trade/offer-and-accept-responder.jsonl",
     "tests/fixtures/vb6/trade/reject-initiator.jsonl",
-    "tests/fixtures/vb6/trade/reject-responder.jsonl"
+    "tests/fixtures/vb6/trade/reject-responder.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -3931,7 +3973,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -3988,7 +4031,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -4028,7 +4072,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -4330,7 +4375,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -4671,7 +4717,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -4726,7 +4773,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -4783,7 +4831,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -4838,7 +4887,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -6316,7 +6366,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -6427,7 +6478,8 @@
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
-    "tests/fixtures/vb6/npcs/session-npcdesc.jsonl"
+    "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -6462,7 +6514,8 @@
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
-    "tests/fixtures/vb6/npcs/session-npcdesc.jsonl"
+    "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -7748,11 +7801,13 @@
    "writer": "client Protocol_Writes.bas:WriteRainToggle",
    "group": "core",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8974,11 +9029,13 @@
    "writer": "client Protocol_Writes.bas:WriteNieveToggle",
    "group": "core",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8991,11 +9048,13 @@
    "writer": "client Protocol_Writes.bas:WriteNieblaToggle",
    "group": "core",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10448,7 +10507,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
   {
@@ -11750,34 +11810,12 @@
    "title": "World FX, environment and minimap",
    "scope": "Light, weather, particles, sound, projectiles, auras, area changes, world map form",
    "packetIds": [
-    "s2c:57",
-    "s2c:58",
-    "s2c:117",
-    "s2c:118",
-    "s2c:119",
-    "s2c:120",
-    "s2c:121",
-    "s2c:123",
     "s2c:138",
-    "s2c:144",
-    "c2s:150",
-    "c2s:222",
-    "c2s:223"
+    "s2c:144"
    ],
    "packetNames": [
-    "S57 AreaChanged",
-    "S58 PauseToggle",
-    "S117 Hora",
-    "S118 Light",
-    "S119 AuraToChar",
-    "S120 SpeedToChar",
-    "S121 LightToFloor",
-    "S123 NieblaToggle",
     "S138 ShowFrmMapa",
-    "S144 Ubicacion",
-    "C150 RainToggle",
-    "C222 NieveToggle",
-    "C223 NieblaToggle"
+    "S144 Ubicacion"
    ],
    "forms": [
     "frmMapaGrande"
