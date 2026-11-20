@@ -36,7 +36,9 @@ has not been inspected or operated in this session.
    **Save Changes** in **IDE Options**. No twinBASIC account or paid key is needed
    for Community. If the IDE is closed, open `C:\ao\twinbasic\twinBASIC.exe`.
 3. **File → Open Project…** (`Ctrl+O`) → **`C:\ao\server\Server.VBP`** → **Open**.
-   Complete **New Project Options**, then **File → Save Project** →
+   In **New Project Options**, untick **Option Explicit ON** to retain the
+   source files' own declaration rules, then click **Continue**.
+   Choose **File → Save Project** →
    **`C:\ao\server\Server.twinproj`**. Press `Ctrl+S` once more.
 4. Select **win32** in the build-configuration toolbar. In Project Explorer,
    click the **Project Settings gear**. Search **Conditional Compilation Args**
