@@ -9,3 +9,4 @@ export * from './packets/spells.js';
 export * from './packets/items.js';
 export * from './packets/keys.js';
 export * from './packets/audio.js';
+export * from './packets/bank-trade.js';
