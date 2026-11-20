@@ -1,6 +1,7 @@
 // AGPL-3.0-or-later. Headless Chrome against the REAL VB6 server, inside Ullathorpe's bank hall (needs the map patch of docs/DATA-PATCHES.md and
 // TItems standing in the hall, which tools/real-server/bank-trade-vault-record.mjs leaves it): Goliath, vault, deposit and withdraw through the UI.
 // Usage: AO_WEB_PORT=5743 node tools/bank-trade-real-shot.mjs
+const need = name => process.env[name] ?? (() => { throw new Error(`Set ${name}`); })();
 import { chromium } from '@playwright/test';
 import { mkdirSync } from 'node:fs';
 const base = `http://127.0.0.1:${process.env.AO_WEB_PORT ?? 5743}/`;
@@ -9,7 +10,7 @@ const page = await browser.newPage({ viewport: { width: 1024, height: 768 } });
 const problems = [];
 page.on('pageerror', e => problems.push(e.message));
 await page.goto(base);
-await page.locator('#email').fill('items@local.test'); await page.locator('#password').fill('itemspw1'); await page.locator('#connect').click();
+await page.locator('#email').fill(need('AO_EMAIL')); await page.locator('#password').fill(need('AO_PASSWORD')); await page.locator('#connect').click();
 await page.locator('#viewport[data-rendered="true"]').waitFor({ timeout: 60_000 });
 await page.waitForTimeout(3000);
 mkdirSync('artifacts/screenshots', { recursive: true });

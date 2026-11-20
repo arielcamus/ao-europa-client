@@ -1,11 +1,12 @@
 // AGPL-3.0-or-later. Drives the classic client in headless Chrome against the REAL VB6 server for the trade screenshots:
-// the browser is TItems (items@local.test), a raw session plays Tbank (banktrade@local.test) and starts the trade.
+// the browser logs in with AO_EMAIL / AO_PASSWORD, a raw session (AO_OTHER_EMAIL / AO_OTHER_PASSWORD) and starts the trade.
 // Usage: AO_WEB_PORT=5743 node tools/bank-trade-shot.mjs     (own bridge: AO_BRIDGE_PORT=7743 AO_TCP_PORT=7667 AO_ASSETS=... node tools/dev-web.mjs)
+const need = name => process.env[name] ?? (() => { throw new Error(`Set ${name}`); })();
 import { chromium } from '@playwright/test';
 import { mkdirSync } from 'node:fs';
 import { Vb6Session, gotoTile, sleep, BC, DC } from './real-server/bank-trade-session.mjs';
 const base = `http://127.0.0.1:${process.env.AO_WEB_PORT ?? 5743}/`;
-const other = new Vb6Session({ email: 'banktrade@local.test', password: 'banktradepw1' });
+const other = new Vb6Session({ email: need('AO_OTHER_EMAIL'), password: need('AO_OTHER_PASSWORD') });
 await other.login();
 const browser = await chromium.launch({ channel: 'chrome', args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader'] }).catch(() => chromium.launch());
 const page = await browser.newPage({ viewport: { width: 1024, height: 768 } });
@@ -13,7 +14,7 @@ const problems = [];
 page.on('pageerror', e => problems.push(e.message)); page.on('response', r => { if (r.status() >= 400) problems.push(`${r.status()} ${r.url()}`); }); page.on('console', m => { if (m.type() === 'error') problems.push(m.text()); });
 page.on('requestfailed', r => problems.push(`failed ${r.url()}`));
 await page.goto(base);
-await page.locator('#email').fill('items@local.test'); await page.locator('#password').fill('itemspw1'); await page.locator('#connect').click();
+await page.locator('#email').fill(need('AO_EMAIL')); await page.locator('#password').fill(need('AO_PASSWORD')); await page.locator('#connect').click();
 await page.locator('#viewport[data-rendered="true"]').waitFor({ timeout: 60_000 });
 await page.waitForTimeout(3000);
 mkdirSync('artifacts/screenshots', { recursive: true });

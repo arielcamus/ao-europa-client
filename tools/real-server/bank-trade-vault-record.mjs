@@ -1,9 +1,10 @@
-// Records the vault and Goliath scenarios INSIDE Ullathorpe's bank hall into tests/fixtures/vb6/bank/*.jsonl (items@local.test / itemspw1, TItems).
+// Records the vault and Goliath scenarios INSIDE Ullathorpe's bank hall into tests/fixtures/vb6/bank/*.jsonl (AO_EMAIL / AO_PASSWORD).
 // AGPL-3.0-or-later. Needs the server to run with the map patch of docs/DATA-PATCHES.md (castle-entry triggers cleared), otherwise the doorway
 // bounces the walker (see tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl). The west door (77,55) opens with a LeftClick on (76,55).
+const need = name => process.env[name] ?? (() => { throw new Error(`Set ${name}`); })();
 import { Vb6Session, gotoTile, sleep, C, DC, BC } from './bank-trade-session.mjs';
 const dir = new URL('../../tests/fixtures/vb6/bank/', import.meta.url).pathname;
-const s = new Vb6Session({ email: process.env.AO_EMAIL ?? 'items@local.test', password: process.env.AO_PASSWORD ?? 'itemspw1' });
+const s = new Vb6Session({ email: need('AO_EMAIL'), password: need('AO_PASSWORD') });
 setTimeout(() => { console.error('timeout'); process.exit(2); }, 200000);
 await s.login();
 await gotoTile(s, [77, 56], { maxSteps: 700 });

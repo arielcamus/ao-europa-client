@@ -1,10 +1,11 @@
-// Records the bank scenarios against the VB6 server into tests/fixtures/vb6/bank/*.jsonl (TItems: items@local.test / itemspw1).
+// Records the bank scenarios against the VB6 server into tests/fixtures/vb6/bank/*.jsonl (AO_EMAIL / AO_PASSWORD: any level-1 test account, e.g. TItems).
 // AGPL-3.0-or-later. These two scenarios were recorded from the street (77,56), 9 tiles from the banker Krix (77,47), BEFORE the map patch of
 // docs/DATA-PATCHES.md let a level-1 character into the hall: deposit, extract and vault moves reach the server from there (distance limit 10), the window-opening
 // packets do not. The hall itself is recorded by bank-trade-vault-record.mjs.
+const need = name => process.env[name] ?? (() => { throw new Error(`Set ${name}`); })();
 import { Vb6Session, gotoTile, sleep, DC, BC } from './bank-trade-session.mjs';
 const dir = new URL('../../tests/fixtures/vb6/bank/', import.meta.url).pathname;
-const s = new Vb6Session({ email: process.env.AO_EMAIL ?? 'items@local.test', password: process.env.AO_PASSWORD ?? 'itemspw1' });
+const s = new Vb6Session({ email: need('AO_EMAIL'), password: need('AO_PASSWORD') });
 setTimeout(() => { console.error('timeout'); process.exit(2); }, 170000);
 await s.login();
 await gotoTile(s, [77, 56], { maxSteps: 200 });

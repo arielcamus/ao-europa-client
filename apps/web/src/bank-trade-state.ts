@@ -4,7 +4,7 @@
  * HandleCommerceRecieveChatMessage, HandleShowUserRequest and HandleShowPregunta.
  * AGPL-3.0-or-later; see NOTICE.
  */
-import { ServerPacketId as S, BankTradeServerPacketId as BS, BANK_SLOTS, TRADE_OFFER_SLOTS } from '@ao/protocol';
+import { ServerPacketId as S, NpcsServerPacketId as NS, BankTradeServerPacketId as BS, BANK_SLOTS, TRADE_OFFER_SLOTS } from '@ao/protocol';
 import type { ServerPacket, TradeOfferItem } from '@ao/protocol';
 
 export interface BankSlot { object: number; elementalTags: number; amount: number; value: number; canUse: number }
@@ -27,6 +27,8 @@ export class BankTradeState {
   other: TradeOffer = emptyOffer();
   /** Server-written chat lines of the trade window (RecTxt), without the local warning. */
   tradeChat: string[] = [];
+  /** Server refusals shown while the window is up (LocaleMsg 1138-1144: no gold, newbie/intransferible item, offer already made...). */
+  tradeNotices: { messageId: number; text: string }[] = [];
   /** frmUserRequest texts, oldest first. */
   requests: string[] = [];
   /** The in-world yes/no question (PreguntaScreen): a locale message id and its parameter. Answered with ResponderPregunta. */
@@ -52,7 +54,7 @@ export class BankTradeState {
       case BS.Goliath: this.goliathOpen = true; this.bankGold = packet.gold; this.bankItems = packet.items; break;
       case BS.UpdateBankGld: this.bankGold = packet.gold; break;
       case BS.UserCommerceInit:
-        this.tradeOpen = true; this.mine = emptyOffer(); this.other = emptyOffer(); this.tradeChat = [];
+        this.tradeOpen = true; this.mine = emptyOffer(); this.other = emptyOffer(); this.tradeChat = []; this.tradeNotices = [];
         break;
       case BS.UserCommerceEnd: this.tradeOpen = false; break;
       case BS.ChangeUserTradeSlot: {
@@ -65,6 +67,11 @@ export class BankTradeState {
         this.tradeChat.push(packet.message);
         if (this.tradeChat.length > 200) this.tradeChat.shift();
         break;
+      case NS.LocaleMsg:
+        // The server answers a refused offer with a console message the window would hide: 1142 is "No podés cambiar tu oferta" (one offer per side).
+        if (!this.tradeOpen || packet.messageId < 1138 || packet.messageId > 1144) return;
+        this.tradeNotices.push({ messageId: packet.messageId, text: packet.text }); if (this.tradeNotices.length > 20) this.tradeNotices.shift();
+        break;
       case BS.ShowUserRequest: this.requests.push(packet.details.replaceAll('·', '\n')); break;
       case BS.ShowPregunta: this.question = { messageId: packet.messageId, param: packet.param, at: ++this.questions }; break;
       default: return;
@@ -75,6 +82,6 @@ export class BankTradeState {
   answered() { if (this.question) { this.question = undefined; this.revision++; } }
   closeAll() {
     this.bankOpen = false; this.goliathOpen = false; this.tradeOpen = false; this.question = undefined;
-    this.mine = emptyOffer(); this.other = emptyOffer(); this.tradeChat = [];
+    this.mine = emptyOffer(); this.other = emptyOffer(); this.tradeChat = []; this.tradeNotices = [];
   }
 }

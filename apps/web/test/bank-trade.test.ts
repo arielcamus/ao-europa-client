@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { BankTradeClientPacketId as BC, BankTradeServerPacketId as BS, FrameDecoder, ServerPacketId as S, decodeClientPacket, decodeServerPacket, encodeServerFrame } from '@ao/protocol';
+import { NpcsServerPacketId as NS, BankTradeClientPacketId as BC, BankTradeServerPacketId as BS, FrameDecoder, ServerPacketId as S, decodeClientPacket, decodeServerPacket, encodeServerFrame } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
 import { Session } from '../src/session.js';
@@ -73,6 +73,12 @@ describe('trade state', () => {
     expect(state.tradeChat).toEqual(['[Ana] hola']); expect(state.requests).toEqual(['a\nb']);
     expect(state.question).toMatchObject({ messageId: 1594, param: 'Ana' });
     state.answered(); expect(state.question).toBeUndefined();
+  });
+  it('server refusals while trading (locale 1138-1144, e.g. 1142 one offer per side) are kept for the window; outside a trade they are not', () => {
+    const state = new BankTradeState(); const msg = (messageId: number) => ({ id: NS.LocaleMsg, messageId, text: '', font: 8, channel: 0 }) as ServerPacket;
+    state.receive(msg(1142)); expect(state.tradeNotices).toEqual([]);
+    state.receive({ id: BS.UserCommerceInit }); state.receive(msg(1142)); state.receive(msg(5));
+    expect(state.tradeNotices.map(n => n.messageId)).toEqual([1142]);
   });
   it('a map change and a fresh login drop every window and the question', () => {
     const state = new BankTradeState();
@@ -190,6 +196,13 @@ describe('real VB6 recordings drive the state', () => {
       if (p.id === BS.UserCommerceInit) seen.push(`open:${state.tradeOpen}`); if (p.id === BS.UserCommerceEnd) seen.push(`closed:${!state.tradeOpen}`);
     }
     expect(seen).toEqual(['question:Tbank', 'open:true', 'closed:true']); expect(state.tradeChat).toEqual(['[Tbank] hola']);
+  });
+  it('trade/item-offer (initiator): my 5-apple offer lands on my side, the second offer is refused with 1142 and shown, the trade then ends', () => {
+    const rows = load('trade/item-offer-initiator'); expect(rows.length).toBeGreaterThan(5);
+    const state = new BankTradeState();
+    for (const row of rows) if (row.dir === 's2c') { const p = decodeServerPacket(Uint8Array.from(Buffer.from(row.hex, 'hex'))); if (!('unknown' in p)) state.receive(p); }
+    expect(state.mine.items[0]).toMatchObject({ object: 1, name: 'Manzana Roja', amount: 5 }); expect(state.mine.gold).toBe(0);
+    expect(state.tradeNotices.map(n => n.messageId)).toContain(1142); expect(state.tradeOpen).toBe(false);
   });
   it('trade/invitation-declined (responder): only the question arrives, no window', () => {
     const state = replay(load('trade/invitation-declined-responder'));

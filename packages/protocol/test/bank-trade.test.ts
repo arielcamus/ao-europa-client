@@ -19,7 +19,9 @@ const server = [
   ['BankEnd (real VB6)', '0900', { id: BS.BankEnd }],
   ['Goliath, empty account (real VB6)', '7c000000000000', { id: BS.Goliath, gold: 0, items: 0 }],
   ['Goliath: gold int32, items byte', '7c00' + '40420f00' + '07', { id: BS.Goliath, gold: 1_000_000, items: 7 }],
-  ['UpdateBankGld', 'af00' + 'e8030000', { id: BS.UpdateBankGld, gold: 1000 }],
+  ['UpdateBankGld after a deposit of 2000 (real VB6)', 'af00d0070000', { id: BS.UpdateBankGld, gold: 2000 }],
+  ['UpdateBankGld after taking 500 (real VB6)', 'af00dc050000', { id: BS.UpdateBankGld, gold: 1500 }],
+  ['UpdateBankGld emptied (real VB6)', 'af0000000000', { id: BS.UpdateBankGld, gold: 0 }],
   ['ShowUserRequest', '6300' + '06' + '4f6665727461', { id: BS.ShowUserRequest, details: 'Oferta' }],
 ] as const;
 
@@ -30,14 +32,20 @@ describe('bank and trade server packets', () => {
       expect(hex(encodeServerPacket(packet as never))).toBe(golden);
     });
   }
-  it('ChangeUserTradeSlot follows WriteChangeUserTradeSlot: mine, gold, then six entries of object, name, grh, amount, tags', () => {
-    const golden = '6400' + '00' + 'f4010000' + 'cf0e' + '044974656d' + '64000000' + '01000000' + '00000000' + emptyEntry.repeat(5);
-    const items = [{ object: 3791, name: 'Item', grh: 100, amount: 1, elementalTags: 0 }, ...Array.from({ length: 5 }, () => ({ object: 0, name: '', grh: 0, amount: 0, elementalTags: 0 }))];
-    const packet = { id: BS.ChangeUserTradeSlot, mine: false, gold: 500, items };
-    expect(decodeServerPacket(bytes(golden))).toEqual(packet);
-    expect(hex(encodeServerPacket(packet as never))).toBe(golden);
-    const mine = golden.replace('64000000', '64000000').replace('6400' + '00', '6400' + '01');
-    expect(decodeServerPacket(bytes(mine))).toMatchObject({ mine: true });
+  const none = Array.from({ length: 5 }, () => ({ object: 0, name: '', grh: 0, amount: 0, elementalTags: 0 }));
+  const apple = { object: 1, name: 'Manzana Roja', grh: 506, amount: 5, elementalTags: 0 };
+  const rest = emptyEntry.repeat(5);
+  const appleHex = '0100' + '0c' + Buffer.from('Manzana Roja').toString('hex') + 'fa010000' + '05000000' + '00000000';
+  it('ChangeUserTradeSlot of a 5-apple offer, my side and the other side (real VB6, tests/fixtures/vb6/trade/item-offer-*)', () => {
+    const mine = '6400' + '01' + '00000000' + appleHex + rest, theirs = '6400' + '00' + '00000000' + appleHex + rest;
+    expect(decodeServerPacket(bytes(mine))).toEqual({ id: BS.ChangeUserTradeSlot, mine: true, gold: 0, items: [apple, ...none] });
+    expect(decodeServerPacket(bytes(theirs))).toMatchObject({ mine: false });
+    expect(hex(encodeServerPacket(decodeServerPacket(bytes(mine)) as never))).toBe(mine);
+  });
+  it('ChangeUserTradeSlot of a 1000-gold offer, no items (real VB6, tests/fixtures/vb6/trade/gold-offer-*)', () => {
+    const golden = '6400' + '01' + 'e8030000' + emptyEntry.repeat(6);
+    expect(decodeServerPacket(bytes(golden))).toEqual({ id: BS.ChangeUserTradeSlot, mine: true, gold: 1000, items: [...none, none[0]] });
+    expect(hex(encodeServerPacket(decodeServerPacket(bytes(golden)) as never))).toBe(golden);
   });
   it('ChangeUserTradeSlot rejects a short offer and a truncated frame', () => {
     expect(() => encodeServerPacket({ id: BS.ChangeUserTradeSlot, mine: true, gold: 0, items: [] } as never)).toThrow('6 slots');

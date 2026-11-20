@@ -1,12 +1,13 @@
 // Records player-to-player trade between two characters into tests/fixtures/vb6/trade/<scenario>-initiator|responder.jsonl.
-// AGPL-3.0-or-later. A = Tbank (banktrade@local.test / banktradepw1), B = TItems (items@local.test / itemspw1); both level 1 on map 1.
+// AGPL-3.0-or-later. A = AO_A_EMAIL / AO_A_PASSWORD, B = AO_B_EMAIL / AO_B_PASSWORD (two level-1 test accounts on map 1).
 // Flow (HandleCommerceStart / IniciarComercioConUsuario / HandleResponderPregunta case 4): A targets B (LeftClick), sends /COMERCIAR;
 // B gets a ShowPregunta and answers yes; both get UserCommerceInit; offers -> ChangeUserTradeSlot; both UserCommerceOk swaps the goods.
 // The scenarios leave the characters as they were (the item goes back and forth).
+const need = name => process.env[name] ?? (() => { throw new Error(`Set ${name}`); })();
 import { Vb6Session, gotoTile, sleep, DC, BC } from './bank-trade-session.mjs';
 const dir = new URL('../../tests/fixtures/vb6/trade/', import.meta.url).pathname;
-const a = new Vb6Session({ email: 'banktrade@local.test', password: 'banktradepw1' });
-const b = new Vb6Session({ email: 'items@local.test', password: 'itemspw1' });
+const a = new Vb6Session({ email: need('AO_A_EMAIL'), password: need('AO_A_PASSWORD') });
+const b = new Vb6Session({ email: need('AO_B_EMAIL'), password: need('AO_B_PASSWORD') });
 setTimeout(() => { console.error('timeout'); process.exit(2); }, 240000);
 await Promise.all([a.login(), b.login()]);
 const target = [a.pos.x + 1, a.pos.y];

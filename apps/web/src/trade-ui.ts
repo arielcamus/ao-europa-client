@@ -13,6 +13,8 @@ import type { SlotArt } from './bank-trade-dom.js';
 import type { Session } from './session.js';
 
 /** frmComerciarUsu.Form_Load: the red warning that opens RecTxt (AddtoRichTextBox 255, 19, 19). */
+/** The server keeps ONE offer per side (HandleUserCommerceOffer: ComUsu.Objeto > 0 -> locale 1142): an item or gold, not six independent slots. */
+export const TRADE_RULE = 'Solo puedes hacer una oferta: un objeto o un monto de oro. Para cambiarla, rechaza y vuelve a empezar.';
 export const TRADE_WARNING = 'Antes de aceptar la transacción asegúrate de tener suficiente espacio en tu inventario, de lo contrario los items sobrantes caerán al piso.';
 const INVENTORY_SLOTS = 42;
 const CHAT_PLACEHOLDER = 'Escribe un mensaje...';
@@ -169,7 +171,8 @@ export class TradeUI {
     const mine = this.selectedMine ? state.mine.items[this.selectedMine - 1] : undefined, other = this.selectedOther ? state.other.items[this.selectedOther - 1] : undefined;
     this.mineName.textContent = mine ? this.itemTitle(mine.object, mine.name) : 'Vacío';
     this.otherName.textContent = other ? this.itemTitle(other.object, other.name) : 'Vacío';
-    const lines = [{ text: TRADE_WARNING, warning: true }, ...state.tradeChat.map(text => ({ text, warning: false }))];
+    const notices = state.tradeNotices.map(n => ({ text: sharedLocale.message(n.messageId, n.text) || `Mensaje ${n.messageId}`, warning: true }));
+    const lines = [{ text: TRADE_WARNING, warning: true }, { text: TRADE_RULE, warning: false }, ...state.tradeChat.map(text => ({ text, warning: false })), ...notices];
     this.log.replaceChildren(...lines.map(line => { const row = make('div', line.warning ? 'bt-log-warning' : 'bt-log-line'); row.textContent = line.text; return row; }));
     this.log.scrollTop = this.log.scrollHeight;
   }

@@ -93,43 +93,42 @@ const changeUserTradeSlot: BtCodec<ChangeUserTradeSlot> = {
   },
 };
 
-const S = BankTradeServerPacketId, C = BankTradeClientPacketId;
 export const bankTradeServerCodecs = {
-  [S.BankEnd]: struct({}),
-  [S.BankInit]: struct({}),
-  [S.UserCommerceInit]: struct({}),
-  [S.UserCommerceEnd]: struct({}),
+  [BankTradeServerPacketId.BankEnd]: struct({}),
+  [BankTradeServerPacketId.BankInit]: struct({}),
+  [BankTradeServerPacketId.UserCommerceInit]: struct({}),
+  [BankTradeServerPacketId.UserCommerceEnd]: struct({}),
   // WriteChangeBankSlot: slot, object, elementalTags, amount, value, canUse (PuedeUsar).
-  [S.ChangeBankSlot]: struct({ slot: byte, object: int16, elementalTags: int32, amount: int16, value: int32, canUse: byte }),
+  [BankTradeServerPacketId.ChangeBankSlot]: struct({ slot: byte, object: int16, elementalTags: int32, amount: int16, value: int32, canUse: byte }),
   // WriteShowUserRequest: the request text, lines joined by U+00B7.
-  [S.ShowUserRequest]: struct({ details: string }),
-  [S.ChangeUserTradeSlot]: changeUserTradeSlot,
+  [BankTradeServerPacketId.ShowUserRequest]: struct({ details: string }),
+  [BankTradeServerPacketId.ChangeUserTradeSlot]: changeUserTradeSlot,
   // WritePreguntaBox: locale message id and its parameter (`·` separated).
-  [S.ShowPregunta]: struct({ messageId: int16, param: string }),
+  [BankTradeServerPacketId.ShowPregunta]: struct({ messageId: int16, param: string }),
   // WriteGoliathInit: gold held in the bank, number of items in the vault.
-  [S.Goliath]: struct({ gold: int32, items: byte }),
-  [S.CommerceRecieveChatMessage]: struct({ message: string }),
-  [S.UpdateBankGld]: struct({ gold: int32 }),
+  [BankTradeServerPacketId.Goliath]: struct({ gold: int32, items: byte }),
+  [BankTradeServerPacketId.CommerceRecieveChatMessage]: struct({ message: string }),
+  [BankTradeServerPacketId.UpdateBankGld]: struct({ gold: int32 }),
 };
 export const bankTradeClientCodecs = {
   // WriteBankExtractItem / WriteBankDeposit / WriteCuentaExtractItem / WriteCuentaDeposit: slot, amount, destination slot (0 = first free).
-  [C.BankExtractItem]: struct({ slot: byte, amount: int16, destination: byte }),
-  [C.BankDeposit]: struct({ slot: byte, amount: int16, destination: byte }),
-  [C.UserCommerceOffer]: struct({ slot: byte, amount: int32 }),
-  [C.RequestAccountState]: struct({}),
-  [C.CommerceStart]: struct({}),
-  [C.BankStart]: struct({}),
-  [C.BankExtractGold]: struct({ amount: int32 }),
-  [C.BankDepositGold]: struct({ amount: int32 }),
-  [C.UserCommerceEnd]: struct({}),
-  [C.BankEnd]: struct({}),
-  [C.UserCommerceOk]: struct({}),
-  [C.UserCommerceReject]: struct({}),
-  [C.TraerBoveda]: struct({}),
-  [C.ResponderPregunta]: struct({ accept: bool }),
+  [BankTradeClientPacketId.BankExtractItem]: struct({ slot: byte, amount: int16, destination: byte }),
+  [BankTradeClientPacketId.BankDeposit]: struct({ slot: byte, amount: int16, destination: byte }),
+  [BankTradeClientPacketId.UserCommerceOffer]: struct({ slot: byte, amount: int32 }),
+  [BankTradeClientPacketId.RequestAccountState]: struct({}),
+  [BankTradeClientPacketId.CommerceStart]: struct({}),
+  [BankTradeClientPacketId.BankStart]: struct({}),
+  [BankTradeClientPacketId.BankExtractGold]: struct({ amount: int32 }),
+  [BankTradeClientPacketId.BankDepositGold]: struct({ amount: int32 }),
+  [BankTradeClientPacketId.UserCommerceEnd]: struct({}),
+  [BankTradeClientPacketId.BankEnd]: struct({}),
+  [BankTradeClientPacketId.UserCommerceOk]: struct({}),
+  [BankTradeClientPacketId.UserCommerceReject]: struct({}),
+  [BankTradeClientPacketId.TraerBoveda]: struct({}),
+  [BankTradeClientPacketId.ResponderPregunta]: struct({ accept: bool }),
   // WriteBovedaItemMove: moves/swaps two vault slots.
-  [C.BovedaMoveItem]: struct({ from: byte, to: byte }),
-  [C.CuentaExtractItem]: struct({ slot: byte, amount: int16, destination: byte }),
-  [C.CuentaDeposit]: struct({ slot: byte, amount: int16, destination: byte }),
-  [C.CommerceSendChatMessage]: struct({ message: string }),
+  [BankTradeClientPacketId.BovedaMoveItem]: struct({ from: byte, to: byte }),
+  [BankTradeClientPacketId.CuentaExtractItem]: struct({ slot: byte, amount: int16, destination: byte }),
+  [BankTradeClientPacketId.CuentaDeposit]: struct({ slot: byte, amount: int16, destination: byte }),
+  [BankTradeClientPacketId.CommerceSendChatMessage]: struct({ message: string }),
 };

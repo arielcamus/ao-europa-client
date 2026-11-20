@@ -228,7 +228,9 @@ function gameKey(action: KeyAction) {
   }
 }
 window.addEventListener('keydown', event => {
-  if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); itemsUi.closeDialogs(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
+  if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); itemsUi.closeDialogs(); bankUi.closeDialogs(); tradeUi.closeDialogs(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
+  // IsDialogOpen: while the vault, Goliath or a trade window is up the game keys (attack, use, drop...) do nothing.
+  if (transacting()) return;
   // The inventory slot that was just clicked keeps focus; the game keys must still work from it.
   const inInventory = event.target instanceof HTMLElement && event.target.closest('#inventory') !== null;
   if (event.target instanceof HTMLElement && !inInventory && event.target.closest('input, textarea, select, button, [role="listbox"], dialog')) return;
