@@ -1,0 +1,494 @@
+[
+ {
+  "name": "frmMain",
+  "purpose": "Main game window: viewport, HUD bars, inventory/spell panels, chat console and input",
+  "group": "core",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/classic-layout.ts",
+    "partial": true,
+    "note": "Layout shell on main; chat console on feat/chat, inventory on feat/items, spell list on feat/spells"
+   },
+   {
+    "ref": "feat/chat",
+    "path": "apps/web/src/chat-box.ts",
+    "partial": true,
+    "note": "chat console and input"
+   },
+   {
+    "ref": "feat/items",
+    "path": "apps/web/src/items-ui.ts",
+    "partial": true,
+    "note": "inventory panel, equipment labels"
+   },
+   {
+    "ref": "feat/spells",
+    "path": "apps/web/src/spells.ts",
+    "partial": true,
+    "note": "spell list and casting"
+   },
+   {
+    "ref": "feat/npcs",
+    "path": "apps/web/src/look-at.ts",
+    "partial": true,
+    "note": "click to look at tile"
+   },
+   {
+    "ref": "feat/doors-roofs",
+    "path": "apps/web/src/map-objects.ts",
+    "partial": true,
+    "note": "doors and roofs in viewport"
+   }
+  ]
+ },
+ {
+  "name": "frmConnect",
+  "purpose": "Login screen (account email and password, character list entry)",
+  "group": "core",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/index.html",
+    "partial": true,
+    "note": "Single login form; no account creation or character list screen"
+   }
+  ]
+ },
+ {
+  "name": "FrmCuenta",
+  "purpose": "Account home / character selection",
+  "group": "core"
+ },
+ {
+  "name": "frmOldPersonaje",
+  "purpose": "Pick an existing character to log in with",
+  "group": "core"
+ },
+ {
+  "name": "frmCrearCuenta",
+  "purpose": "Create account",
+  "group": "core"
+ },
+ {
+  "name": "frmNewAccount",
+  "purpose": "New account details",
+  "group": "core"
+ },
+ {
+  "name": "frmCrearPersonaje",
+  "purpose": "Create character (race, class, gender, head, city)",
+  "group": "core"
+ },
+ {
+  "name": "frmDeleteChar",
+  "purpose": "Delete character confirmation",
+  "group": "core"
+ },
+ {
+  "name": "frmPasswd",
+  "purpose": "Change password",
+  "group": "core"
+ },
+ {
+  "name": "frmNewPassword",
+  "purpose": "Set new password",
+  "group": "core"
+ },
+ {
+  "name": "FrmRecuperar",
+  "purpose": "Recover account",
+  "group": "core"
+ },
+ {
+  "name": "frmPasswordReset",
+  "purpose": "Password reset code request",
+  "group": "core"
+ },
+ {
+  "name": "Frmcarga",
+  "purpose": "Loading splash",
+  "group": "core"
+ },
+ {
+  "name": "frmCargando",
+  "purpose": "Loading screen with progress",
+  "group": "core"
+ },
+ {
+  "name": "frmConnecting",
+  "purpose": "Connecting status",
+  "group": "core"
+ },
+ {
+  "name": "frmPres",
+  "purpose": "Presentation splash",
+  "group": "core"
+ },
+ {
+  "name": "frmCerrar",
+  "purpose": "Exit confirmation",
+  "group": "core"
+ },
+ {
+  "name": "frmMensaje",
+  "purpose": "Generic message box",
+  "group": "core"
+ },
+ {
+  "name": "FrmPregunta",
+  "purpose": "Generic yes/no question prompt (group invites, confirmations)",
+  "group": "party"
+ },
+ {
+  "name": "frmtip",
+  "purpose": "Tip of the day",
+  "group": "core"
+ },
+ {
+  "name": "FrmLogear",
+  "purpose": "Server/port connection dialog",
+  "group": "core"
+ },
+ {
+  "name": "frmKeypad",
+  "purpose": "On-screen keypad for character password",
+  "group": "core"
+ },
+ {
+  "name": "frmMensajePapiro",
+  "purpose": "Parchment / papyrus message viewer",
+  "group": "items"
+ },
+ {
+  "name": "frmCantidad",
+  "purpose": "Amount prompt (drop, deposit, gold, sell)",
+  "group": "items",
+  "evidence": [
+   {
+    "ref": "feat/items",
+    "path": "apps/web/src/items-ui.ts",
+    "partial": false,
+    "note": ""
+   }
+  ]
+ },
+ {
+  "name": "frmComerciar",
+  "purpose": "NPC shop window (buy/sell)",
+  "group": "items",
+  "evidence": [
+   {
+    "ref": "feat/items",
+    "path": "apps/web/src/items-ui.ts",
+    "partial": false,
+    "note": ""
+   }
+  ]
+ },
+ {
+  "name": "FrmKeyInv",
+  "purpose": "Key ring inventory",
+  "group": "items"
+ },
+ {
+  "name": "frmSkins",
+  "purpose": "Item skins / appearance",
+  "group": "extras"
+ },
+ {
+  "name": "frmBancoObj",
+  "purpose": "Bank vault (items and gold)",
+  "group": "bank"
+ },
+ {
+  "name": "frmGoliath",
+  "purpose": "Bank gold deposit/withdraw (Goliath)",
+  "group": "bank"
+ },
+ {
+  "name": "frmBancoCuenta",
+  "purpose": "Account-wide vault",
+  "group": "bank"
+ },
+ {
+  "name": "frmComerciarUsu",
+  "purpose": "Player-to-player trade window",
+  "group": "trade"
+ },
+ {
+  "name": "frmUserRequest",
+  "purpose": "Incoming request prompt (trade and similar)",
+  "group": "trade"
+ },
+ {
+  "name": "FrmGrupo",
+  "purpose": "Party window",
+  "group": "party"
+ },
+ {
+  "name": "frmGuildAdm",
+  "purpose": "Registered guilds list",
+  "group": "guild"
+ },
+ {
+  "name": "frmGuildBrief",
+  "purpose": "Guild brief / details of another guild",
+  "group": "guild"
+ },
+ {
+  "name": "frmGuildDetails",
+  "purpose": "Guild founding details",
+  "group": "guild"
+ },
+ {
+  "name": "frmGuildFoundation",
+  "purpose": "Found a guild",
+  "group": "guild"
+ },
+ {
+  "name": "frmGuildLeader",
+  "purpose": "Guild leader panel (members, proposals, news)",
+  "group": "guild"
+ },
+ {
+  "name": "frmGuildNews",
+  "purpose": "Guild news",
+  "group": "guild"
+ },
+ {
+  "name": "frmGuildURL",
+  "purpose": "Guild website",
+  "group": "guild"
+ },
+ {
+  "name": "frmCommet",
+  "purpose": "Peace / alliance offer text",
+  "group": "guild"
+ },
+ {
+  "name": "frmPeaceProp",
+  "purpose": "Peace proposals list",
+  "group": "guild"
+ },
+ {
+  "name": "frmSolicitud",
+  "purpose": "Guild membership application",
+  "group": "guild"
+ },
+ {
+  "name": "frmCharInfo",
+  "purpose": "Character info / guild applicant info",
+  "group": "guild"
+ },
+ {
+  "name": "frmEligeAlineacion",
+  "purpose": "Faction alignment choice",
+  "group": "extras"
+ },
+ {
+  "name": "FrmQuest",
+  "purpose": "Quest log",
+  "group": "quests"
+ },
+ {
+  "name": "frmQuestInfo",
+  "purpose": "Quest details / NPC quest offer",
+  "group": "quests"
+ },
+ {
+  "name": "frmSkills3",
+  "purpose": "Skill allocation",
+  "group": "skills"
+ },
+ {
+  "name": "FrmEstadisticas",
+  "purpose": "Character statistics and attributes",
+  "group": "skills"
+ },
+ {
+  "name": "frmStatistics",
+  "purpose": "Mini statistics",
+  "group": "skills"
+ },
+ {
+  "name": "frmEntrenador",
+  "purpose": "Trainer: choose creature",
+  "group": "npcs"
+ },
+ {
+  "name": "FrmViajes",
+  "purpose": "Travel destinations via NPC",
+  "group": "npcs"
+ },
+ {
+  "name": "frmHerrero",
+  "purpose": "Blacksmith crafting",
+  "group": "crafting"
+ },
+ {
+  "name": "frmCarp",
+  "purpose": "Carpenter crafting",
+  "group": "crafting"
+ },
+ {
+  "name": "frmAlqui",
+  "purpose": "Alchemy crafting",
+  "group": "crafting"
+ },
+ {
+  "name": "FrmSastre",
+  "purpose": "Tailor crafting",
+  "group": "crafting"
+ },
+ {
+  "name": "frmCrafteo",
+  "purpose": "Generic crafting window with catalyst",
+  "group": "crafting"
+ },
+ {
+  "name": "frmOpciones",
+  "purpose": "Options (sound, light, display)",
+  "group": "options"
+ },
+ {
+  "name": "frmMasOpciones",
+  "purpose": "More options",
+  "group": "options"
+ },
+ {
+  "name": "frmCustomKeys",
+  "purpose": "Custom key bindings",
+  "group": "options"
+ },
+ {
+  "name": "frmBindKey",
+  "purpose": "Bind a key to an action",
+  "group": "options"
+ },
+ {
+  "name": "frmMapaGrande",
+  "purpose": "Large world map",
+  "group": "minimap"
+ },
+ {
+  "name": "frmCollectibleCard",
+  "purpose": "Collectible card viewer",
+  "group": "extras"
+ },
+ {
+  "name": "frmCreateBattleground",
+  "purpose": "Create battleground",
+  "group": "extras"
+ },
+ {
+  "name": "frmLobbyBattleground",
+  "purpose": "Battleground lobby",
+  "group": "extras"
+ },
+ {
+  "name": "frmRetos",
+  "purpose": "Challenges / duels",
+  "group": "extras"
+ },
+ {
+  "name": "frmShop",
+  "purpose": "Premium shop",
+  "group": "extras"
+ },
+ {
+  "name": "frmShopPjsAO20",
+  "purpose": "Character marketplace",
+  "group": "extras"
+ },
+ {
+  "name": "frmTransferChar",
+  "purpose": "Character transfer",
+  "group": "extras"
+ },
+ {
+  "name": "frmTransferChar2FA",
+  "purpose": "Character transfer two-factor step",
+  "group": "extras"
+ },
+ {
+  "name": "frmPatchNotes",
+  "purpose": "Patch notes",
+  "group": "extras"
+ },
+ {
+  "name": "frmNoticia",
+  "purpose": "News at login",
+  "group": "extras"
+ },
+ {
+  "name": "frmForo",
+  "purpose": "Forum message list",
+  "group": "extras"
+ },
+ {
+  "name": "FrmTorneo",
+  "purpose": "Tournament organiser",
+  "group": "gm"
+ },
+ {
+  "name": "frmCambiaMotd",
+  "purpose": "Edit message of the day",
+  "group": "gm"
+ },
+ {
+  "name": "frmDebug",
+  "purpose": "Debug tools",
+  "group": "gm"
+ },
+ {
+  "name": "FrmGmAyuda",
+  "purpose": "Message to administrators",
+  "group": "gm"
+ },
+ {
+  "name": "frmMessageTxt",
+  "purpose": "Predefined GM messages",
+  "group": "gm"
+ },
+ {
+  "name": "frmMSG",
+  "purpose": "GM messages list",
+  "group": "gm"
+ },
+ {
+  "name": "FrmObjetos",
+  "purpose": "Create object",
+  "group": "gm"
+ },
+ {
+  "name": "frmPanelGm",
+  "purpose": "GM panel",
+  "group": "gm"
+ },
+ {
+  "name": "frmProcesses",
+  "purpose": "User processes list (anti-cheat)",
+  "group": "gm"
+ },
+ {
+  "name": "frmSpawnList",
+  "purpose": "Spawn NPC list",
+  "group": "gm"
+ },
+ {
+  "name": "MenuGM",
+  "purpose": "GM context menu",
+  "group": "gm"
+ },
+ {
+  "name": "MenuNPC",
+  "purpose": "NPC context menu",
+  "group": "gm"
+ },
+ {
+  "name": "MenuUser",
+  "purpose": "Player context menu",
+  "group": "gm"
+ }
+]
