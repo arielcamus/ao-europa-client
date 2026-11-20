@@ -1,4 +1,5 @@
 #!/bin/bash
 set -euo pipefail
-# The QEMU backend enables VNC password auth and loads its private password via QMP.
+# Installed Windows boots without installer media. The QEMU backend loads its
+# private VNC password via QMP and verifies password authentication on port 5905.
 exec python3 "$(cd "$(dirname "$0")" && pwd)/vm/host.py" up "$@"

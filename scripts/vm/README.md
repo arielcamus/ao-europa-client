@@ -98,6 +98,10 @@ through QMP. Its random eight-character password is created once in private
 `vnc-password.txt` (mode `600`) and reused on subsequent starts. The launcher
 prints only the file path. A VM started without password authentication needs
 a graceful Windows shutdown and QEMU restart before it can accept a password.
+The launcher verifies that the VNC handshake offers only security type 2.
+After `shutdown /s /t 0` over SSH, wait for `host.py status` to report `shutdown`,
+then run `vm-up.sh`; it exits the already-shut-down QEMU process and starts a new
+one. Installed guests do not attach installer or seed media on subsequent boots.
 The agent does not operate it.
 
 ## Install and verify the payload after Windows setup

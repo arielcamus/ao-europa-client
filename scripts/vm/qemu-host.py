@@ -49,6 +49,26 @@ def running_pid():
     return None
 
 
+def verify_vnc_auth():
+    # Check the RFB negotiation itself, without displaying or sending the password.
+    with socket.create_connection(('127.0.0.1', 5905), timeout=3) as sock:
+        def receive(size):
+            data = b''
+            while len(data) < size:
+                chunk = sock.recv(size - len(data))
+                if not chunk:
+                    raise RuntimeError('VNC closed the connection during authentication negotiation.')
+                data += chunk
+            return data
+
+        if receive(12) != b'RFB 003.008\n':
+            raise RuntimeError('Unexpected VNC protocol version.')
+        sock.sendall(b'RFB 003.008\n')
+        security_types = receive(receive(1)[0])
+        if security_types != b'\x02':
+            raise RuntimeError('VNC must offer only password authentication (security type 2).')
+
+
 def configure_vnc():
     if qmp('query-vnc').get('auth') != 'vnc':
         raise SystemExit('VNC password authentication is disabled. Shut Windows down gracefully, '
@@ -71,6 +91,7 @@ def configure_vnc():
         qmp('expire_password', {'protocol': 'vnc', 'time': 'never'})
     except RuntimeError:
         raise SystemExit('Could not configure the VNC password through QMP.') from None
+    verify_vnc_auth()
 
 
 def status():
@@ -127,6 +148,17 @@ def up():
             record = json.loads(paused.read_text())
             if record.get('process_stopped') and record['pid'] == running_pid():
                 os.kill(record['pid'], signal.SIGCONT)
+        # -no-shutdown keeps QEMU alive after Windows has shut down over SSH.
+        # Only exit that already-shut-down emulator before starting a fresh process.
+        if status() == 'shutdown':
+            qmp('quit')
+            for _ in range(50):
+                if not running_pid():
+                    break
+                time.sleep(0.1)
+            else:
+                raise SystemExit('QEMU did not exit after guest shutdown; no replacement was started.')
+    if running_pid():
         configure_vnc()
         if status() == 'paused':
             qmp('cont')
@@ -156,6 +188,7 @@ def up():
         '-qmp', f'unix:{QMP},server=on,wait=off', '-serial', f'file:{STATE / "serial.log"}',
         '-rtc', 'base=localtime', '-no-shutdown',
     ]
+    # Completed installations boot without installer/seed media, which may be deleted.
     if not (STATE / 'windows-installed.json').exists() and not (STATE / 'provisioned.json').exists():
         for drive_id, filename, boot in [('installer', 'windows-noprompt.iso', ',bootindex=2'), ('seed', 'seed.iso', '')]:
             command += ['-drive', f'if=none,id={drive_id},media=cdrom,format=raw,readonly=on,file={DATA / filename}', '-device', f'usb-storage,drive={drive_id}{boot}']

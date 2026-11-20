@@ -674,3 +674,44 @@ local console active, twinBASIC responsive; host free **16,936,652,800 bytes
 (16.94 GB)**, minimum observed **16.37 GB**, above the approved
 12 GB floor. The disk guard remains active. Elapsed wall-clock through this
 check: **1 h 9 min 56 s** since 10:47:55 UTC; commit/push follow.
+
+## 20 November 2026 — VNC password authentication repair
+
+Resumed at **12:44:39 UTC** after the orchestrator deleted the original Windows
+ISO to recover space. QEMU was paused by the disk guard and still had its old
+unauthenticated VNC listener. Its QMP `set_password` request was rejected while
+`query-vnc` reported `auth: none`; the already-committed launch configuration
+had not yet been applied to that process.
+
+Restored the disk guard, resumed Windows, and requested `shutdown /s /t 0` over
+SSH. Waited for QMP to report `shutdown`, then used `vm-up.sh` to exit the
+already-shut-down emulator and restart with the same installed disk, firmware,
+memory, CPUs and forwards, plus `-vnc 127.0.0.1:5,password=on`. Neither installer
+nor seed media is attached. QMP set the private random eight-character password
+from `~/Projects/ao-reference/runtime/ao-vm/vnc-password.txt`, mode `600`.
+
+The launcher now checks the RFB handshake for security type 2 after loading the
+password, and handles the QEMU process left alive by `-no-shutdown`. Its recovery
+path resumes a SIGSTOP-paused process before querying QMP and refuses to launch
+a replacement until the previous emulator has exited.
+
+Verification at **12:52:25 UTC**:
+
+- RFB 3.8 offers only security type **2**; RFB 3.3 also selects type **2** and
+  sends the password challenge. An invalid response is rejected. QMP confirms
+  `auth: vnc` on **127.0.0.1:5905**. The live unauthenticated listener had been
+  rejected by the new check before the restart.
+- SSH works; `aobuilder` is active in console session **1**. The existing
+  `AOTwinBASIC` task opened process **3772**. A temporary interactive task
+  confirmed it is responsive with a **twinBASIC IDE** window, then was removed.
+  No project import, compiler invocation, mouse or keyboard automation occurred.
+- QEMU PID **5673** is running; the disk guard heartbeat is current and host
+  free space is above **22 GB**. The password file is outside Git, mode `600`,
+  inside the mode-`700` private state directory.
+- Shell/Python syntax and whitespace checks passed. Fault-injection checks
+  confirmed recovery from a SIGSTOP pause and refusal to replace a QEMU process
+  that has not exited. Running `vm-up.sh` again preserved the active guest and
+  authenticated listener.
+
+Elapsed wall-clock through this verification: **7 min 46 s** for this resumed
+task; the commit and push follow.

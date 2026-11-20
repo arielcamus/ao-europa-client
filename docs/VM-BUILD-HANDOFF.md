@@ -1,7 +1,7 @@
 # AO Windows build handoff
 
 **20 November 2026 — Windows installed, running, and SSH reachable.** Local
-administrator `aobuilder` is logged into console session 2 with auto-logon enabled.
+administrator `aobuilder` is logged into the console with auto-logon enabled.
 twinBASIC Community 1044 is running in that session. Dependency validation passed;
 the human import/build below is still required and `server.exe` does not yet exist.
 
@@ -90,7 +90,9 @@ Its Windows 11 Pro image is index 3, ARM64, build **26300.9457**. The original
 in `~/Downloads/ao-vm/Win11_ARM64_en-gb.iso` was not modified. Installation used a
 hard link and an APFS-cloned no-prompt diagnostic ISO to avoid a full extra copy.
 Both installation media were ejected after setup; the two task-created Windows
-ISO links/copies were removed. The original download remains available.
+ISO links/copies were removed. The orchestrator subsequently deleted the original
+download to recover host space. Installed boots attach neither installer nor
+seed media and do not require the deleted ISO.
 
 Setup uses a local administrator, auto-logon, hidden online-account/OOBE pages,
 Compact OS, disabled hibernation and automatic updates, key-only OpenSSH, and
@@ -101,8 +103,8 @@ The fallback has no TPM: Homebrew QEMU's TPM TIS device failed with
 
 Installed and verified:
 
-- **twinBASIC Community 1044**, extracted at `C:\ao\twinbasic`; process 7796 is
-  responsive in console session 2. First-run dialogs remain for the human.
+- **twinBASIC Community 1044**, extracted at `C:\ao\twinbasic` and opened in the
+  logged-in console. First-run dialogs remain for the human.
 - Microsoft's built-in x86 VB6 runtime and five signed controls/libraries from
   KB2708437: `comctl32.ocx`, `msinet.ocx`, `msdatgrd.ocx`, `msstdfmt.dll`,
   `msbind.dll`. All five registered successfully with x86 `regsvr32`.
@@ -127,8 +129,18 @@ the working fallback is QEMU. The guest remains unactivated.
 See [the provisioning notes](../scripts/vm/README.md) and
 [the build log](BUILD-LOG.md) for exact host commands, diagnostics and limitations.
 
-Closeout verification at **11:57:51 UTC**: QEMU running, SSH reachable,
+Provisioning closeout at **11:57:51 UTC**: QEMU running, SSH reachable,
 local console active, twinBASIC responsive; host free **16,936,652,800 bytes
 (16.94 GB)**, minimum observed **16.37 GB**, above the approved
 12 GB floor. The disk guard remains active. Elapsed wall-clock through this
 check: **1 h 9 min 56 s** since 10:47:55 UTC; commit/push follow.
+
+VNC repair verified at **12:52:25 UTC**: Windows was shut down gracefully over
+SSH and QEMU restarted with **`-vnc 127.0.0.1:5,password=on`**, without installer
+or seed drives. QMP loaded the private eight-character password; the password
+file remains mode **600**. RFB 3.8 and 3.3 client handshakes confirmed **VNC
+security type 2**, and an invalid authentication response was rejected.
+SSH works, `aobuilder` is active in console session **1**, and twinBASIC process
+**3772** is responsive with its **twinBASIC IDE** window present. The window
+check ran in that interactive session; no project import or build was performed.
+QEMU and the disk guard remain running with more than **22 GB** host space free.
