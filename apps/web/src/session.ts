@@ -173,15 +173,22 @@ export class Session {
       this.send({ id: C.RequestPositionUpdate });
     }
   }
-  /** Classic LeftClick on a map tile (client Protocol_Writes.WriteLeftClick). */
-  leftClick(x: number, y: number): boolean { return this.tileClick(DoorClientPacketId.LeftClick, x, y); }
-  /** Classic DoubleClick: opens/closes the door object on the tile, or uses what is there. */
-  doubleClick(x: number, y: number): boolean { return this.tileClick(DoorClientPacketId.DoubleClick, x, y); }
+  /** Classic LeftClick on a map tile; the server opens/closes doors and uses world objects on it (HandleWorldAction). */
+  leftClick(x: number, y: number): boolean {
+    if (!this.canClick(x, y)) return false;
+    this.send({ id: DoorClientPacketId.LeftClick, x, y, counter: ++this.leftClickCounter }); return true;
+  }
+  /** Classic DoubleClick; the reference server ignores it, kept for fidelity. */
+  doubleClick(x: number, y: number): boolean {
+    if (!this.canClick(x, y)) return false;
+    this.send({ id: DoorClientPacketId.DoubleClick, x, y }); return true;
+  }
   private lastClick = -Infinity;
-  private tileClick(id: 95 | 96, x: number, y: number): boolean {
+  private leftClickCounter = 0;
+  private canClick(x: number, y: number): boolean {
     const now = this.clock();
     if (!this.ready || now - this.lastClick < this.clickInterval || x < 1 || y < 1 || x > 100 || y > 100) return false;
-    this.lastClick = now; this.send({ id, x, y }); return true;
+    this.lastClick = now; return true;
   }
   clickInterval = 200;
   talk(message: string): boolean {

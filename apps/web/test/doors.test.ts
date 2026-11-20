@@ -3,7 +3,7 @@ import { ClientPacketId as C, DoorClientPacketId, DoorServerPacketId as D, Serve
 import type { ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
 import { parseMap } from '../src/assets.js';
-import { MapObjects, RoofFade, hayTecho, parseObjectGraphics, roofHidden, tileKey } from '../src/map-objects.js';
+import { MapObjects, RoofFade, doorClickTile, hayTecho, parseObjectGraphics, roofHidden, tileKey } from '../src/map-objects.js';
 import { Session } from '../src/session.js';
 
 function harness() {
@@ -61,6 +61,16 @@ describe('ground objects and doors', () => {
     map.create(72, 35, { objIndex: 2333, amount: 1, elementalTags: 0 }); expect(map.objectAt(72, 35)?.objIndex).toBe(2333);
     map.delete(72, 35); expect(map.objectAt(72, 35)).toBeUndefined();
   });
+  it('picks the click tile the VB6 server accepts for a door (neighbour offsets, never the door tile itself)', () => {
+    const map = new MapObjects(); map.create(72, 35, { objIndex: 2334, amount: 1, elementalTags: 0 });
+    const isDoor = (i: number) => i === 2334 || i === 2333;
+    expect(doorClickTile(map, isDoor, { x: 71, y: 35 })).toEqual({ x: 71, y: 35 });   // (x+1,y) is the door
+    expect(doorClickTile(map, isDoor, { x: 72, y: 34 })).toEqual({ x: 72, y: 34 });   // (x,y+1) is the door
+    expect(doorClickTile(map, isDoor, { x: 71, y: 34 })).toEqual({ x: 71, y: 34 });   // (x+1,y+1) is the door
+    expect(doorClickTile(map, isDoor, { x: 72, y: 35 })).toEqual({ x: 72, y: 34 });   // door tile itself -> tile above
+    expect(doorClickTile(map, isDoor, { x: 60, y: 60 })).toBeUndefined();
+    expect(doorClickTile(map, i => i === 1, { x: 72, y: 35 })).toBeUndefined();        // not a door object
+  });
   it('session applies door packets from the server and drops them on a map change', () => {
     const h = harness(); h.login();
     h.recv({ id: D.ObjectCreate, x: 72, y: 35, objIndex: 2334, amount: 1, elementalTags: 0 }, { id: D.BlockPosition, x: 72, y: 35, sides: 15 });
@@ -72,14 +82,15 @@ describe('ground objects and doors', () => {
     expect(h.session.mapObjects.objects.size).toBe(0); expect(h.session.mapObjects.blocked.size).toBe(0);
     expect(h.session.ready).toBe(false); // placement is awaited again after a ChangeMap
   });
-  it('sends DoubleClick/LeftClick for a tile only when playing, in range and paced by the leftClick interval', () => {
+  it('sends LeftClick (with a rising counter) and DoubleClick only when playing, in range and paced by the leftClick interval', () => {
     const h = harness();
-    expect(h.session.doubleClick(72, 35)).toBe(false);          // not logged in
+    expect(h.session.leftClick(72, 35)).toBe(false);            // not logged in
     h.login(); h.advance(1000);
-    expect(h.session.doubleClick(0, 35)).toBe(false); expect(h.session.doubleClick(72, 101)).toBe(false);
-    expect(h.session.doubleClick(72, 35)).toBe(true);
+    expect(h.session.leftClick(0, 35)).toBe(false); expect(h.session.leftClick(72, 101)).toBe(false);
+    expect(h.session.leftClick(72, 35)).toBe(true);
     expect(h.session.leftClick(72, 35)).toBe(false);            // too soon
     h.advance(1000); expect(h.session.leftClick(72, 35)).toBe(true);
-    expect(h.clicks()).toEqual([{ id: DoorClientPacketId.DoubleClick, x: 72, y: 35 }, { id: DoorClientPacketId.LeftClick, x: 72, y: 35 }]);
+    h.advance(1000); expect(h.session.doubleClick(72, 35)).toBe(true);
+    expect(h.clicks()).toEqual([{ id: DoorClientPacketId.LeftClick, x: 72, y: 35, counter: 1 }, { id: DoorClientPacketId.LeftClick, x: 72, y: 35, counter: 2 }, { id: DoorClientPacketId.DoubleClick, x: 72, y: 35 }]);
   });
 });

@@ -6,7 +6,7 @@ session against it is a golden fixture: the new server must answer the same clie
 ## Location and naming
 
 `tests/fixtures/vb6/<feature>/<scenario>.jsonl` where `<feature>` is one of `doors`, `chat`, `combat`, `spells`, `items`,
-`npcs` (or a new short lowercase word) and `<scenario>` is a kebab-case description (`open-close-plain-door`,
+`npcs` (or a new short lowercase word) and `<scenario>` is a kebab-case description (`open-door-castle-entry-refused`,
 `say-and-shout`, `melee-kill-and-resurrect`). One file is one connected session, from the first server packet to disconnect.
 
 ## Format
@@ -65,3 +65,14 @@ Noise ids to ignore when diffing (`name`): `UserOnline`(112), `PlayWave`(55), `F
 
 The id is already a field, the length is redundant and framing is covered by `packages/protocol/test/protocol.test.ts`; keeping only
 the payload lets one fixture row be compared with whatever encoder a server uses.
+
+## Fixtures
+
+| file | what it records |
+| --- | --- |
+| `doors/open-door-castle-entry-refused.jsonl` | login as `Aotest`, `LeftClick` (x,y,counter) on the plain door (72,35): look only; on (71,35): the door toggles open (`BlockPosition`x4 + `ObjectCreate` 2333); walking onto the door tile is bounced by the server (castle-entry trigger 26: `AreaChanged` re-sync back to (72,36)); a `LeftClick` from too far only looks |
+
+Server facts verified while recording (VB6 `HandleLeftClick`/`HandleWorldAction`/`HandleDoorAction`):
+`LeftClick` is `x, y, counter:int32`; without the counter the packet is logged as edited and ignored. `DoubleClick` is read and ignored.
+A door acts on a click at the tile whose (x+1,y), (x+1,y+1) or (x,y+1) neighbour holds it; a click exactly on the door tile only looks. The
+reach is `Distance <= 2`. Keyed doors (`Llave=1`) answer with a locale message. Tile exits (TE) warp with `ChangeMap` + `CharacterCreate`(self) + `UserCharIndexInServer`.

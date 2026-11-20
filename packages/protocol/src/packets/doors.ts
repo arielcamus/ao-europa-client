@@ -27,8 +27,17 @@ export const blockPosition: DoorCodec<{ x: number; y: number; sides: number }> =
   read: r => ({ x: r.readInt8(), y: r.readInt8(), sides: r.readInt8() }),
   write: (w, v) => { w.writeInt8(v.x); w.writeInt8(v.y); w.writeInt8(v.sides); },
 };
-/** Client LeftClick / DoubleClick: tile x, y. A door is opened or closed with DoubleClick. */
-export const tileClick: DoorCodec<{ x: number; y: number }> = objectDelete;
+/**
+ * Client LeftClick: tile x, y, then a per-session counter Int32 (WriteLeftClick increments TS_LeftClick; the server runs
+ * verifyTimeStamp on it, and a payload without it is logged as an "edited packet"). HandleLeftClick -> HandleWorldAction opens/closes
+ * doors and uses world objects. Verified live 2026-11-20: x,y alone is rejected.
+ */
+export const leftClick: DoorCodec<{ x: number; y: number; counter: number }> = {
+  read: r => ({ x: r.readInt8(), y: r.readInt8(), counter: r.readInt32() }),
+  write: (w, v) => { w.writeInt8(v.x); w.writeInt8(v.y); w.writeInt32(v.counter); },
+};
+/** Client DoubleClick: tile x, y. The reference server reads and ignores it ("World interactions are handled on left click"). */
+export const doubleClick: DoorCodec<{ x: number; y: number }> = objectDelete;
 
 export const doorServerCodecs = {
   [DoorServerPacketId.ObjectCreate]: objectCreate,
@@ -36,6 +45,6 @@ export const doorServerCodecs = {
   [DoorServerPacketId.BlockPosition]: blockPosition,
 } as const;
 export const doorClientCodecs = {
-  [DoorClientPacketId.LeftClick]: tileClick,
-  [DoorClientPacketId.DoubleClick]: tileClick,
+  [DoorClientPacketId.LeftClick]: leftClick,
+  [DoorClientPacketId.DoubleClick]: doubleClick,
 } as const;

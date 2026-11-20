@@ -66,3 +66,16 @@ export function parseObjectGraphics(text: string): Map<number, ObjectGraphic> {
   return result;
 }
 export const DOOR_OBJECT_TYPE = 6;
+
+/**
+ * Which tile to LeftClick to act on a door, or undefined when the tapped tile holds no door. Verified live against the VB6
+ * server (2026-11-20): HandleWorldAction acts on an object at the clicked tile's (x+1,y), (x+1,y+1) or (x,y+1) neighbours
+ * (multi-tile objects), while a click exactly on the door tile only "looks" at it. So a tap on the door tile itself is sent
+ * to the tile above it, whose (x,y+1) neighbour is the door.
+ */
+export function doorClickTile(objects: MapObjects, isDoor: (objIndex: number) => boolean, tile: { x: number; y: number }) {
+  const door = (x: number, y: number) => { const o = objects.objectAt(x, y); return o !== undefined && isDoor(o.objIndex); };
+  if (door(tile.x + 1, tile.y) || door(tile.x + 1, tile.y + 1) || door(tile.x, tile.y + 1)) return tile;
+  if (door(tile.x, tile.y) && tile.y > 1) return { x: tile.x, y: tile.y - 1 };
+  return undefined;
+}

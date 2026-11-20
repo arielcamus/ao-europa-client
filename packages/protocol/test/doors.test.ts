@@ -29,12 +29,14 @@ describe('door/object packets (VB6 PrepareMessageObjectCreate, WriteBlockPositio
     expect(() => decodeServerPacket(bytes('3400' + '2d2801'))).toThrow();
     expect(() => decodeServerPacket(bytes('3200' + '2d28'))).toThrow(); // truncated ObjectCreate
   });
-  it('encodes LeftClick(95) and DoubleClick(96) as tile bytes', () => {
-    expect(hex(encodeClientPacket({ id: DoorClientPacketId.LeftClick, x: 72, y: 35 }))).toBe('5f00' + '4823');
+  it('LeftClick(95) is x, y, Int32 counter (live server rejects x,y alone); DoubleClick(96) is x, y', () => {
+    expect(hex(encodeClientPacket({ id: DoorClientPacketId.LeftClick, x: 72, y: 35, counter: 3 }))).toBe('5f00' + '4823' + '03000000');
+    expect(decodeClientPacket(bytes('5f00' + '4823' + '03000000'))).toEqual({ id: 95, x: 72, y: 35, counter: 3 });
+    expect(() => decodeClientPacket(bytes('5f00' + '4823'))).toThrow();
     expect(hex(encodeClientPacket({ id: DoorClientPacketId.DoubleClick, x: 72, y: 35 }))).toBe('6000' + '4823');
     expect(decodeClientPacket(bytes('6000' + '4823'))).toEqual({ id: 96, x: 72, y: 35 });
   });
-  const fixture = new URL('../../../tests/fixtures/vb6/doors/open-close-plain-door.jsonl', import.meta.url);
+  const fixture = new URL('../../../tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl', import.meta.url);
   it.skipIf(!existsSync(fixture))('decodes and re-encodes every door packet in the recorded VB6 session', () => {
     const rows = readFileSync(fixture, 'utf8').trim().split('\n').map(line => JSON.parse(line) as { dir: string; id: number; hex: string });
     let checked = 0;

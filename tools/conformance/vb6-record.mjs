@@ -23,7 +23,7 @@ export class Recorder {
     }
   }
   send(id, body = []) { this.records.push({ t_ms: Date.now() - this.t0, dir: 'c2s', id, name: clientNames[id] ?? `Unknown${id}`, hex: Buffer.from(body).toString('hex') }); this.socket.write(frame(id, body)); }
-  wait(pred, ms = 5000) { const hit = this.records.slice(this.mark ?? 0).find(pred); if (hit) return Promise.resolve(hit);
+  wait(pred, ms = 20000) { const hit = this.records.slice(this.mark ?? 0).find(pred); if (hit) return Promise.resolve(hit);
     return new Promise((res, rej) => { const timer = setTimeout(() => rej(new Error('timeout')), ms); this.waiters.push(r => (pred(r) ? (clearTimeout(timer), res(r), true) : false)); }); }
   sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
   save(path) { fs.writeFileSync(path, this.records.map(r => JSON.stringify(r)).join('\n') + '\n'); }
