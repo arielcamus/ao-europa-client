@@ -547,3 +547,6 @@ was represented as a regression check for this update. At **08:43:56 UTC**,
 `df -k .` reported **54,333,612 KiB free** (51.82 GiB / 55.64 GB), still above
 the 25 GB floor. Preflight, documentation and tests took **1 minute 26 seconds**
 from session start; final commit/PR closeout follows this measurement.
+
+## Decision 2026-11-20 11:07 CET (Ariel): classic UI first
+The client reproduces the VB6 client's own UI (original interface graphics: main window frame, inventory, spells list, console) with no redesign. Reasons: minimise design/dev work and allow screen-by-screen comparison with the original. UI modernisation comes later. Phones use the scaled classic layout until then. The M2 custom dark web frame is to be replaced. AO Forever is a technical reference only (browser client over WebSocket), never a visual one.
