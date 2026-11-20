@@ -20,7 +20,7 @@ Backup: `Obj.dat.orig-before-copia-restore`. Still empty or absent, and NOT in `
 `GameLogic.DoTileEvents` treats map triggers 21..40 as `EMPEROR_CASTLE_ENTRY_n` and warps the walker back to `(x, y+1)` with locale message 2215 unless a
 castle with that trigger exists. `Mapas/mapa1.csm` marks building interiors with 26, 27, 29, 31, 32, 33, so with no castle founded nobody can enter
 (recordings: `tests/fixtures/vb6/buildings/*-castle-trigger-bounce.jsonl`). Patch: set those trigger values to 0 in place (file size unchanged,
-600 tiles: 26 tailor, 27 alchemist, 29 bank, 31 house with door (62,66), 32 carpentry, 33 miner/smith). Backups: `mapa1.csm.orig-before-castle-triggers`
+408 tiles: 26 tailor, 27 alchemist, 29 bank, 31 house with door (62,66), 32 carpentry, 33 miner/smith). Backups: `mapa1.csm.orig-before-castle-triggers`
 (29, 32) and `mapa1.csm.orig-before-castle-triggers-2` (the rest).
 
 Not patched (proposal): the same triggers sit on city maps 4, 34 (Nix), 58-61, 65, 66 (Banderbill), 62, 64 (Lindos), 111, 112, 151, 156, 195, 196 (Arghal, Arkhein),
