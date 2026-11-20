@@ -822,3 +822,8 @@ Result: transport, framing and the login handshake match PROTOCOL.md byte for by
 
 ## 2026-11-20 first dbgStep read was useless (instrumentation bug), fixed
 Application log after login: `Error en LoadCharacterFromDB: Aotest. -2147467259 - Unspecified error Source=. Línea: 0 [dbgStep=LoadCharacterFromDB L334: Call LogDatabaseError(...)]`. My marker generator had also put a marker on the first line of the `ErrorHandler:` block, overwriting the real last step. Removed (backup `.orig6`, patch file regenerated); other handlers never had one. Needs one more re-import + F5.
+
+## 2026-11-20 dbgStep result and fix attempt (needs one more re-import)
+Application log: `Error en LoadCharacterFromDB: Aotest. -2147467259 - Unspecified error ... [dbgStep=SetupUserSpells L436: User.Stats.UserHechizos(RS!Number) = RS!spell_id]`. So SetupUserBasicInfo/Flags/FactionInfo (direct `.x = RS!field` assignments) all pass; it dies in the first `Setup*` that uses a Field object as an ARRAY INDEX or member index.
+Data is fine (spell rows: integer number 1-40, spell_id 0; `typeof` integer, no NULLs).
+Fix (patch only, `CharacterPersistence.bas`, backup `.orig7`, diff regenerated): every `X(RS!Number)` becomes `X(CLng(RS!Number))` (19 places: spells, pets, bank, skills, quests); `RS!spell_id`, `RS!pet_id`, `RS!value` wrapped in `CLng(SanitizeNullValue(..., 0))`; extra `dbgStep = "<Sub>: before RS.MoveNext"` markers so a MoveNext failure is distinguishable. Hypothesis: twinBASIC does not coerce an ADO Field default value in an index/subscript expression. Unproven until the next F5 run.

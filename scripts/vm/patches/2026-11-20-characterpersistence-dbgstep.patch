@@ -20,8 +20,9 @@
              While Not RS.EOF
 +                dbgStep = "LoadCharacterBank L117: If RS!Number >= LBound(.BancoInvent.Object) And RS!Number <= UBound(.BancoInvent"
                  If RS!Number >= LBound(.BancoInvent.Object) And RS!Number <= UBound(.BancoInvent.Object) Then
+-                    With .BancoInvent.Object(RS!Number)
 +                    dbgStep = "LoadCharacterBank L118: With .BancoInvent.Object(RS!Number)"
-                     With .BancoInvent.Object(RS!Number)
++                    With .BancoInvent.Object(CLng(RS!Number))
 +                        dbgStep = "LoadCharacterBank L119: db_obj_index = RS!item_id"
                          db_obj_index = RS!item_id
                          .ObjIndex = 0
@@ -102,7 +103,7 @@
  End Function
  
  Private Sub LogInvalidCharacterObjects(ByVal UserIndex As Integer, ByVal inventoryName As String, ByVal invalidObjects As String)
-@@ -262,177 +280,280 @@
+@@ -262,178 +280,282 @@
      Dim inventoryLoaded As Boolean
      Dim bankLoaded      As Boolean
      failureReason = vbNullString
@@ -380,11 +381,14 @@
      Set RS = Query("SELECT number, spell_id FROM spell WHERE user_id = ?;", User.Id)
      If Not RS Is Nothing Then
          While Not RS.EOF
+-            User.Stats.UserHechizos(RS!Number) = RS!spell_id
 +            dbgStep = "SetupUserSpells L436: User.Stats.UserHechizos(RS!Number) = RS!spell_id"
-             User.Stats.UserHechizos(RS!Number) = RS!spell_id
++            User.Stats.UserHechizos(CLng(RS!Number)) = CLng(SanitizeNullValue(RS!spell_id, 0))
++            dbgStep = "SetupUserSpells: before RS.MoveNext"
              RS.MoveNext
          Wend
-@@ -441,12 +562,16 @@
+     End If
+@@ -441,16 +563,21 @@
  
  Private Sub SetupUserPets(ByRef User As t_User)
      Dim RS As ADODB.Recordset
@@ -395,13 +399,19 @@
              ' Solo slots de domadas: un number fuera de rango caería en un slot de invocación
 +            dbgStep = "SetupUserPets L448: If RS!Number >= 1 And RS!Number <= MAXMASCOTAS Then"
              If RS!Number >= 1 And RS!Number <= MAXMASCOTAS Then
+-                User.MascotasType(RS!Number) = RS!pet_id
 +                dbgStep = "SetupUserPets L449: User.MascotasType(RS!Number) = RS!pet_id"
-                 User.MascotasType(RS!Number) = RS!pet_id
++                User.MascotasType(CLng(RS!Number)) = CLng(SanitizeNullValue(RS!pet_id, 0))
 +                dbgStep = "SetupUserPets L450: If val(RS!pet_id) <> 0 Then"
                  If val(RS!pet_id) <> 0 Then
                      User.NroMascotas = User.NroMascotas + 1
                  End If
-@@ -460,15 +585,20 @@
+             End If
++            dbgStep = "SetupUserPets: before RS.MoveNext"
+             RS.MoveNext
+         Wend
+     End If
+@@ -460,21 +587,27 @@
      Dim RS      As ADODB.Recordset
      Dim counter As Long
      counter = 0
@@ -409,8 +419,9 @@
      Set RS = Query("SELECT number, item_id, amount, elemental_tags FROM bank_item WHERE user_id = ?;", User.Id)
      If Not RS Is Nothing Then
          While Not RS.EOF
+-            With User.BancoInvent.Object(RS!Number)
 +            dbgStep = "SetupUserBankInventory L466: With User.BancoInvent.Object(RS!Number)"
-             With User.BancoInvent.Object(RS!Number)
++            With User.BancoInvent.Object(CLng(RS!Number))
 +                dbgStep = "SetupUserBankInventory L467: .ObjIndex = RS!item_id"
                  .ObjIndex = RS!item_id
                  If .ObjIndex <> 0 Then
@@ -422,7 +433,14 @@
                          .ElementalTags = RS!elemental_tags
                      Else
                          .ObjIndex = 0
-@@ -484,10 +614,13 @@
+                     End If
+                 End If
+             End With
++            dbgStep = "SetupUserBankInventory: before RS.MoveNext"
+             RS.MoveNext
+         Wend
+         User.BancoInvent.NroItems = counter
+@@ -484,11 +617,15 @@
  Private Sub SetupUserSkills(ByRef User As t_User)
      Dim RS As ADODB.Recordset
      Dim LoopC As Long
@@ -430,13 +448,17 @@
      Set RS = Query("SELECT number, value FROM skillpoint WHERE user_id = ?;", User.Id)
      If Not RS Is Nothing Then
          While Not RS.EOF
+-            User.Stats.UserSkills(RS!Number) = RS!value
+-            User.Stats.SkillDirty(RS!Number) = False
 +            dbgStep = "SetupUserSkills L490: User.Stats.UserSkills(RS!Number) = RS!value"
-             User.Stats.UserSkills(RS!Number) = RS!value
++            User.Stats.UserSkills(CLng(RS!Number)) = CLng(SanitizeNullValue(RS!value, 0))
 +            dbgStep = "SetupUserSkills L491: User.Stats.SkillDirty(RS!Number) = False"
-             User.Stats.SkillDirty(RS!Number) = False
++            User.Stats.SkillDirty(CLng(RS!Number)) = False
++            dbgStep = "SetupUserSkills: before RS.MoveNext"
              RS.MoveNext
          Wend
-@@ -505,26 +638,41 @@
+     End If
+@@ -505,31 +642,47 @@
      For SlotC = 1 To MAXUSERQUESTS
          User.QuestStats.Quests(SlotC).Dirty = False ' Loaded state starts clean.
      Next SlotC
@@ -446,39 +468,56 @@
          While Not RS.EOF
 +            dbgStep = "SetupUserQuests L511: If Not IsNull(RS!Number) Then"
              If Not IsNull(RS!Number) Then
+-                User.QuestStats.Quests(RS!Number).QuestIndex = RS!quest_id
+-                User.QuestStats.Quests(RS!Number).Dirty = False ' Loaded from DB.
+-                If User.QuestStats.Quests(RS!Number).QuestIndex > 0 Then
+-                    If QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredNPCs Then
 +                dbgStep = "SetupUserQuests L512: User.QuestStats.Quests(RS!Number).QuestIndex = RS!quest_id"
-                 User.QuestStats.Quests(RS!Number).QuestIndex = RS!quest_id
++                User.QuestStats.Quests(CLng(RS!Number)).QuestIndex = RS!quest_id
 +                dbgStep = "SetupUserQuests L513: User.QuestStats.Quests(RS!Number).Dirty = False ' Loaded from DB."
-                 User.QuestStats.Quests(RS!Number).Dirty = False ' Loaded from DB.
++                User.QuestStats.Quests(CLng(RS!Number)).Dirty = False ' Loaded from DB.
 +                dbgStep = "SetupUserQuests L514: If User.QuestStats.Quests(RS!Number).QuestIndex > 0 Then"
-                 If User.QuestStats.Quests(RS!Number).QuestIndex > 0 Then
++                If User.QuestStats.Quests(CLng(RS!Number)).QuestIndex > 0 Then
 +                    dbgStep = "SetupUserQuests L515: If QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredNPCs Then"
-                     If QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredNPCs Then
++                    If QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredNPCs Then
                          Dim NPCs() As String
 +                        dbgStep = "SetupUserQuests L517: NPCs = Split(RS!NPCs, ""-"")"
                          NPCs = Split(RS!NPCs, "-")
+-                        ReDim User.QuestStats.Quests(RS!Number).NPCsKilled(1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredNPCs)
+-                        For LoopC = 1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredNPCs
+-                            User.QuestStats.Quests(RS!Number).NPCsKilled(LoopC) = val(NPCs(LoopC - 1))
 +                        dbgStep = "SetupUserQuests L518: ReDim User.QuestStats.Quests(RS!Number).NPCsKilled(1 To QuestList(User.QuestStat"
-                         ReDim User.QuestStats.Quests(RS!Number).NPCsKilled(1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredNPCs)
++                        ReDim User.QuestStats.Quests(CLng(RS!Number)).NPCsKilled(1 To QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredNPCs)
 +                        dbgStep = "SetupUserQuests L519: For LoopC = 1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).Require"
-                         For LoopC = 1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredNPCs
++                        For LoopC = 1 To QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredNPCs
 +                            dbgStep = "SetupUserQuests L520: User.QuestStats.Quests(RS!Number).NPCsKilled(LoopC) = val(NPCs(LoopC - 1))"
-                             User.QuestStats.Quests(RS!Number).NPCsKilled(LoopC) = val(NPCs(LoopC - 1))
++                            User.QuestStats.Quests(CLng(RS!Number)).NPCsKilled(LoopC) = val(NPCs(LoopC - 1))
                          Next LoopC
                      End If
+-                    If QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredTargetNPCs Then
 +                    dbgStep = "SetupUserQuests L523: If QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredTargetNPCs Th"
-                     If QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredTargetNPCs Then
++                    If QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredTargetNPCs Then
                          Dim NPCsTarget() As String
 +                        dbgStep = "SetupUserQuests L525: NPCsTarget = Split(RS!NPCsTarget, ""-"")"
                          NPCsTarget = Split(RS!NPCsTarget, "-")
+-                        ReDim User.QuestStats.Quests(RS!Number).NPCsTarget(1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredTargetNPCs)
+-                        For LoopC = 1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredTargetNPCs
+-                            User.QuestStats.Quests(RS!Number).NPCsTarget(LoopC) = val(NPCsTarget(LoopC - 1))
 +                        dbgStep = "SetupUserQuests L526: ReDim User.QuestStats.Quests(RS!Number).NPCsTarget(1 To QuestList(User.QuestStat"
-                         ReDim User.QuestStats.Quests(RS!Number).NPCsTarget(1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredTargetNPCs)
++                        ReDim User.QuestStats.Quests(CLng(RS!Number)).NPCsTarget(1 To QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredTargetNPCs)
 +                        dbgStep = "SetupUserQuests L527: For LoopC = 1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).Require"
-                         For LoopC = 1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredTargetNPCs
++                        For LoopC = 1 To QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredTargetNPCs
 +                            dbgStep = "SetupUserQuests L528: User.QuestStats.Quests(RS!Number).NPCsTarget(LoopC) = val(NPCsTarget(LoopC - 1))"
-                             User.QuestStats.Quests(RS!Number).NPCsTarget(LoopC) = val(NPCsTarget(LoopC - 1))
++                            User.QuestStats.Quests(CLng(RS!Number)).NPCsTarget(LoopC) = val(NPCsTarget(LoopC - 1))
                          Next LoopC
                      End If
-@@ -538,6 +686,7 @@
+                 End If
+             End If
++            dbgStep = "SetupUserQuests: before RS.MoveNext"
+             RS.MoveNext
+         Wend
+     End If
+@@ -538,6 +691,7 @@
  Private Sub SetupUserQuestsDone(ByRef User As t_User)
      Dim RS    As ADODB.Recordset
      Dim LoopC As Byte
@@ -486,7 +525,7 @@
      Set RS = Query("SELECT quest_id FROM quest_done WHERE user_id = ?;", User.Id)
      If Not RS Is Nothing Then
          User.QuestStats.NumQuestsDone = RS.RecordCount
-@@ -545,6 +694,7 @@
+@@ -545,6 +699,7 @@
              ReDim User.QuestStats.QuestsDone(1 To User.QuestStats.NumQuestsDone)
              LoopC = 1
              While Not RS.EOF
@@ -494,7 +533,7 @@
                  User.QuestStats.QuestsDone(LoopC) = RS!quest_id
                  LoopC = LoopC + 1
                  RS.MoveNext
-@@ -579,9 +729,11 @@
+@@ -579,9 +734,11 @@
      On Error GoTo ErrorHandler_GetPatronTierFromAccountID
      GetPatronTierFromAccountID = e_TipoUsuario.tNormal
      Dim RS As ADODB.Recordset
@@ -506,7 +545,7 @@
          tipo_usuario_db = RS!is_active_patron
          Select Case tipo_usuario_db
              Case patron_tier_aventurero
-@@ -600,7 +752,7 @@
+@@ -600,7 +757,7 @@
      End If
      Exit Function
  ErrorHandler_GetPatronTierFromAccountID:
