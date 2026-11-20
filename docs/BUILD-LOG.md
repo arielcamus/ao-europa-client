@@ -121,6 +121,10 @@ All licensed artwork and rendered screenshots stay local and ignored.
   was not rerun in this session (no credentials supplied). Earlier M2 real-server
   evidence remains separate. New classic UI state/chat is verified against source
   procedures, independent oracle bytes, and the explicitly labelled stand-in.
+- Published `classic-ui` and opened **draft PR #5** against `m2-browser`:
+  https://github.com/arielcamus/ao-client/pull/5. Feature commit `a4c4b1f`.
+  Real wall-clock from session start to opening the draft: **33m 27s**
+  (10:10:50–10:44:17 UTC), including branch comparison, implementation and retries.
 
 ## 2026-11-20 setup and server finding
 - Reference clones copied to ~/Projects/ao-reference (server-classic @ caac313, client-classic, Recursos, Aurora.Network).
