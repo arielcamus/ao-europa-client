@@ -1,5 +1,5 @@
 # AGPL-3.0-or-later. Classic wire compatibility for lambdaclass/argentum.
-# This module translates transport/authentication only. Gameplay belongs to Arena.
+# This module translates wire layouts/authentication only. Gameplay belongs to Arena.
 defmodule AoTcpGateway.ClassicProfile do
   import Bitwise
   alias AoProtocol.Server.Encoder
@@ -90,6 +90,17 @@ defmodule AoTcpGateway.ClassicProfile do
     end
   end
 
+  defp normalize(<<29::little-signed-16, experience::binary-size(4), _next_xp::little-signed-32>>) do
+    # VB6 WriteUpdateExp / HandleUpdateExp: ONE Int32. Next-level XP belongs
+    # to UpdateUserStats (61); the port's second Int32 is not a classic field.
+    <<29::little-signed-16, experience::binary>>
+  end
+  defp normalize(<<37::little-signed-16, rest::binary>>) do
+    {message, <<font>>} = old_string(rest)
+    # PrepareMessageConsoleMsg: String8 (varint UTF-8 byte length), font,
+    # channel. The port has no channel; use VB6 TEXTCHANNEL_SYSTEM = 0.
+    <<37::little-signed-16, string(message)::binary, font, 0>>
+  end
   defp normalize(<<42::little-signed-16, fixed::binary-size(23), rest::binary>>) do
     {name, <<flags::binary-size(3), rest::binary>>} = old_string(rest)
     {auras, tail} = Enum.map_reduce(1..7, rest, fn _, bytes ->

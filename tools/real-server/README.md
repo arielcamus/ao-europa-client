@@ -19,10 +19,13 @@ collision, map entry and logout persistence remain the server's responsibility.
 
 Outgoing packets retain their IDs. The adapter frames each packet at the final
 TCP write boundary, after the server's existing priority/coalescing code. It
-converts CharacterCreate/Error strings, reorders the twelve upstream intervals
+converts CharacterCreate/Error/ConsoleMsg strings, reorders the twelve upstream intervals
 into the sixteen classic fields, supplies neutral clan alignment and the full
 logout byte, and maps the upstream zero map version to the actual map resource
-ID. The four unsupported extra timings and account-list equipment are zero.
+ID. UpdateExp carries only current XP, as in VB6; next-level XP is a field of
+UpdateUserStats. ConsoleMsg supplies the port's missing channel as
+`TEXTCHANNEL_SYSTEM = 0`. The four unsupported extra timings and account-list
+equipment are zero.
 Unknown outgoing packets keep their body and can be skipped by frame length.
 Unsupported incoming commands are rejected and the socket is closed.
 
@@ -31,6 +34,56 @@ combat/inventory/chat compatibility. With the flag absent, the upstream codec
 remains in use. WebSocket gameplay handling is unchanged. Both listeners are
 bound to loopback by `server.patch`; the Phoenix HTTP endpoint is disabled by
 the launcher. Client protocol tables and the byte-transparent bridge are unchanged.
+
+## Complete decoded-packet audit (PR #5)
+
+The source of truth is the paired VB6 writer/handler at the revisions in
+[PROTOCOL.md](../../docs/PROTOCOL.md), not the port's encoder comments.
+`WriteUpdateExp` (`Protocol_Writes.bas:666`) writes ID 29 then **one Int32**;
+`HandleUpdateExp` (`Protocol.bas:1375`) reads precisely that Int32. The complete
+frame for XP 25 is `06 00 1d 00 19 00 00 00` (8 bytes including the envelope).
+The port adds `next_xp`, producing a 12-byte frame with four trailing bytes.
+
+`classic_profile_test.exs` tests all 21 emitted types that PR #5 decodes against
+independent C++ fixtures in `packages/protocol/test/goldens.json`. A coverage
+guard compares the client enum with the pinned upstream encoder's packet IDs.
+The three decoded but never emitted types are explicitly checked as absent.
+The same actual adapter frames pass through the production TypeScript decoder,
+both coalesced and one byte at a time. Profile-off tests cover every upstream
+command in the table. The adapter does not change the upstream encoder.
+
+| ID | Packet | Golden body bytes (excludes 2-byte envelope) | Audit result |
+| --- | --- | ---: | --- |
+| 1 | Connected | 2 | Pass: empty non-debug body after ID |
+| 2 | Logged | 3 | Pass: one-byte Boolean |
+| 7 | Disconnect | 3 | Pass: existing full-logout Boolean conversion |
+| 25 | UpdateSta | 4 | Pass: Int16 |
+| 26 | UpdateMana | 4 | Pass: Int16 |
+| 27 | UpdateHP | 8 | Pass: Int16 HP, Int32 shield |
+| 28 | UpdateGold | 10 | Pass: two Int32s; unsupported gold cap is zero |
+| 29 | UpdateExp | 6 | **Fixed:** omit port's second Int32 |
+| 30 | ChangeMap | 6 | Pass: two Int16s; existing zero-version resource mapping |
+| 31 | PosUpdate | 4 | Pass: x/y bytes |
+| 37 | ConsoleMsg | 12 | **Fixed:** varint UTF-8 byte length, text, font, system channel |
+| 42 | CharacterCreate | 81 | Pass: full VB6 sequence, converted strings and neutral clan alignment |
+| 44 | CharacterMove | 6 | Pass: Int16 index, x/y bytes |
+| 47 | UserCharIndexInServer | 4 | Pass: Int16 |
+| 61 | UpdateUserStats | 36 | Pass: full VB6 sequence including next-level XP and current XP |
+| 63 | ChangeInventorySlot | 18 | Pass: full sequence, float32 price, tags, Boolean flags |
+| 64 | InventoryUnlockSlots | — | Not emitted by pinned port (classic payload is one byte) |
+| 66 | ChangeSpellSlot | 8 | Pass: byte slot, Int16 spell/index, Boolean; empty index = -1 |
+| 73 | ErrorMsg | 8 | Pass: existing String8 conversion |
+| 78 | UpdateHungerAndThirst | 6 | Pass: four bytes in water/food order |
+| 158 | Intervals | 66 | Pass: existing reorder and 16 Int32 fields |
+| 186 | PosUpdateUserChar | — | Not emitted (classic x/y bytes, Int16 index) |
+| 187 | PosUpdateChar | — | Not emitted (classic Int16 index, x/y bytes) |
+| 199 | AccountCharacterList | 39 | Pass: count, two complete variable-integer/String8 records |
+
+Before the fix: **19/21 rows passed**; UpdateExp and ConsoleMsg failed. After:
+**21/21 rows, 29/29 ExUnit tests**, including signed Int32 XP limits, empty and
+128-byte UTF-8 console messages, incoming framing, and unchanged native output.
+Lengths above use the table's sample values; string-containing packets vary.
+Unsupported gameplay packets outside this decoder overlap remain frame-skipped.
 
 ## Reproduce on macOS
 
@@ -63,6 +116,7 @@ Compile, check the independent C++ packet fixtures, and launch:
 
 ```sh
 export AO_CLIENT_ROOT="$PWD"
+pnpm --filter @ao/protocol build # used by the adapter's cross-language check
 cd ../ao-reference/argentum-elixir/server
 mix local.hex --force
 mix local.rebar --force
@@ -99,7 +153,7 @@ counters are rejected. It walks north until the map blocks a step, returns by
 the same path, then tests replay disconnection. Use the supplied Ullathorpe test
 character, without another client simultaneously logged into that account.
 
-On the `m2-browser` branch, mount the matching original local artwork and start
+On PR #5's `classic-ui` branch, mount the matching original local artwork and start
 the unchanged byte bridge to this real TCP server:
 
 ```sh
@@ -114,7 +168,12 @@ it does not change wire bytes or automatically attest an arbitrary endpoint.
 The opt-in browser test requires that profile, attempts five walks, requires
 accepted movement and verifies rollback for any blocked step. It stays connected
 for 30 seconds, saves desktop/mobile screenshots, and reconnects to check
-persistence. Traces are disabled so login credentials are not captured.
+persistence at a position different from the starting tile (taking extra steps
+if the initial loop returns to its origin). Traces are disabled so login
+credentials are not captured.
+It also checks UpdateExp on both logins, exact welcome-console text, and records
+received packet IDs without saving raw frames or credentials. Evidence is saved
+as `artifacts/screenshots/classic-real-community-{desktop.png,mobile.png,proof.json}`.
 Normal `pnpm test:browser` remains a deterministic stand-in regression suite.
 
 Local evidence is under `artifacts/server-attempts/` and `artifacts/screenshots/`

@@ -101,12 +101,21 @@ int main() {
     w = packet(158);
     for (int32_t value : {101,102,103,104,105,300,107,108,109,110,111,112,113,114,115,116}) w.i32(value);
     emit("Intervals", w, true);
+    // Adapter defaults for fields the port does not implement; same VB6 layout.
+    for (size_t n = w.bytes.size() - 16; n < w.bytes.size(); ++n) w.bytes[n] = 0;
+    emit("IntervalsAdapter", w, true);
     w = packet(199); w.varint<int32_t>(2);
     w.varint<int32_t>(300); w.string("A\xc3\xb1");
     for (int32_t value : {200,128,3,257,50,51,12,1,2,3,4,5}) w.varint<int32_t>(value);
     w.varint<int32_t>(2); w.string("B");
     for (int32_t value : {1,2,3,4,5,6,7,8,9,10,11,12}) w.varint<int32_t>(value);
     emit("AccountCharacterList", w, true);
+    w = packet(199); w.varint<int32_t>(2);
+    w.varint<int32_t>(300); w.string("A\xc3\xb1");
+    for (int32_t value : {200,128,3,257,50,51,12,1,0,0,0,0}) w.varint(value);
+    w.varint<int32_t>(2); w.string("B");
+    for (int32_t value : {1,2,6,4,5,6,7,2,0,0,0,0}) w.varint(value);
+    emit("AccountCharacterListAdapter", w, true);
     w = packet(42);
     w.i16(0x1234); w.i16(200); w.i16(201); w.byte(4); w.byte(50); w.byte(60);
     for (int16_t value : {202,203,204,205,206,207,-1}) w.i16(value);
@@ -117,14 +126,25 @@ int main() {
     for (int value : {6,3,7,8,9}) w.byte(value);
     w.i16(0x506); w.byte(10);
     emit("CharacterCreate", w, true);
+    w.bytes.back() = 0; // No clan alignment in the port.
+    emit("CharacterCreateAdapter", w, true);
     w = packet(75); w.string("Hola \xc3\xb1"); w.i32(3); emit("Talk", w, true);
     w = packet(25); w.i16(90); emit("UpdateSta", w, true);
     w = packet(26); w.i16(60); emit("UpdateMana", w, true);
     w = packet(27); w.i16(80); w.i32(123456); emit("UpdateHP", w, true);
     w = packet(28); w.i32(1200); w.i32(1000); emit("UpdateGold", w, true);
+    w = packet(28); w.i32(1200); w.i32(0); emit("UpdateGoldAdapter", w, true);
     w = packet(29); w.i32(25); emit("UpdateExp", w, true);
+    for (int32_t value : {-2147483647 - 1, -1, 0, 2147483647}) {
+        w = packet(29); w.i32(value); emit("UpdateExp:" + std::to_string(value), w, true);
+    }
     w = packet(37); w.string("Hola \xc3\xb1"); w.byte(2); emit("ConsoleMsg", w, true);
     w.byte(3); emit("ConsoleMsgChannel", w, true);
+    w.bytes.back() = 0; emit("ConsoleMsgAdapter", w, true); // TEXTCHANNEL_SYSTEM
+    w = packet(37); w.string(""); w.byte(255); w.byte(0); emit("ConsoleMsgEmptyAdapter", w, true);
+    std::string longMessage;
+    for (int n = 0; n < 64; ++n) longMessage += "\xc3\xb1";
+    w = packet(37); w.string(longMessage); w.byte(2); w.byte(0); emit("ConsoleMsgLongAdapter", w, true);
     w = packet(61); w.i16(100); w.i16(80); w.i32(123456);
     for (int16_t value : {80,60,100,90}) w.i16(value);
     w.i32(1200); w.i32(1000); w.byte(12); w.i32(200); w.i32(25); w.byte(3);

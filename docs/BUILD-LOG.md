@@ -613,3 +613,70 @@ disabled to avoid saving credentials. Logs: `m2-typecheck.log`, `m2-build.log`,
 `m2-frozen-install.log`, `m2-regression.log`, `m2-real-browser-after-restart.log`.
 The final real-server screenshots were visually inspected. No artwork,
 credential, database or binary is staged; both PRs remain draft.
+
+## 2026-11-20 PR #5 classic adapter packet audit and live verification
+
+Work started **10:53:58 UTC**. The adapter's tracked source is in this repository,
+`tools/real-server/classic_profile.ex`, so the fix is on PR #5's `classic-ui`
+branch. No changes were made to `~/Projects/argentum-server`, its `gate-fixes`
+branch/worktree, or that job's running server. Validation used the existing,
+separate pinned checkout `ao-reference/argentum-elixir` at `1699a662`.
+
+Confirmed against both official VB6 trees at the revisions in PROTOCOL.md:
+
+- Server `Protocol_Writes.bas:666` (`WriteUpdateExp`) writes Int16 ID 29 then
+  exactly one Int32 experience value. Client `Protocol.bas:1375`
+  (`HandleUpdateExp`) reads exactly one Int32. The classic frame for XP 25 is
+  `06 00 1d 00 19 00 00 00`. The port adds a second Int32, `next_xp`.
+- The adapter now removes that field only at the classic TCP boundary.
+  The client decoder, shared upstream encoder and native WebSocket protocol
+  stay unchanged. Next-level XP belongs to UpdateUserStats (61).
+- The full audit found one additional mismatch: ConsoleMsg (37) retained the
+  port's Int16 string length. It now uses classic varint UTF-8 byte length and
+  appends `TEXTCHANNEL_SYSTEM = 0`, the neutral default for the port's absent
+  channel. This matches `PrepareMessageConsoleMsg:3477` and
+  `HandleConsoleMessage:1834`.
+
+The [complete audit table](../tools/real-server/README.md#complete-decoded-packet-audit-pr-5)
+covers **21 emitted/client-decoded packet types**. InventoryUnlockSlots (64),
+PosUpdateUserChar (186), and PosUpdateChar (187) are decoded but never emitted by
+this pinned port; the coverage test checks that explicitly.
+
+Added C++ oracle fixtures for adapter defaults and edge cases, 21 individual
+byte-exact table rows, an emitter/decoder coverage guard, signed Int32 XP limits,
+empty/128-byte UTF-8 console strings, and profile-off preservation of all native
+commands in the table. `verify-wire.mjs` decodes the actual Elixir adapter output
+with the built client codec, both coalesced and byte-at-a-time, and verifies
+exact re-encoding. It does not substitute TypeScript-generated expected bytes.
+
+Before applying the fix, **19/21 table rows passed**, UpdateExp/ConsoleMsg failed,
+and the production decoder reproduced `Packet id=29: 4 trailing bytes in
+one-message frame`. After applying it with `prepare.sh`, **21/21 rows and 29/29
+ExUnit tests passed**, including the cross-language check. The existing **97/97
+unit/transport tests**, typecheck and all five workspace builds passed.
+
+Final live test against the real community server on TCP 17666 and PR #5's
+production browser bundle through the normal WS/TCP bridge:
+
+- **Passed in 33.7 seconds** (34.9 seconds including runner startup), final
+  pre-reconnect capture **11:03:49 UTC**.
+- Real Bcrypt account login, map 1 / Ciudad de Ullathorpe, **five accepted walks
+  and two authoritative collision corrections**, **30 seconds connected**.
+- Position changed **(60,43) → (60,44)**; logout/login restored **(60,44)**.
+  An independent PostgreSQL query after logout confirmed `pos_x=60, pos_y=44`.
+- Both logins decoded UpdateExp (XP 0), displayed the exact welcome ConsoleMsg,
+  and produced no protocol/page errors or failed asset requests.
+- Desktop and resized 390px mobile screenshots inspected. A first run passed
+  login/walking/30s but exposed an immediate resize-assertion race; the test now
+  polls the same no-overflow condition. A second passing run ended its walk loop
+  at the initial tile, so the final test requires a changed tile before checking
+  reconnect persistence. No production UI or timeout was changed for this.
+
+Reproduction: follow `tools/real-server/README.md`, build the client protocol,
+run `mix run --no-start "$AO_CLIENT_ROOT/tools/real-server/classic_profile_test.exs"`
+inside the prepared server, then run the opt-in Playwright real-server config.
+Local evidence (ignored): `artifacts/server-attempts/adapter-{before,after}.log`,
+`classic-adapter-live-{server,web,browser}.log`, and
+`artifacts/screenshots/classic-real-community-{desktop.png,mobile.png,proof.json}`.
+The task's server and preview remain available on loopback ports 17666/5191.
+No credentials, artwork, database or compiled artifacts are committed.
