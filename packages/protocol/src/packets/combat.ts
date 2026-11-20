@@ -34,7 +34,6 @@ export enum CombatServerPacketId {
   NPCHitUser = 32,
   UserHittedByUser = 33,
   UserHittedUser = 34,
-  CreateFX = 60,
   TextOverChar = 125,
   ArmaMov = 145,
   CharUpdateHP = 150,
@@ -59,8 +58,7 @@ export const combatServerCodecs = {
   // WriteUserHittedByUser (a player hit me) / WriteUserHittedUser (I hit a player).
   [CombatServerPacketId.UserHittedByUser]: hit,
   [CombatServerPacketId.UserHittedUser]: hit,
-  // CharacterRemove (43), CharacterChange (49) and LocaleMsg (141) are the npcs codecs; LeftClick (95) is the doors codec.
-  [CombatServerPacketId.CreateFX]: struct({ charIndex: int16, fx: int16, loops: int16, x: byte, y: byte }),
+  // CharacterRemove (43), CharacterChange (49) and LocaleMsg (141) are the npcs codecs; CreateFX (60) the spells codec; LeftClick (95) the doors codec.
   [CombatServerPacketId.TextOverChar]: struct({ text: string, charIndex: int16, color: int32 }),
   [CombatServerPacketId.ArmaMov]: struct({ charIndex: int16, isRanged: byte }),
   [CombatServerPacketId.CharUpdateHP]: struct({ charIndex: int16, hp: int32, maxHp: int32, shield: int32 }),

@@ -12,6 +12,8 @@ import type { GroundObject, ObjectGraphic } from './map-objects.js';
 import { CharacterSprites } from './character-render.js';
 import { NPC_NAME_COLOR, parseColors, parseLocale, playerNameColor, privilegeTitle } from './character-data.js';
 import type { LocaleData, Rgb } from './character-data.js';
+import { spellTables } from './spells.js';
+import type { ActiveFx } from './spells.js';
 
 class SpritePool {
   private sprites: Sprite[] = [];
@@ -80,7 +82,7 @@ export class WorldRenderer {
     this.app.canvas.setAttribute('aria-label', 'Argentum map. Use arrow keys or W A S D to walk.');
     this.host.prepend(this.app.canvas);
     this.app.stage.addChild(this.world);
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 9; i++) {
       const container = new Container(); this.world.addChild(container); this.pools.push(new SpritePool(container));
     }
     this.world.addChild(this.labelLayer);
@@ -240,6 +242,7 @@ export class WorldRenderer {
     }
     this.camera = { x: cameraX, y: cameraY };
     this.drawCharacters(session, position, now, cameraX, cameraY, width, height);
+    this.drawEffects(session, now, position);
     this.pools.forEach(item => item.finish());
   }
   /** Sprites of a stationary south-facing character, for the NPC dialog portrait. */
@@ -296,6 +299,42 @@ export class WorldRenderer {
       // Overhead speech is drawn once, by ChatBubbles from ChatState (chat #7); the tracker's dialog only feeds the NPC window.
     }
     for (let i = this.labelsUsed; i < this.labels.length; i++) this.labels[i]!.visible = false;
+  }
+  private selfBodyY(session: Session) {
+    const id = session.self?.body ?? 0;
+    let body = this.bodyCache.get(id);
+    if (!body && id > 0) { try { body = readBody(this.bodies, this.molds, this.graphics, id); this.bodyCache.set(id, body); } catch { return 0; } }
+    return body?.bodyY ?? 0;
+  }
+  /**
+   * Spell FX (CreateFX / FxPiso), engine.bas Char_Render FxList: a Grh from FXs.ini drawn at the
+   * character's tile plus the FX offsets, 20px down, over the body. Pool 7 is additive (IsPNG=0,
+   * the VB6 blended draw), pool 8 plain alpha (IsPNG=1). One pass lasts frameMs * frames.
+   */
+  private drawEffects(session: Session, now: number, self: { x: number; y: number }) {
+    const spells = session.spells;
+    if (!spells.effects.length) return;
+    const info = (fx: ActiveFx) => {
+      const section = fx.grh ? undefined : spellTables.fx.get(`fx${fx.fx}`);
+      const grh = fx.grh ?? Number(section?.get('animacion') ?? 0);
+      if (!grh || !this.graphics.has(grh)) return undefined;
+      return { animation: this.animation(grh), offsetX: Number(section?.get('offsetx') ?? 0), offsetY: Number(section?.get('offsety') ?? 0), png: section?.get('ispng') === '1' || fx.grh !== undefined };
+    };
+    spells.prune(now, fx => { const a = info(fx); return a ? a.animation.frameMs * a.animation.frames.length : 0; });
+    this.pools[7]!.container.blendMode = 'add'; this.pools[8]!.container.alpha = 220 / 255; this.pools[7]!.container.alpha = 220 / 255;
+    for (const fx of spells.effects) {
+      const data = info(fx);
+      if (!data) continue;
+      let x = fx.x, y = fx.y, body = 0;
+      if (fx.charIndex !== undefined) {
+        // Other characters use the tracker's slide position so an FX follows a walking NPC (npcs #8).
+        const character = session.tracker.chars.get(fx.charIndex);
+        if (fx.charIndex === session.charIndex) { x = self.x; y = self.y; body = this.selfBodyY(session); }
+        else if (character) { const view = session.tracker.visualPosition(character, now); x = view.x; y = view.y; }
+        else if (!x || !y) continue;
+      }
+      this.draw(this.pools[data.png ? 8 : 7]!, data.animation, x * 32 + data.offsetX, y * 32 + data.offsetY + 20 + body, now - fx.startedAt);
+    }
   }
   destroy() {
     this.epoch++; this.observer?.disconnect();

@@ -46,12 +46,10 @@ export const ponerPuntos = (value: number) => String(Math.trunc(value)).replace(
 /** VB RGB() long (0x00BBGGRR) to a CSS colour, as RGBA_From_vbColor does. */
 export const vbColor = (value: number) => `rgb(${value & 255}, ${(value >> 8) & 255}, ${(value >> 16) & 255})`;
 export interface FloatingText { text: string; color: string; charIndex: number; start: number; slide: number }
-export interface CharFx { charIndex: number; fx: number; loops: number; start: number }
-type Source = { ui: ClassicState; characters: Map<number, CharacterCreate>; charIndex: number | undefined; clock(): number };
+type Source = { ui: ClassicState; characters: Map<number, CharacterCreate>; charIndex: number | undefined; clock(): number; bleed?: (charIndex: number, fx: number) => void };
 
 export class CombatState {
   floating: FloatingText[] = [];
-  fx: CharFx[] = [];
   /** charIndex -> start of the weapon swing (ArmaMov); drawing the swing needs weapon art, not rendered yet. */
   swings = new Map<number, number>();
   attacksSent = 0;
@@ -79,7 +77,6 @@ export class CombatState {
   }
   prune(now: number) {
     this.floating = this.floating.filter(item => now - item.start <= TEXT_LIFE_MS);
-    this.fx = this.fx.filter(item => now - item.start <= 5000);
   }
   private line(source: Source, text: string, font = FONT.FIGHT) {
     source.ui.message(text, font);
@@ -113,10 +110,8 @@ export class CombatState {
         break;
       case CS.CharAtaca:
         // Victim bleeds when the hit landed (damage > 0); -1 is a miss.
-        if (packet.damage > 0 && packet.victimIndex > 0) this.fx.push({ charIndex: packet.victimIndex, fx: BLOOD_FX, loops: 0, start: now });
-        break;
-      case CS.CreateFX:
-        if (packet.fx > 0) this.fx.push({ charIndex: packet.charIndex, fx: packet.fx, loops: packet.loops, start: now });
+        // The splash is drawn by the spells FX renderer (CreateFX 60 is the spells codec); combat keeps no FX list.
+        if (packet.damage > 0 && packet.victimIndex > 0) source.bleed?.(packet.victimIndex, BLOOD_FX);
         break;
       case CS.TextOverChar:
         this.addText(packet.text, vbColor(packet.color), packet.charIndex, now);

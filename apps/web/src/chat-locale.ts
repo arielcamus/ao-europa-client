@@ -12,11 +12,17 @@ import { lookAtFields } from './look-at.js';
 /** Server messages use U+00AC (the "not" sign, 0xAC in windows-1252) to separate parameters. */
 const SEPARATOR = '¬';
 
-export interface SpellText { name: string; desc: string; ownMessage: string; casterMessage: string; targetMessage: string; words: string }
+export interface SpellText {
+  name: string; desc: string; ownMessage: string; casterMessage: string; targetMessage: string; words: string;
+  /** From Dat/Hechizos.dat (HechizoData): the HECINF requirement lines. */
+  minSkill: string; mana: string; stamina: string; staminaPercent: number;
+}
 
 export class ChatLocale {
   private messages = new Map<number, string>();
   private data: Ini = new Map();
+  /** Dat/Hechizos.dat, set by the spells feature (loadSpellTables); spell text falls back to it. */
+  spellData: Ini = new Map();
   /** True once the message table is loaded; text built before that is rebuilt on render. */
   ready = false;
 
@@ -51,10 +57,13 @@ export class ChatLocale {
   objectName(id: number) { return this.value(`obj${id}`, 'name'); }
   questFinalText(id: number) { return this.value(`quest${id}`, 'descfinal'); }
   spell(id: number): SpellText {
-    const get = (key: string) => this.value(`hechizo${id}`, key);
+    const dat = (key: string) => this.spellData.get(`hechizo${id}`)?.get(key) ?? '';
+    const get = (key: string) => this.value(`hechizo${id}`, key) || dat(key);
     return {
       name: get('nombre'), desc: get('desc'), ownMessage: get('propiomsg'),
       casterMessage: get('hechizeromsg'), targetMessage: get('targetmsg'), words: get('palabrasmagicas'),
+      minSkill: dat('minskill') || '0', mana: dat('manarequerido') || '0', stamina: dat('starequerido') || '0',
+      staminaPercent: Number(dat('starequeridopercent') || dat('stapercentrequired') || 0),
     };
   }
 }

@@ -56,3 +56,6 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1
 .npc-portrait { flex: none; width: 64px; height: 96px; }
 .npc-title { font: bold 14px Tahoma, Arial, sans-serif; color: #ffd75e; margin-bottom: 4px; }
 .npc-text { font: 13px/16px Tahoma, Arial, sans-serif; }
+
+/* Spell targeting: frmMain sets MousePointer = 2 (crosshair) while UsingSkill <> 0. */
+#viewport[data-targeting="true"] { cursor: crosshair; }
