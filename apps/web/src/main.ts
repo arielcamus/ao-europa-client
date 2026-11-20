@@ -5,6 +5,7 @@ import { Session } from './session.js';
 import { WorldRenderer } from './renderer.js';
 import { applyClassicLayout } from './classic-layout.js';
 import { ClassicUI, element } from './classic-ui.js';
+import { doorClickTile } from './map-objects.js';
 
 applyClassicLayout();
 const form = element<HTMLFormElement>('login'), account = element<HTMLInputElement>('email'), password = element<HTMLInputElement>('password');
@@ -159,8 +160,19 @@ const aim = (event: PointerEvent) => {
   const x = event.clientX - rect.left - rect.width / 2, y = event.clientY - rect.top - rect.height / 2;
   touchHeading = Math.abs(x) > Math.abs(y) ? (x > 0 ? Heading.East : Heading.West) : (y > 0 ? Heading.South : Heading.North);
 };
+// Doors: the reference server opens/closes a door on LeftClick(x, y, counter) (HandleWorldAction); DoubleClick is ignored.
+// A tap/click on a door sends LeftClick for the tapped tile (VB6 behaviour), shifted only when a character stands on it or below it.
+function doorAt(event: PointerEvent | MouseEvent) {
+  if (!session?.ready) return undefined;
+  const tile = renderer.tileAt(session, event.clientX, event.clientY, performance.now());
+  if (!tile) return undefined;
+  const occupied = (x: number, y: number) => [...session!.characters.values()].some(c => c.x === x && c.y === y);
+  return doorClickTile(session.mapObjects, objIndex => renderer.isDoor(objIndex), tile, occupied);
+}
 viewport.addEventListener('pointerdown', event => {
   if (!event.isPrimary || !session?.ready) return;
+  const door = doorAt(event);
+  if (door) { event.preventDefault(); clearInput(); session.leftClick(door.x, door.y); renderer.app.canvas.focus(); return; }
   event.preventDefault(); clearInput(); aim(event); walk(touchHeading!);
   viewport.setPointerCapture(event.pointerId); renderer.app.canvas.focus();
 });

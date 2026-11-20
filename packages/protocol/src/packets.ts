@@ -11,6 +11,7 @@
 import { ProtocolError, Reader, Writer } from './binary.js';
 import type { SafeArrayInt8 } from './binary.js';
 import { encodeFrame } from './frame.js';
+import { doorClientCodecs, doorServerCodecs } from './packets/doors.js';
 
 export enum ServerPacketId {
   Connected = 1,
@@ -173,7 +174,7 @@ const consoleMessage: Codec<{ message: string; font: number; channel?: number }>
   },
 };
 
-const serverCodecs = {
+const coreServerCodecs = {
   [ServerPacketId.Connected]: connected,
   [ServerPacketId.Logged]: struct({ newUser: bool }),
   [ServerPacketId.Disconnect]: struct({ fullLogout: bool }),
@@ -201,13 +202,41 @@ const serverCodecs = {
   [ServerPacketId.AccountCharacterList]: accountList,
 };
 
-const clientCodecs = {
+const coreClientCodecs = {
   [ClientPacketId.LoginAccount]: struct({ email: string, password: string }),
   [ClientPacketId.LoginExistingChar]: struct({ charId: int32, name: string }),
   [ClientPacketId.Talk]: struct({ message: string, counter: int32 }),
   [ClientPacketId.Walk]: struct({ heading, counter: int32 }),
   [ClientPacketId.RequestPositionUpdate]: struct({}),
 };
+
+/**
+ * Every codec table, by feature. ONE codec per packet id: an object spread silently keeps the LAST duplicate, so the merged
+ * tables below are checked at load time and a second registration of an id throws instead of shadowing the first.
+ * A new feature table is added here AND to the spread below (test/codec-tables.test.ts fails if the two disagree).
+ */
+export const codecTables = {
+  server: { core: coreServerCodecs, doors: doorServerCodecs },
+  client: { core: coreClientCodecs, doors: doorClientCodecs },
+} as const;
+const serverCodecs = { ...coreServerCodecs, ...doorServerCodecs };
+const clientCodecs = { ...coreClientCodecs, ...doorClientCodecs };
+
+/** Throws when two tables register the same id or a merged table holds an id no listed table owns. */
+export function assertDisjointCodecTables(tables: Record<string, object>, merged: object, side: string): void {
+  const owner = new Map<string, string>();
+  for (const [name, table] of Object.entries(tables)) {
+    for (const id of Object.keys(table)) {
+      const previous = owner.get(id);
+      if (previous) throw new Error(`${side} packet id ${id} has two codecs (${previous} and ${name})`);
+      owner.set(id, name);
+    }
+  }
+  const extra = Object.keys(merged).filter(id => !owner.has(id));
+  if (extra.length) throw new Error(`${side} codecs ${extra.join(', ')} are merged but not listed in codecTables`);
+}
+assertDisjointCodecTables(codecTables.server, serverCodecs, 'server');
+assertDisjointCodecTables(codecTables.client, clientCodecs, 'client');
 
 type Packet<R> = { [K in keyof R]: { id: K } & Value<R[K]> }[keyof R];
 export type ServerPacket = Packet<typeof serverCodecs>;

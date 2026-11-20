@@ -4,16 +4,23 @@
  * See ../../../LICENSE and ../../../NOTICE.
  */
 import { ClientPacketId as C, ServerPacketId as S, Heading, FrameDecoder, decodeServerPacket, encodeClientFrame } from '@ao/protocol';
+import { DoorClientPacketId, DoorServerPacketId as DoorServer } from '@ao/protocol';
 import type { CharacterCreate, ClientPacket } from '@ao/protocol';
 import { ClassicState } from './ui-state.js';
+import { MapObjects } from './map-objects.js';
+import { PacketCounters, SEQUENCED_CLIENT_PACKETS } from './packet-counters.js';
+import type { PacketFamily } from './packet-counters.js';
 
 export interface Position { x: number; y: number }
+const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
 export interface Motion { from: Position; to: Position; started: number; duration: number }
 export type Phase = 'connecting' | 'account' | 'login' | 'playing' | 'closed';
 
 /** Transport-independent state. Only one position query/walk may be outstanding. */
 export class Session {
   readonly ui = new ClassicState();
+  /** Ground objects (doors included) and server block overrides for the current map. */
+  readonly mapObjects = new MapObjects();
   characterLevel: number | undefined;
   phase: Phase = 'connecting';
   map: number | undefined;
@@ -22,7 +29,10 @@ export class Session {
   position: Position | undefined;
   motion: Motion | undefined;
   characters = new Map<number, CharacterCreate>();
-  walksSent = 0;
+  /** Shared per-connection packet counters (never reset on ChangeMap). */
+  readonly counters = new PacketCounters();
+  next(family: PacketFamily): number { return this.counters.next(family); }
+  get walksSent() { return this.counters.current('walk'); }
   confirmedWalks = 0;
   correctedWalks = 0;
   unknownFrames = 0;
@@ -34,7 +44,6 @@ export class Session {
   private pending: { expected?: Position; since: number } | undefined;
   private lastWalk = -Infinity;
   private lastQuery = 0;
-  private talkCounter = 0;
   private lastTalk = -Infinity;
   private talkInterval = 500;
   private placementDeadline: number;
@@ -55,7 +64,22 @@ export class Session {
   }
   get stepMs() { return Math.max(50, Math.ceil((this.walkInterval ?? 300) / (this.self?.speeding || 1))) + 30; }
 
-  private send(packet: ClientPacket) { this.write(encodeClientFrame(packet)); }
+  /**
+   * The one door to the socket. A sequence-checked packet must carry the counter that session.next(family) just issued; a counter
+   * kept anywhere else would drift from the server's per-family counter and get the socket closed, so it is refused here.
+   */
+  private send(packet: ClientPacket) {
+    const family = SEQUENCED_CLIENT_PACKETS[packet.id];
+    if (family !== undefined) {
+      const counter = (packet as { counter?: unknown }).counter;
+      if (counter !== this.counters.current(family) || this.issued.get(family) === counter) {
+        throw new Error(`Packet ${packet.id} must take its counter from session.next('${family}')`);
+      }
+      this.issued.set(family, counter);
+    }
+    this.write(encodeClientFrame(packet));
+  }
+  private readonly issued = new Map<string, number>();
   receive(bytes: Uint8Array): void {
     if (this.phase === 'closed') return;
     for (const body of this.decoder.push(bytes)) {
@@ -82,7 +106,7 @@ export class Session {
           this.map = packet.map; this.resourceMap = packet.resourceMap;
           this.position = undefined; this.motion = undefined; this.pending = undefined;
           this.placementDeadline = this.clock() + 10_000;
-          this.characters.clear();
+          this.characters.clear(); this.mapObjects.clear();
           // Retain self index across warps; require a fresh CharacterCreate for placement.
           break;
         case S.CharacterCreate:
@@ -104,6 +128,7 @@ export class Session {
           if (packet.walk < 0 || packet.walk > 60_000) throw new Error('Invalid walk interval');
           this.walkInterval = packet.walk;
           this.talkInterval = Math.max(500, packet.talk);
+          this.clickInterval = Math.max(100, packet.leftClick);
           break;
         case S.PosUpdate: this.place(packet.x, packet.y); break;
         case S.PosUpdateUserChar:
@@ -115,6 +140,12 @@ export class Session {
           if (packet.charIndex === this.charIndex) this.place(packet.x, packet.y);
           break;
         }
+        // Off-map coordinates are ignored (the VB6 client would index outside MapData); ObjIndex <= 0 clears the tile.
+        case DoorServer.ObjectCreate:
+          if (inMap(packet)) { if (packet.objIndex > 0) this.mapObjects.create(packet.x, packet.y, packet); else this.mapObjects.delete(packet.x, packet.y); }
+          break;
+        case DoorServer.ObjectDelete: if (inMap(packet)) this.mapObjects.delete(packet.x, packet.y); break;
+        case DoorServer.BlockPosition: if (inMap(packet)) this.mapObjects.block(packet.x, packet.y, packet.sides); break;
         case S.ErrorMsg: throw new Error(`Server: ${packet.message}`);
         case S.Disconnect: throw new Error('The server disconnected this character');
       }
@@ -150,7 +181,7 @@ export class Session {
     this.pending = { expected: to, since: now };
     this.lastWalk = now;
     this.lastQuery = now;
-    this.send({ id: C.Walk, heading, counter: ++this.walksSent });
+    this.send({ id: C.Walk, heading, counter: this.next('walk') });
     // TCP order ensures the position probe follows this walk. Silence never counts as success.
     this.send({ id: C.RequestPositionUpdate });
     return true;
@@ -165,10 +196,27 @@ export class Session {
       this.send({ id: C.RequestPositionUpdate });
     }
   }
+  /** Classic LeftClick on a map tile; the server opens/closes doors and uses world objects on it (HandleWorldAction). */
+  leftClick(x: number, y: number): boolean {
+    if (!this.canClick(x, y)) return false;
+    this.send({ id: DoorClientPacketId.LeftClick, x, y, counter: this.next('leftClick') }); return true;
+  }
+  /** Classic DoubleClick; the reference server ignores it, kept for fidelity. */
+  doubleClick(x: number, y: number): boolean {
+    if (!this.canClick(x, y)) return false;
+    this.send({ id: DoorClientPacketId.DoubleClick, x, y }); return true;
+  }
+  private lastClick = -Infinity;
+  private canClick(x: number, y: number): boolean {
+    const now = this.clock();
+    if (!this.ready || now - this.lastClick < this.clickInterval || x < 1 || y < 1 || x > 100 || y > 100) return false;
+    this.lastClick = now; return true;
+  }
+  clickInterval = 200;
   talk(message: string): boolean {
     if (!this.ready || this.clock() - this.lastTalk < this.talkInterval) return false;
     if (!message.trim() || message.length > 160 || new TextEncoder().encode(message).length > 255) return false;
-    this.send({ id: C.Talk, message, counter: ++this.talkCounter });
+    this.send({ id: C.Talk, message, counter: this.next('talk') });
     this.lastTalk = this.clock();
     return true;
   }
