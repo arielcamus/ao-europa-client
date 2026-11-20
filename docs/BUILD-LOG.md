@@ -477,3 +477,13 @@ Stopped investigating additional server routes after this success. Terminated
 the task's twinBASIC IDE after the denied app access; no VBP compilation claimed.
 Original VB6 and full gameplay wire compatibility remain outside this result.
 The community server and real browser preview are left running locally.
+
+M2 final regression validation after integrating M1: frozen lockfile install,
+typecheck, all workspace builds, **77 unit/transport tests (1.50 s)** and
+**6 browser tests (1.7 min)** passed. The browser suite exercised the production
+bundle in desktop Chrome, touch-emulated Chrome and touch-emulated WebKit.
+The opt-in real-server browser test passed separately in **34.2 s**, with traces
+disabled to avoid saving credentials. Logs: `m2-typecheck.log`, `m2-build.log`,
+`m2-frozen-install.log`, `m2-regression.log`, `m2-real-browser-after-restart.log`.
+The final real-server screenshots were visually inspected. No artwork,
+credential, database or binary is staged; both PRs remain draft.

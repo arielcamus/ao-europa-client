@@ -17,7 +17,8 @@
     "dev": "pnpm build:server && node tools/dev-web.mjs",
     "dev:standin": "pnpm build:server && node tools/dev-web.mjs --standin",
     "web:preview": "pnpm build && node tools/dev-web.mjs --standin --preview",
-    "test:browser": "pnpm build && playwright test"
+    "test:browser": "pnpm build && playwright test",
+    "test:browser:real": "pnpm build && playwright test --config playwright.real.config.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.65.1",

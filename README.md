@@ -15,10 +15,10 @@ See [setup and scope](tools/real-server/README.md). Interoperability with the
 original **ao-org VB6 executable** remains untested; no compiled binary was found.
 
 M2 adds a browser client that renders local classic maps and an animated character
-with keyboard/touch walking through the bridge. **The demonstrated backend is the
-stand-in.** Wine now runs x86 Windows programs on this Mac, but the real server is
-still blocked by the absence of a compiled Server.exe or licensed VB6 compiler.
-The exact Wine recipe and observed limits are in [the build log](docs/BUILD-LOG.md).
+with keyboard/touch walking through the bridge. **Verified against the real
+community server**: 30 seconds connected, accepted movement, collision correction
+and position persistence after reconnect. The original VB6 executable remains
+unverified. Route attempts and evidence are in [the build log](docs/BUILD-LOG.md).
 
 ## Browser preview (M2)
 
@@ -32,6 +32,10 @@ AO_ASSETS="$HOME/Projects/ao-reference/Recursos" AO_WEB_PORT=5187 pnpm dev:stand
 
 # Point the same browser/bridge at an existing classic TCP server:
 AO_ASSETS="$HOME/Projects/ao-reference/Recursos" AO_TCP_HOST=127.0.0.1 AO_TCP_PORT=7666 pnpm dev
+
+# Real local community server, after tools/real-server/README.md setup:
+AO_ASSETS="$HOME/Projects/ao-reference/Recursos" AO_TCP_PORT=17666 \
+  AO_SERVER_PROFILE=elixir-classic AO_WEB_PORT=5191 pnpm dev
 
 # Build and run the production bundle locally with the stand-in:
 AO_ASSETS="$HOME/Projects/ao-reference/Recursos" pnpm web:preview
@@ -69,6 +73,13 @@ Desktop Chrome, mobile Chrome and mobile WebKit each verify login, four directio
 30 seconds connected, confirmed coordinates, credential rejection and disconnect.
 Screenshots are written to `artifacts/screenshots/m2-{desktop-chrome,mobile-chrome,mobile-webkit}.png`.
 These are browser emulations on the Mac, not physical-phone testing.
+
+For a running real community server/preview on port 5191, supply the local
+`AO_EMAIL`/`AO_PASSWORD` and run `pnpm test:browser:real`. This opt-in test requires
+the `elixir-classic` profile, checks accepted and blocked movement, and reconnects
+to verify persistence. It saves `m2-real-community-{desktop,mobile}.png` and a
+credential-free proof JSON under `artifacts/screenshots/`. Its mobile image is
+a responsive viewport check; the regression suite above tests touch emulation.
 
 M2 supports four/five-layer CSM render prefixes, `graficos.ini`, `cabezas.ind` and
 `cuerpos.dat`/`moldes.ini` character animations. It is a movement/rendering preview:

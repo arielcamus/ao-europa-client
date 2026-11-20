@@ -41,15 +41,19 @@ function close(message = 'Disconnected') {
 async function boot() {
   const response = await fetch('/ao-config.json');
   if (!response.ok) throw new Error('Start this client with pnpm dev or pnpm dev:standin.');
-  const config: { mode: string; wsPath: string } = await response.json();
+  const config: { mode: string; serverProfile?: string; wsPath: string } = await response.json();
   if (!['standin', 'classic'].includes(config.mode) || config.wsPath !== '/bridge') throw new Error('Invalid local server configuration');
+  if (config.serverProfile && !['classic', 'elixir-classic'].includes(config.serverProfile)) throw new Error('Invalid server profile');
   mode = config.mode as typeof mode; wsPath = config.wsPath;
-  element('mode').textContent = mode === 'standin' ? 'TEST STAND-IN' : 'CLASSIC · UNVERIFIED';
+  const community = mode === 'classic' && config.serverProfile === 'elixir-classic';
+  element('mode').textContent = mode === 'standin' ? 'TEST STAND-IN' : community ? 'AO COMMUNITY SERVER' : 'CLASSIC · UNVERIFIED';
   element('mode-note').textContent = mode === 'standin'
-    ? 'A local test world. The real VB6 server is blocked by a missing compiler.'
+    ? 'A local test world with fixture accounts.'
+    : community ? 'Community server with the classic protocol adapter. The first character is selected.'
     : 'Connect to your configured classic server with an existing account. The first character is selected.';
   element('scope-note').textContent = mode === 'standin'
     ? 'Protocol fixture only. No collision rules, NPCs, combat or persistence.'
+    : community ? 'Real map collision and character persistence. This client preview supports login and movement.'
     : 'Map and character movement preview. Live compatibility is not yet verified.';
   if (mode === 'standin') { account.value = 'standin@local'; password.value = 'testpass'; }
   await renderer.init();

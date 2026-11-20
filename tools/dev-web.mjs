@@ -7,6 +7,8 @@ import { localAssets } from './local-assets.mjs';
 
 const standinMode = process.argv.includes('--standin');
 const previewMode = process.argv.includes('--preview');
+const serverProfile = process.env.AO_SERVER_PROFILE ?? 'classic';
+if (!['classic', 'elixir-classic'].includes(serverProfile)) throw new Error('Invalid AO_SERVER_PROFILE');
 const cleanup = [];
 let stopping = false;
 async function stop() {
@@ -25,7 +27,7 @@ try {
     server.middlewares.use((request, response, next) => {
       if (request.url === '/ao-config.json') {
         response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
-        response.end(JSON.stringify({ mode: standinMode ? 'standin' : 'classic', wsPath: '/bridge' }));
+        response.end(JSON.stringify({ mode: standinMode ? 'standin' : 'classic', serverProfile, wsPath: '/bridge' }));
       } else next();
     });
     server.middlewares.use(assets);
@@ -46,7 +48,9 @@ try {
     else { web.httpServer.closeAllConnections(); await new Promise(resolve => web.httpServer.close(resolve)); }
   });
   if (!previewMode) await web.listen();
-  console.log(standinMode ? 'TEST STAND-IN — no real VB6 server; movement fixture has no collision rules.' : 'Classic server target — real-server interoperability still unverified.');
+  console.log(standinMode ? 'TEST STAND-IN — movement fixture without collision rules.'
+    : serverProfile === 'elixir-classic' ? 'AO COMMUNITY SERVER — lambdaclass/argentum with the classic adapter.'
+    : 'Classic server target — verify interoperability with your configured server.');
   web.printUrls();
   for (const signal of ['SIGINT', 'SIGTERM']) process.once(signal, () => { void stop().then(() => process.exit(0)); });
 } catch (error) {
