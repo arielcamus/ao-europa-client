@@ -1,4 +1,4 @@
-ao-client M1: TypeScript adaptations made 2026-11-20.
+ao-client M1/M2: TypeScript adaptations made 2026-11-20.
 
 Argentum 20 Game Server and Game Client
 Copyright (C) 2023-2026 Noland Studios LTD.
@@ -10,6 +10,11 @@ FITNESS FOR A PARTICULAR PURPOSE.
 Based on Argentum Online 0.11.6, Copyright (C) 2002 Márquez Pablo Ignacio.
 Argentum Online is based on Baronsoft's VB6 Online RPG.
 Original ORE creator: aaron@baronsoft.com; http://www.baronsoft.com/.
+
+M2 local resource readers/rendering adapt Recursos.bas, GameIni.bas, engine.bas,
+TileEngine.bas and clsTexManager.cls from the pinned classic client. Original map
+format credited upstream to Juan Martín Sotuyo Dodero (Maraxus).
+No original map, index, sprite, audio, screenshot or converted asset is distributed.
 
 Aurora.Network
 Copyright (C) 2018-2022 by Agustin Alvarez. All rights reserved.
