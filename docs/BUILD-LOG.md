@@ -487,3 +487,63 @@ disabled to avoid saving credentials. Logs: `m2-typecheck.log`, `m2-build.log`,
 `m2-frozen-install.log`, `m2-regression.log`, `m2-real-browser-after-restart.log`.
 The final real-server screenshots were visually inspected. No artwork,
 credential, database or binary is staged; both PRs remain draft.
+
+## 2026-11-20 Windows VM request — stopped at compiler licensing preflight
+
+Session began **08:42:30 UTC** (09:42:30 Europe/Madrid), following Ariel's
+09:41 VM approval. Read the complete build log, including the Wine/twinBASIC
+attempt and the lambdaclass adapter. Started from the clean `m2-browser` branch
+and created `vm-server`; PR #2 remains the base of this follow-up.
+
+Constraints: original `ao-org/argentum-online-server-classic`, `Server.VBP`,
+`PYMMO=0`; at most 4 GB VM RAM and a 40 GB thin virtual disk; at least 25 GB host
+free space; official software sources; no purchases or account use. Ariel
+explicitly instructed: **if a paid licence or Ariel's account is needed, STOP
+and report exactly what**.
+
+### Verified stop condition
+
+Rechecked the publisher's current [twinBASIC licensing table](https://twinbasic.com/licensing)
+on 20 November. Its `Automated builds / CI` row says **No** for Community and
+Personal, **Yes** for Professional and higher. Professional explicitly includes
+`Automated and unattended build support`. Thus the requested command-line build
+over SSH and one-command unattended rebuild require a **twinBASIC Professional
+or higher licence**; the free Community IDE does not authorize that workflow.
+No suitable licence has been supplied for this task. The earlier claim that
+twinBASIC is free must be qualified by this automation restriction.
+
+Stopped VM installation and server work at this point, per Ariel's instruction.
+No purchase, activation, login, licence bypass, UTM install, Windows download,
+VM creation, dependency installation, or compiler invocation was performed in
+this session. No source compatibility or Windows ARM execution failure is
+claimed: this is a verified licensing prerequisite, before an execution test.
+Even a suitable licence would not by itself prove that VBP import or this
+server's dependencies build successfully; those checks remain outstanding.
+
+The existing `beta-x-1044` download is present, but the previous Wine result
+remains the only compiler evidence. A licensed VB6 compiler remains another
+possible route, also unavailable as documented above. Resuming either route
+requires Ariel to supply an existing suitable licence and authorize its use,
+or to change the command-line build requirement to a permitted manual workflow.
+No working `vm-up.sh`, `vm-build-server.sh`, or `vm-down.sh` is claimed or added;
+there is no verified one-command rebuild yet.
+
+### Actual result and resource use
+
+- VM RAM allocated/used: **0 GB**; virtual disk created/used: **0 GB**.
+- `df -k .` initially reported **54,369,808 KiB available** (51.85 GiB,
+  55.67 decimal GB), below the prompt's approximate 70 GB but above its floor.
+  At **08:43:25 UTC**, `statvfs` reported **55,674,802,176 bytes available**.
+- No original-VB6 M1 run, bot log, M2 browser run, or new screenshot exists.
+  The earlier `m1-real-bot*.log` and `m2-real-community-*.png` evidence applies
+  exclusively to the lambdaclass adapter and is not evidence for this VM goal.
+- This branch records the blocker only. VM provisioning, SSH/port forwarding,
+  `PYMMO=0` compilation, original-server launch and live client validation remain
+  unperformed. Repository checks and closeout timing are recorded below.
+
+Documentation closeout: `pnpm test` passed **77 tests in 5 files (1.50 s)**;
+`git diff --check` passed. No implementation changed, so no browser or VM test
+was represented as a regression check for this update. At **08:43:56 UTC**,
+`df -k .` reported **54,333,612 KiB free** (51.82 GiB / 55.64 GB), still above
+the 25 GB floor. Preflight, documentation and tests took **1 minute 26 seconds**
+from session start; final commit/PR closeout follows this measurement.
