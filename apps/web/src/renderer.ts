@@ -7,7 +7,7 @@ import { Application, Container, Rectangle, Sprite, Texture } from 'pixi.js';
 import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
 import type { Session } from './session.js';
-import { DOOR_OBJECT_TYPE, RoofFade, parseObjectGraphics, roofHidden, tileKey } from './map-objects.js';
+import { DOOR_OBJECT_TYPE, RoofLights, nearRoof, parseObjectGraphics } from './map-objects.js';
 import type { ObjectGraphic } from './map-objects.js';
 
 class SpritePool {
@@ -46,7 +46,7 @@ export class WorldRenderer {
   private observer: ResizeObserver | undefined;
   private readonly world = new Container();
   private objectGraphics = new Map<number, ObjectGraphic>();
-  private readonly roofs = new RoofFade();
+  private readonly roofs = new RoofLights();
   private lastRender = 0;
 
   constructor(private readonly host: HTMLElement, private readonly report: (message: string) => void) {}
@@ -80,7 +80,7 @@ export class WorldRenderer {
   }
   async loadMap(id: number) {
     const epoch = ++this.epoch;
-    this.readyMap = undefined; this.map = undefined; this.roofs.clear();
+    this.readyMap = undefined; this.map = undefined;
     this.pools.forEach(pool => { pool.reset(); pool.finish(); });
     // Keep texture memory bounded to the current map. Late loads are discarded.
     for (const texture of this.textures.values()) if (texture !== Texture.EMPTY) texture.destroy();
@@ -88,7 +88,7 @@ export class WorldRenderer {
     this.textures.clear(); this.sources.clear(); this.pending.clear(); this.failed.clear(); this.loadedSheets = 0; this.clippedFrames = 0;
     const [bytes] = await Promise.all([fetchBytes(`Mapas/mapa${id}.csm`), this.loadMetadata()]);
     if (epoch !== this.epoch) return;
-    this.map = parseMap(bytes); this.mapName = this.map.name; this.readyMap = id;
+    this.map = parseMap(bytes); this.mapName = this.map.name; this.roofs.reset(this.map.triggers); this.readyMap = id;
   }
   private animation(id: number) {
     let animation = this.animations.get(id);
@@ -172,6 +172,7 @@ export class WorldRenderer {
     const cameraY = position.y * 32 + 16 - height / 2;
     this.world.position.set(-Math.round(cameraX * zoom), -Math.round(cameraY * zoom));
     const dt = this.lastRender ? Math.min(100, now - this.lastRender) : 16; this.lastRender = now;
+    this.roofs.update(this.map.triggers[(session.position!.y - 1) * 100 + session.position!.x - 1] ?? 0, dt);
     this.pools.forEach(pool => pool.reset());
     const minX = Math.max(1, Math.floor(cameraX / 32) - 10), maxX = Math.min(100, Math.ceil((cameraX + width) / 32) + 10);
     const minY = Math.max(1, Math.floor(cameraY / 32) - 2), maxY = Math.min(100, Math.ceil((cameraY + height) / 32) + 10);
@@ -190,9 +191,9 @@ export class WorldRenderer {
         const id = this.map.layers[layer]![tile]!;
         if (!id) continue;
         if (layer === 4) {
-          // Client roof rule (HayTecho + same-trigger fade): roofs above the player's own building turn see-through.
-          const alpha = this.roofs.step(tile, roofHidden(this.map.triggers, tileKey(session.position!.x, session.position!.y), tile), dt);
-          this.draw(pool, this.animation(id), x * 32, y * 32, now, true, alpha);
+          // Live VB6 roof rule: one alpha per roof trigger, 3x3 NearRoof, the player's own roof fades out.
+          const trigger = nearRoof(this.map.triggers, x, y);
+          this.draw(pool, this.animation(id), x * 32, y * 32, now, true, trigger ? this.roofs.alphaOf(trigger) : 1);
         } else this.draw(pool, this.animation(id), x * 32, y * 32, now, layer !== 0);
       }
     }

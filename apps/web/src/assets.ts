@@ -162,7 +162,8 @@ export interface Body { walk: Animation[]; bodyX: number; bodyY: number; headX: 
 export function readBody(bodies: Ini, molds: Ini, graphics: GraphicIndex, id: number): Body {
   const section = bodies.get(`body${id}`);
   if (!section) throw new Error(`Missing body ${id}`);
-  const value = (key: string) => Number(section.get(key) ?? 0);
+  // Some bodies (the ghost, 829) carry a trailing VB comment: "Walk1=51672 ' arriba".
+  const value = (key: string) => Number((section.get(key) ?? '0').split("'")[0]);
   const bodyX = value('bodyoffsetx'), bodyY = value('bodyoffsety');
   let walk: Animation[];
   if (value('std') === 0) {

@@ -62,6 +62,11 @@ describe('classic local resources', () => {
     expect(body.walk[0]!.frameMs).toBeCloseTo(27.7778);
     expect(body.headY).toBe(-2);
   });
+  it('ignores a trailing VB comment on a body value (the ghost body 829)', () => {
+    const graphics = parseGraphics('Grh7=1-3-0-0-32-32\nGrh8=1-3-0-0-32-32\nGrh9=1-3-0-0-32-32\nGrh10=1-3-0-0-32-32');
+    const body = readBody(parseIni("[BODY829]\nWalk1=7\t ' arriba\nWalk2=8\t ' derecha\nWalk3=9\t ' abajo\nWalk4=10  ' izq\nHeadOffsetY=-2"), new Map(), graphics, 829);
+    expect(body.walk).toHaveLength(4); expect(body.headY).toBe(-2);
+  });
   it('reads the 263-byte header and four int32 head references', () => {
     const bytes = Buffer.alloc(281); bytes.writeInt16LE(1, 263);
     [70_001, 70_002, 70_003, 70_004].forEach((n, i) => bytes.writeInt32LE(n, 265 + i * 4));

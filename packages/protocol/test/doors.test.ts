@@ -41,7 +41,8 @@ describe('door/object packets (VB6 PrepareMessageObjectCreate, WriteBlockPositio
     const rows = readFileSync(fixture, 'utf8').trim().split('\n').map(line => JSON.parse(line) as { dir: string; id: number; hex: string });
     let checked = 0;
     for (const row of rows) {
-      const body = Buffer.concat([Buffer.from([row.id & 255, row.id >> 8]), Buffer.from(row.hex, 'hex')]);
+      const body = Buffer.from(row.hex, 'hex'); // fixture format: hex is the full frame body incl. the 2-byte LE id
+      expect(body.readInt16LE(0)).toBe(row.id);
       if (row.dir === 's2c' && [50, 52, 53].includes(row.id)) { expect(hex(encodeServerPacket(decodeServerPacket(body) as never))).toBe(body.toString('hex')); checked++; }
       if (row.dir === 'c2s' && [95, 96].includes(row.id)) { expect(hex(encodeClientPacket(decodeClientPacket(body) as never))).toBe(body.toString('hex')); checked++; }
     }

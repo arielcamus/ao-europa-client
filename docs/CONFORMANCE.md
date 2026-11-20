@@ -14,8 +14,8 @@ session against it is a golden fixture: the new server must answer the same clie
 JSON Lines, UTF-8, one object per packet, in wire order of observation (a stable sort by `t_ms`; ties keep arrival order):
 
 ```json
-{"t_ms": 1532, "dir": "s2c", "id": 50, "name": "ObjectCreate", "hex": "24195e09010000000000"}
-{"t_ms": 4210, "dir": "c2s", "id": 96, "name": "DoubleClick", "hex": "4823"}
+{"t_ms": 1532, "dir": "s2c", "id": 50, "name": "ObjectCreate", "hex": "320024195e09010000000000"}
+{"t_ms": 4210, "dir": "c2s", "id": 96, "name": "DoubleClick", "hex": "60004823"}
 ```
 
 | field | meaning |
@@ -24,14 +24,14 @@ JSON Lines, UTF-8, one object per packet, in wire order of observation (a stable
 | `dir` | `c2s` client to server, `s2c` server to client |
 | `id` | packet id, the int16 at the start of the frame body (`ServerPacketID` / `ClientPacketID` of `PacketId.bas`, PYMMO=0) |
 | `name` | id name without the VB6 `e` prefix (`ObjectCreate`); `Unknown<id>` when not in the table. Informational, never compared |
-| `hex` | lower-case hex of the packet **payload**: the frame body after the 2-byte id, no length prefix. Empty string for empty packets |
+| `hex` | lower-case hex of the **full frame body**: the 2-byte little-endian packet id followed by the payload, no length prefix. An empty packet is just the id (`1400`) |
 
 Rules:
 
-- The length prefix is never stored; the recorder re-frames. `body = int16LE(id) + hex`.
-- Credentials: record with a throw-away local account. `LoginAccount` (`c2s` 305) keeps its `hex` but test accounts must be
-  `@local.test` with a password that is not reused anywhere. Never record a real account. Fixtures are committed, so a
-  recording must not contain secrets.
+- The length prefix is never stored; the recorder re-frames (`uint16LE(len(hex)/2) + body`). `hex` already starts with the id, so `hex` is exactly what `decodeServerPacket` / `decodeClientPacket` take.
+- Credentials: record with a throw-away local account (`@local.test`, a password used nowhere else). **The recorder redacts credential packets:
+  `LoginAccount` (305) and `CreateAccount` (304) are stored with an empty payload (`hex` is only the id, e.g. `3101`).** The recorder requires
+  `AO_EMAIL`, `AO_PASSWORD`, `AO_CHAR_ID`, `AO_CHAR` explicitly and has no defaults. A fixture still contains the character name and its data.
 - A fixture may be trimmed to a contiguous window only by removing whole leading/trailing packets, never edited inside.
 - Time-varying packets (`UserOnline`, `PlayWave`, `FlashScreen`, `hora`, server uptime strings, random `RainToggle`) may stay in
   the file; comparers must ignore them via the shared noise list (below).
@@ -40,13 +40,13 @@ Rules:
 
 ```sh
 # VB6 server must be listening on 127.0.0.1:7667 and the account must exist (tools/real-server/vb6-create-account.mjs).
-AO_PORT=7667 AO_EMAIL=<feature>@local.test AO_PASSWORD=... AO_CHAR_ID=<id> AO_CHAR=<name> \
+AO_PORT=7667 AO_EMAIL=<feature>@local.test AO_PASSWORD=... AO_CHAR_ID=<id> AO_CHAR=<name> [AO_ASSETS=<Recursos>] \
   node tools/conformance/vb6-record.mjs tools/conformance/scenario-<feature>.mjs tests/fixtures/vb6/<feature>/<scenario>.jsonl
 ```
 
 `tools/conformance/vb6-record.mjs` connects, logs in (`LoginAccount`, `LoginExistingChar`), runs the scenario's
 `export default async (rec) => { ... }` and writes the file. A scenario uses `rec.send(id, bodyBytes)`, `rec.wait(pred)`,
-`rec.sleep(ms)` and `rec.records`. `tools/conformance/scenario-doors.mjs` is the reference scenario.
+`rec.sleep(ms)` and `rec.records`; `tools/conformance/helpers.mjs` has `makeWalker(rec)` (path finding over the CSM from `AO_ASSETS`, `goto`, `step`, `click` with the VB6 counters). `scenario-doors.mjs` and `scenario-walkto.mjs` are the reference scenarios.
 `tools/conformance/server-packet-names.json` maps server ids to names (generated from `PacketId.bas`; names are for humans only).
 
 ## Using a fixture as a test
@@ -70,9 +70,16 @@ the payload lets one fixture row be compared with whatever encoder a server uses
 
 | file | what it records |
 | --- | --- |
-| `doors/open-door-castle-entry-refused.jsonl` | login as `Aotest`, `LeftClick` (x,y,counter) on the plain door (72,35): look only; on (71,35): the door toggles open (`BlockPosition`x4 + `ObjectCreate` 2333); walking onto the door tile is bounced by the server (castle-entry trigger 26: `AreaChanged` re-sync back to (72,36)); a `LeftClick` from too far only looks |
+| `doors/open-door-castle-entry-refused.jsonl` | login as `Aotesta`; `LeftClick` (x,y,counter) on the plain door (72,35) while the player stands on (72,36): look only; `LeftClick` on (71,35): the door toggles (`BlockPosition`x4 + `ObjectCreate`); walking onto the door tile is bounced by the server (castle-entry trigger 26, `AreaChanged` resync); a click from too far only looks |
+| `buildings/bank-doors-closed.jsonl` | walking onto the Finanzas doorway (77,56)->(77,55): rejected (`PosUpdate` unchanged); the doors are objects 1424/1426 that were missing from `Obj.dat` |
+| `buildings/church-patron-tile.jsonl` | walking into the Templo interior (trigger 20, ONLY_PATREON_TILE): `LocaleMsg` and `PosUpdate` unchanged |
 
-Server facts verified while recording (VB6 `HandleLeftClick`/`HandleWorldAction`/`HandleDoorAction`):
-`LeftClick` is `x, y, counter:int32`; without the counter the packet is logged as edited and ignored. `DoubleClick` is read and ignored.
-A door acts on a click at the tile whose (x+1,y), (x+1,y+1) or (x,y+1) neighbour holds it; a click exactly on the door tile only looks. The
-reach is `Distance <= 2`. Keyed doors (`Llave=1`) answer with a locale message. Tile exits (TE) warp with `ChangeMap` + `CharacterCreate`(self) + `UserCharIndexInServer`.
+Server facts verified while recording (VB6 `HandleLeftClick` / `HandleWorldAction` / `HandleDoorAction` / `LegalWalk`):
+
+- `LeftClick` is `x, y, counter:int32`; without the counter the packet is logged as edited and ignored. `DoubleClick` is read and ignored.
+- `HandleLeftClick` skips the world action when ANY character (the player included) stands on `(x,y)` or `(x,y+1)` and when a non-interactable NPC does.
+  Otherwise an object on `(x,y)` is used directly (a door toggles); only if `(x,y)` has no object does it try `(x+1,y)`, `(x+1,y+1)`, `(x,y+1)` in that order.
+  Reach is Euclidean `Distance <= 2`. A `Llave=1` door answers with a locale message; a `Subtipo=1` door also toggles `(x-3,y+1)`.
+- Walking: `LegalWalk` refuses the move when the TARGET tile's `Blocked` has bit `2^(heading-1)` (N=1,E=2,S=4,W=8), a `FLAG_AGUA` tile (0x20) on foot, an NPC/user on it, a Patreon-only tile (trigger 20) for non-patrons, and castle-entry triggers for non-members.
+- Tile exits (TE) warp with `ChangeMap` + `CharacterCreate`(self) + `UserCharIndexInServer`.
+- Packet counters are per family (`PacketNames`), per connection, started at 1 (`apps/web/src/packet-counters.ts`).

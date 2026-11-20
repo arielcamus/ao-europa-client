@@ -3,7 +3,7 @@ import { ClientPacketId as C, DoorClientPacketId, DoorServerPacketId as D, Serve
 import type { ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
 import { parseMap } from '../src/assets.js';
-import { MapObjects, RoofFade, doorClickTile, hayTecho, parseObjectGraphics, roofHidden, tileKey } from '../src/map-objects.js';
+import { MapObjects, RoofLights, doorClickTile, hayTecho, nearRoof, parseObjectGraphics, tileKey } from '../src/map-objects.js';
 import { Session } from '../src/session.js';
 
 function harness() {
@@ -20,20 +20,23 @@ describe('roof rule (TileEngine.HayTecho)', () => {
     for (const t of [1, 4, 16, 60, 61, 200]) expect(hayTecho(t), String(t)).toBe(true);
     for (const t of [0, 2, 3, 5, 26, 29, 54, 59]) expect(hayTecho(t), String(t)).toBe(false);
   });
-  it('hides only roof tiles sharing the trigger of the tile the player stands on', () => {
-    const triggers = new Uint16Array(10_000);
-    triggers[tileKey(10, 10)] = 61; triggers[tileKey(11, 10)] = 61; triggers[tileKey(30, 30)] = 62; triggers[tileKey(5, 5)] = 29;
-    expect(roofHidden(triggers, tileKey(10, 10), tileKey(11, 10))).toBe(true);
-    expect(roofHidden(triggers, tileKey(10, 10), tileKey(30, 30))).toBe(false);
-    expect(roofHidden(triggers, tileKey(20, 20), tileKey(11, 10))).toBe(false); // outdoors: nothing hides
-    expect(roofHidden(triggers, tileKey(5, 5), tileKey(5, 5))).toBe(false);      // 29 is not a roof trigger
+  it('NearRoof returns the first roof trigger in the 3x3 block (rows first), else 0', () => {
+    const t = new Uint16Array(10_000); t[tileKey(10, 10)] = 61; t[tileKey(12, 10)] = 62; t[tileKey(5, 5)] = 29;
+    expect(nearRoof(t, 11, 10)).toBe(61);               // (10,10) comes before (12,10)
+    expect(nearRoof(t, 12, 11)).toBe(62);
+    expect(nearRoof(t, 5, 5)).toBe(0);                   // 29 is not a roof trigger
+    expect(nearRoof(t, 1, 1)).toBe(0);                   // edges are clamped to the map
   });
-  it('fades out toward a floor and back in to opaque at the client rate', () => {
-    const roof = new RoofFade();
-    let alpha = 1; for (let i = 0; i < 40; i++) alpha = roof.step(1, true, 16);
-    expect(alpha).toBeLessThan(0.1); expect(alpha).toBeGreaterThan(0);
-    for (let i = 0; i < 40; i++) alpha = roof.step(1, false, 16);
-    expect(alpha).toBe(1);
+  it('keeps one alpha per roof trigger: the roof under the player fades to 0 at 48/255 per tick, the others return to opaque', () => {
+    const t = new Uint16Array(10_000); t[tileKey(10, 10)] = 61; t[tileKey(30, 30)] = 62; t[tileKey(5, 5)] = 29;
+    const roofs = new RoofLights(); roofs.reset(t);
+    expect(roofs.size).toBe(2); expect(roofs.alphaOf(61)).toBe(1); expect(roofs.alphaOf(29)).toBe(1);
+    for (let i = 0; i < 3; i++) roofs.update(61, 16);
+    expect(roofs.alphaOf(61)).toBeCloseTo(1 - 3 * 48 / 255, 5); expect(roofs.alphaOf(62)).toBe(1);
+    for (let i = 0; i < 10; i++) roofs.update(61, 16);
+    expect(roofs.alphaOf(61)).toBe(0);                    // floor 0, not a visible minimum
+    for (let i = 0; i < 10; i++) roofs.update(0, 16);     // outdoors again
+    expect(roofs.alphaOf(61)).toBe(1);
   });
   it('reads the trigger section of a CSM map', () => {
     const chunks: Buffer[] = []; const n = (v: number, s: number) => { const b = Buffer.alloc(s); b.writeIntLE(v, 0, s); chunks.push(b); };
@@ -61,15 +64,26 @@ describe('ground objects and doors', () => {
     map.create(72, 35, { objIndex: 2333, amount: 1, elementalTags: 0 }); expect(map.objectAt(72, 35)?.objIndex).toBe(2333);
     map.delete(72, 35); expect(map.objectAt(72, 35)).toBeUndefined();
   });
-  it('picks the click tile the VB6 server accepts for a door (neighbour offsets, never the door tile itself)', () => {
+  it('sends the TAPPED tile like VB6; the server skips the click when a character stands on it or below it', () => {
     const map = new MapObjects(); map.create(72, 35, { objIndex: 2334, amount: 1, elementalTags: 0 });
     const isDoor = (i: number) => i === 2334 || i === 2333;
-    expect(doorClickTile(map, isDoor, { x: 71, y: 35 })).toEqual({ x: 71, y: 35 });   // (x+1,y) is the door
-    expect(doorClickTile(map, isDoor, { x: 72, y: 34 })).toEqual({ x: 72, y: 34 });   // (x,y+1) is the door
-    expect(doorClickTile(map, isDoor, { x: 71, y: 34 })).toEqual({ x: 71, y: 34 });   // (x+1,y+1) is the door
-    expect(doorClickTile(map, isDoor, { x: 72, y: 35 })).toEqual({ x: 72, y: 34 });   // door tile itself -> tile above
-    expect(doorClickTile(map, isDoor, { x: 60, y: 60 })).toBeUndefined();
-    expect(doorClickTile(map, i => i === 1, { x: 72, y: 35 })).toBeUndefined();        // not a door object
+    const nobody = () => false;
+    expect(doorClickTile(map, isDoor, { x: 72, y: 35 }, nobody)).toEqual({ x: 72, y: 35 });   // the door tile itself
+    expect(doorClickTile(map, isDoor, { x: 71, y: 35 }, nobody)).toEqual({ x: 71, y: 35 });   // (x+1,y) is the door, tile has no object
+    expect(doorClickTile(map, isDoor, { x: 72, y: 34 }, nobody)).toEqual({ x: 72, y: 34 });   // (x,y+1)
+    expect(doorClickTile(map, isDoor, { x: 71, y: 34 }, nobody)).toEqual({ x: 71, y: 34 });   // (x+1,y+1)
+    expect(doorClickTile(map, isDoor, { x: 60, y: 60 }, nobody)).toBeUndefined();
+    expect(doorClickTile(map, i => i === 1, { x: 72, y: 35 }, nobody)).toBeUndefined();          // not a door
+    // Live finding: the player stood at (72,36) = (x,y+1) of the door, so the server ignored the click on (72,35).
+    const playerBelow = (x: number, y: number) => x === 72 && y === 36;
+    expect(doorClickTile(map, isDoor, { x: 72, y: 35 }, playerBelow)).toEqual({ x: 71, y: 35 }); // fallback (x-1,y)
+    const west = (x: number, y: number) => (x === 72 && y === 36) || (x === 71 && y === 35);
+    expect(doorClickTile(map, isDoor, { x: 72, y: 35 }, west)).toEqual({ x: 72, y: 34 });        // (x-1,y) and (x-1,y-1) have a character on/below -> (x,y-1)
+    const crowd = (x: number, y: number) => y === 36 || (x === 71 && y === 35) || (x === 71 && y === 34) || (x === 72 && y === 34);
+    expect(doorClickTile(map, isDoor, { x: 72, y: 35 }, crowd)).toBeUndefined();
+    // A door on a neighbour is only used when the tapped tile has no object of its own.
+    map.create(71, 35, { objIndex: 5, amount: 1, elementalTags: 0 });
+    expect(doorClickTile(map, isDoor, { x: 71, y: 35 }, nobody)).toBeUndefined();
   });
   it('session applies door packets from the server and drops them on a map change', () => {
     const h = harness(); h.login();
@@ -78,11 +92,15 @@ describe('ground objects and doors', () => {
     expect(h.session.mapObjects.blocked.get(tileKey(72, 35))).toBe(15);
     h.recv({ id: D.ObjectCreate, x: 72, y: 35, objIndex: 2333, amount: 1, elementalTags: 0 }, { id: D.BlockPosition, x: 72, y: 35, sides: 0 });
     expect(h.session.mapObjects.objectAt(72, 35)?.objIndex).toBe(2333);
+    h.recv({ id: D.ObjectCreate, x: 72, y: 35, objIndex: 0, amount: 0, elementalTags: 0 });  // ObjIndex <= 0 clears the tile
+    expect(h.session.mapObjects.objectAt(72, 35)).toBeUndefined();
+    h.recv({ id: D.ObjectCreate, x: 0, y: 200, objIndex: 5, amount: 1, elementalTags: 0 }, { id: D.BlockPosition, x: 101, y: 3, sides: 1 }); // off-map: ignored
+    expect(h.session.mapObjects.objects.size).toBe(0); expect(h.session.mapObjects.blocked.size).toBe(1);
     h.recv({ id: S.ChangeMap, map: 600, resourceMap: 600 });
     expect(h.session.mapObjects.objects.size).toBe(0); expect(h.session.mapObjects.blocked.size).toBe(0);
     expect(h.session.ready).toBe(false); // placement is awaited again after a ChangeMap
   });
-  it('sends LeftClick (with a rising counter) and DoubleClick only when playing, in range and paced by the leftClick interval', () => {
+  it('uses one shared counter per VB6 family for the whole session and sends LeftClick (with a rising counter) and DoubleClick only when playing, in range and paced by the leftClick interval', () => {
     const h = harness();
     expect(h.session.leftClick(72, 35)).toBe(false);            // not logged in
     h.login(); h.advance(1000);

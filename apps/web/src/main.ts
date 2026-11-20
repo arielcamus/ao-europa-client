@@ -161,11 +161,13 @@ const aim = (event: PointerEvent) => {
   touchHeading = Math.abs(x) > Math.abs(y) ? (x > 0 ? Heading.East : Heading.West) : (y > 0 ? Heading.South : Heading.North);
 };
 // Doors: the reference server opens/closes a door on LeftClick(x, y, counter) (HandleWorldAction); DoubleClick is ignored.
-// A tap/click on a door object sends that LeftClick instead of walking.
+// A tap/click on a door sends LeftClick for the tapped tile (VB6 behaviour), shifted only when a character stands on it or below it.
 function doorAt(event: PointerEvent | MouseEvent) {
   if (!session?.ready) return undefined;
   const tile = renderer.tileAt(session, event.clientX, event.clientY, performance.now());
-  return tile && doorClickTile(session.mapObjects, objIndex => renderer.isDoor(objIndex), tile);
+  if (!tile) return undefined;
+  const occupied = (x: number, y: number) => [...session!.characters.values()].some(c => c.x === x && c.y === y);
+  return doorClickTile(session.mapObjects, objIndex => renderer.isDoor(objIndex), tile, occupied);
 }
 viewport.addEventListener('pointerdown', event => {
   if (!event.isPrimary || !session?.ready) return;
