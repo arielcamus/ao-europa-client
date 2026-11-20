@@ -1,0 +1,160 @@
+--- a/Codigo/CharacterPersistence.bas
++++ b/Codigo/CharacterPersistence.bas
+@@ -118,7 +118,7 @@
+         If Not RS Is Nothing Then
+             While Not RS.EOF
+                 dbgStep = "LoadCharacterBank L117: If RS!Number >= LBound(.BancoInvent.Object) And RS!Number <= UBound(.BancoInvent"
+-                If RS!Number >= LBound(.BancoInvent.Object) And RS!Number <= UBound(.BancoInvent.Object) Then
++                If CLng(RS!Number) >= LBound(.BancoInvent.Object) And CLng(RS!Number) <= UBound(.BancoInvent.Object) Then
+                     dbgStep = "LoadCharacterBank L118: With .BancoInvent.Object(RS!Number)"
+                     With .BancoInvent.Object(CLng(RS!Number))
+                         dbgStep = "LoadCharacterBank L119: db_obj_index = RS!item_id"
+@@ -226,8 +226,8 @@
+                                 .ElementalTags = RS!elemental_tags
+                                 dbgStep = "LoadCharacterInventory L211: If RS!is_equipped Then"
+                                 If RS!is_equipped Then
+-                                    dbgStep = "LoadCharacterInventory L212: Call EquiparInvItem(UserIndex, RS!Number, True)"
+-                                    Call EquiparInvItem(UserIndex, RS!Number, True)
++                                    dbgStep = "LoadCharacterInventory L212: Call EquiparInvItem(UserIndex, CByte(RS!Number), True)"
++                                    Call EquiparInvItem(UserIndex, CByte(RS!Number), True)
+                                 End If
+                             Else
+                                 invalid_objects = invalid_objects & db_inv_slot & ":" & db_obj_index & ";"
+@@ -568,12 +568,12 @@
+     If Not RS Is Nothing Then
+         While Not RS.EOF
+             ' Solo slots de domadas: un number fuera de rango caería en un slot de invocación
+-            dbgStep = "SetupUserPets L448: If RS!Number >= 1 And RS!Number <= MAXMASCOTAS Then"
+-            If RS!Number >= 1 And RS!Number <= MAXMASCOTAS Then
++            dbgStep = "SetupUserPets L448: If CLng(RS!Number) >= 1 And CLng(RS!Number) <= MAXMASCOTAS Then"
++            If CLng(RS!Number) >= 1 And CLng(RS!Number) <= MAXMASCOTAS Then
+                 dbgStep = "SetupUserPets L449: User.MascotasType(RS!Number) = RS!pet_id"
+                 User.MascotasType(CLng(RS!Number)) = CLng(SanitizeNullValue(RS!pet_id, 0))
+-                dbgStep = "SetupUserPets L450: If val(RS!pet_id) <> 0 Then"
+-                If val(RS!pet_id) <> 0 Then
++                dbgStep = "SetupUserPets L450: If val(CStr(SanitizeNullValue(RS!pet_id, 0))) <> 0 Then"
++                If val(CStr(SanitizeNullValue(RS!pet_id, 0))) <> 0 Then
+                     User.NroMascotas = User.NroMascotas + 1
+                 End If
+             End If
+@@ -658,7 +658,7 @@
+                     If QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredNPCs Then
+                         Dim NPCs() As String
+                         dbgStep = "SetupUserQuests L517: NPCs = Split(RS!NPCs, ""-"")"
+-                        NPCs = Split(RS!NPCs, "-")
++                        NPCs = Split(CStr(SanitizeNullValue(RS!NPCs, vbNullString)), "-")
+                         dbgStep = "SetupUserQuests L518: ReDim User.QuestStats.Quests(RS!Number).NPCsKilled(1 To QuestList(User.QuestStat"
+                         ReDim User.QuestStats.Quests(CLng(RS!Number)).NPCsKilled(1 To QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredNPCs)
+                         dbgStep = "SetupUserQuests L519: For LoopC = 1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).Require"
+@@ -671,7 +671,7 @@
+                     If QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredTargetNPCs Then
+                         Dim NPCsTarget() As String
+                         dbgStep = "SetupUserQuests L525: NPCsTarget = Split(RS!NPCsTarget, ""-"")"
+-                        NPCsTarget = Split(RS!NPCsTarget, "-")
++                        NPCsTarget = Split(CStr(SanitizeNullValue(RS!NPCsTarget, vbNullString)), "-")
+                         dbgStep = "SetupUserQuests L526: ReDim User.QuestStats.Quests(RS!Number).NPCsTarget(1 To QuestList(User.QuestStat"
+                         ReDim User.QuestStats.Quests(CLng(RS!Number)).NPCsTarget(1 To QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredTargetNPCs)
+                         dbgStep = "SetupUserQuests L527: For LoopC = 1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).Require"
+--- a/Codigo/ModCastle.bas
++++ b/Codigo/ModCastle.bas
+@@ -128,7 +128,7 @@
+     
+     Do While Not RS.EOF
+         Dim CastleSlot As Integer
+-        CastleSlot = GetCastleSlotById(RS!castle_id)
++        CastleSlot = GetCastleSlotById(CInt(RS!castle_id))
+         Debug.Assert CastleSlot > 0
+         Dim CharacterName As String
+         CharacterName = LCase$(CStr(RS!character_name))
+@@ -197,7 +197,7 @@
+         Debug.Assert False
+         Exit Sub
+     End If
+-    ReDim CastleData(1 To RS.Fields(0).value)
++    ReDim CastleData(1 To CLng(RS.Fields(0).value))
+ 
+     Dim i As Long
+     i = 1
+@@ -224,7 +224,7 @@
+     
+             If Not IsNull(RS!owner_character_id) Then
+                 .owner_char_id = (RS!owner_character_id)
+-                .owner_char_name = LCase$(GetCharacterNameByUserId(RS!owner_character_id))
++                .owner_char_name = LCase$(GetCharacterNameByUserId(CLng(RS!owner_character_id)))
+             End If
+             
+             If Not IsNull(RS!foundation_date) Then
+@@ -799,7 +799,7 @@
+                     'if charname is no longer in the whitelist dictionary
+                     If Not .castleWhiteList.Exists(LCase$(CStr(RS!character_name))) Then
+                         'Delete char from db
+-                        Set RS2 = Query(DELETE_CHAR_IN_CASTLE_WHITELIST, RS!id)
++                        Set RS2 = Query(DELETE_CHAR_IN_CASTLE_WHITELIST, CLng(RS!id))
+                         If RS2 Is Nothing Then
+                             Debug.Assert False
+                             Call LogInfoServidor("Error while deleting whitelisted character in db charname: " & RS!character_name & " for castle: " & RS!castle_id)
+@@ -807,7 +807,7 @@
+                     'if he is, check if he is saved in db
+                     Else
+                         'insert if doesn't exist, ignore if he does (logic inside the query)
+-                        Set RS2 = Query(INSERT_OR_IGNORE_NEW_CHAR_IN_CASTLE_WHITELIST, RS!character_name, RS!castle_id)
++                        Set RS2 = Query(INSERT_OR_IGNORE_NEW_CHAR_IN_CASTLE_WHITELIST, CStr(RS!character_name), CLng(RS!castle_id))
+                     End If
+                     RS.MoveNext
+                 Loop
+--- a/Codigo/ModGlobalQuests.bas
++++ b/Codigo/ModGlobalQuests.bas
+@@ -160,13 +160,13 @@
+                 .Name = RS!Name
+                 .ObjectIndex = RS!obj_id
+                 .GatheringThreshold = RS!threshold
+-                .StartDate = SQLiteToDate(RS!start_date)
+-                .EndDate = SQLiteToDate(RS!end_date)
++                .StartDate = SQLiteToDate(CStr(RS!start_date))
++                .EndDate = SQLiteToDate(CStr(RS!end_date))
+                 .IsActive = RS!is_active
+                 Set RS = Query(SUM_TOTAL_AMOUNT_FROM_USER_CONTRIBUTION, i)
+                 If Not IsNull(RS!total_amount) Then
+                     .GatheringGlobalCounter = RS!total_amount
+-                    .GatheringGlobalInstallments = RS!total_amount + .GatheringInitialInstallments
++                    .GatheringGlobalInstallments = CLng(RS!total_amount) + .GatheringInitialInstallments
+                 End If
+             End If
+         End With
+--- a/Codigo/clsClan.cls
++++ b/Codigo/clsClan.cls
+@@ -337,7 +337,7 @@
+         Dim i As Integer
+         i = 0
+         While Not RS.EOF
+-            list(i) = GetUserName(RS!user_id)
++            list(i) = GetUserName(CLng(RS!user_id))
+             i = i + 1
+             RS.MoveNext
+         Wend
+--- a/Codigo/modDatabase.bas
++++ b/Codigo/modDatabase.bas
+@@ -456,7 +456,7 @@
+         ElseIf EsAdmin(Personaje(i).nombre) Then
+             Personaje(i).Status = 7
+         End If
+-        If val(RS!is_dead) = 1 Or val(RS!is_sailing) = 1 Then
++        If val(CStr(SanitizeNullValue(RS!is_dead, 0))) = 1 Or val(CStr(SanitizeNullValue(RS!is_sailing, 0))) = 1 Then
+             Personaje(i).Cabeza = 0
+         End If
+         RS.MoveNext
+@@ -758,10 +758,10 @@
+     End If
+     Dim IsLegion As Boolean
+     Dim IsArmy   As Boolean
+-    IsLegion = RS!Status = e_Facciones.concilio Or RS!Status = e_Facciones.Caos
+-    IsArmy = RS!Status = e_Facciones.consejo Or RS!Status = e_Facciones.Armada
+-    Call WriteCharacterInfo(UserIndex, username, RS!race_id, RS!class_id, RS!genre_id, RS!level, RS!gold, RS!bank_gold, GuildRequestHistory, gName, Miembro, IsArmy, IsLegion, _
+-            RS!ciudadanos_matados, RS!criminales_matados)
++    IsLegion = CLng(RS!Status) = e_Facciones.concilio Or CLng(RS!Status) = e_Facciones.Caos
++    IsArmy = CLng(RS!Status) = e_Facciones.consejo Or CLng(RS!Status) = e_Facciones.Armada
++    Call WriteCharacterInfo(UserIndex, username, CLng(RS!race_id), CLng(RS!class_id), CLng(RS!genre_id), CByte(RS!level), CLng(RS!gold), CLng(RS!bank_gold), GuildRequestHistory, gName, Miembro, IsArmy, IsLegion, _
++            CLng(RS!ciudadanos_matados), CLng(RS!criminales_matados))
+     Exit Sub
+ ErrorHandler:
+     Call LogDatabaseError("Error in SendCharacterInfoDatabase: " & username & ". " & Err.Number & " - " & Err.Description)
