@@ -67,6 +67,8 @@ export class WorldRenderer {
   locale: LocaleData | undefined;
   /** Tile under the mouse: NPC names are only drawn there, as in Char_Render (TX, TY). */
   hoverTile: { x: number; y: number } | undefined;
+  /** The HideNames key (binding 7, VB6 `Nombres`): names and titles over characters on or off. */
+  showNames = true;
   /** Top-left of the visible world in native pixels, from the last frame (combat overlay, hover tile).*/
   camera = { x: 0, y: 0 };
 
@@ -283,7 +285,7 @@ export class WorldRenderer {
       for (const layer of sprites.layers(char, heading)) {
         this.draw(pool, layer.animation, px + layer.x, py + layer.y, layer.walks && moving ? elapsed : 0);
       }
-      if (char.npc) {
+      if (!this.showNames) { /* HideNames */ } else if (char.npc) {
         // NPC names appear only under the cursor, in (0,129,195).
         if (this.hoverTile && this.hoverTile.x === char.x && this.hoverTile.y === char.y && char.name) {
           this.label(char.name, NPC_NAME_COLOR, px + 16, py + 31);

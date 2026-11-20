@@ -1,0 +1,15 @@
+{"t_ms":1537,"dir":"c2s","id":288,"name":"UseItemU","hex":"20010401000000"}
+{"t_ms":1538,"dir":"s2c","id":78,"name":"UpdateHungerAndThirst","hex":"4e0064646464"}
+{"t_ms":1538,"dir":"s2c","id":55,"name":"Unknown55","hex":"37000700322f0000"}
+{"t_ms":1538,"dir":"s2c","id":63,"name":"ChangeInventorySlot","hex":"3f0004640e62000000000000000000000000"}
+{"t_ms":2216,"dir":"s2c","id":112,"name":"Unknown112","hex":"70000400"}
+{"t_ms":2539,"dir":"c2s","id":99,"name":"UseItem","hex":"6300070101000000"}
+{"t_ms":2541,"dir":"s2c","id":55,"name":"Unknown55","hex":"37008700322f0000"}
+{"t_ms":2541,"dir":"s2c","id":102,"name":"FYA","hex":"660014133c001313"}
+{"t_ms":2541,"dir":"s2c","id":61,"name":"UpdateUserStats","hex":"3d001400140000000000000000003c003c0000000000e803000001f40100000000000003"}
+{"t_ms":2541,"dir":"s2c","id":63,"name":"ChangeInventorySlot","hex":"3f0007f21076000000000000000000000000"}
+{"t_ms":3540,"dir":"c2s","id":288,"name":"UseItemU","hex":"20010602000000"}
+{"t_ms":3542,"dir":"s2c","id":102,"name":"FYA","hex":"660014153c001313"}
+{"t_ms":3542,"dir":"s2c","id":55,"name":"Unknown55","hex":"37008700322f0000"}
+{"t_ms":3542,"dir":"s2c","id":61,"name":"UpdateUserStats","hex":"3d001400140000000000000000003c003c0000000000e803000001f40100000000000003"}
+{"t_ms":3542,"dir":"s2c","id":63,"name":"ChangeInventorySlot","hex":"3f0006f11062000000000000000000000000"}

@@ -10,6 +10,7 @@ import type { WorldRenderer } from './renderer.js';
 import { loadInterface, loadedInterfaceUrl } from './interface-assets.js';
 import { renderMessage } from './chat-console.js';
 import { loadSpellTables, swapSpellSlots } from './spells.js';
+import { ObjectCatalog, loadObjectIni } from './object-catalog.js';
 
 export const element = <T extends HTMLElement = HTMLElement>(id: string) => {
   const node = document.getElementById(id);
@@ -29,6 +30,9 @@ export class ClassicUI {
   private selectedItem = 0;
   private selectedSpell = 0;
   private slotButtons: HTMLButtonElement[] = [];
+  /** Double click on an inventory item (picInv_DblClick -> UserItemClick); set by main.ts. */
+  onActivate: ((slot: number) => void) | undefined;
+  private catalog: ObjectCatalog | undefined;
 
   constructor(private readonly renderer: WorldRenderer, private readonly report: (message: string) => void) {
     for (let i = 0; i < 42; i++) {
@@ -42,6 +46,7 @@ export class ClassicUI {
         this.selectedItem = item ? i + 1 : 0; this.markItem();
         if (item) this.session?.ui.message(this.objects.get(`obj${item.object}`)?.get('texto') ?? button.title);
       });
+      button.addEventListener('dblclick', () => { if (this.session?.ui.inventory.has(i + 1)) { this.selectedItem = i + 1; this.markItem(); this.onActivate?.(i + 1); } });
       element('inventory').append(button); this.slotButtons.push(button);
     }
     element('inventory-tab').onclick = () => this.showSpells(false);
@@ -87,11 +92,11 @@ export class ClassicUI {
       else node.style.backgroundImage = `url("${url}")`;
     });
     const [objects, spells] = await Promise.all([
-      fetchText('Dat/Obj.dat'), fetchText('Dat/Hechizos.dat'), ...imageTasks,
+      loadObjectIni(), fetchText('Dat/Hechizos.dat'), ...imageTasks,
       this.sheet(135), this.renderer.graphic(47743),
       ...['centrohechizo', 'centroinventario', 'ventanaprincipal_info'].map(name => loadInterface(name)),
     ]);
-    this.objects = parseIni(objects); this.spells = parseIni(spells);
+    this.objects = objects; this.catalog = new ObjectCatalog(objects); this.spells = parseIni(spells);
     await loadSpellTables(this.spells).catch(error => this.report(String(error)));
     await this.renderInventory();
     element('classic').dataset.uiReady = 'true';
@@ -103,6 +108,24 @@ export class ClassicUI {
       pending = image.decode().then(() => image); this.sheets.set(file, pending);
     }
     return pending;
+  }
+  /** Slot selected in the main inventory; 200 is the gold pseudo-slot (FLAGORO). */
+  get selectedSlot() { return this.selectedItem; }
+  selectGold() { this.selectedItem = 200; this.markItem(); }
+  /** The 32x32 item picture the inventory draws, shared with the shop window. */
+  async itemArt(grh: number): Promise<HTMLCanvasElement> {
+    const frame = await this.renderer.graphic(grh), sheet = await this.sheet(frame.file);
+    const canvas = document.createElement('canvas'); canvas.width = 32; canvas.height = 32; canvas.className = 'item-art';
+    const ctx = canvas.getContext('2d')!;
+    ctx.drawImage(sheet, frame.x, frame.y, frame.width, frame.height, Math.floor((32 - frame.width) / 2), 32 - frame.height, frame.width, frame.height);
+    const pixels = ctx.getImageData(0, 0, 32, 32);
+    for (let j = 0; j < pixels.data.length; j += 4) if (!pixels.data[j] && !pixels.data[j + 1] && !pixels.data[j + 2]) pixels.data[j + 3] = 0;
+    ctx.putImageData(pixels, 0, 0);
+    return canvas;
+  }
+  async slotBackground(grh: number): Promise<{ image: string; position: string }> {
+    const frame = await this.renderer.graphic(grh);
+    return { image: `url("/ao-assets/Graficos/${frame.file}.png")`, position: `-${frame.x}px -${frame.y}px` };
   }
   private markItem() {
     this.slotButtons.forEach((button, i) => button.setAttribute('aria-pressed', String(i + 1 === this.selectedItem)));
@@ -177,6 +200,7 @@ export class ClassicUI {
       this.session = session; this.revision = -1; this.selectedItem = 0; this.selectedSpell = 0; this.showSpells(false); this.showMenu(false);
     }
     if (!session) return;
+    if (this.catalog) session.catalog ??= this.catalog;
     const ui = session.ui, stats = ui.stats;
     element('cast').setAttribute('aria-disabled', String(!session.ready));
     const hp = stats.hp ?? session.self?.minHp, maxHp = stats.maxHp ?? session.self?.maxHp;

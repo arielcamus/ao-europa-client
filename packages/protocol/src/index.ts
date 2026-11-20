@@ -6,3 +6,5 @@ export * from './packets/npcs.js';
 export * from './packets/chat.js';
 export * from './packets/combat.js';
 export * from './packets/spells.js';
+export * from './packets/items.js';
+export * from './packets/keys.js';
