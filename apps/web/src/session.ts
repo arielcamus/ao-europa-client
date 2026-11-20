@@ -4,8 +4,10 @@
  * See ../../../LICENSE and ../../../NOTICE.
  */
 import { ClientPacketId as C, ServerPacketId as S, Heading, FrameDecoder, decodeServerPacket, encodeClientFrame } from '@ao/protocol';
+import { DoorClientPacketId, DoorServerPacketId as DoorServer } from '@ao/protocol';
 import type { CharacterCreate, ClientPacket } from '@ao/protocol';
 import { ClassicState } from './ui-state.js';
+import { MapObjects } from './map-objects.js';
 
 export interface Position { x: number; y: number }
 export interface Motion { from: Position; to: Position; started: number; duration: number }
@@ -14,6 +16,8 @@ export type Phase = 'connecting' | 'account' | 'login' | 'playing' | 'closed';
 /** Transport-independent state. Only one position query/walk may be outstanding. */
 export class Session {
   readonly ui = new ClassicState();
+  /** Ground objects (doors included) and server block overrides for the current map. */
+  readonly mapObjects = new MapObjects();
   characterLevel: number | undefined;
   phase: Phase = 'connecting';
   map: number | undefined;
@@ -82,7 +86,7 @@ export class Session {
           this.map = packet.map; this.resourceMap = packet.resourceMap;
           this.position = undefined; this.motion = undefined; this.pending = undefined;
           this.placementDeadline = this.clock() + 10_000;
-          this.characters.clear();
+          this.characters.clear(); this.mapObjects.clear();
           // Retain self index across warps; require a fresh CharacterCreate for placement.
           break;
         case S.CharacterCreate:
@@ -104,6 +108,7 @@ export class Session {
           if (packet.walk < 0 || packet.walk > 60_000) throw new Error('Invalid walk interval');
           this.walkInterval = packet.walk;
           this.talkInterval = Math.max(500, packet.talk);
+          this.clickInterval = Math.max(100, packet.leftClick);
           break;
         case S.PosUpdate: this.place(packet.x, packet.y); break;
         case S.PosUpdateUserChar:
@@ -115,6 +120,9 @@ export class Session {
           if (packet.charIndex === this.charIndex) this.place(packet.x, packet.y);
           break;
         }
+        case DoorServer.ObjectCreate: this.mapObjects.create(packet.x, packet.y, packet); break;
+        case DoorServer.ObjectDelete: this.mapObjects.delete(packet.x, packet.y); break;
+        case DoorServer.BlockPosition: this.mapObjects.block(packet.x, packet.y, packet.sides); break;
         case S.ErrorMsg: throw new Error(`Server: ${packet.message}`);
         case S.Disconnect: throw new Error('The server disconnected this character');
       }
@@ -165,6 +173,17 @@ export class Session {
       this.send({ id: C.RequestPositionUpdate });
     }
   }
+  /** Classic LeftClick on a map tile (client Protocol_Writes.WriteLeftClick). */
+  leftClick(x: number, y: number): boolean { return this.tileClick(DoorClientPacketId.LeftClick, x, y); }
+  /** Classic DoubleClick: opens/closes the door object on the tile, or uses what is there. */
+  doubleClick(x: number, y: number): boolean { return this.tileClick(DoorClientPacketId.DoubleClick, x, y); }
+  private lastClick = -Infinity;
+  private tileClick(id: 95 | 96, x: number, y: number): boolean {
+    const now = this.clock();
+    if (!this.ready || now - this.lastClick < this.clickInterval || x < 1 || y < 1 || x > 100 || y > 100) return false;
+    this.lastClick = now; this.send({ id, x, y }); return true;
+  }
+  clickInterval = 200;
   talk(message: string): boolean {
     if (!this.ready || this.clock() - this.lastTalk < this.talkInterval) return false;
     if (!message.trim() || message.length > 160 || new TextEncoder().encode(message).length > 255) return false;

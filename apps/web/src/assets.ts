@@ -7,6 +7,8 @@ export interface WorldMap {
   name: string;
   layers: Uint32Array[];
   blocked: Uint8Array;
+  /** Per-tile trigger id (e_Trigger); 0 when none. Drives the roof rule. */
+  triggers: Uint16Array;
   /** M2 reads the render prefix only; gameplay/effect sections remain opaque. */
   trailingBytes: number;
 }
@@ -60,7 +62,7 @@ export function parseMap(bytes: Uint8Array): WorldMap {
   };
   const blockedCount = count(five ? r.i32() : first);
   const counts = Array.from({ length: five ? 5 : 4 }, () => count(r.i32()));
-  for (let i = 0; i < 6; i++) count(r.i32());
+  const [triggerCount] = Array.from({ length: 6 }, () => count(r.i32())) as [number, ...number[]];
   r.take(8); // tMapSize is often all zero; the classic world bounds are 1..100.
   const name = r.text();
   r.u8(); r.text(); r.take(9); // backup, restrict, two music IDs, safe
@@ -81,7 +83,13 @@ export function parseMap(bytes: Uint8Array): WorldMap {
       layers[layer]![index] = grh;
     }
   }
-  return { name, layers, blocked, trailingBytes: bytes.length - r.offset };
+  // Section order after the layers (FileIO.CargarMapaFormatoCSM): triggers (x:i16, y:i16, trigger:i16).
+  const triggers = new Uint16Array(10_000);
+  for (let i = 0; i < triggerCount; i++) {
+    const x = r.i16(), y = r.i16(), trigger = r.i16();
+    if (x >= 1 && y >= 1 && x <= 100 && y <= 100) triggers[tileIndex(x, y)] = trigger; // tolerate stray editor tiles
+  }
+  return { name, layers, blocked, triggers, trailingBytes: bytes.length - r.offset };
 }
 
 export function parseIni(text: string): Ini {

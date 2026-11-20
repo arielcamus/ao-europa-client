@@ -11,6 +11,7 @@
 import { ProtocolError, Reader, Writer } from './binary.js';
 import type { SafeArrayInt8 } from './binary.js';
 import { encodeFrame } from './frame.js';
+import { doorClientCodecs, doorServerCodecs } from './packets/doors.js';
 
 export enum ServerPacketId {
   Connected = 1,
@@ -199,6 +200,7 @@ const serverCodecs = {
   [ServerPacketId.PosUpdateUserChar]: struct({ x: byte, y: byte, charIndex: int16 }),
   [ServerPacketId.PosUpdateChar]: struct({ charIndex: int16, x: byte, y: byte }),
   [ServerPacketId.AccountCharacterList]: accountList,
+  ...doorServerCodecs,
 };
 
 const clientCodecs = {
@@ -207,6 +209,7 @@ const clientCodecs = {
   [ClientPacketId.Talk]: struct({ message: string, counter: int32 }),
   [ClientPacketId.Walk]: struct({ heading, counter: int32 }),
   [ClientPacketId.RequestPositionUpdate]: struct({}),
+  ...doorClientCodecs,
 };
 
 type Packet<R> = { [K in keyof R]: { id: K } & Value<R[K]> }[keyof R];

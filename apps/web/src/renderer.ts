@@ -7,16 +7,18 @@ import { Application, Container, Rectangle, Sprite, Texture } from 'pixi.js';
 import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
 import type { Session } from './session.js';
+import { DOOR_OBJECT_TYPE, RoofFade, parseObjectGraphics, roofHidden, tileKey } from './map-objects.js';
+import type { ObjectGraphic } from './map-objects.js';
 
 class SpritePool {
   private sprites: Sprite[] = [];
   private used = 0;
   constructor(readonly container: Container) {}
   reset() { this.used = 0; }
-  draw(texture: Texture, x: number, y: number) {
+  draw(texture: Texture, x: number, y: number, alpha = 1) {
     let sprite = this.sprites[this.used++];
     if (!sprite) { sprite = new Sprite(); this.sprites.push(sprite); this.container.addChild(sprite); }
-    sprite.texture = texture; sprite.position.set(Math.round(x), Math.round(y)); sprite.visible = true;
+    sprite.texture = texture; sprite.position.set(Math.round(x), Math.round(y)); sprite.alpha = alpha; sprite.visible = true;
   }
   finish() { for (let i = this.used; i < this.sprites.length; i++) this.sprites[i]!.visible = false; }
 }
@@ -43,6 +45,9 @@ export class WorldRenderer {
   private pools: SpritePool[] = [];
   private observer: ResizeObserver | undefined;
   private readonly world = new Container();
+  private objectGraphics = new Map<number, ObjectGraphic>();
+  private readonly roofs = new RoofFade();
+  private lastRender = 0;
 
   constructor(private readonly host: HTMLElement, private readonly report: (message: string) => void) {}
   get settled() { return this.readyMap !== undefined && this.loadedSheets > 0 && this.pending.size === 0; }
@@ -66,14 +71,16 @@ export class WorldRenderer {
   private loadMetadata(): Promise<void> {
     return this.metadata ??= Promise.all([
       fetchText('init/graficos.ini'), fetchText('init/cuerpos.dat'), fetchText('init/moldes.ini'), fetchBytes('init/cabezas.ind'),
-    ]).then(([graphics, bodies, molds, heads]) => {
+      fetchText('Dat/Obj.dat').catch(() => ''),
+    ]).then(([graphics, bodies, molds, heads, objects]) => {
+      this.objectGraphics = parseObjectGraphics(objects);
       this.graphics = parseGraphics(graphics); this.bodies = parseIni(bodies);
       this.molds = parseIni(molds); this.heads = parseHeads(heads);
     }).catch(error => { this.metadata = undefined; throw error; });
   }
   async loadMap(id: number) {
     const epoch = ++this.epoch;
-    this.readyMap = undefined; this.map = undefined;
+    this.readyMap = undefined; this.map = undefined; this.roofs.clear();
     this.pools.forEach(pool => { pool.reset(); pool.finish(); });
     // Keep texture memory bounded to the current map. Late loads are discarded.
     for (const texture of this.textures.values()) if (texture !== Texture.EMPTY) texture.destroy();
@@ -136,10 +143,23 @@ export class WorldRenderer {
     };
     image.src = `/ao-assets/Graficos/${file}.png`;
   }
-  private draw(pool: SpritePool, animation: Animation, x: number, y: number, time: number, centered = true) {
+  private draw(pool: SpritePool, animation: Animation, x: number, y: number, time: number, centered = true, alpha = 1) {
     const frame = animation.frames[Math.floor(time / animation.frameMs) % animation.frames.length]!;
-    pool.draw(this.texture(frame), x + (centered ? Math.floor((32 - frame.width) / 2) : 0), y + (centered ? 32 - frame.height : 0));
+    pool.draw(this.texture(frame), x + (centered ? Math.floor((32 - frame.width) / 2) : 0), y + (centered ? 32 - frame.height : 0), alpha);
   }
+  /** Map tile under a pointer, using the same camera as render(); undefined outside the viewport. */
+  tileAt(session: Session, clientX: number, clientY: number, now: number): { x: number; y: number } | undefined {
+    const position = session.visualPosition(now);
+    const rect = this.host.getBoundingClientRect();
+    if (!position || !rect.width || !rect.height) return undefined;
+    const sx = this.app.screen.width / rect.width, sy = this.app.screen.height / rect.height; // layout may be CSS-scaled
+    const px = (clientX - rect.left) * sx, py = (clientY - rect.top) * sy;
+    if (px < 0 || py < 0 || px > this.app.screen.width || py > this.app.screen.height) return undefined;
+    const x = Math.floor((px + position.x * 32 + 16 - this.app.screen.width / 2) / 32);
+    const y = Math.floor((py + position.y * 32 + 16 - this.app.screen.height / 2) / 32);
+    return x >= 1 && y >= 1 && x <= 100 && y <= 100 ? { x, y } : undefined;
+  }
+  isDoor(objIndex: number) { return this.objectGraphics.get(objIndex)?.type === DOOR_OBJECT_TYPE; }
   render(session: Session | undefined, now: number) {
     const position = session?.visualPosition(now);
     if (!this.map || !position || !session?.self || this.readyMap !== session.resourceMap) return;
@@ -151,6 +171,7 @@ export class WorldRenderer {
     const cameraX = position.x * 32 + 16 - width / 2;
     const cameraY = position.y * 32 + 16 - height / 2;
     this.world.position.set(-Math.round(cameraX * zoom), -Math.round(cameraY * zoom));
+    const dt = this.lastRender ? Math.min(100, now - this.lastRender) : 16; this.lastRender = now;
     this.pools.forEach(pool => pool.reset());
     const minX = Math.max(1, Math.floor(cameraX / 32) - 10), maxX = Math.min(100, Math.ceil((cameraX + width) / 32) + 10);
     const minY = Math.max(1, Math.floor(cameraY / 32) - 2), maxY = Math.min(100, Math.ceil((cameraY + height) / 32) + 10);
@@ -159,8 +180,20 @@ export class WorldRenderer {
         // VB6 finishes characters in a row, then draws that row's layer 4.
         // Split that layer around the self row; roofs remain above everything.
         const pool = this.pools[layer < 3 ? layer : layer === 4 ? 6 : y < session.position!.y ? 3 : 5]!;
-        const id = this.map.layers[layer]![(y - 1) * 100 + x - 1]!;
-        if (id) this.draw(pool, this.animation(id), x * 32, y * 32, now, layer !== 0);
+        const tile = (y - 1) * 100 + x - 1;
+        // Ground objects (doors included) sit between the second and third map layers.
+        if (layer === 2) {
+          const object = session.mapObjects.objectAt(x, y);
+          const grh = object ? this.objectGraphics.get(object.objIndex)?.grh : undefined;
+          if (grh) this.draw(pool, this.animation(grh), x * 32, y * 32, now, true);
+        }
+        const id = this.map.layers[layer]![tile]!;
+        if (!id) continue;
+        if (layer === 4) {
+          // Client roof rule (HayTecho + same-trigger fade): roofs above the player's own building turn see-through.
+          const alpha = this.roofs.step(tile, roofHidden(this.map.triggers, tileKey(session.position!.x, session.position!.y), tile), dt);
+          this.draw(pool, this.animation(id), x * 32, y * 32, now, true, alpha);
+        } else this.draw(pool, this.animation(id), x * 32, y * 32, now, layer !== 0);
       }
     }
     let body = this.bodyCache.get(session.self.body);

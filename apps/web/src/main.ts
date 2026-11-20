@@ -159,8 +159,23 @@ const aim = (event: PointerEvent) => {
   const x = event.clientX - rect.left - rect.width / 2, y = event.clientY - rect.top - rect.height / 2;
   touchHeading = Math.abs(x) > Math.abs(y) ? (x > 0 ? Heading.East : Heading.West) : (y > 0 ? Heading.South : Heading.North);
 };
+// Doors: the classic client opens them with DoubleClick(x, y) on the door tile. A tap on a door object is treated as that
+// double click (no walking), a mouse double click works on any tile.
+function doorAt(event: PointerEvent | MouseEvent) {
+  if (!session?.ready) return undefined;
+  const tile = renderer.tileAt(session, event.clientX, event.clientY, performance.now());
+  const object = tile && session.mapObjects.objectAt(tile.x, tile.y);
+  return tile && object && renderer.isDoor(object.objIndex) ? tile : undefined;
+}
+viewport.addEventListener('dblclick', event => {
+  if (!session?.ready) return;
+  const tile = renderer.tileAt(session, event.clientX, event.clientY, performance.now());
+  if (tile) { event.preventDefault(); session.doubleClick(tile.x, tile.y); }
+});
 viewport.addEventListener('pointerdown', event => {
   if (!event.isPrimary || !session?.ready) return;
+  const door = doorAt(event);
+  if (door) { event.preventDefault(); clearInput(); session.doubleClick(door.x, door.y); renderer.app.canvas.focus(); return; }
   event.preventDefault(); clearInput(); aim(event); walk(touchHeading!);
   viewport.setPointerCapture(event.pointerId); renderer.app.canvas.focus();
 });
