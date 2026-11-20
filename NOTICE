@@ -1,0 +1,23 @@
+ao-client M1: TypeScript adaptations made 2026-11-20.
+
+Argentum 20 Game Server and Game Client
+Copyright (C) 2023-2026 Noland Studios LTD.
+Packet IDs: Copyright (C) 2026 Noland Studios LTD.
+Network modules: Copyright (C) 2022 Noland Studios.
+GNU Affero General Public License, version 3 or (at your option) any later version.
+See LICENSE. Distributed without any warranty, including MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.
+Based on Argentum Online 0.11.6, Copyright (C) 2002 Márquez Pablo Ignacio.
+Argentum Online is based on Baronsoft's VB6 Online RPG.
+Original ORE creator: aaron@baronsoft.com; http://www.baronsoft.com/.
+
+Aurora.Network
+Copyright (C) 2018-2022 by Agustin Alvarez. All rights reserved.
+This work is licensed under the terms of the Apache 2.0 license.
+See LICENSES/Apache-2.0.txt.
+Upstream: https://github.com/Wolftein/Aurora.Network
+The adapted binary and framing sources retain this Apache notice; the combined
+ao-client project is distributed under AGPL-3.0-or-later.
+
+No game assets are included. The stand-in is a test fixture, not the AO game
+server; the real interoperability target is the ao-org classic VB6 server.

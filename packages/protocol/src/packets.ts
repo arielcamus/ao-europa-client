@@ -1,0 +1,196 @@
+/*
+ * TypeScript adaptation, 2026-11-20, of Argentum 20 classic PacketId.bas,
+ * Protocol.bas and Protocol_Writes.bas (server and client), PYMMO=0.
+ * Copyright (C) 2023-2026 Noland Studios LTD.
+ * Based on Argentum Online 0.11.6, Copyright (C) 2002 Márquez Pablo Ignacio,
+ * itself based on Baronsoft's VB6 Online RPG (aaron@baronsoft.com).
+ * This program is free software under GNU AGPL version 3 or, at your option,
+ * any later version. Distributed WITHOUT ANY WARRANTY, including MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See ../../../LICENSE.
+ */
+import { ProtocolError, Reader, Writer } from './binary.js';
+import type { SafeArrayInt8 } from './binary.js';
+import { encodeFrame } from './frame.js';
+
+export enum ServerPacketId {
+  Connected = 1,
+  Logged = 2,
+  Disconnect = 7,
+  ChangeMap = 30,
+  PosUpdate = 31,
+  CharacterCreate = 42,
+  CharacterMove = 44,
+  UserCharIndexInServer = 47,
+  ErrorMsg = 73,
+  Intervals = 158,
+  PosUpdateUserChar = 186,
+  PosUpdateChar = 187,
+  AccountCharacterList = 199,
+}
+
+export enum ClientPacketId {
+  LoginExistingChar = 73,
+  Walk = 78,
+  RequestPositionUpdate = 79,
+  LoginAccount = 305,
+}
+
+export enum Heading { North = 1, East = 2, South = 3, West = 4 }
+
+interface Codec<T> {
+  read(reader: Reader): T;
+  write(writer: Writer, value: T): void;
+}
+type Value<C> = C extends Codec<infer T> ? T : never;
+type Shape<S> = { [K in keyof S]: Value<S[K]> };
+
+function struct<const S extends Record<string, Codec<unknown>>>(fields: S): Codec<Shape<S>> {
+  return {
+    read(reader) {
+      const value: Record<string, unknown> = {};
+      for (const [key, codec] of Object.entries(fields)) value[key] = codec.read(reader);
+      return value as Shape<S>;
+    },
+    write(writer, value) {
+      for (const [key, codec] of Object.entries(fields)) codec.write(writer, value[key]);
+    },
+  };
+}
+
+const byte: Codec<number> = { read: r => r.readInt8(), write: (w, v) => { w.writeInt8(v); } };
+const int16: Codec<number> = { read: r => r.readInt16(), write: (w, v) => { w.writeInt16(v); } };
+const int32: Codec<number> = { read: r => r.readInt32(), write: (w, v) => { w.writeInt32(v); } };
+const int: Codec<number> = { read: r => r.readInt(), write: (w, v) => { w.writeInt(v); } };
+const real32: Codec<number> = { read: r => r.readReal32(), write: (w, v) => { w.writeReal32(v); } };
+const string: Codec<string> = { read: r => r.readString(), write: (w, v) => { w.writeString(v); } };
+const bool: Codec<boolean> = { read: r => r.readBool(), write: (w, v) => { w.writeBool(v); } };
+
+function validateHeading(value: number): Heading {
+  if (!Number.isInteger(value) || value < Heading.North || value > Heading.West) {
+    throw new ProtocolError(`Invalid walk heading ${value}`);
+  }
+  return value;
+}
+const heading: Codec<Heading> = {
+  read: r => validateHeading(r.readInt8()),
+  write: (w, v) => { w.writeInt8(validateHeading(v)); },
+};
+
+const debugArray = (): SafeArrayInt8 => ({
+  bounds: [{ lowerBound: 1, count: 10 }],
+  data: Uint8Array.from({ length: 10 }, (_, index) => index + 1),
+});
+
+const connected: Codec<{ debugging: boolean }> = {
+  read(reader) {
+    if (reader.remaining === 0) return { debugging: false };
+    const values = reader.readSafeArrayInt8();
+    if (values.bounds.length !== 1 || values.bounds[0]!.lowerBound !== 1 ||
+        values.bounds[0]!.count !== 10 || values.data.some((value, index) => value !== index + 1)) {
+      throw new ProtocolError('Connected DEBUGGING SAFEARRAY must contain bytes 1..10 at bounds 1..10');
+    }
+    return { debugging: true };
+  },
+  write(writer, value) { if (value.debugging) writer.writeSafeArrayInt8(debugArray()); },
+};
+
+// Order verified against server WriteAccountCharacterList and client HandleAccountCharacterList.
+const accountCharacter = struct({
+  id: int, name: string, body: int, head: int, characterClass: int, map: int,
+  x: int, y: int, level: int, status: int, helmet: int, shield: int, weapon: int, backpack: int,
+});
+export type AccountCharacter = Value<typeof accountCharacter>;
+
+const accountList: Codec<{ characters: AccountCharacter[] }> = {
+  read(reader) {
+    const count = reader.readInt();
+    // Each entry needs at least 14 bytes. Never allocate from an unchecked count.
+    if (count < 0 || count > Math.floor(reader.remaining / 14)) throw new ProtocolError('Invalid character count');
+    return { characters: Array.from({ length: count }, () => accountCharacter.read(reader)) };
+  },
+  write(writer, value) {
+    writer.writeInt(value.characters.length);
+    for (const character of value.characters) accountCharacter.write(writer, character);
+  },
+};
+
+// Every field, including the final clanAlignment byte, is present in both VB6 trees.
+const characterCreate = struct({
+  charIndex: int16, body: int16, head: int16, heading: byte, x: byte, y: byte,
+  weapon: int16, shield: int16, helmet: int16, cart: int16, backpack: int16,
+  fx: int16, fxLoops: int16, name: string, status: byte, privileges: byte, particleFx: byte,
+  headAura: string, weaponAura: string, bodyAura: string, damageAura: string,
+  resistanceAura: string, otherAura: string, shieldAura: string,
+  speeding: real32, npc: byte, appear: byte, groupIndex: int16, clanIndex: int16, clanLevel: byte,
+  minHp: int32, maxHp: int32, minMana: int32, maxMana: int32,
+  symbol: byte, flags: byte, userType: byte, team: byte, flag: byte, npcNumber: int16, clanAlignment: byte,
+});
+export type CharacterCreate = Value<typeof characterCreate>;
+
+const intervals = struct({
+  hit: int32, bow: int32, magic: int32, extractWork: int32, buildWork: int32,
+  walk: int32, dropItem: int32, useItemKey: int32, useItemClick: int32,
+  hitMagic: int32, magicHit: int32, hitUseItem: int32, hide: int32, talk: int32,
+  leftClick: int32, meditate: int32,
+});
+export type Intervals = Value<typeof intervals>;
+
+const serverCodecs = {
+  [ServerPacketId.Connected]: connected,
+  [ServerPacketId.Logged]: struct({ newUser: bool }),
+  [ServerPacketId.Disconnect]: struct({ fullLogout: bool }),
+  [ServerPacketId.ChangeMap]: struct({ map: int16, resourceMap: int16 }),
+  [ServerPacketId.PosUpdate]: struct({ x: byte, y: byte }),
+  [ServerPacketId.CharacterCreate]: characterCreate,
+  [ServerPacketId.CharacterMove]: struct({ charIndex: int16, x: byte, y: byte }),
+  [ServerPacketId.UserCharIndexInServer]: struct({ charIndex: int16 }),
+  [ServerPacketId.ErrorMsg]: struct({ message: string }),
+  [ServerPacketId.Intervals]: intervals,
+  // These two position packets intentionally have DIFFERENT field order.
+  [ServerPacketId.PosUpdateUserChar]: struct({ x: byte, y: byte, charIndex: int16 }),
+  [ServerPacketId.PosUpdateChar]: struct({ charIndex: int16, x: byte, y: byte }),
+  [ServerPacketId.AccountCharacterList]: accountList,
+};
+
+const clientCodecs = {
+  [ClientPacketId.LoginAccount]: struct({ email: string, password: string }),
+  [ClientPacketId.LoginExistingChar]: struct({ charId: int32, name: string }),
+  [ClientPacketId.Walk]: struct({ heading, counter: int32 }),
+  [ClientPacketId.RequestPositionUpdate]: struct({}),
+};
+
+type Packet<R> = { [K in keyof R]: { id: K } & Value<R[K]> }[keyof R];
+export type ServerPacket = Packet<typeof serverCodecs>;
+export type ClientPacket = Packet<typeof clientCodecs>;
+export interface UnknownPacket { unknown: true; id: number; payload: Uint8Array }
+
+function decode<R extends Record<number, Codec<object>>>(body: Uint8Array, codecs: R): Packet<R> | UnknownPacket {
+  const reader = new Reader(body);
+  const id = reader.readInt16();
+  const codec = codecs[id];
+  if (!codec) return { unknown: true, id, payload: reader.readBytes(reader.remaining) };
+  try {
+    const packet = { id, ...codec.read(reader) };
+    reader.end(); // A frame holds exactly ONE packet; never guess a second packet boundary.
+    return packet as Packet<R>;
+  } catch (error) {
+    throw new ProtocolError(`Packet id=${id}: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+function encode(id: number, packet: object, codecs: Record<number, Codec<object>>): Uint8Array {
+  const codec = codecs[id];
+  if (!codec) throw new ProtocolError(`Unsupported packet id=${id}`);
+  const writer = new Writer().writeInt16(id);
+  codec.write(writer, packet);
+  return writer.toBytes();
+}
+
+/** Accept a single frame BODY from FrameDecoder, without the length prefix. */
+export const decodeServerPacket = (body: Uint8Array): ServerPacket | UnknownPacket => decode(body, serverCodecs);
+export const decodeClientPacket = (body: Uint8Array): ClientPacket | UnknownPacket => decode(body, clientCodecs);
+/** Encoders return a body; use the *Frame helpers when writing to a socket. */
+export const encodeServerPacket = (packet: ServerPacket): Uint8Array => encode(packet.id, packet, serverCodecs);
+export const encodeClientPacket = (packet: ClientPacket): Uint8Array => encode(packet.id, packet, clientCodecs);
+export const encodeServerFrame = (packet: ServerPacket): Uint8Array => encodeFrame(encodeServerPacket(packet));
+export const encodeClientFrame = (packet: ClientPacket): Uint8Array => encodeFrame(encodeClientPacket(packet));
