@@ -15,6 +15,7 @@ import { fetchText } from './assets.js';
 import { ItemsUI } from './items-ui.js';
 import { CraftingUI } from './crafting-ui.js';
 import { KeyAction, keyAction } from './keymap.js';
+import { SkillsWindows } from './skills-window.js';
 import { KeysClientPacketId as K, WorkSkill } from '@ao/protocol';
 import { Minimap } from './minimap.js';
 import { AudioSystem } from './audio-system.js';
@@ -44,6 +45,14 @@ const report = (message: string) => {
 const renderer = new WorldRenderer(viewport, report);
 const ui = new ClassicUI(renderer, report);
 const npcDialog = new NpcDialog(element('classic'), renderer);
+const skillsWindows = new SkillsWindows(element('classic'));
+// frmMain: EstadisticasBoton (the skills arrow, 982,66 31x28) -> RequestSkills; ImgEstadisticas (Estadísticas in the info panel) -> RequestAtributes + RequestMiniStats.
+const skillsButton = document.createElement('button');
+skillsButton.type = 'button'; skillsButton.className = 'hotspot'; skillsButton.setAttribute('aria-label', 'Skills');
+skillsButton.style.cssText = 'position:absolute;left:982px;top:66px;width:31px;height:28px;z-index:4';
+element('classic').append(skillsButton);
+skillsButton.onclick = () => { try { session?.requestSkills(); } catch (error) { close(String(error)); } };
+ui.bindMenu('Estadísticas', () => { try { session?.requestStats(); } catch (error) { close(String(error)); } });
 const bubbles = new ChatBubbles(element('chat-bubbles'));
 const chatBox = new ChatBox(chatForm, chat, element('messages'), () => renderer.app.canvas.focus(), error => close(String(error)));
 const combatOverlay = new CombatOverlay(viewport, renderer);
@@ -68,7 +77,7 @@ function guard(action: () => unknown) {
   try { action(); } catch (error) { close(error instanceof Error ? error.message : String(error)); }
 }
 function close(message = 'Disconnected') {
-  clearInput(); stoppedAt = performance.now(); chatBox.close(); npcDialog.hide(); audio.detach();
+  clearInput(); stoppedAt = performance.now(); chatBox.close(); npcDialog.hide(); audio.detach(); skillsWindows.closeAll();
   if (session) {
     try { session.finish(message); } catch (error) { message = `${message}; ${String(error)}`; }
   }
@@ -116,6 +125,7 @@ async function boot() {
       bubbles.update(session, now);
       combatOverlay.update(session, now);
       audio.tick();
+      skillsWindows.update(session);
     } catch (error) { if (session?.phase !== 'closed') close(error instanceof Error ? error.message : String(error)); }
     if (now - lastUi > 100) { updateUi(now); lastUi = now; }
   });

@@ -5,7 +5,7 @@
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; see NOTICE.
  * GM and gameplay slash commands belong to other features: they get an explicit "not available" line.
  */
-import { CombatClientPacketId as CC, ClientPacketId as C, BankTradeClientPacketId as BC } from '@ao/protocol';
+import { CombatClientPacketId as CC, ClientPacketId as C, BankTradeClientPacketId as BC, KeysClientPacketId as K, SkillsClientPacketId as SC } from '@ao/protocol';
 import type { ClientPacket } from '@ao/protocol';
 import { FONTTYPE } from './chat-fonts.js';
 
@@ -28,6 +28,8 @@ export interface ChatContext {
   dead?: boolean;
   /** Comerciando: a shop, the vault or a trade window holds the player. */
   trading?: boolean;
+  /** UserStats.minman = maxman: /MEDITAR refuses with the full-mana line. */
+  manaFull?: boolean;
 }
 
 /** SendTxt_Change: keep only characters the VB6 box accepts (space..250). */
@@ -48,6 +50,7 @@ const MESSAGES = {
   withdrawAmount: 'Ingrese la cantidad que desea retirar',
   badDepositAmount: 'Cantidad incorrecta. Utilice /depositar CANTIDAD.',
   missingParameters: 'Faltan parámetros. Utilice /depositar CANTIDAD.',
+  fullMana: '¡Tu maná está completo!',
 };
 
 /** Holds what the VB6 client keeps between messages: SendingType and sndPrivateTo. The guild counter is the session's (PacketCounters). */
@@ -121,6 +124,15 @@ export class ChatInput {
         // Combat (#11): act on the priest selected with a left click (WriteResucitate / WriteHeal, no fields).
         case '/RESUCITAR': case '/RESURRECT': outcome.packet = { id: CC.Resucitate }; return;
         case '/CURAR': case '/CURE': outcome.packet = { id: CC.Heal }; return;
+        // Skills (feat/skills): ParseUserCommand /ENTRENAR, /DESCANSAR, /MEDITAR, /EST.
+        case '/ENTRENAR': case '/TRAIN': if (context.dead) note(MESSAGES.dead, FONTTYPE.INFO); else outcome.packet = { id: SC.TrainList }; return;
+        case '/DESCANSAR': case '/REST': if (context.dead) note(MESSAGES.dead, FONTTYPE.INFO); else outcome.packet = { id: SC.Rest }; return;
+        case '/MEDITAR': case '/MEDITATE':
+          if (context.manaFull) note(MESSAGES.fullMana, 4); // FONTTYPE_INFOBOLD
+          else if (context.dead) note(MESSAGES.dead, FONTTYPE.INFO);
+          else outcome.packet = { id: K.Meditate };
+          return;
+        case '/EST': outcome.packet = { id: SC.RequestStats }; return;
         case '/BMSG':
           if (filled) outcome.packet = { id: C.CouncilMessage, message: args }; else note(MESSAGES.empty);
           return;

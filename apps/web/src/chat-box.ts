@@ -56,7 +56,7 @@ export class ChatBox {
     if (!session) return;
     const text = this.field.value;
     try {
-      const outcome = this.guild ? this.input.guildMessage(text) : this.input.submit(text, { level: session.ui.stats.level, dead: session.dead, trading: session.bankTrade.trading });
+      const outcome = this.guild ? this.input.guildMessage(text) : this.input.submit(text, { level: session.ui.stats.level, dead: session.dead, trading: session.bankTrade.trading, manaFull: session.ui.stats.mana !== undefined && session.ui.stats.mana === session.ui.stats.maxMana });
       let ok = true;
       if (outcome.talk !== undefined) ok = outcome.talk.trim() === '' || session.talk(outcome.talk);
       else if (outcome.packet) ok = session.sendChat(outcome.packet);
