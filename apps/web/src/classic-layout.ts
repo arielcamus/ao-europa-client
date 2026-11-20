@@ -28,6 +28,18 @@ export const controls: Record<string, readonly [number, number, number, number]>
   cmdIngresar: [2750 / 15, 137, 132, 28],
 };
 
+/**
+ * Uniform scale of the 1024x768 classic window for a browser window. Smaller than the window (phones): shrink to fit,
+ * as before. Larger: grow to fill, snapping to a whole number when that wastes under 12% so the pixel art stays crisp.
+ */
+export function classicScale(width: number, height: number): number {
+  const fit = Math.min(width / CLASSIC_WIDTH, height / CLASSIC_HEIGHT);
+  if (!(fit > 0)) return 1;
+  if (fit <= 1) return fit;
+  const whole = Math.floor(fit);
+  return whole / fit >= 0.88 ? whole : fit;
+}
+
 export function applyClassicLayout() {
   document.querySelectorAll<HTMLElement>('[data-vb]').forEach(element => {
     const rect = controls[element.dataset.vb!];
@@ -36,7 +48,7 @@ export function applyClassicLayout() {
     Object.assign(element.style, { left: `${x}px`, top: `${y}px`, width: `${width}px`, height: `${height}px` });
   });
   const resize = () => {
-    const scale = Math.min(1, document.documentElement.clientWidth / CLASSIC_WIDTH, window.innerHeight / CLASSIC_HEIGHT);
+    const scale = classicScale(document.documentElement.clientWidth, window.innerHeight);
     document.documentElement.style.setProperty('--classic-scale', String(scale));
     const fit = document.getElementById('classic-fit')!;
     fit.style.width = `${CLASSIC_WIDTH * scale}px`; fit.style.height = `${CLASSIC_HEIGHT * scale}px`;

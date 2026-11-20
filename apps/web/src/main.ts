@@ -15,12 +15,14 @@ import { fetchText } from './assets.js';
 import { ItemsUI } from './items-ui.js';
 import { KeyAction, keyAction } from './keymap.js';
 import { KeysClientPacketId as K, WorkSkill } from '@ao/protocol';
+import { Minimap } from './minimap.js';
 
 applyClassicLayout();
 const form = element<HTMLFormElement>('login'), account = element<HTMLInputElement>('email'), password = element<HTMLInputElement>('password');
 const connect = element<HTMLButtonElement>('connect'), disconnect = element<HTMLButtonElement>('disconnect');
 const errorBox = element('error'), viewport = element('viewport'), connection = element('connection');
 const chatForm = element<HTMLFormElement>('chat-form'), chat = element<HTMLInputElement>('chat');
+const minimap = new Minimap(element('minimap'));
 const keys = new Map<string, Heading>();
 let touchHeading: Heading | undefined;
 let session: Session | undefined;
@@ -111,6 +113,7 @@ function updateUi(now: number) {
   itemsUi.update(session);
   if (!session) return;
   const playing = session.ready && renderer.readyMap === session.resourceMap;
+  minimap.update(session, playing);
   if (playing) {
     form.hidden = true; disconnect.hidden = false;
     element('map-name').textContent = renderer.mapName; element('map-name').title = renderer.mapName;
@@ -120,8 +123,6 @@ function updateUi(now: number) {
   } else if (session.phase !== 'closed') connection.textContent = session.ready ? 'Loading map…' : 'Connecting…';
   if (session.position) {
     element('position').textContent = `${session.position.x}, ${session.position.y}`;
-    const dot = element('minimap-dot'); dot.hidden = !playing;
-    dot.style.left = `${session.position.x - 2.5}px`; dot.style.top = `${session.position.y - 2.5}px`;
   }
   element('confirmed').textContent = String(session.confirmedWalks);
   element('corrected').textContent = String(session.correctedWalks);

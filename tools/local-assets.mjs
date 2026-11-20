@@ -7,11 +7,11 @@ export async function localAssets(directory) {
   if (!directory) throw new Error('Set AO_ASSETS to your local ao-reference/Recursos directory. Assets are never bundled.');
   const root = await realpath(directory);
   const files = new Map();
-  const allowed = /^(Mapas\/mapa\d+\.csm|Graficos\/\d+\.png|init\/(graficos\.ini|cuerpos\.dat|moldes\.ini|cabezas\.ind|armas\.dat|escudos\.dat|cascos\.ind|colores\.dat|FXs\.ini|sp_localindex\.dat|sp_localmsg\.dat)|interface\/[a-z0-9_-]+\.bmp|Dat\/(Obj|Hechizos)\.dat)$/i;
+  const allowed = /^(Mapas\/mapa\d+\.csm|Graficos\/\d+\.png|init\/(graficos\.ini|cuerpos\.dat|moldes\.ini|cabezas\.ind|armas\.dat|escudos\.dat|cascos\.ind|colores\.dat|FXs\.ini|sp_localindex\.dat|sp_localmsg\.dat)|interface\/[a-z0-9_-]+\.bmp|Minimapas\/mapa\d+\.bmp|Dat\/(Obj|Hechizos)\.dat)$/i;
   const folders = await readdir(root);
-  for (const folder of ['Mapas', 'Graficos', 'init', 'interface', 'Dat']) {
+  for (const folder of ['Mapas', 'Graficos', 'init', 'interface', 'Dat', 'Minimapas']) {
     const actual = folders.find(name => name.toLowerCase() === folder.toLowerCase());
-    if (!actual) throw new Error(`Missing local asset directory: ${folder}`);
+    if (!actual) { if (folder === 'Minimapas') continue; throw new Error(`Missing local asset directory: ${folder}`); }
     for (const name of await readdir(join(root, actual))) {
       const path = `${actual}/${name}`;
       if (allowed.test(path)) files.set(path.toLowerCase(), join(root, path));
