@@ -18,7 +18,16 @@ export interface WorldMap {
   audio: { music: number; ambient: string; rain: boolean; snow: boolean; fog: boolean };
   /** The NPC and tile-exit sections after the objects stay opaque. */
   trailingBytes: number;
+  /** tMapDat fields the world FX read (Recursos.CargarMapa): zone ("DUNGEON" lights the dungeon colour), base light, rain/snow/fog flags. */
+  info: MapInfo;
+  /** Static lights from the CSM light section (x, y, RGBA, range: below 100 square, otherwise round of range-99). */
+  lights: MapLight[];
+  /** Static particle emitters from the CSM particle section (stream id from particles.ind). */
+  particles: MapParticle[];
 }
+export interface MapInfo { zone: string; baseLight: number; rain: boolean; snow: boolean; fog: boolean }
+export interface MapLight { x: number; y: number; r: number; g: number; b: number; range: number }
+export interface MapParticle { x: number; y: number; stream: number }
 export interface MapFileObject { x: number; y: number; objIndex: number; amount: number;
 }
 export interface GraphicFrame { file: number; x: number; y: number; width: number; height: number }
@@ -76,8 +85,8 @@ export function parseMap(bytes: Uint8Array): WorldMap {
   r.take(8); // tMapSize is often all zero; the classic world bounds are 1..100.
   const name = r.text();
   r.u8(); r.text(); const musicAt = r.take(9); // backup, restrict, then music_numberHi, music_numberLow (Int32 each) and safe
-  r.text(); r.text(); const ambient = r.text(); // zone, terrain, ambient
-  r.take(16); r.text(); const weatherAt = r.take(3); // light, letter, extras, then rain, snow, fog flags
+  const zone = r.text(); r.text(); const ambient = r.text(); // zone, terrain, ambient
+  const baseLight = r.i32(); r.take(12); r.text(); const weatherAt = r.take(3); // base light, letter grh, two extras, extra3, then rain, snow, fog flags
   const blocked = new Uint8Array(10_000);
   for (let i = 0; i < blockedCount; i++) {
     const index = tileIndex(r.i16(), r.i16());
@@ -100,7 +109,16 @@ export function parseMap(bytes: Uint8Array): WorldMap {
     if (x >= 1 && y >= 1 && x <= 100 && y <= 100) triggers[tileIndex(x, y)] = trigger; // tolerate stray editor tiles
   }
   // File order after the triggers (Recursos.CargarMapa): particles (x,y,i32), lights (x,y,RGBA,range), objects (x,y,index,amount).
-  r.take(particleCount * 8); r.take(lightCount * 9);
+  const particles: MapParticle[] = [], lights: MapLight[] = [];
+  for (let i = 0; i < particleCount; i++) {
+    const x = r.i16(), y = r.i16(), stream = r.i32();
+    if (stream > 0 && x >= 1 && y >= 1 && x <= 100 && y <= 100) particles.push({ x, y, stream });
+  }
+  for (let i = 0; i < lightCount; i++) {
+    // tDatosLuces: x, y, RGBA (B, G, R, A bytes in memory), range.
+    const x = r.i16(), y = r.i16(), b = r.u8(), g = r.u8(), red = r.u8(); r.u8(); const range = r.u8();
+    if (range > 0 && x >= 1 && y >= 1 && x <= 100 && y <= 100) lights.push({ x, y, r: red, g, b, range });
+  }
   const objects: MapFileObject[] = [];
   for (let i = 0; i < objectCount; i++) {
     const x = r.i16(), y = r.i16(), objIndex = r.i16(), amount = r.i16();
@@ -110,7 +128,8 @@ export function parseMap(bytes: Uint8Array): WorldMap {
     music: r.view.getInt32(musicAt + 4, true), ambient,
     rain: bytes[weatherAt] === 1, snow: bytes[weatherAt + 1] === 1, fog: bytes[weatherAt + 2] !== 0,
   };
-  return { name, layers, blocked, triggers, objects, audio, trailingBytes: bytes.length - r.offset };
+  const info: MapInfo = { zone, baseLight, rain: bytes[weatherAt] !== 0, snow: bytes[weatherAt + 1] !== 0, fog: bytes[weatherAt + 2] !== 0 };
+  return { name, layers, blocked, triggers, objects, audio, trailingBytes: bytes.length - r.offset, info, lights, particles };
 }
 
 export function parseIni(text: string): Ini {

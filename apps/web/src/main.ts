@@ -134,6 +134,8 @@ function updateUi(now: number) {
   if (session.position) {
     element('position').textContent = `${session.position.x}, ${session.position.y}`;
   }
+  // frmMain.lblhora: RevisarHoraMundo writes HH:MM of the in-game day; blank until the server has sent the time.
+  element('clock').textContent = session.world.clock.inited ? session.world.clock.time(session.world.now()).label : '';
   element('confirmed').textContent = String(session.confirmedWalks);
   element('corrected').textContent = String(session.correctedWalks);
   element('duration').textContent = `${Math.floor(((stoppedAt ?? now) - (session.loggedAt ?? session.connectedAt)) / 1000)} s`;

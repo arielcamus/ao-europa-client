@@ -20,6 +20,7 @@ import { itemsClientCodecs, itemsServerCodecs } from './packets/items.js';
 import { keysClientCodecs, keysServerCodecs } from './packets/keys.js';
 import { audioServerCodecs } from './packets/audio.js';
 import { bankTradeClientCodecs, bankTradeServerCodecs } from './packets/bank-trade.js';
+import { worldClientCodecs, worldServerCodecs } from './packets/world.js';
 
 export enum ServerPacketId {
   Connected = 1,
@@ -252,11 +253,11 @@ const chatClientTable = {
  * A new feature table is added here AND to the spread below (test/codec-tables.test.ts fails if the two disagree).
  */
 export const codecTables = {
-  server: { core: coreServerCodecs, doors: doorServerCodecs, npcs: npcsServerCodecs, chat: chatServerTable, combat: combatServerCodecs, spells: spellServerCodecs, items: itemsServerCodecs, keys: keysServerCodecs, audio: audioServerCodecs, bankTrade: bankTradeServerCodecs },
-  client: { core: coreClientCodecs, doors: doorClientCodecs, chat: chatClientTable, combat: combatClientCodecs, spells: spellClientCodecs, items: itemsClientCodecs, keys: keysClientCodecs, bankTrade: bankTradeClientCodecs },
+  server: { core: coreServerCodecs, doors: doorServerCodecs, npcs: npcsServerCodecs, chat: chatServerTable, combat: combatServerCodecs, spells: spellServerCodecs, items: itemsServerCodecs, keys: keysServerCodecs, audio: audioServerCodecs, bankTrade: bankTradeServerCodecs, world: worldServerCodecs },
+  client: { core: coreClientCodecs, doors: doorClientCodecs, chat: chatClientTable, combat: combatClientCodecs, spells: spellClientCodecs, items: itemsClientCodecs, keys: keysClientCodecs, bankTrade: bankTradeClientCodecs, world: worldClientCodecs },
 } as const;
-const serverCodecs = { ...coreServerCodecs, ...doorServerCodecs, ...npcsServerCodecs, ...chatServerTable, ...combatServerCodecs, ...spellServerCodecs, ...itemsServerCodecs, ...keysServerCodecs, ...audioServerCodecs, ...bankTradeServerCodecs };
-const clientCodecs = { ...coreClientCodecs, ...doorClientCodecs, ...chatClientTable, ...combatClientCodecs, ...spellClientCodecs, ...itemsClientCodecs, ...keysClientCodecs, ...bankTradeClientCodecs };
+const serverCodecs = { ...coreServerCodecs, ...doorServerCodecs, ...npcsServerCodecs, ...chatServerTable, ...combatServerCodecs, ...spellServerCodecs, ...itemsServerCodecs, ...keysServerCodecs, ...audioServerCodecs, ...bankTradeServerCodecs, ...worldServerCodecs };
+const clientCodecs = { ...coreClientCodecs, ...doorClientCodecs, ...chatClientTable, ...combatClientCodecs, ...spellClientCodecs, ...itemsClientCodecs, ...keysClientCodecs, ...bankTradeClientCodecs, ...worldClientCodecs };
 
 /** Throws when two tables register the same id or a merged table holds an id no listed table owns. */
 export function assertDisjointCodecTables(tables: Record<string, object>, merged: object, side: string): void {

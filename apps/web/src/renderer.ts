@@ -14,16 +14,20 @@ import { NPC_NAME_COLOR, parseColors, parseLocale, playerNameColor, privilegeTit
 import type { LocaleData, Rgb } from './character-data.js';
 import { spellTables } from './spells.js';
 import type { ActiveFx } from './spells.js';
+import { FxRenderer } from './fx-render.js';
+import { parseParticles } from './fx-particles.js';
+import { fxTables, parseProjectiles } from './fx-world.js';
+import type { FrameInfo } from './fx-world.js';
 
 class SpritePool {
   private sprites: Sprite[] = [];
   private used = 0;
   constructor(readonly container: Container) {}
   reset() { this.used = 0; }
-  draw(texture: Texture, x: number, y: number, alpha = 1) {
+  draw(texture: Texture, x: number, y: number, alpha = 1, tint = 0xffffff) {
     let sprite = this.sprites[this.used++];
     if (!sprite) { sprite = new Sprite(); this.sprites.push(sprite); this.container.addChild(sprite); }
-    sprite.texture = texture; sprite.position.set(Math.round(x), Math.round(y)); sprite.alpha = alpha; sprite.visible = true;
+    sprite.texture = texture; sprite.position.set(Math.round(x), Math.round(y)); sprite.alpha = alpha; sprite.tint = tint; sprite.visible = true;
   }
   finish() { for (let i = this.used; i < this.sprites.length; i++) this.sprites[i]!.visible = false; }
 }
@@ -52,6 +56,8 @@ export class WorldRenderer {
   private readonly world = new Container();
   private objectGraphics = new Map<number, ObjectGraphic>();
   private readonly roofs = new RoofLights();
+  /** Light map, particles, projectiles, auras and weather (feat/world-fx); created in init(). */
+  private fx: FxRenderer | undefined;
   private readonly trees = new TreeFade();
   /** Trees, signs, deposits and decorations come from the map file, never from the server (ModAreas.EsObjetoFijo). */
   private fixed = new Map<number, GroundObject>();
@@ -88,6 +94,8 @@ export class WorldRenderer {
       const container = new Container(); this.world.addChild(container); this.pools.push(new SpritePool(container));
     }
     this.world.addChild(this.labelLayer);
+    this.fx = new FxRenderer({ animation: id => this.animation(id), texture: frame => this.texture(frame), hasGraphic: id => this.graphics.has(id) });
+    this.fx.attach(this.world, this.app.stage, this.pools[6]!.container);
     this.observer = new ResizeObserver(() => this.app.renderer.resize(this.host.clientWidth, this.host.clientHeight));
     this.observer.observe(this.host);
     this.app.ticker.maxFPS = 60;
@@ -101,7 +109,10 @@ export class WorldRenderer {
       optional(fetchText('init/armas.dat'), 'armas.dat'), optional(fetchText('init/escudos.dat'), 'escudos.dat'),
       optional(fetchBytes('init/cascos.ind'), 'cascos.ind'), optional(fetchText('init/colores.dat'), 'colores.dat'),
       optional(fetchText('init/sp_localindex.dat'), 'sp_localindex.dat'),
-    ]).then(([graphics, bodies, molds, heads, objects, weapons, shields, helmets, colors, locale]) => {
+      optional(fetchBytes('init/particles.ind'), 'particles.ind'), optional(fetchText('init/ProjectileDef.dat'), 'ProjectileDef.dat'),
+    ]).then(([graphics, bodies, molds, heads, objects, weapons, shields, helmets, colors, locale, particles, projectiles]) => {
+      if (particles) fxTables.streams = parseParticles(particles);
+      if (projectiles) fxTables.projectiles = parseProjectiles(parseIni(projectiles));
       this.objectGraphics = parseObjectGraphics(objects);
       this.graphics = parseGraphics(graphics); this.bodies = parseIni(bodies);
       this.molds = parseIni(molds); this.heads = parseHeads(heads);
@@ -118,6 +129,7 @@ export class WorldRenderer {
     const epoch = ++this.epoch;
     this.readyMap = undefined; this.map = undefined; this.fixed = new Map(); this.trees.clear();
     this.pools.forEach(pool => { pool.reset(); pool.finish(); });
+    this.fx?.clear();
     // Keep texture memory bounded to the current map. Late loads are discarded.
     for (const texture of this.textures.values()) if (texture !== Texture.EMPTY) texture.destroy();
     for (const source of this.sources.values()) source.destroy(true);
@@ -184,9 +196,9 @@ export class WorldRenderer {
     };
     image.src = `/ao-assets/Graficos/${file}.png`;
   }
-  private draw(pool: SpritePool, animation: Animation, x: number, y: number, time: number, centered = true, alpha = 1) {
+  private draw(pool: SpritePool, animation: Animation, x: number, y: number, time: number, centered = true, alpha = 1, tint = 0xffffff) {
     const frame = animation.frames[Math.floor(time / animation.frameMs) % animation.frames.length]!;
-    pool.draw(this.texture(frame), x + (centered ? Math.floor((32 - frame.width) / 2) : 0), y + (centered ? 32 - frame.height : 0), alpha);
+    pool.draw(this.texture(frame), x + (centered ? Math.floor((32 - frame.width) / 2) : 0), y + (centered ? 32 - frame.height : 0), alpha, tint);
   }
   /** Map tile under a pointer, using the same camera as render(); undefined outside the viewport. */
   tileAt(session: Session, clientX: number, clientY: number, now: number): { x: number; y: number } | undefined {
@@ -257,14 +269,40 @@ export class WorldRenderer {
         if (layer === 4) {
           // Live VB6 roof rule: one alpha per roof trigger, 3x3 NearRoof, the player's own roof fades out.
           const trigger = nearRoof(this.map.triggers, x, y);
-          this.draw(pool, this.animation(id), x * 32, y * 32, now, true, trigger ? this.roofs.alphaOf(trigger) : 1);
+          // Roofs sit above the light map and the particles, so they take their tile's light as a tint (RenderScreen draws them with light_value).
+          this.draw(pool, this.animation(id), x * 32, y * 32, now, true, trigger ? this.roofs.alphaOf(trigger) : 1, this.fx!.roofTint(session.world, x, y));
         } else this.draw(pool, this.animation(id), x * 32, y * 32, now, layer !== 0);
       }
     }
     this.camera = { x: cameraX, y: cameraY };
     this.drawCharacters(session, position, now, cameraX, cameraY, width, height);
     this.drawEffects(session, now, position);
+    this.renderWorldFx(session, now, dt, { minX, maxX, minY, maxY }, cameraX, cameraY, width, height);
     this.pools.forEach(item => item.finish());
+  }
+  /** Light, particles, projectiles, auras and weather: apply the parsed map once, advance the world FX, draw them. */
+  private renderWorldFx(session: Session, now: number, dt: number, view: FrameInfo['view'], cameraX: number, cameraY: number, width: number, height: number) {
+    const world = session.world, map = this.map;
+    if (!map || !this.fx) return;
+    if (world.appliedGeneration !== world.generation) world.setMap(map.info, map.lights, map.particles);
+    const charPixel = (charIndex: number) => {
+      if (charIndex === session.charIndex) { const p = session.visualPosition(now); return p ? { x: p.x * 32, y: p.y * 32 } : undefined; }
+      const char = session.tracker.chars.get(charIndex);
+      if (!char) return undefined;
+      const at = session.tracker.visualPosition(char, now);
+      return { x: at.x * 32, y: at.y * 32 };
+    };
+    world.update(now, { dt, view, charPixel, selfDead: session.dead });
+    this.fx.render(world, {
+      session, now, dt, cameraX, cameraY, width, height, charPixel,
+      charBodyOffsetY: charIndex => this.bodyY(charIndex === session.charIndex ? session.self?.body ?? 0 : session.tracker.chars.get(charIndex)?.body ?? 0),
+    });
+  }
+  /** BodyOffset.y of a body (negative above the tile): where Char_Render anchors a character's particle groups. */
+  private bodyY(id: number) {
+    let body = this.bodyCache.get(id);
+    if (!body && id > 0) { try { body = readBody(this.bodies, this.molds, this.graphics, id); this.bodyCache.set(id, body); } catch { return 0; } }
+    return body?.bodyY ?? 0;
   }
   /** Sprites of a stationary south-facing character, for the NPC dialog portrait. */
   portraitLayers(body: number, head: number) {
@@ -321,12 +359,7 @@ export class WorldRenderer {
     }
     for (let i = this.labelsUsed; i < this.labels.length; i++) this.labels[i]!.visible = false;
   }
-  private selfBodyY(session: Session) {
-    const id = session.self?.body ?? 0;
-    let body = this.bodyCache.get(id);
-    if (!body && id > 0) { try { body = readBody(this.bodies, this.molds, this.graphics, id); this.bodyCache.set(id, body); } catch { return 0; } }
-    return body?.bodyY ?? 0;
-  }
+  private selfBodyY(session: Session) { return this.bodyY(session.self?.body ?? 0); }
   /**
    * Spell FX (CreateFX / FxPiso), engine.bas Char_Render FxList: a Grh from FXs.ini drawn at the
    * character's tile plus the FX offsets, 20px down, over the body. Pool 7 is additive (IsPNG=0,
@@ -358,7 +391,7 @@ export class WorldRenderer {
     }
   }
   destroy() {
-    this.epoch++; this.observer?.disconnect();
+    this.epoch++; this.observer?.disconnect(); this.fx?.destroy();
     this.app.destroy(true, { children: true });
     for (const texture of this.textures.values()) if (texture !== Texture.EMPTY) texture.destroy();
     for (const source of this.sources.values()) source.destroy(true);
