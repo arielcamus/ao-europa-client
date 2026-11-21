@@ -48,7 +48,7 @@ import { PapiroUI } from './papiro-ui.js';
 import { InventoryExtras } from './inventory-extras.js';
 import { ConnectUI } from './connect-ui.js';
 import { LoadingCard, showConfirm, showConnecting, showExit, showMessage, showNewAccount } from './session-windows.js';
-import { TEXT } from './connect-text.js';
+import { TEXT, silentLoginText } from './connect-text.js';
 import { FloatingTexts } from './floating-text.js';
 import type { SessionNotice } from './session.js';
 import type { VbWindow } from './vb-window.js';
@@ -184,8 +184,8 @@ let connectingWindow: VbWindow | undefined;
 const connectUi = new ConnectUI(element('classic'), renderer, {
   enter: character => guard(() => session?.enterCharacter(character)),
   create: character => guard(() => session?.createCharacter(character)),
-  logout: () => close(),
-  close: () => { close(); try { window.close(); } catch { /* a tab the script did not open stays open */ } },
+  logout: () => close('Disconnected', true),
+  close: () => { close('Disconnected', true); try { window.close(); } catch { /* a tab the script did not open stays open */ } },
   message: text => { showMessage(element('classic'), text); },
   confirm: (text, yes) => { showConfirm(element('classic'), text, yes); },
   click: () => audio.director.click(),
@@ -205,7 +205,13 @@ function attack() {
 function guard(action: () => unknown) {
   try { action(); } catch (error) { close(error instanceof Error ? error.message : String(error)); }
 }
-function close(message = 'Disconnected') {
+/** `byPlayer`: the player (or a deliberate server Disconnect) ended it, so an unanswered character request is not explained. */
+function close(message = 'Disconnected', byPlayer = false) {
+  // A ShowMessageBox / ErrorMsg the server sent right before closing (refusal, then CloseSocket) still reaches the player; and a
+  // character request that ends with no word from the server says so instead of dropping back to the login screen (char-create, 21 Nov).
+  const live = session && session.phase !== 'closed' ? session : undefined;
+  while (live?.notices.length) handleNotice(live.notices.shift()!);
+  const silent = byPlayer ? undefined : live?.silentLoginFailure;
   connectingWindow?.close(); clearInput(); stoppedAt = performance.now(); chatBox.close(); npcDialog.hide(); audio.detach(); skillsWindows.closeAll(); questWindows.closeAll();
   if (session) {
     try { session.finish(message); } catch (error) { message = `${message}; ${String(error)}`; }
@@ -214,6 +220,7 @@ function close(message = 'Disconnected') {
   connect.disabled = false; disconnect.hidden = true;
   connection.textContent = message;
   if (message !== 'Disconnected') report(message);
+  if (silent) { const text = silentLoginText(silent, message.startsWith('Timed out')); connectUi.say(text); showMessage(element('classic'), text); }
 }
 async function boot() {
   const response = await fetch('/ao-config.json');
@@ -276,7 +283,7 @@ function syncConnect() {
   const s = session && session.phase !== 'closed' ? session : undefined;
   while (s?.notices.length) handleNotice(s.notices.shift()!);
   const playing = !!s && s.ready && renderer.readyMap === s.resourceMap;
-  if (s?.phase === 'connecting') { if (!connectingWindow?.isOpen) connectingWindow = showConnecting(element('classic'), () => close()); } else connectingWindow?.close();
+  if (s?.phase === 'connecting') { if (!connectingWindow?.isOpen) connectingWindow = showConnecting(element('classic'), () => close('Disconnected', true)); } else connectingWindow?.close();
   if (playing) connectUi.setScreen('none');
   else if (s?.phase === 'account') {
     if (shownAccount !== s.accountRevision || connectUi.current === 'login' || connectUi.current === 'none') { shownAccount = s.accountRevision; connectUi.showAccount(s.accountCharacters); }
@@ -337,7 +344,7 @@ function connectSession(email: string, secret: string, create = false) {
   npcDialog.hide();
   const owner = session;
   // HandleDisconnect ends in General_Set_Connect (the login screen); HandleCerrarleCliente is CloseClient.
-  session.onDisconnect = () => { if (session === owner) close(); };
+  session.onDisconnect = () => { if (session === owner) close('Disconnected', true); }; // a deliberate Disconnect (Quit), not a silent drop
   session.onCloseClient = () => { if (session === owner) { close('El servidor cerró el cliente.'); showMessage(element('classic'), 'El servidor cerró el cliente.'); } };
   session.tracker.onNpcDescription = ({ npcNumber }) => { if (session === owner) void npcDialog.showWhenReady(npcNumber, () => sharedLocale); };
   chatBox.attach(session);
@@ -382,9 +389,9 @@ quitButton.addEventListener('click', () => { try { window.close(); } catch { /* 
 form.append(remember, accountButton, quitButton);
 if (remembered) { account.value = remembered; connectUi.say(TEXT.welcomeBack); }
 // frmMain Image4(1) opens frmCerrar: Menú principal = WriteQuit (the server counts down, then Disconnect), Salir = CloseClient.
-disconnect.addEventListener('click', () => !interactiveFlow ? close() : showExit(element('classic'), {
+disconnect.addEventListener('click', () => !interactiveFlow ? close('Disconnected', true) : showExit(element('classic'), {
   menu: () => guard(() => session?.sendAction({ id: K.Quit })),
-  exit: () => { guard(() => session?.sendAction({ id: K.Quit })); window.setTimeout(() => { close(); try { window.close(); } catch { /* ignored */ } }, 300); },
+  exit: () => { guard(() => session?.sendAction({ id: K.Quit })); window.setTimeout(() => { close('Disconnected', true); try { window.close(); } catch { /* ignored */ } }, 300); },
 }));
 // frmMain OpcionesBoton opens frmOpciones (gameplay, video, audio tabs, and the key editor).
 element('settings').addEventListener('click', () => optionsUi.toggle());
@@ -544,5 +551,5 @@ viewport.addEventListener('pointerdown', event => {
 });
 viewport.addEventListener('pointermove', event => { if (viewport.hasPointerCapture(event.pointerId)) aim(event); });
 for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) viewport.addEventListener(name, clearInput);
-window.addEventListener('pagehide', () => { close(); renderer.destroy(); });
+window.addEventListener('pagehide', () => { close('Disconnected', true); renderer.destroy(); });
 void boot().then(() => { connect.disabled = false; }).catch(error => report(String(error)));
