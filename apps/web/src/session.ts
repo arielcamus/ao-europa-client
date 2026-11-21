@@ -23,6 +23,8 @@ import type { ObjectCatalog } from './object-catalog.js';
 import { BankTradeState } from './bank-trade-state.js';
 import { BankTradeController } from './bank-trade.js';
 import { WorldFx } from './fx-world.js';
+import { QuestsState } from './quests.js';
+import { QuestClientPacketId as QC, QuestServerPacketId as QS } from '@ao/protocol';
 
 export interface Position { x: number; y: number }
 const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
@@ -60,6 +62,8 @@ export class Session {
   /** Bank vault, Goliath and player-to-player trade (feat/bank-trade). */
   readonly bankTrade = new BankTradeState();
   readonly bankTradeActions = new BankTradeController({ send: packet => this.send(packet), ready: () => this.ready }, this.bankTrade);
+  /** Quest list, quest details and NPC quest offers (feat/quests). */
+  readonly quests = new QuestsState();
   characterLevel: number | undefined;
   phase: Phase = 'connecting';
   map: number | undefined;
@@ -142,6 +146,7 @@ export class Session {
         // CharAtaca blood goes into the one spell FX list; VB6 skips it when the victim is sailing.
         bleed: (charIndex, fx) => { if (!this.tracker.chars.get(charIndex)?.sailing) this.spells.addFx({ fx, charIndex, x: 0, y: 0, loops: 0, startedAt: this.clock() }); },
       });
+      this.quests.receive(packet);
       this.spells.receive(packet);
       this.items.receive(packet);
       this.bankTrade.receive(packet);
@@ -206,6 +211,8 @@ export class Session {
           this.clickInterval = Math.max(100, packet.leftClick);
           this.hitInterval = packet.hit;
           break;
+        // HandleQuestListSend asks for the details of the first quest at once.
+        case QS.QuestListSend: if (packet.quests.length) this.requestQuestDetails(1); break;
         case S.PosUpdate: this.place(packet.x, packet.y); break;
         case S.PosUpdateUserChar:
         case S.PosUpdateChar:
@@ -351,6 +358,23 @@ export class Session {
   }
   /** /DESCANSAR. */
   rest(): boolean { if (!this.ready) return false; this.send({ id: SC.Rest }); return true; }
+  /** Quests button / WriteQuestListRequest: the server answers with QuestListSend. */
+  requestQuestList(): boolean { if (!this.ready) return false; this.send({ id: QC.QuestListRequest }); return true; }
+  /** WriteQuestDetailsRequest: `slot` is the 1-based position in the quest list. */
+  requestQuestDetails(slot: number): boolean {
+    if (!this.ready || !Number.isInteger(slot) || slot < 1 || slot > 255) return false;
+    this.quests.requestedSlot = slot; this.send({ id: QC.QuestDetailsRequest, slot }); return true;
+  }
+  /** WriteQuestAccept: `slot` is the 1-based row of the offered-quest list; the server answers with a console line and an NPC symbol. */
+  acceptQuest(slot: number): boolean {
+    if (!this.ready || !Number.isInteger(slot) || slot < 1 || slot > 255) return false;
+    this.send({ id: QC.QuestAccept, slot }); return true;
+  }
+  /** WriteQuestAbandon; the server answers with a fresh QuestListSend. */
+  abandonQuest(slot: number): boolean {
+    if (!this.ready || !Number.isInteger(slot) || slot < 1 || slot > 255) return false;
+    this.send({ id: QC.QuestAbandon, slot }); return true;
+  }
   talk(message: string): boolean {
     if (!this.ready || this.clock() - this.lastTalk < this.talkInterval) return false;
     if (!message.trim() || message.length > 160 || new TextEncoder().encode(message).length > 255) return false;

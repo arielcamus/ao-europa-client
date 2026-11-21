@@ -342,6 +342,9 @@ export class WorldRenderer {
       for (const layer of sprites.layers(char, heading)) {
         this.draw(pool, layer.animation, px + layer.x, py + layer.y, layer.walks && moving ? elapsed : 0);
       }
+      // Quest marker (engine.bas Char_Render, .simbolo): grh 5257 + symbol, 48 px above the head, bobbing 8 px; drawn even with names hidden.
+      const marker = char.npc && char.symbol ? sprites.body(char.body) : undefined;
+      if (char.symbol && marker) this.draw(pool, this.animation(5257 + char.symbol), px + 6 + marker.headX, py + marker.headY - 48 - 8 * Math.sin((now % 31415) * 0.002) ** 2, now, false);
       if (!this.showNames) { /* HideNames */ } else if (char.npc) {
         // NPC names appear only under the cursor, in (0,129,195).
         if (this.hoverTile && this.hoverTile.x === char.x && this.hoverTile.y === char.y && char.name) {

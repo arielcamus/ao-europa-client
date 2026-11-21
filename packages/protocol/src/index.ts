@@ -13,3 +13,4 @@ export * from './packets/bank-trade.js';
 export * from './packets/world.js';
 export * from './packets/crafting.js';
 export * from './packets/skills.js';
+export * from './packets/quests.js';
