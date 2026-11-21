@@ -121,13 +121,6 @@
  },
  {
   "dir": "c2s",
-  "id": 247,
-  "name": "CancelarExit",
-  "types": [],
-  "hex": "f700"
- },
- {
-  "dir": "c2s",
   "id": 249,
   "name": "ComenzarTorneo",
   "types": [],

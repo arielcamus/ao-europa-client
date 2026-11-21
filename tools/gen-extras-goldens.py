@@ -26,7 +26,7 @@ W = r'Writer\.Write(Int8|Int16|Int32|String8|Bool)\('
 R = r'[Rr]eader\.Read(Int8|Int16|Int32|String8|Bool)\b'
 for i, n in [(64, 'ChangeDescription'), (67, 'Gamble'), (68, 'MapPriceEntrance'), (69, 'LeaveFaction'), (185, 'Participar'), (213, 'OfertaInicial'),
              (216, 'CuentaRegresiva'), (218, 'Duel'), (219, 'AcceptDuel'), (220, 'CancelDuel'), (221, 'QuitDuel'), (240, 'SubastaInfo'),
-             (244, 'EventoInfo'), (245, 'CrearEvento'), (247, 'CancelarExit'), (249, 'ComenzarTorneo'), (250, 'CancelarTorneo'),
+             (244, 'EventoInfo'), (245, 'CrearEvento'), (249, 'ComenzarTorneo'), (250, 'CancelarTorneo'),
              (251, 'BusquedaTesoro'), (267, 'FinEvento'), (272, 'CreateEvent'), (274, 'LogMacroClickHechizo'), (292, 'CancelarEvento'),
              (295, 'EventoFaccionario'), (297, 'LobbyCommand'), (310, 'AntiMacroMessage'), (311, 'ModifyCastleWhiteList')]:
     add('c2s', i, n, cw, 'Write' + n, W)

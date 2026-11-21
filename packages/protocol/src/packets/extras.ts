@@ -48,7 +48,7 @@ export const ExtrasServerPacketId = {
 export const ExtrasClientPacketId = {
   ChangeDescription: 64, Gamble: 67, MapPriceEntrance: 68, LeaveFaction: 69, Participar: 185, OfertaInicial: 213, OfertaDeSubasta: 214,
   CuentaRegresiva: 216, Duel: 218, AcceptDuel: 219, CancelDuel: 220, QuitDuel: 221, Casarse: 227, MacroPossent: 239, SubastaInfo: 240,
-  EventoInfo: 244, CrearEvento: 245, CancelarExit: 247, CrearTorneo: 248, ComenzarTorneo: 249, CancelarTorneo: 250, BusquedaTesoro: 251,
+  EventoInfo: 244, CrearEvento: 245, CrearTorneo: 248, ComenzarTorneo: 249, CancelarTorneo: 250, BusquedaTesoro: 251,
   FinEvento: 267, CreateEvent: 272, LogMacroClickHechizo: 274, BuyShopItem: 290, StartEvent: 291, CancelarEvento: 292,
   PublicarPersonajeMAO: 294, EventoFaccionario: 295, LobbyCommand: 297, FeatureToggle: 298, AntiCheatMessage: 302, RequestLobbyList: 303,
   AntiMacroMessage: 310, ModifyCastleWhiteList: 311,
@@ -150,7 +150,6 @@ export const extrasClientCodecs = {
   [ExtrasClientPacketId.EventoInfo]: empty,
   /** WriteCrearEvento: TIPO Int8, duracion Int8, multiplicacion Int8. */
   [ExtrasClientPacketId.CrearEvento]: flat({ type: 'i8', duration: 'i8', multiplier: 'i8' }),
-  [ExtrasClientPacketId.CancelarExit]: empty,
   /** HandleCrearTorneo (server): levels, slots, cost, twelve class flags, map, x, y, name, rules. */
   [ExtrasClientPacketId.CrearTorneo]: flat({
     minLevel: 'i8', maxLevel: 'i8', slots: 'i8', cost: 'i32', mage: 'i8', cleric: 'i8', warrior: 'i8', assassin: 'i8', bard: 'i8', druid: 'i8',
