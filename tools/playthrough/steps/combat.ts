@@ -6,7 +6,7 @@ import type { ClientPacket } from '@ao/protocol';
 import { step } from '../harness.js';
 import type { Ctx } from '../harness.js';
 import type { Sess } from '../session.js';
-import { ensureEquipped, spotOn, actor, dbEdit, setUser, setSlot, setSkill, equipSlot, slotOf, amountOf, attack, castSpell, workClick, series, localeIds, Msg, spotOnMap2, placeSet, gmGoto, spawnCreature, killMine, click, useSlot } from './sc-util.js';
+import { dbEditBoth, ensureEquipped, spotOn, actor, dbEdit, setUser, setSlot, setSkill, equipSlot, slotOf, amountOf, attack, castSpell, workClick, series, localeIds, Msg, spotOnMap2, placeSet, gmGoto, spawnCreature, killMine, click, useSlot } from './sc-util.js';
 import { attributes, miniStats, loadMap } from './util.js';
 import { walkable, path as bfs } from '../maps.js';
 
@@ -94,4 +94,106 @@ step('CMB-02', async c => {
   c.ok(d!.damages.length >= 2, `${d!.damages.length} damage samples: ${d!.damages.join(',')}`);
   c.ok(d!.damages.every(x => x >= lo && x <= hi), `every hit in [${lo}, ${hi}] (STR ${d!.strength}, DañoArmas 1.05)`);
   c.ok(Math.max(...d!.damages) > lo, 'the damage varies (not a constant)');
+});
+
+// ---------- PvP: CMB-03 .. CMB-06 ----------
+const Safe = { on: 'SafeModeOn', off: 'SafeModeOff' };
+const toggleSeguro = (s: Sess) => s.send({ id: KEY.SafeToggle } as ClientPacket);
+/** Both own characters side by side (mage east of the warrior, warrior facing east) on `map`; both alive, fed, dressed; the warrior wields the sword. */
+async function duel(c: Ctx, map: number, cx: number, cy: number, dressed = true) {
+  const [x, y] = spotOn(map, cx, cy, 4, 3);
+  const w0 = await actor(c, 'war'), v0 = await actor(c, 'mage');
+  if (dressed) { await ensureEquipped(w0, 3500); await ensureEquipped(w0, 3487); void v0; } // done while still on the safe map; the equipment persists through the relog
+  await dbEditBoth(c, {
+    mage: [setUser('is_dead=0, is_poisoned=0, status=1, min_hp=20, min_sta=60, min_ham=100, min_sed=100'), placeSet(map, x + 1, y)],
+    war: [setUser('is_dead=0, status=1, faction_score=0, min_hp=20, min_sta=60, min_ham=100, min_sed=100, heading=2'), placeSet(map, x, y)],
+  });
+  const w = await actor(c, 'war'), v = await actor(c, 'mage');
+  c.ok(w.map === map && v.map === map, `both characters on map ${map} (warrior ${w.map}:${w.x},${w.y} mage ${v.map}:${v.x},${v.y})`);
+  if (Math.abs(w.x - v.x) + Math.abs(w.y - v.y) !== 1) { // the server put the logins on the closest legal tiles: the mage walks to a neighbour of the warrior
+    const f = loadMap(map)!.map; let done = false;
+    for (const [tx, ty] of [[w.x + 1, w.y], [w.x - 1, w.y], [w.x, w.y + 1], [w.x, w.y - 1]] as [number, number][]) {
+      if (!walkable(f, tx, ty)) continue; const route = (v.x === tx && v.y === ty) ? [] : bfs(f, [v.x, v.y], [tx, ty]); if (!route) continue;
+      let ok = true; for (const h of route) { const r = await v.step(h as Heading, 450); if (!r.moved) { ok = false; break; } } if (ok) { done = true; break; }
+    }
+    if (!done) c.blocked(`the mage could not reach a tile next to the warrior at ${w.x},${w.y}`);
+  }
+  c.ok(Math.abs(w.x - v.x) + Math.abs(w.y - v.y) === 1, `adjacent: warrior ${w.x},${w.y} mage ${v.x},${v.y}`);
+  heading(w, v.x > w.x ? Heading.East : v.x < w.x ? Heading.West : v.y > w.y ? Heading.South : Heading.North); await w.sleep(400);
+  return { w, v };
+}
+const hpOf = (s: Sess) => s.stats!.hp;
+
+step('CMB-03', async c => {
+  // PuedeAtacar (pinned SistemaCombate.bas), in this order: a citizen with the safe toggle ON is refused against a citizen with message 1057 (the doc's 1057/1058); only then the map test
+  // ('Estas en un Mapa Seguro?': MapInfo.Seguro = 1 -> message 1062 'zona segura, aqui no podes atacar otros usuarios'); a ZonaSegura trigger tile gives 1063.
+  // On an unsafe map with the toggle off UsuarioAtacaUsuario goes on to UsuarioImpacto and UserDamageToUser (CMB-04): the victim gets UserHittedByUser.
+  let { w, v } = await duel(c, 751, 62, 57);
+  await w.sleep(1300); let m = w.mark(); attack(w); await w.sleep(1500);
+  c.ok(localeIds(w, m).includes(Msg.safeCitizen), `Forgat, safe toggle on: message ${Msg.safeCitizen} (no podes atacar ciudadanos, desactiva el seguro)`);
+  c.eq(hpOf(v), 20, 'the mage lost nothing');
+  m = w.mark(); toggleSeguro(w); await w.sleep(1000); c.ok(w.since(m).some(r => r.name === Safe.off), 'SafeModeOff after the toggle');
+  m = w.mark(); await w.sleep(1250); attack(w); await w.sleep(1500);
+  const ids = localeIds(w, m);
+  c.ok(ids.includes(1062), `Forgat is a Seguro=1 map: toggle off, still refused with message 1062 (got ${ids.join(',') || 'nothing'})`);
+  c.eq(hpOf(v), 20, 'still no damage on the safe map');
+  // unsafe map
+  ({ w, v } = await duel(c, 2, 50, 50, false));
+  m = w.mark(); toggleSeguro(w); await w.sleep(1000); c.ok(w.since(m).some(r => r.name === Safe.off), 'map 2: SafeModeOff after the toggle (it is ON again after every login)');
+  c.eq((await miniStats(w)).alignment, 1, 'warrior is a citizen (alignment 1) before attacking');
+  const hits: { place: number; damage: number }[] = []; let swings = 0; m = w.mark(); const startHp = hpOf(v); c.note(`HP before the duel: warrior ${hpOf(w)}, mage ${hpOf(v)}`);
+  while (swings < 16 && hits.length < 4 && hpOf(v) > 6 && hpOf(w) > 6) {
+    const b = v.mark(); await w.sleep(1250); attack(w); swings++; await w.sleep(1100);
+    for (const r of v.since(b)) if (r.name === 'UserHittedByUser') hits.push({ place: (r.packet as any).place, damage: Number((r.packet as any).damage) });
+  }
+  c.shared.duel = { hits, swings, startHp, endHp: hpOf(v), strength: (await attributes(w)).strength };
+  c.ok(hits.length >= 1, `${hits.length} hits in ${swings} swings reached the mage as UserHittedByUser: ${JSON.stringify(hits)}`);
+  c.ok(hpOf(v) < startHp, `the mage's HP fell ${startHp} -> ${hpOf(v)}`);
+  c.shared.duelPair = { w, v };
+});
+
+step('CMB-04', async c => {
+  // UserDamageToUser (pinned): BaseDamage = GetUserDamage (CMB-02: sword 1..3, STR, DañoArmas 1.05), body part RandomNumber(1,8) (>6 re-rolled to 2..6; 1 = head: helmet defence only), Defensa = armour + shield
+  // RandomNumber(MinDef, MaxDef); Damage = (BaseDamage - Defensa) * GetPhysicalDamageModifier * GetPhysicDamageReduction, floor 0. The mage wears the tunic (OBJ3502 MinDef = MaxDef = 0), no helmet, no shield: defence 0.
+  const d = c.shared.duel as { hits: { place: number; damage: number }[]; strength: number } | undefined;
+  if (!d) c.blocked('needs the hits recorded by CMB-03');
+  const lo = Math.round((3 * 1 + 0 + 1) * 1.05), hi = Math.round((3 * 3 + 3 * 0.2 * Math.max(d!.strength - 15, 0) + 2) * 1.05);
+  c.ok(d!.hits.every(h => h.damage >= lo && h.damage <= hi), `every hit in [${lo}, ${hi}] (defence 0): ${d!.hits.map(h => h.damage).join(',')}`);
+  c.ok(d!.hits.every(h => h.place >= 1 && h.place <= 6), `body parts ${d!.hits.map(h => h.place).join(',')} are within 1..6 (head, arms, legs, torso)`);
+});
+
+step('CMB-05', async c => {
+  // UsuarioAtacadoPorUsuario (pinned), called by UsuarioAtacaUsuario BEFORE the hit roll: esCiudadano(attacker) and victim citizen/army -> VolverCriminal: Faccion.Status = 0, FactionScore = 0 if it was citizen.
+  // So even a swing that misses makes the attacker a criminal. Status is a flag, there is no numeric reputation (Declares e_Facciones: Criminal 0, Ciudadano 1, Caos 2, Armada 3, Concilio 4, Consejo 5).
+  const pair = c.shared.duelPair as { w: Sess; v: Sess } | undefined;
+  if (!pair) c.blocked('needs the duel of CMB-03');
+  const { w, v } = pair!;
+  c.eq((await miniStats(w)).alignment, 0, 'the attacker is now a criminal (alignment 0)');
+  c.eq((await miniStats(v)).alignment, 1, 'the victim stays a citizen (alignment 1)');
+  const m = w.mark(); toggleSeguro(w); await w.sleep(1000);
+  c.ok(localeIds(w, m).includes(Msg.onlyCitizensToggle), `a criminal cannot change the toggle: message ${Msg.onlyCitizensToggle} (solo los ciudadanos pueden cambiar el seguro)`);
+  c.ok(!w.since(m).some(r => r.name === Safe.on || r.name === Safe.off), 'no SafeModeOn/Off came back');
+});
+
+step('CMB-06', async c => {
+  // Pinned Protocol.bas: HandleSafeToggle flips flags.Seguro for a citizen (WriteSafeModeOn/Off) and answers 696 to everybody else (CMB-05); a guild of citizen or army alignment cannot switch it off (message 697).
+  // HandlePartyToggle flips SeguroParty -> WritePartySafeOn/Off; HandleSeguroClan / HandleSeguroResu / HandleLegionarySecure flip their flag and WriteClanSeguro / WriteSeguroResu / WriteLegionarySecure carry the NEW value.
+  const v = await actor(c, 'mage');
+  const flip = async (label: string, send: () => void, names: string[], val?: (p: any) => boolean) => {
+    const out: boolean[] = [];
+    for (let i = 0; i < 2; i++) {
+      const m = v.mark(); send(); await v.sleep(900);
+      const r = v.since(m).find(x => names.includes(x.name)); c.ok(!!r, `${label} #${i + 1}: ${r?.name ?? 'no answer'}`);
+      out.push(val ? val(r!.packet) : r!.name === names[0]);
+    }
+    c.ok(out[0] !== out[1], `${label} flips between the two presses (${out.join(' then ')})`);
+  };
+  await flip('safe toggle (/SEG)', () => v.send({ id: KEY.SafeToggle } as ClientPacket), ['SafeModeOn', 'SafeModeOff']);
+  await flip('party safe toggle', () => v.send({ id: KEY.PartySafeToggle } as ClientPacket), ['PartySafeOn', 'PartySafeOff']);
+  await flip('clan safe toggle', () => v.send({ id: STC.SeguroClan } as ClientPacket), ['ClanSeguro'], p => !!p.enabled);
+  await flip('resurrection safe toggle', () => v.send({ id: STC.SeguroResu } as ClientPacket), ['SeguroResu'], p => !!p.enabled);
+  await flip('legionary safe toggle', () => v.send({ id: STC.LegionarySecure } as ClientPacket), ['LegionarySecure'], p => !!p.enabled);
+  c.note('the army/citizen-guild lock (message 697) needs a guild of that alignment: asserted in the guild flows, not here');
+  // leave the duel: both characters back in Forgat as citizens
+  await dbEditBoth(c, { mage: [setUser('is_dead=0, status=1, min_hp=20, pos_map=751, pos_x=60, pos_y=57')], war: [setUser('is_dead=0, status=1, faction_score=0, min_hp=20, pos_map=751, pos_x=62, pos_y=57')] });
 });

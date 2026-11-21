@@ -49,7 +49,10 @@ export async function dbEdit(c: Ctx, w: Who, ...statements: string[]) {
   s.close();
   let free = false;
   for (let i = 0; i < 20 && !free; i++) { free = sql(`select is_logged from user where id=${id};`) === '0'; if (!free) await new Promise(r => setTimeout(r, 3000)); }
-  if (free) for (const st of statements) sql(st.replace(/\{id\}/g, String(id)));
+  if (free) for (const st of statements) {
+    const out = sql(st.replace(/\{id\}/g, String(id)).replace(/;\s*$/, ' returning 1;'));
+    if (!out.startsWith('1') && /^update user /i.test(st)) throw new Error(`UPDATE not applied to ${nameOf(c, w)} (is_logged still set?): ${st.slice(0, 80)}`);
+  }
   if (w === 'mage') await c.relogin(); else await relogWar(c);
   if (!free) c.blocked(`the server kept ${nameOf(c, w)} flagged is_logged=1 for 60 s, so the DB UPDATE was not applied`);
 }
@@ -83,7 +86,7 @@ export function spotOn(map: number, cx: number, cy: number, len = 4, rows = 1): 
 export const placeSet = (map: number, x: number, y: number) => setUser(`pos_map=${map}, pos_x=${x}, pos_y=${y}`);
 /** The server's locale ids since a mark. */
 export const localeIds = (s: Sess, m: number) => s.localeSince(m).map(l => l.id);
-export const Msg = { poisonTick: 47, poisonDamage: 390, cured: 682, notPoisoned: 683, wait: 681, tired: 93, healed: 519, hungry: 904, dead: 77, safeCitizen: 1057, safeArmy: 1058, armyVsArmy: 1055, armyVsCitizen: 1056, noSafeArea: 572 } as const;
+export const Msg = { poisonTick: 47, poisonDamage: 390, cured: 682, notPoisoned: 683, wait: 681, tired: 93, healed: 519, hungry: 904, dead: 77, safeCitizen: 1057, safeArmy: 1058, armyVsArmy: 1055, armyVsCitizen: 1056, noSafeArea: 572, onlyCitizensToggle: 696 } as const;
 /** Time series of one packet name since `m`: [{ t (ms since the session opened), packet }]. */
 export const series = (s: Sess, m: number, name: string) => s.since(m).filter(r => r.name === name).map(r => ({ t: r.t, p: r.packet as any }));
 /** EquipItem toggles, and the login inventory does not say what is equipped: send it, and send it again when the answer says the item is not worn. */
@@ -93,4 +96,17 @@ export async function ensureEquipped(s: Sess, obj: number, want = true) {
     if (!!slotOf(s, obj)!.equipped === want) return true;
   }
   return false;
+}
+
+/** Like dbEdit for both characters at once: both log out together, both rows are updated, both log back in together (a character stranded on an unsafe map while the other one relogs gets killed by wandering creatures). */
+export async function dbEditBoth(c: Ctx, edits: { mage: string[]; war: string[] }) {
+  const ws: Who[] = ['mage', 'war'], sess = await Promise.all(ws.map(w => actor(c, w)));
+  const ids = ws.map(w => Number(sql(`select id from user where name='${nameOf(c, w).replace(/'/g, "''")}';`)));
+  await Promise.all(sess.map(async s => { const pm = s.mark(); s.say('/SALIR'); await s.until(() => s.closed || s.rx.slice(pm).some(r => r.name === 'Disconnect'), 25_000, 'logout').catch(() => undefined); s.close(); }));
+  for (let i = 0; i < 2; i++) {
+    let free = false; for (let k = 0; k < 20 && !free; k++) { free = sql(`select is_logged from user where id=${ids[i]};`) === '0'; if (!free) await new Promise(r => setTimeout(r, 3000)); }
+    if (!free) throw new Error(`${nameOf(c, ws[i]!)} stayed flagged is_logged=1: UPDATE not applied`);
+    for (const st of edits[ws[i]!]) { const out = sql(st.replace(/\{id\}/g, String(ids[i])).replace(/;\s*$/, ' returning 1;')); if (!out.startsWith('1') && /^update user /i.test(st)) throw new Error(`UPDATE not applied to ${nameOf(c, ws[i]!)}: ${st.slice(0, 80)}`); }
+  }
+  await Promise.all([c.relogin(), relogWar(c)]);
 }

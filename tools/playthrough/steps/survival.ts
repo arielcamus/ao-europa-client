@@ -5,7 +5,7 @@ import { SkillsClientPacketId as SK } from '@ao/protocol';
 import type { ClientPacket } from '@ao/protocol';
 import { step } from '../harness.js';
 import type { Ctx } from '../harness.js';
-import { actor, dbEdit, setUser, useSlot, equipSlot, slotOf, amountOf, series, localeIds, Msg, spotOnMap2, placeSet, gmGoto, spawnCreature, killMine } from './sc-util.js';
+import { attack, actor, dbEdit, setUser, useSlot, equipSlot, slotOf, amountOf, series, localeIds, Msg, gmGoto, spawnCreature, killMine } from './sc-util.js';
 import { attributes } from './util.js';
 
 const APPLE = 3684, WATER = 3685, RED = 4335, BLUE = 4336, YELLOW = 4337, VIOLET = 4334;
@@ -95,22 +95,23 @@ step('SUR-07', async c => {
 
 // SUR-09 first: it poisons the mage with a creature the GM helper spawns itself, measures the ticks and ends by curing with the violet potion (SUR-08's second half).
 step('SUR-09', async c => {
-  // EfectoVeneno (General.bas), called from the game loop while Envenenado <> 0: Counters.Veneno counts to IntervaloVeneno = 90 loop ticks; each tick Damage = 1 + (RandomNumber(3,5) * MaxHp \ 100)
-  // (VB6 precedence: 1 + ((r*MaxHp) \ 100)) = 1 for a 20 HP mage unless r = 5 (2). Poison has no expiry. The serpent is NPC 502 (Veneno=1, MinHIT 3 MaxHIT 6, 22 HP).
-  const g = c.gm; const [x, y] = spotOnMap2(4);
-  await dbEdit(c, 'mage', setUser('min_hp=20, min_ham=100, min_sed=100, min_man=150'), placeSet(2, x, y));
-  const p = c.player; c.eq(p.map, 2, 'mage placed on map 2 (unsafe)');
-  await gmGoto(c, 2, x + 2, y);
+  // EfectoVeneno (pinned General.bas), called from the game loop while Envenenado <> 0: Counters.Veneno counts to IntervaloVeneno = 90 loop ticks; each tick Damage = 1 + (RandomNumber(3,5) * MaxHp \ 100)
+  // (VB6 precedence: 1 + ((r * MaxHp) \ 100)) = 1 for a 20 HP mage unless r = 5 (then 2), with message 47 and, when chat-combat is on, 390. Poison has no expiry. The serpent is NPC 502 (live NPCs.dat:
+  // Veneno=1, MinHIT 3 MaxHIT 6, 22 HP), spawned by the GM helper in Forgat and removed as soon as the mage is poisoned.
+  const g = c.gm; await dbEdit(c, 'mage', setUser('is_dead=0, min_hp=20, min_ham=100, min_sed=100, min_man=150, pos_map=751, pos_x=60, pos_y=57'));
+  const p = c.player; await gmGoto(c, 751, p.x + 2, p.y);
   const mine = await spawnCreature(c, 502); const m = p.mark();
   let poisoned = false;
-  try { await p.until(() => localeIds(p, m).includes(Msg.poisonTick) || (p.stats?.hp ?? 20) <= 7, 60_000, 'poison tick or low HP'); poisoned = localeIds(p, m).includes(Msg.poisonTick); }
+  try { await p.until(() => localeIds(p, m).includes(Msg.poisonTick) || (p.stats?.hp ?? 20) <= 12, 60_000, 'poison tick or low HP'); }
   finally { await killMine(c, mine); }
+  await p.until(() => localeIds(p, m).includes(Msg.poisonTick), 6000, 'a poison tick').catch(() => undefined); poisoned = localeIds(p, m).includes(Msg.poisonTick);
+  void g;
   if (!poisoned) { c.shared.cure = 'not poisoned'; c.blocked('the serpent did not poison within the window (poison chance per hit); the creature was removed'); }
   const t0 = p.mark(); await p.sleep(16_000);
   const ticks = p.since(t0).filter(r => r.name === 'LocaleMsg' && (r.packet as any).messageId === Msg.poisonTick).map(r => r.t);
   c.ok(ticks.length >= 3, `${ticks.length} poison ticks in 16 s`);
   const gaps = ticks.slice(1).map((t, i) => (t - ticks[i]!) / 1000); c.near(Math.min(...gaps), 2.5, 6, `tick gaps ${gaps.map(g => g.toFixed(1)).join(', ')} s (IntervaloVeneno+1 = 91 loop ticks, about 3.6 s)`);
-  const hp = series(p, t0, 'UpdateHP').map(s => s.p.hp as number);
+  const raw = series(p, t0, 'UpdateHP').map(s => s.p.hp as number), hp = raw.filter((h, i) => i === 0 || h !== raw[i - 1]);
   const drops = hp.slice(1).map((h, i) => hp[i]! - h).filter(d => d > 0); c.ok(drops.length > 0 && drops.every(d => d >= 1 && d <= 2), `each tick took ${drops.join(',')} HP (1 or 2 for MaxHp 20)`);
   // cure: violet potion (HealsPoison)
   const before = amountOf(p, VIOLET), m2 = p.mark(); useSlot(p, slotOf(p, VIOLET)!.slot); await p.sleep(1500);
@@ -118,7 +119,6 @@ step('SUR-09', async c => {
   c.eq(before - amountOf(p, VIOLET), 1, 'the cure consumed one potion');
   const m3 = p.mark(); await p.sleep(9000); c.ok(!localeIds(p, m3).includes(Msg.poisonTick), 'no poison tick in 9 s after the cure');
   c.shared.cure = 'cured';
-  await dbEdit(c, 'mage', setUser('min_hp=20, pos_map=751, pos_x=60, pos_y=57'));
 });
 
 step('SUR-08', async c => {
@@ -191,18 +191,16 @@ step('SUR-12', async c => {
 });
 
 step('SUR-13', async c => {
-  // UsuarioAtaca (SistemaCombate.bas): MinSta < 10 -> message 93 (estas muy cansado) and no attack; else QuitarSta(RandomNumber(1, 10)). Spells: Hechizos.dat StaRequerido (Dardo 2).
-  const w = await actor(c, 'war');
-  await dbEdit(c, 'war', setUser('min_sta=9, min_ham=100, min_sed=100'));
-  const p = await actor(c, 'war'); let m = p.mark();
-  p.send({ id: 80, counter: 0 } as ClientPacket); await p.sleep(1500);
-  c.ok(localeIds(p, m).includes(Msg.tired), 'stamina 9: attack refused with message 93');
-  c.eq(p.stats!.stamina, 9, 'nothing was spent');
-  await dbEdit(c, 'war', setUser('min_sta=30'));
-  const p2 = await actor(c, 'war'); m = p2.mark(); p2.send({ id: 80, counter: 0 } as ClientPacket); await p2.sleep(1500);
-  const sta = series(p2, m, 'UpdateSta').map(s => s.p.stamina as number);
-  c.ok(sta.length > 0, 'an attack at stamina 30 sent UpdateSta'); const spent = 30 - Math.min(...sta); c.near(spent, 1, 10, `swing at an empty tile spent ${spent} (RandomNumber 1..10; regen may add back 1 or 2)`);
-  void w;
+  // UsuarioAtaca (pinned SistemaCombate.bas): MinSta < 10 -> message 93 (estas muy cansado), ChatOverHead 'no tengo energia' and NO swing; otherwise QuitarSta(RandomNumber(1, 10)) before the swing
+  // (the per-swing cost is measured in CMB-01). The character is HUNGRY here (MinHam = 0) so RecStamina cannot refill the 9 points between login and the swing (SUR-02).
+  await dbEdit(c, 'war', setUser('is_dead=0, min_sta=9, min_ham=0, min_sed=100, min_hp=20'));
+  const p = await actor(c, 'war'); const m = p.mark(); c.ok(p.stats!.stamina < 10, `stamina ${p.stats!.stamina} (< 10)`);
+  attack(p); await p.sleep(1500);
+  c.ok(localeIds(p, m).includes(Msg.tired), 'stamina under 10: attack refused with message 93 (estas muy cansado)');
+  c.eq(series(p, m, 'ArmaMov').length, 0, 'no swing was made');
+  c.ok(p.since(m).some(r => r.name === 'ChatOverHead'), 'the no-energy bubble (ChatOverHead) was sent');
+  c.note('spell, work and steal stamina costs (Dardo 2, chop/mine/fish 5, smelting 2, craft 2, steal 15) are asserted in CMB-17 for the spell; the work costs need trees, ore, a forge and a thief and stay manual');
+  await dbEdit(c, 'war', setUser('min_sta=60, min_ham=100, min_sed=100'));
 });
 
 step('SUR-14', async c => c.blocked('manual: needs a fire-casting creature or spell (Incinerar needs Magia 100 and 1500 mana); EfectoIncineramiento hits random(20,30) every IntervaloFuego/4'));
