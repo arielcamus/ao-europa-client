@@ -39,15 +39,18 @@ step('MOV-07', async c => {
   const [h, [dx, dy]] = neighbours[0]!;
   // VB6 GameLogic.bas:CheckMapRestrictions refuses a non-GM below MapInfo(dest).MinLevel (MSG 1108 "Necesitas ser al menos nivel N"); 391 needs 20. Level 20 through the DB (own char), reverted at the end.
   await dbUpdateOwn(c, `level=20, pos_map=24, pos_x=${t.x - dx}, pos_y=${t.y - dy}`);
-  const p = c.player, m = p.mark(), before = [p.map, p.x, p.y];
-  const r = await p.step(Number(h), 300); await p.sleep(1500);
-  c.note(`stepped onto the otTeleport tile 24:${t.x},${t.y} (obj ${t.objIndex}) from ${before}; now ${p.map}:${p.x},${p.y}; saw ${p.since(m).map(x => x.name).filter(n => !/CharacterMove|CharacterChange/.test(n)).join(',')}`);
-  c.ok(p.map !== 24 || Math.abs(p.x - t.x) + Math.abs(p.y - t.y) > 3, `the teleport moved the character away (moved=${r.moved}); the tile exit says ${exitTo.map}:${exitTo.dx},${exitTo.dy} +-${objs.get(t.objIndex)?.radio ?? '?'}`);
-  const rad = objs.get(t.objIndex)?.radio ?? 0;
-  c.eq(p.map, exitTo.map, 'arrived on the TileExit map');
-  c.ok(Math.abs(p.x - exitTo.dx) <= rad + 3 && Math.abs(p.y - exitTo.dy) <= rad + 3, `landed within Radio ${rad} of the exit (+3 for ClosestLegalPos)`);
-  c.fixture('teleport-object', p, m);
-  await dbUpdateOwn(c, 'level=1, is_dead=0, pos_map=751, pos_x=60, pos_y=57');
+  try {
+    const p = c.player, m = p.mark(), before = [p.map, p.x, p.y];
+    const r = await p.step(Number(h), 300); await p.sleep(1500);
+    c.note(`stepped onto the otTeleport tile 24:${t.x},${t.y} (obj ${t.objIndex}) from ${before}; now ${p.map}:${p.x},${p.y}; saw ${p.since(m).map(x => x.name).filter(n => !/CharacterMove|CharacterChange/.test(n)).join(',')}`);
+    c.ok(p.map !== 24 || Math.abs(p.x - t.x) + Math.abs(p.y - t.y) > 3, `the teleport moved the character away (moved=${r.moved}); the tile exit says ${exitTo.map}:${exitTo.dx},${exitTo.dy} +-${objs.get(t.objIndex)?.radio ?? '?'}`);
+    const rad = objs.get(t.objIndex)?.radio ?? 0;
+    c.eq(p.map, exitTo.map, 'arrived on the TileExit map');
+    c.ok(Math.abs(p.x - exitTo.dx) <= rad + 3 && Math.abs(p.y - exitTo.dy) <= rad + 3, `landed within Radio ${rad} of the exit (+3 for ClosestLegalPos)`);
+    c.fixture('teleport-object', p, m);
+  } finally {
+    await dbUpdateOwn(c, 'level=1, is_dead=0, pos_map=751, pos_x=60, pos_y=57');
+  }
 });
 
 step('MOV-08', async c => {
