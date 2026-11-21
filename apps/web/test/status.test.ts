@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { SessionServerPacketId, ClientPacketId as C, ServerPacketId as S, Heading, StatusClientPacketId as SC, StatusServerPacketId as SS, encodeServerFrame, decodeClientPacket, FrameDecoder } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
@@ -95,5 +96,36 @@ describe('combat status (VB6 Protocol.bas handlers)', () => {
     h.recv({ id: SS.EscudoMov, charIndex: SELF }); expect(s.shieldSwings.has(SELF)).toBe(true);
     h.recv({ id: SS.DoAnimation, charIndex: SELF, animation: 829 }); expect(s.animating.get(SELF)).toBe(829);
     h.recv({ id: S.ChangeMap, map: 2, resourceMap: 2 }); expect(s.bars.size).toBe(0);
+  });
+});
+
+describe('replay of a real VB6 paralysed login (tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl)', () => {
+  it('is paralysed from the login (ParalizeOK arrives BEFORE Logged and survives it) and free again at the second ParalizeOK', () => {
+    const lines = readFileSync(new URL('../../../tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl', import.meta.url), 'utf8').trim().split('\n')
+      .map(line => JSON.parse(line) as { t_ms: number; dir: string; id: number; hex: string });
+    const session = new Session({ email: 'x', password: 'y' }, () => undefined, () => 5000);
+    const feed = (hex: string) => { const body = Buffer.from(hex, 'hex'); session.receive(new Uint8Array([body.length & 255, body.length >> 8, ...body])); };
+    const server = lines.filter(l => l.dir === 's2c');
+    const paralyze = server.filter(l => l.id === SS.ParalizeOK), logged = server.findIndex(l => l.id === S.Logged);
+    expect(paralyze).toHaveLength(2); expect(server.indexOf(paralyze[0]!)).toBeLessThan(logged);
+    for (const line of server) {
+      feed(line.hex);
+      if (line === paralyze[0]) expect(session.status.paralyzed).toBe(true);
+    }
+    // The second packet is the expiry: the toggle leaves the character free (and the stand-in walk check passes again).
+    expect(session.status.paralyzed).toBe(false); expect(session.status.canMove()).toBe(true);
+    expect(server.indexOf(paralyze[1]!)).toBeGreaterThan(logged);
+  });
+});
+
+describe('replay of a real VB6 spell scroll (tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl)', () => {
+  it('UseItem on the scroll answers ChangeSpellSlot (the spell is learned) and an emptied inventory slot', () => {
+    const lines = readFileSync(new URL('../../../tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl', import.meta.url), 'utf8').trim().split('\n')
+      .map(line => JSON.parse(line) as { dir: string; id: number; hex: string });
+    const session = new Session({ email: 'x', password: 'y' }, () => undefined, () => 5000);
+    for (const line of lines.filter(l => l.dir === 's2c')) { const body = Buffer.from(line.hex, 'hex'); session.receive(new Uint8Array([body.length & 255, body.length >> 8, ...body])); }
+    expect(session.ui.spells.get(4)).toMatchObject({ slot: 4, spell: 11 });
+    expect(session.ui.inventory.has(13)).toBe(false); // the scroll was consumed
+    expect(lines.find(l => l.dir === 'c2s' && l.id === 99)?.hex).toBe('63000d0101000000'); // UseItem(slot 13, fromInventory, counter 1)
   });
 });

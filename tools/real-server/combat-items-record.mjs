@@ -9,7 +9,7 @@ import {
 
 const need = name => process.env[name] ?? (() => { throw new Error(`Set ${name}`); })();
 const [scenario, out] = process.argv.slice(2);
-const s = new Vb6Session({ email: need('AO_EMAIL'), password: need('AO_PASSWORD') });
+const s = new Vb6Session({ email: need('AO_EMAIL'), password: need('AO_PASSWORD'), character: process.env.AO_CHAR });
 await s.login(); await sleep(800);
 const from = s.records.length;
 const say = ms => sleep(ms);
@@ -38,6 +38,10 @@ const kill = async n => { // select it (LeftClick), then GM /RMATA without respa
 const killAllMine = async () => { for (let i = 0; i < 8; i++) { const n = npcs().find(c => mine.has(c.charIndex)); if (!n) return; await kill(n); } };
 const respawnSpawn = npcIndex => s.send({ id: G.CreateNPCWithRespawn, npcIndex });
 const scenarios = {
+  // The spell scroll in slot 13 (amount set to 1 through the DB; UseItem exits when the amount is 0): the server teaches the spell (ChangeSpellSlot + console line) and consumes the scroll.
+  async 'learn-spell-scroll'() { await say(2500); s.send({ id: IC.UseItem, slot: 13, fromInventory: true, counter: s.nextCounter('use') }); await say(3000); },
+  // user.is_paralyzed = 1 in the DB (logged-out character): the login sends ParalizeOK, and ~20 s later the paralysis expires and the server sends it again (a toggle).
+  async 'paralysed-login'() { await say(32000); },
   // Undo of a cleanup that killed native NPCs: /RACC (spawn with respawn) one of the same kind at each given 'map:x:y' (AO_RESTORE=2:50:40,...).
   async restore() {
     for (const spot of process.env.AO_RESTORE.split(',')) { const [m, x, y] = spot.split(':').map(Number); warp(m, x, y); await say(1800); respawnSpawn(Number(process.env.AO_NPC ?? 502)); await say(1200); log('restored at', spot, 'npcs near', npcs().filter(n => Math.hypot(n.x - x, n.y - y) < 4).map(n => [n.npcNumber, n.x, n.y])); }
