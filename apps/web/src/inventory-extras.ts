@@ -38,6 +38,8 @@ export interface InventoryExtrasHooks {
   dropSelected: () => void;
   /** IsDialogOpen / IsMovementBlocked / IsDragDropBlockedByPanel: true when dragging onto the world must do nothing. */
   dropBlocked: () => boolean;
+  /** OnDragEnd: a bindable item let go over the hotkey bar binds it; it is not thrown on the floor. */
+  overHotkeyBar?: (x: number, y: number) => boolean;
 }
 
 export class InventoryExtras {
@@ -131,7 +133,7 @@ export class InventoryExtras {
     if (target > 0) {
       // ItemDropped: Drag <> Drop sends the move. The slot under the mouse becomes the selected one (empty ones deselect).
       session.inventoryActions.move(drag.slot, target);
-    } else if (under.some(node => node.id === 'viewport') && !this.hooks.dropBlocked()) {
+    } else if (under.some(node => node.id === 'viewport') && !this.hooks.dropBlocked() && !(session.ui.inventory.get(drag.slot)?.bindable && this.hooks.overHotkeyBar?.(event.clientX, event.clientY))) {
       // Dropped over the renderer: InvSelectedItem = Dragging, then TirarItem.
       this.ui.selectSlot(drag.slot); this.hooks.dropSelected(); return;
     }

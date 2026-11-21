@@ -38,7 +38,7 @@ export class HotkeysUI {
   private readonly arrow: HTMLButtonElement;
   private readonly ghost: HTMLElement;
   private key = '';
-  private drag: { spellSlot: number; index: number } | undefined;
+  private drag: { slot: number; index: number; type: number } | undefined;
   constructor(private readonly classic: HTMLElement, private readonly viewport: HTMLElement, private readonly art: HotkeyArt) {
     this.root = make('div', '', viewport, 'hotkeys'); this.root.hidden = true; this.root.setAttribute('role', 'group'); this.root.setAttribute('aria-label', 'Atajos de hechizos');
     for (let i = 0; i < HOTKEY_COUNT; i++) {
@@ -53,21 +53,33 @@ export class HotkeysUI {
     const spells = document.getElementById('spells');
     spells?.addEventListener('contextmenu', event => event.preventDefault());
     spells?.addEventListener('pointerdown', event => this.start(event));
+    // clsGrapchicalInventory.InventoryWindow_MouseDown: a right-drag from a slot whose object is IsBindable (the server sends it in ChangeInventorySlot).
+    const inventory = document.getElementById('inventory');
+    inventory?.addEventListener('pointerdown', event => this.startItem(event, inventory));
     window.addEventListener('pointermove', event => this.move(event));
     window.addEventListener('pointerup', event => this.end(event));
     window.addEventListener('pointercancel', () => this.cancel());
   }
   private scale() { return this.classic.getBoundingClientRect().width / 1024 || 1; }
+  /** picHechiz_MouseDown: IsBindable comes from the server (ChangeSpellSlot), never from the client's Hechizos.dat. */
   private start(event: PointerEvent) {
     const s = this.session;
     if (event.button !== 2 || !s?.ready || !s.options.hotkeysEnabled) return;
     const row = (event.target as HTMLElement | null)?.closest<HTMLElement>('.spell'), slot = Number(row?.dataset.slot);
-    const index = s.ui.spells.get(slot)?.index ?? 0;
-    if (!row || !(index > 0) || sharedLocale.spellData.get(`hechizo${index}`)?.get('isbindable') !== '1') return;
-    event.preventDefault(); this.drag = { spellSlot: slot, index };
+    const entry = s.ui.spells.get(slot), index = entry?.index ?? 0;
+    if (!row || !(index > 0) || !entry?.bindable) return;
+    event.preventDefault(); this.drag = { slot, index, type: HotkeyType.Spell };
     this.ghost.replaceChildren(); this.ghost.hidden = true;
     const icon = Number(sharedLocale.spellData.get(`hechizo${index}`)?.get('iconoindex'));
     if (icon > 0) void this.art.itemArt(icon).then(canvas => { if (this.drag?.index === index) { this.ghost.replaceChildren(canvas); this.ghost.hidden = false; this.place(event); } }).catch(() => {});
+  }
+  private startItem(event: PointerEvent, inventory: HTMLElement) {
+    const s = this.session;
+    if (event.button !== 2 || !s?.ready || !s.options.hotkeysEnabled) return;
+    const button = (event.target as HTMLElement | null)?.closest?.('.inventory-slot'), slot = button ? [...inventory.children].indexOf(button) + 1 : 0;
+    const entry = slot ? s.ui.inventory.get(slot) : undefined;
+    // The inventory draws its own ghost for the item; this only remembers what a drop on the bar binds.
+    if (entry && entry.object > 0 && entry.bindable) this.drag = { slot, index: entry.object, type: HotkeyType.Item };
   }
   private place(event: PointerEvent) {
     const rect = this.classic.getBoundingClientRect(), scale = this.scale();
@@ -81,7 +93,7 @@ export class HotkeysUI {
     this.cancel();
     const rect = this.viewport.getBoundingClientRect(), scale = this.scale();
     const slot = hotkeySlotAt((event.clientX - rect.left) / scale, (event.clientY - rect.top) / scale);
-    if (slot >= 0 && !this.session?.options.hideHotkeys) this.session?.optionsActions.setHotkey(slot, drag.index, drag.spellSlot, HotkeyType.Spell);
+    if (slot >= 0 && !this.session?.options.hideHotkeys) this.session?.optionsActions.setHotkey(slot, drag.index, drag.slot, drag.type);
   }
 
   update(session: Session | undefined, playing: boolean) {
@@ -97,7 +109,11 @@ export class HotkeysUI {
       const slot = this.slots[i]!; slot.hidden = state.hideHotkeys;
       const label = slot.querySelector<HTMLElement>('.hk-label')!; label.textContent = hotkeyLabel(bindings[24 + i] ?? 0);
       slot.querySelector('canvas')?.remove(); slot.title = '';
-      if (entry.index > 0 && entry.type === HotkeyType.Spell) {
+      if (entry.index > 0 && entry.type === HotkeyType.Item) {
+        const info = session?.catalog?.get(entry.index);
+        slot.title = info?.name ?? `Objeto ${entry.index}`;
+        if (info?.grh) void this.art.itemArt(info.grh).then(canvas => { if (this.key === key) slot.insertBefore(canvas, label); }).catch(() => {});
+      } else if (entry.index > 0 && entry.type === HotkeyType.Spell) {
         const data = sharedLocale.spellData.get(`hechizo${entry.index}`), icon = Number(data?.get('iconoindex'));
         slot.title = data?.get('nombre') ?? `Hechizo ${entry.index}`;
         if (icon > 0) void this.art.itemArt(icon).then(canvas => { if (this.key === key) slot.insertBefore(canvas, label); }).catch(() => {});
@@ -108,4 +124,10 @@ export class HotkeysUI {
       Object.assign(this.arrow.style, { width: `${frame.width}px`, height: `${frame.height}px`, top: `${VIEWPORT.height - 10}px`, backgroundImage: bg.image, backgroundPosition: bg.position });
     }).catch(() => {});
   }
+}
+
+/** True when a drop point (client coordinates) is over a slot of the hotkey bar, so the inventory does not throw the item instead. */
+export function overHotkeyBar(viewport: HTMLElement, classic: HTMLElement, x: number, y: number): boolean {
+  const rect = viewport.getBoundingClientRect(), scale = classic.getBoundingClientRect().width / 1024 || 1;
+  return hotkeySlotAt((x - rect.left) / scale, (y - rect.top) / scale) >= 0;
 }

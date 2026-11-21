@@ -46,7 +46,7 @@ import { OptionsUI } from './options-ui.js';
 import { KeyBindings } from './key-bindings.js';
 import { KeysUI } from './keys-ui.js';
 import { QuestVoice } from './quest-voice.js';
-import { HotkeysUI } from './hotkeys-ui.js';
+import { HotkeysUI, overHotkeyBar } from './hotkeys-ui.js';
 import { windows } from './window-stack.js';
 import { displayName } from './character-data.js';
 import { KeyringUI } from './keyring-ui.js';
@@ -199,6 +199,7 @@ const papiroUi = new PapiroUI(element('classic'));
 const inventoryExtras = new InventoryExtras(element('classic'), ui, {
   dropSelected: () => guard(() => itemsUi.dropSelected()),
   dropBlocked: () => transacting() || itemsUi.dialogOpen || keyringUi.isOpen || travelUi.isOpen || craftingUi.windowOpen || craftingExtraUi.windowOpen || (session?.items.shopOpen ?? false),
+  overHotkeyBar: (x, y) => !!session?.options.hotkeysEnabled && !session.options.hideHotkeys && overHotkeyBar(viewport, element('classic'), x, y),
 });
 const fpsLabel = document.createElement('span'); fpsLabel.id = 'fps'; fpsLabel.hidden = true; element('classic').append(fpsLabel);
 let lastFps = 0;
@@ -526,8 +527,13 @@ window.addEventListener('keyup', event => {
 });
 window.addEventListener('blur', clearInput);
 window.addEventListener('resize', clearInput);
+// VB6: clicking a HUD button or tab never takes the keyboard from the game, so a held key keeps walking. A mouse press on a button/tab does not
+// move the focus (the click still fires); keyboard focus on a button (Tab) is left alone. Only a text field taking focus stops the walk.
+document.addEventListener('mousedown', event => {
+  if (event.target instanceof HTMLElement && event.target.closest('button, [role="tab"]') && !event.target.closest('input, textarea, select, dialog, [role="dialog"], [role="alertdialog"]')) event.preventDefault();
+});
 document.addEventListener('focusin', event => {
-  if (event.target instanceof HTMLElement && event.target.closest('input, button, [role="listbox"]')) clearInput();
+  if (event.target instanceof HTMLElement && event.target.closest('input, textarea, select, [role="listbox"]')) clearInput();
 });
 document.addEventListener('visibilitychange', () => { if (document.hidden) clearInput(); });
 // A phone keeps the exact classic layout. Touch the map in a direction from the

@@ -1,5 +1,9 @@
 :root { color-scheme: dark; font-family: Tahoma, Arial, sans-serif; color: #c8bebe; background: #000; --classic-scale: 1; }
 * { box-sizing: border-box; }
+/* The pinned client has no browser text: a drag (right button, see inventory-extras / hotkeys-ui) must never start a selection or a native image drag. */
+body, body * { -webkit-user-select: none; user-select: none; }
+input, textarea { -webkit-user-select: text; user-select: text; }
+img, canvas { -webkit-user-drag: none; }
 body { margin: 0; min-height: 100svh; display: grid; place-items: center; }
 button, input { font: inherit; }
 button { cursor: pointer; }
