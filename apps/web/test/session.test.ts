@@ -39,14 +39,33 @@ describe('browser session', () => {
     expect(h.session.position).toEqual({ x: 50, y: 60 });
     expect(h.session.motion).toBeUndefined(); expect(h.session.correctedWalks).toBe(1);
     h.advance(330); expect(h.session.walk(Heading.West)).toBe(true);
-    h.advance(5001); expect(() => h.session.tick()).toThrow('stopped responding');
+    h.advance(5001); expect(() => h.session.tick()).not.toThrow();
     expect(h.session.confirmedWalks).toBe(0);
+  });
+  it('waits out a stalled server instead of disconnecting (VB6 has no position watchdog)', () => {
+    const h = harness(); h.login();
+    expect(h.session.walk(Heading.East)).toBe(true);
+    // A 12 s stall of the VB6 main loop (seen live 21 Nov): still playing, input still waits for the reply, one console line.
+    for (let t = 0; t < 12_000; t += 500) { h.advance(500); expect(() => h.session.tick()).not.toThrow(); }
+    expect(h.session.phase).toBe('playing'); expect(h.session.error).toBe('');
+    expect(h.session.serverSilentSince).toBeDefined();
+    expect(h.session.ui.messages.filter(m => m.text === 'El servidor no responde. Esperando...')).toHaveLength(1);
+    expect(h.session.walk(Heading.East)).toBe(false);
+    // TCP delivers the late reply when the server resumes: the walk counts, walking resumes, the line says so.
+    h.recv({ id: S.PosUpdate, x: 51, y: 60 });
+    expect(h.session.confirmedWalks).toBe(1); expect(h.session.serverSilentSince).toBeUndefined();
+    expect(h.session.ui.messages.at(-1)?.text).toBe('El servidor volvió a responder.');
+    expect(h.session.walk(Heading.East)).toBe(true);
+    // A short hiccup below the threshold prints nothing.
+    h.advance(4000); h.session.tick(); h.recv({ id: S.PosUpdate, x: 52, y: 60 });
+    expect(h.session.ui.messages.filter(m => m.text.startsWith('El servidor'))).toHaveLength(2);
   });
   it('clears old map placement and accepts the same self index on a warp', () => {
     const h = harness(); h.login(); h.session.walk(Heading.East);
     h.advance(30_000);
     h.recv({ id: S.ChangeMap, map: 2, resourceMap: 3 });
     expect(() => h.session.tick()).not.toThrow(); // warp deadline starts at the warp
+    h.advance(15_000); expect(() => h.session.tick()).not.toThrow(); // a stalled server's late placement is waited for in game
     expect(h.session.ready).toBe(false); expect(h.session.walk(Heading.East)).toBe(false);
     h.recv({ ...f.CharacterCreate, x: 10, y: 20 });
     expect(h.session.position).toEqual({ x: 10, y: 20 }); expect(h.session.resourceMap).toBe(3);
@@ -59,6 +78,10 @@ describe('browser session', () => {
     const partial = harness(); partial.session.receive(Uint8Array.of(4, 0, 31));
     expect(() => partial.session.finish()).toThrow();
     const timeout = harness(); timeout.advance(10001); expect(() => timeout.session.tick()).toThrow('Timed out');
+    // Entering a character keeps its 10 s deadline (the only in-session timeout left).
+    const entering = harness(); entering.recv(f.Connected, f.AccountCharacterList);
+    expect(entering.session.phase).toBe('login'); entering.advance(10001);
+    expect(() => entering.session.tick()).toThrow('Timed out waiting for login');
   });
   it.each([false, true])('uses the real WS→TCP bridge and stand-in (rejectWalks=%s)', async rejectWalks => {
     const server = await startStandin({ rejectWalks, walkIntervalMs: 20 });
