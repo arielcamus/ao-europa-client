@@ -346,3 +346,20 @@ describe('VB6 recording: login, idle, cross the area border (tests/fixtures/vb6/
     expect(speeds.length).toBeGreaterThan(0);
   });
 });
+
+describe('VB6 recording: rain and snow toggles (tests/fixtures/vb6/world/weather-toggles.jsonl, #28)', () => {
+  it('RainToggle (59) and NieveToggle (122) decode from the real server frames and drive the weather flags', async () => {
+    const { decodeServerPacket } = await import('@ao/protocol');
+    const rows = readFileSync(new URL('../../../tests/fixtures/vb6/world/weather-toggles.jsonl', import.meta.url), 'utf8').trim().split('\n')
+      .map(line => JSON.parse(line) as { dir: string; id: number; hex: string });
+    const world = new WorldFx(() => 0);
+    const seen: string[] = [];
+    for (const row of rows.filter(r => r.dir === 's2c')) {
+      const packet = decodeServerPacket(Uint8Array.from(Buffer.from(row.hex, 'hex')));
+      expect('unknown' in packet).toBe(false);
+      world.receive(packet);
+      seen.push(`${row.id}:${world.raining ? 'R' : '-'}${world.snowing ? 'S' : '-'}`);
+    }
+    expect(seen).toEqual(['59:--', '122:--', '59:R-', '122:RS', '122:R-', '122:RS']);
+  });
+});

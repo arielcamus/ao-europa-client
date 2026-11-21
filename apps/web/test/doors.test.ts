@@ -5,6 +5,7 @@ import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js
 import { parseMap } from '../src/assets.js';
 import { MapObjects, RoofLights, doorClickTile, hayTecho, nearRoof, parseObjectGraphics, tileKey } from '../src/map-objects.js';
 import { Session } from '../src/session.js';
+import { WorldServerPacketId as W } from '@ao/protocol';
 
 function harness() {
   let now = 0; const sent: Uint8Array[] = [];
@@ -96,6 +97,13 @@ describe('ground objects and doors', () => {
     const playerBelow = (x: number, y: number) => x === 72 && y === 36;
     expect(doorClickTile(map, isDoor, { x: 72, y: 35 }, playerBelow)).toEqual({ x: 71, y: 35 });
     expect(doorClickTile(map, isDoor, { x: 72, y: 35 }, playerBelow, treeAt)).toEqual({ x: 71, y: 34 });
+  });
+  it('AreaChanged (CambioDeArea) drops server objects outside the new 36 x 36 window and keeps those inside (#22.1)', () => {
+    const h = harness(); h.login();
+    h.recv({ id: D.ObjectCreate, x: 72, y: 35, objIndex: 2334, amount: 1, elementalTags: 0 }, { id: D.ObjectCreate, x: 10, y: 10, objIndex: 7, amount: 1, elementalTags: 0 });
+    h.recv({ id: W.AreaChanged, x: 72, y: 38 } as ServerPacket); // area x 60..95, y 24..59
+    expect(h.session.mapObjects.objectAt(72, 35)?.objIndex).toBe(2334);
+    expect(h.session.mapObjects.objectAt(10, 10)).toBeUndefined();
   });
   it('session applies door packets from the server and drops them on a map change', () => {
     const h = harness(); h.login();

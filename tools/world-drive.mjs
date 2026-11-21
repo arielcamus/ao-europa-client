@@ -16,10 +16,9 @@ async function launchOnce({ email, password, port = process.env.AO_WEB_PORT ?? 5
   const problems = [], wire = [];
   page.on('pageerror', e => problems.push(e.message));
   page.on('console', m => { if (m.type() === 'error') problems.push(m.text()); });
-  page.on('websocket', ws => {
-    ws.on('framereceived', f => { const b = Buffer.from(f.payload); if (b.length >= 4) wire.push({ dir: 's2c', id: b.readUInt16LE(2), hex: b.subarray(2).toString('hex') }); });
-    ws.on('framesent', f => { const b = Buffer.from(f.payload); if (b.length >= 4) wire.push({ dir: 'c2s', id: b.readUInt16LE(2), hex: b.subarray(2).toString('hex') }); });
-  });
+  // A websocket message can hold several length-prefixed frames: split them, one row per packet body (id included).
+  const frames = (payload, dir) => { const b = Buffer.from(payload); for (let at = 0; at + 4 <= b.length;) { const n = b.readUInt16LE(at); if (n < 2 || at + 2 + n > b.length) break; const body = b.subarray(at + 2, at + 2 + n); if (body.readUInt16LE(0) < 30000) wire.push({ dir, id: body.readUInt16LE(0), hex: body.toString('hex') }); at += 2 + n; } };
+  page.on('websocket', ws => { ws.on('framereceived', f => frames(f.payload, 's2c')); ws.on('framesent', f => frames(f.payload, 'c2s')); });
   await page.goto(`http://127.0.0.1:${port}/`);
   await page.locator('#email').fill(email); await page.locator('#password').fill(password); await page.locator('#connect').click();
   await page.locator('#connect-stage[data-screen="account"]').waitFor({ timeout: 60_000 });
