@@ -228,3 +228,14 @@ What the pinned client (619e69d, `Protocol.bas`) does with the five server packe
 | 185 | `NotificarClienteCasteo` | Sets `frmMain.shapexy.BackColor` (green when 1, else red). `shapexy` is parked at (1200, 1200) of a 1332x928 form by `SetupGameplayUI`: never visible. The server has no caller for its writer. | `SpellState.castFrom` records it (`spells.ts`); nothing is drawn, like VB6. |
 
 Keymap (`modBindKeys.Accionar`, issue #20): `eShowOnline` only flips `MostrarOnline`, which nothing reads; `eScreenShoot` (13) has no `Case` at all; `eGameStats` only runs `SaveSetting("OPCIONES", "FPSFLAG", FPSFLAG)` (the FPS checkbox of frmOpciones is what toggles it). The three are faithful no-ops/persist-only in `main.ts` `gameKey`; hotkeys 1-0 already follow `eEnableHotkeys` (`options-state.ts` `useHotkey`).
+
+## Text encodings (2026-11-21)
+
+- **Wire (`String8`)**: UTF-8, always. The Aurora COM writer converts the VB6 BSTR with `WideCharToMultiByte(CP_UTF8)`, so a server that read its
+  windows-1252 `.dat` files correctly sends well-formed UTF-8 (live check: MOTD and locale texts with accents, ñ, ¿ ¡). The reader stays strict.
+- **Data files**: `decodeGameText` in `apps/web/src/assets.ts` is the one decoder (`fetchText` uses it; nothing else may use a default
+  `TextDecoder` or `Response.text()` on game data). The pinned files are windows-1252 EXCEPT `init/sp_localindex.dat` (UTF-8; read as
+  windows-1252 it turned "¡Todo lo que buscas y más!" into "ÂiTodo lo que buscas y mÃis!"), and some are mixed line by line or within a line
+  (`init/SP_LocalMsg.dat`: ten messages hold UTF-8 "ú" next to windows-1252 "¡"/"é"). It decodes per line: strict UTF-8, else windows-1252
+  while keeping any well-formed UTF-8 sequence, and repairs the double-encoded "Ã"+"º" pairs in `sp_localindex.dat`. Binary resources
+  (`.csm` names, particle names) are windows-1252 (`Reader.text`).
