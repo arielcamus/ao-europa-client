@@ -87,6 +87,14 @@ try {
     await page.screenshot({ path: `${out}/mobile-real-picker.png` });
     await page.locator('#mobile-picker .m-close').tap().catch(() => undefined);
   } else log('chicken gone after the taps (killed)', true);
+  // Potions: one tap keeps drinking (paced) until the bar is full; a second tap stops.
+  if (await page.locator('#m-potion-hp').isVisible()) {
+    const count = from => sent.slice(from).filter(p => p.id === 288).length;
+    const mark = sent.length; await page.locator('#m-potion-hp').tap(); await page.waitForTimeout(3000);
+    const during = count(mark); await page.locator('#m-potion-hp').tap(); const stop = sent.length; await page.waitForTimeout(1500);
+    log('red potion: UseItemU in 3 s', during); log('after the second tap', count(stop));
+    log('hp', await page.locator('#m-hp-text').textContent());
+  } else log('red potion button hidden (HP full or no potion)', true);
   log('problems', problems);
 } finally {
   if (gm) {

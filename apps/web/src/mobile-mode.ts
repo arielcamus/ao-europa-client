@@ -110,6 +110,7 @@ export class MobileMode {
   private pending: Pending | undefined;
   private target: Target | undefined;
   private drinking: { kind: 'hp' | 'mana' } | undefined;
+  private lastDrink = -Infinity;
   private drawerTab: 'spells' | 'inventory' | 'menu' = 'spells';
   private drawerRevision = -1;
   private lastHint = { text: '', at: -Infinity };
@@ -156,7 +157,7 @@ export class MobileMode {
     const want = this.layout === 'mobile' && playing && !!session;
     if (want !== this.active) { if (want) this.enter(); else this.leave(); }
     const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
-    this.toggle.hidden = !(playing && this.layout === 'classic' && (coarse || innerWidth < 900));
+    this.toggle.hidden = !(playing && this.layout === 'classic' && coarse);
     if (!this.active || !session) return;
     this.refreshHud(session);
     if (!this.drawer.hidden && session.ui.revision !== this.drawerRevision) this.renderDrawer(session);
@@ -346,7 +347,8 @@ export class MobileMode {
     const chars = [...session.tracker.chars.values()];
     // A walking character is drawn between its old and new tile while the tracker already holds the new one: the old tile counts too.
     const on = (ch: Character, dy: number) => (ch.x === tile.x && ch.y === tile.y + dy) || (!!ch.motion && ch.motion.from.x === tile.x && ch.motion.from.y === tile.y + dy);
-    const c = chars.find(ch => on(ch, 0)) ?? chars.find(ch => on(ch, 1));
+    // The head match is only for others: the tile right above the player is a door, a sign or the ground, never the player.
+    const c = chars.find(ch => on(ch, 0)) ?? chars.find(ch => ch.charIndex !== session.charIndex && on(ch, 1));
     return c ? { charIndex: c.charIndex, kind: this.kindOf(session, c) } : undefined;
   }
   private liveTarget(session: Session): Target | undefined {
@@ -456,6 +458,10 @@ export class MobileMode {
     const [value, max] = kind === 'hp' ? [stats.hp ?? 0, stats.maxHp ?? 0] : [stats.mana ?? 0, stats.maxMana ?? 0];
     const slot = this.potionSlot(session, kind);
     if (slot === undefined || value >= max || session.dead) { this.drinking = undefined; return; }
+    // useKey paces itself by the server's IntervaloUsarItem, which is 0 until the Intervals packet: never more than ~4 a second here.
+    const now = performance.now();
+    if (now - this.lastDrink < Math.max(250, session.items.intervals.useItemKey)) return;
+    this.lastDrink = now;
     this.deps.guard(() => session.itemActions.useKey(slot));
   }
 
@@ -579,7 +585,9 @@ export class MobileMode {
       cast.onclick = () => {
         this.closeDrawer();
         const target = this.liveTarget(session);
-        if (target && target.kind !== 'npc' && target.kind !== 'priest' && target.kind !== 'none') this.perform(session, target, { kind: 'cast', spell, rule: 'drawer' });
+        // Only a creature, or yourself for a helpful spell, is targeted automatically; anything else (a player looked at earlier included)
+        // takes the classic path, so a spell picked here can never land on a player by accident.
+        if (target && (target.kind === 'hostile' || (target.kind === 'self' && spell.effect === 'positive'))) this.perform(session, target, { kind: 'cast', spell, rule: 'drawer' });
         else this.deps.guard(() => session.spells.cast(spell.slot, spell.name)); // classic flow: the next world tap is the target
       };
       const pinButton = el('button', { type: 'button', className: `m-spell-pin${pin === spell.slot ? ' on' : ''}` }, '📌');
@@ -633,8 +641,7 @@ export class MobileMode {
   /** Long-press: choose the spell for this target. Hostile creatures: the choice is also pinned (the next taps repeat it). Players: once. */
   private openPicker(session: Session, target: Target, x: number, y: number) {
     const spells = this.spells(session), mana = session.ui.stats.mana ?? 0;
-    const forHostile = target.kind === 'hostile' || target.kind === 'npc' || target.kind === 'priest';
-    const sensible = (s: MobileSpell) => (forHostile || target.kind === 'player' ? isOffensive(s) : s.effect === 'positive');
+    const sensible = (s: MobileSpell) => (target.kind === 'hostile' || target.kind === 'player' ? isOffensive(s) : s.effect === 'positive');
     const ordered = [...spells.filter(sensible), ...spells.filter(s => !sensible(s))];
     const c = target.charIndex >= 0 ? session.tracker.chars.get(target.charIndex) : undefined;
     const list = el('div', { className: 'm-picker-list' });

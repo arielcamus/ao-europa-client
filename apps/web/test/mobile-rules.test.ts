@@ -156,5 +156,9 @@ describe('hostility', () => {
     expect(hostility(section({ attackable: '1', npctype: '4' }))).toBe('npc');
     expect(hostility(undefined)).toBe('npc');
     expect(hostility(section({ npctype: '1', attackable: '0' }))).toBe('priest');
+    // Guardia Imperial (NPC 260, type 2) and Guardia del Caos (NPC 271, type 8) are Hostile=1 but never a tap target; dragons (6) are.
+    expect(hostility(section({ npctype: '2', hostile: '1', attackable: '1' }))).toBe('npc');
+    expect(hostility(section({ npctype: '8', hostile: '1', attackable: '1' }))).toBe('npc');
+    expect(hostility(section({ npctype: '6', hostile: '1', attackable: '1' }))).toBe('hostile');
   });
 });

@@ -164,8 +164,11 @@ export function mobileZoom(areaW: number, areaH: number, level: ZoomLevel): numb
 /** Dat/npcs.dat [NPCn]: attackable creatures are the targets of a plain tap; merchants, bankers and priests only get a LeftClick. */
 export function hostility(section: Map<string, string> | undefined): 'hostile' | 'npc' | 'priest' {
   if (!section) return 'npc';
-  if (section.get('npctype') === '1') return 'priest';
-  if (section.get('hostile') === '1') return 'hostile';
   const type = section.get('npctype');
+  if (type === '1') return 'priest';
+  // Guards (Imperial 2, Chaos 8) carry Hostile=1 too, and trainers, bankers and the other service NPCs are never a tap target.
+  // Only common creatures (0) and dragons (6) are; the review found NPC 260/261/271/981 (guards) would have been attacked.
+  if (type !== undefined && type !== '0' && type !== '6') return 'npc';
+  if (section.get('hostile') === '1') return 'hostile';
   return section.get('attackable') === '1' && section.get('comercia') !== '1' && (type === undefined || type === '0') ? 'hostile' : 'npc';
 }
