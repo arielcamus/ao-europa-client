@@ -9,6 +9,12 @@ import type { ClientPacket, ServerPacket } from '../../../packages/protocol/src/
 // IsBindable is not read from Hechizos.dat: the pinned client takes it from the server's ChangeSpellSlot / ChangeInventorySlot (bindable flag),
 // so these tests inject those packets and run on any data set (pre-HOO Recursos included).
 
+/** The spell list is rebuilt on every UI revision, so a row found a moment ago can be detached when its box is read: read it again. */
+async function box(locator: import('@playwright/test').Locator) {
+  let rect: Awaited<ReturnType<typeof locator.boundingBox>> = null;
+  await expect.poll(async () => (rect = await locator.boundingBox()) !== null).toBe(true);
+  return rect!;
+}
 async function login(page: Page) {
   const seen: ClientPacket[] = [];
   let inject: (...packets: ServerPacket[]) => void = () => {};
@@ -133,16 +139,17 @@ test.describe('options window, key editor and hotkey bar', () => {
     await page.getByRole('tab', { name: 'Hechizos', exact: true }).click();
     const spell = page.locator('#spell-1');
     await expect(spell).toBeVisible();
-    const from = (await spell.boundingBox())!, slot = (await bar.locator('.hk-slot').nth(2).boundingBox())!;
+    const slot = await box(bar.locator('.hk-slot').nth(2));
     // A non-bindable spell binds nothing (picHechiz_MouseDown) and a real mouse drag selects no text.
     await expect(page.locator('#spell-2')).toBeVisible();
-    const plain = (await page.locator('#spell-2').boundingBox())!;
+    const plain = await box(page.locator('#spell-2'));
     await page.mouse.move(plain.x + 10, plain.y + 5); await page.mouse.down({ button: 'right' });
     await page.mouse.move(slot.x + slot.width / 2, slot.y + slot.height / 2, { steps: 8 }); await page.mouse.up({ button: 'right' });
     await page.mouse.move(plain.x + 10, plain.y + 5); await page.mouse.down();
     await page.mouse.move(slot.x + slot.width / 2, slot.y + slot.height / 2, { steps: 8 }); await page.mouse.up();
     expect(await page.evaluate(() => window.getSelection()?.toString() ?? '')).toBe('');
     expect(seen.find(p => p.id === OC.SetHotkeySlot && (p as { index: number }).index === 2)).toBeUndefined();
+    const from = await box(spell);
     await page.mouse.move(from.x + 10, from.y + 5);
     await page.mouse.down({ button: 'right' });
     await page.mouse.move(slot.x + slot.width / 2, slot.y + slot.height / 2, { steps: 8 });

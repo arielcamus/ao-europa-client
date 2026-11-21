@@ -24,6 +24,9 @@ describe('one keymap from DefaultKey.ini [DEFAULTSMODERN]', () => {
       .toEqual([KeyAction.MoveUp, KeyAction.MoveLeft, KeyAction.MoveDown, KeyAction.MoveRight, KeyAction.MoveUp, KeyAction.MoveLeft]);
     expect(Object.keys(DEFAULTS_MODERN)).toHaveLength(34);
     expect(vbKeyCode('NumpadMultiply')).toBe(106); expect(keyAction('KeyZ')).toBeUndefined();
+    // frmCustomKeys takes any key code: the VK_OEM_* keys (ñ, ´, ç... on a Spanish Mac) and the keypad's - and / are bindable too.
+    expect(['Semicolon', 'Equal', 'Slash', 'Backquote', 'BracketLeft', 'Backslash', 'BracketRight', 'Quote', 'NumpadSubtract', 'NumpadDivide'].map(vbKeyCode))
+      .toEqual([186, 187, 191, 192, 219, 220, 221, 222, 109, 111]);
   });
   it('Work keys (steal, hide, tame) take the shared work counter', () => {
     const sent: Uint8Array[] = [];
