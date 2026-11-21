@@ -43,24 +43,46 @@ const num = value => {
 /** "a-b-c" lists (Obj1=38-10000, DropQuest1=10-2494-1-1): the n-th integer. */
 const field = (value, n) => num((value ?? '').split('-')[n]);
 
-function graphicsIds(text) {
-  const ids = new Set();
+/** graficos.ini (LoadGrhIni): GrhN=1-file-x-y-w-h (static) or GrhN=frames-id..-duration (animation). */
+function parseGraphics(text) {
+  const graphics = new Map();
   for (const line of text.split(/\r?\n/)) {
-    const m = /^Grh(\d+)=(\d+)/i.exec(line.trim());
-    if (m && Number(m[2]) > 0) ids.add(Number(m[1]));
+    const m = /^Grh(\d+)=(.+)$/i.exec(line.trim());
+    if (!m) continue;
+    const v = m[2].split('-').map(Number);
+    if (!(v[0] > 0)) continue;
+    graphics.set(Number(m[1]), v[0] === 1 ? { file: v[1], x: v[2], y: v[3], width: v[4], height: v[5] } : { frames: v.slice(1, 1 + v[0]) });
   }
-  return ids;
+  return graphics;
+}
+
+/** Width/height from the PNG IHDR chunk, undefined when the file is missing or not a PNG. Cached per file number. */
+function pngSizer(dir) {
+  const names = new Map(dir && existsSync(dir) ? readdirSync(dir).map(n => [n.toLowerCase(), n]) : []);
+  const cache = new Map();
+  return file => {
+    if (cache.has(file)) return cache.get(file);
+    const name = names.get(`${file}.png`);
+    let size;
+    if (name) {
+      const head = readFileSync(join(dir, name)).subarray(0, 24);
+      if (head.length === 24 && head.readUInt32BE(12) === 0x49484452) size = { width: head.readUInt32BE(16), height: head.readUInt32BE(20) };
+    }
+    cache.set(file, size);
+    return size;
+  };
 }
 
 /** cabezas.ind / cascos.ind: 263-byte header, i16 count, four i32 graphic ids per entry. Valid ids have a non-zero first graphic. */
 function indexEntries(bytes) {
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   const count = view.getInt16(263, true);
-  const ids = new Set();
+  const ids = new Map(); // id -> the four directional graphic ids
   for (let i = 1; i <= count; i++) {
     const at = 265 + (i - 1) * 16;
     if (at + 16 > bytes.length) break;
-    if (view.getInt32(at, true) > 0 || view.getInt32(at + 4, true) > 0) ids.add(i);
+    const grhs = [0, 4, 8, 12].map(o => view.getInt32(at + o, true));
+    if (grhs[0] > 0 || grhs[1] > 0) ids.set(i, grhs);
   }
   return ids;
 }
@@ -102,10 +124,11 @@ export function loadDataSet(root, { datDir, mapsDir, maps = 'all' } = {}) {
     npcs: ini(dat, 'npcs.dat'), objs: ini(dat, 'obj.dat'), spells: ini(dat, 'Hechizos.dat'), quests: ini(dat, 'Quests.DAT'),
     crafting: Object.fromEntries(['ArmasHerrero.dat', 'ArmadurasHerrero.dat', 'ObjCarpintero.dat', 'ObjSastre.dat', 'ObjAlquimista.dat']
       .map(n => [n, ini(dat, n)]).filter(([, v]) => v)),
-    bodies: ini(init, 'cuerpos.dat'), weapons: ini(init, 'armas.dat'), shields: ini(init, 'escudos.dat'), fxs: ini(init, 'FXs.ini'),
+    bodies: ini(init, 'cuerpos.dat'), molds: ini(init, 'moldes.ini'), weapons: ini(init, 'armas.dat'), shields: ini(init, 'escudos.dat'), fxs: ini(init, 'FXs.ini'),
     heads: findPath(init, 'cabezas.ind') ? indexEntries(readFileSync(findPath(init, 'cabezas.ind'))) : undefined,
     helmets: findPath(init, 'cascos.ind') ? indexEntries(readFileSync(findPath(init, 'cascos.ind'))) : undefined,
-    graphics: text(init, 'graficos.ini') !== undefined ? graphicsIds(text(init, 'graficos.ini')) : undefined,
+    graphics: text(init, 'graficos.ini') !== undefined ? parseGraphics(text(init, 'graficos.ini')) : undefined,
+    pngSize: pngSizer(findPath(root, 'Graficos')),
     maps: new Map(),
   };
   if (mapDir && maps) {
@@ -119,6 +142,10 @@ export function loadDataSet(root, { datDir, mapsDir, maps = 'all' } = {}) {
   }
   return set;
 }
+
+/** ObjTypes that are never in an inventory (Declares.bas e_OBJType): trees, doors, signs, castle spawner, teleports, decorations,
+ * ore deposits, anvils, forges, maps, chests, fishing pools. */
+const WORLD_ONLY_TYPES = new Set([4, 6, 8, 10, 19, 20, 22, 27, 28, 37, 48, 52]);
 
 const hasContent = section => section !== undefined && [...section.values()].some(v => v !== '');
 
@@ -137,20 +164,50 @@ export function checkIntegrity(set) {
   const objOk = id => hasContent(set.objs?.get(`obj${id}`));
   const questOk = id => hasContent(set.quests?.get(`quest${id}`));
   const spellOk = id => hasContent(set.spells?.get(`hechizo${id}`));
-  const bodyOk = id => hasContent(set.bodies?.get(`body${id}`));
   const missingInputs = Object.entries({ npcs: set.npcs, objs: set.objs, spells: set.spells, quests: set.quests, bodies: set.bodies,
     heads: set.heads, helmets: set.helmets, graphics: set.graphics, weapons: set.weapons, shields: set.shields, fxs: set.fxs })
     .filter(([, v]) => !v).map(([k]) => k);
+
+  // A static graphic is drawable when its PNG exists and the rectangle lies inside it; an animation when every frame is.
+  const drawable = (id, depth = 0) => {
+    const g = set.graphics?.get(id);
+    if (!g) return false;
+    if (g.frames) return depth < 2 && g.frames.length > 0 && g.frames.every(f => drawable(f, depth + 1));
+    const size = set.pngSize?.(g.file);
+    return !!size && g.x >= 0 && g.y >= 0 && g.width > 0 && g.height > 0 && g.x + g.width <= size.width && g.y + g.height <= size.height;
+  };
+  /**
+   * A cuerpos.dat / armas.dat / escudos.dat entry draws when Std=0 and its four Walk/Dir graphics are drawable, or Std>0 with an
+   * existing moldes.ini template and an existing FileNum PNG (Recursos.bas CargarCuerpos / CargarAnimArmas / CargarAnimEscudos).
+   */
+  const spriteDraws = (section, prefix) => {
+    if (!hasContent(section)) return false;
+    const std = num(section.get('std'));
+    if (std > 0) return hasContent(set.molds?.get(`molde${std}`)) && !!set.pngSize?.(num(section.get('filenum')));
+    return [1, 2, 3, 4].every(h => drawable(num(section.get(`${prefix}${h}`))));
+  };
+  const indexDraws = (index, id) => (index?.get(id) ?? []).filter(g => g > 0).every(g => drawable(g)) && index?.has(id);
+  const sprite = (check, from, id, kind) => {
+    const sections = { body: set.bodies, weapon: set.weapons, shield: set.shields };
+    const prefix = { body: 'body', weapon: 'arma', shield: 'esc' }[kind];
+    const section = sections[kind]?.get(`${prefix}${id}`);
+    add(check, from, id, hasContent(section));
+    if (hasContent(section)) add(`${check}Graphic`, from, id, spriteDraws(section, kind === 'body' ? 'walk' : 'dir'));
+  };
+  const indexed = (check, from, id, index) => {
+    add(check, from, id, index?.has(id));
+    if (index?.has(id)) add(`${check}Graphic`, from, id, indexDraws(index, id));
+  };
 
   for (const [name, s] of set.npcs ?? []) {
     const m = /^npc(\d+)$/.exec(name);
     if (!m || !hasContent(s)) continue;
     const from = `NPC${m[1]}`;
-    for (const key of ['body', 'bodyidle']) { const id = num(s.get(key)); if (id > 0) add('npc.body', `${from}.${key}`, id, bodyOk(id)); }
-    const head = num(s.get('head')); if (head > 0) add('npc.head', from, head, set.heads?.has(head));
-    const arma = num(s.get('arma')); if (arma > 0) add('npc.weapon', from, arma, hasContent(set.weapons?.get(`arma${arma}`)));
-    const esc = num(s.get('escudo')); if (esc > 0) add('npc.shield', from, esc, hasContent(set.shields?.get(`esc${esc}`)));
-    const casco = num(s.get('casco')); if (casco > 0) add('npc.helmet', from, casco, set.helmets?.has(casco));
+    for (const key of ['body', 'bodyidle']) { const id = num(s.get(key)); if (id > 0) sprite('npc.body', `${from}.${key}`, id, 'body'); }
+    const head = num(s.get('head')); if (head > 0) indexed('npc.head', from, head, set.heads);
+    const arma = num(s.get('arma')); if (arma > 0) sprite('npc.weapon', from, arma, 'weapon');
+    const esc = num(s.get('escudo')); if (esc > 0) sprite('npc.shield', from, esc, 'shield');
+    const casco = num(s.get('casco')); if (casco > 0) indexed('npc.helmet', from, casco, set.helmets);
     for (const [key, value] of s) {
       if (/^obj\d+$/.test(key)) { const id = field(value, 0); if (id > 0) add('npc.shopObject', `${from}.${key}`, id, objOk(id)); }
       else if (/^quizadropea\d+$/.test(key)) { const id = field(value, 0); if (id > 0) add('npc.dropObject', `${from}.${key}`, id, objOk(id)); }
@@ -167,14 +224,27 @@ export function checkIntegrity(set) {
     const m = /^obj(\d+)$/.exec(name);
     if (!m || !hasContent(s)) continue;
     const from = `OBJ${m[1]}`;
-    const grh = num(s.get('grhindex')); if (grh > 0) add('obj.grh', from, grh, set.graphics?.has(grh));
+    const grh = num(s.get('grhindex'));
+    if (grh > 0) {
+      add('obj.grh', from, grh, set.graphics?.has(grh));
+      if (set.graphics?.has(grh)) add('obj.grhFile', from, grh, drawable(grh));
+      // Inventory icons are one 32x32 frame (frmMain picInv slots). A world-only object (tree, door, sign, deposit, anvil, ...) may be any size.
+      // A carried object whose GrhIndex is a body/weapon sprite frame instead (the 2026-10 obj.dat: OBJ3488 "Escudo del Principiante"
+      // GrhIndex 3485 = Graficos/1983.png 73,45 26x46, a cape frame) shows a wrong inventory picture. Keyed by object id.
+      const type = num(s.get('objtype'));
+      if (!WORLD_ONLY_TYPES.has(type)) {
+        const g = set.graphics?.get(grh);
+        add('obj.inventoryIcon', from, Number(m[1]), !!g && !g.frames && g.width === 32 && g.height === 32);
+      }
+    }
     for (const [key, value] of s) {
-      if (/^(ropaje\w+|numropaje)$/.test(key)) { const id = num(value); if (id > 0) add('obj.body', `${from}.${key}`, id, bodyOk(id)); }
+      if (/^(ropaje\w+|numropaje)$/.test(key)) { const id = num(value); if (id > 0) sprite('obj.body', `${from}.${key}`, id, 'body'); }
     }
     const type = num(s.get('objtype')), anim = num(s.get('anim'));
-    if (anim > 0 && type === 2) add('obj.weaponAnim', from, anim, hasContent(set.weapons?.get(`arma${anim}`)));
-    if (anim > 0 && type === 16) add('obj.shieldAnim', from, anim, hasContent(set.shields?.get(`esc${anim}`)));
-    if (anim > 0 && type === 17) add('obj.helmetAnim', from, anim, set.helmets?.has(anim));
+    // The server sends Anim as CharacterChange weapon/shield/helmet (FileIO.LoadOBJData: WeaponAnim/ShieldAnim/CascoAnim = "Anim").
+    if (anim > 0 && type === 2) sprite('obj.weaponAnim', from, anim, 'weapon');
+    if (anim > 0 && type === 16) sprite('obj.shieldAnim', from, anim, 'shield');
+    if (anim > 0 && type === 17) indexed('obj.helmetAnim', from, anim, set.helmets);
     for (const key of ['indexabierta', 'indexcerrada', 'indexcerradallave']) {
       const id = num(s.get(key)); if (id > 0) add('obj.door', `${from}.${key}`, id, objOk(id));
     }

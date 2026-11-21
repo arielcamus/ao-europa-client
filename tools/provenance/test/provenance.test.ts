@@ -55,7 +55,10 @@ describe('provenance lock (synthetic tree)', () => {
 describe('referential integrity (synthetic data set)', () => {
   // The shape of the 2026-10-10 Recursos npcs.dat: NPCs pointing at bodies the classic init/cuerpos.dat does not have.
   const root = join(tmp, 'data');
-  put(root, 'init/cuerpos.dat', '[INIT]\r\nNumBodys=2\r\n[BODY1]\r\nWalk1=10\r\n[BODY2]\r\nStd=1\r\nFileNum=5\r\n');
+  put(root, 'init/cuerpos.dat', '[INIT]\r\nNumBodys=2\r\n[BODY1]\r\nWalk1=10\r\nWalk2=10\r\nWalk3=10\r\nWalk4=10\r\n[BODY2]\r\nStd=1\r\nFileNum=5\r\n');
+  put(root, 'init/moldes.ini', '[MOLDE1]\r\nX=0\r\nY=0\r\nWidth=25\r\nHeight=45\r\nDir1=6\r\nDir2=6\r\nDir3=5\r\nDir4=5\r\n');
+  const png = new Uint8Array(24); png.set([0x89, 0x50, 0x4e, 0x47, 13, 10, 26, 10, 0, 0, 0, 13, 0x49, 0x48, 0x44, 0x52, 0, 0, 0, 64, 0, 0, 0, 128]);
+  put(root, 'Graficos/5.png', png); // a 64x128 PNG header is all the checker reads
   put(root, 'init/graficos.ini', 'Grh10=1-5-0-0-32-32\r\nGrh11=1-5-32-0-32-32\r\n');
   put(root, 'Dat/obj.dat', '[OBJ1]\r\nName=Manzana\r\nGrhIndex=11\r\n[OBJ2]\r\n');
   put(root, 'Dat/npcs.dat', '[NPC1]\r\nName=Sastre\r\nBody=2\r\nObj1=1-10\r\n');
@@ -71,6 +74,22 @@ describe('referential integrity (synthetic data set)', () => {
     const r = checkIntegrity(loadDataSet(root));
     expect(newGaps(r)['npc.body']).toEqual([{ from: 'NPC1.body', id: 6243 }]);
     expect(newGaps(r, { 'npc.body': [6243] })).toEqual({}); // a baseline entry silences only that id
+  });
+
+  it('catches wrong item graphics: a sprite frame as inventory icon, a weapon anim beyond armas.dat, a graphic with no PNG', () => {
+    // The 2026-10 obj.dat: "Escudo del Principiante" GrhIndex 3485 is a 26x46 cape frame; "Espada del Principiante" Anim 186 > NumArmas 184.
+    put(root, 'init/graficos.ini', 'Grh10=1-5-0-0-32-32\r\nGrh11=1-5-32-0-32-32\r\nGrh12=1-5-0-32-26-46\r\nGrh13=1-9-0-0-32-32\r\n');
+    put(root, 'init/armas.dat', '[INIT]\r\nNumArmas=1\r\n[ARMA1]\r\nDir1=10\r\nDir2=10\r\nDir3=10\r\nDir4=10\r\n');
+    put(root, 'Dat/npcs.dat', '[NPC1]\r\nName=Sastre\r\nBody=1\r\n');
+    put(root, 'Dat/obj.dat', '[OBJ1]\r\nName=Espada\r\nObjType=2\r\nGrhIndex=11\r\nAnim=1\r\n' +
+      '[OBJ2]\r\nName=Espada del Principiante\r\nObjType=2\r\nGrhIndex=11\r\nAnim=186\r\n' +
+      '[OBJ3]\r\nName=Escudo del Principiante\r\nObjType=16\r\nGrhIndex=12\r\n[OBJ4]\r\nName=Sin PNG\r\nObjType=11\r\nGrhIndex=13\r\n');
+    const gaps = newGaps(checkIntegrity(loadDataSet(root)));
+    expect(gaps['obj.weaponAnim']).toEqual([{ from: 'OBJ2', id: 186 }]);
+    expect(gaps['obj.inventoryIcon']).toEqual([{ from: 'OBJ3', id: 3 }]);
+    expect(gaps['obj.grhFile']).toEqual([{ from: 'OBJ4', id: 13 }]);
+    expect(gaps['obj.weaponAnimGraphic']).toBeUndefined();
+    put(root, 'Dat/obj.dat', '[OBJ1]\r\nName=Manzana\r\nGrhIndex=11\r\n[OBJ2]\r\n');
   });
 
   it('an empty object section counts as missing (the [OBJ1425] door case)', () => {
