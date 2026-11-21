@@ -34,6 +34,7 @@ export class ClassicUI {
   private generation = 0;
   private selectedItem = 0;
   private selectedSpell = 0;
+  private panelSeq = 0;
   private slotButtons: HTMLButtonElement[] = [];
   private menuButtons = new Map<string, HTMLButtonElement>();
   private menuActions = new Map<string, () => void>();
@@ -56,8 +57,9 @@ export class ClassicUI {
       button.addEventListener('dblclick', () => { if (this.session?.ui.inventory.has(i + 1)) { this.selectedItem = i + 1; this.markItem(); this.onActivate?.(i + 1); } });
       element('inventory').append(button); this.slotButtons.push(button);
     }
-    element('inventory-tab').onclick = () => this.showSpells(false);
-    element('spells-tab').onclick = () => this.showSpells(true);
+    // frmMain.inventoryClick / hechizosClick: a followed client reports the panel it shows (WriteNotifyInventarioHechizos).
+    element('inventory-tab').onclick = () => { this.showSpells(false); this.session?.spells.notifyPanel(1, Math.max(0, this.selectedSpell - 1), 0); };
+    element('spells-tab').onclick = () => { this.showSpells(true); this.session?.spells.notifyPanel(2, Math.max(0, this.selectedSpell - 1), 0); };
     element('spell-up').onclick = () => this.moveSpell(true);
     element('spell-down').onclick = () => this.moveSpell(false);
     element('spells').addEventListener('keydown', event => {
@@ -238,6 +240,12 @@ export class ClassicUI {
       this.session = session; this.revision = -1; this.selectedItem = 0; this.selectedSpell = 0; this.showSpells(false); this.showMenu(false);
     }
     if (!session) return;
+    // HandleGetInventarioHechizos: a GM following this player flips the panel (and the selected spell row) remotely.
+    const request = session.spells.panelRequest;
+    if (request && request.seq !== this.panelSeq) {
+      this.panelSeq = request.seq;
+      if (request.value === 1) this.showSpells(false); else if (request.value === 2) { this.showSpells(true); this.selectSpell(request.selected + 1); }
+    }
     if (this.catalog) session.catalog ??= this.catalog;
     const ui = session.ui, stats = ui.stats;
     // frmMain: the on/off picture of each safe follows the flags the server last set (all on after login).

@@ -86,6 +86,15 @@ describe('spell session behaviour', () => {
     h.recv({ id: NS.CharacterRemove, charIndex: 41, vanish: false, warp: false });
     expect(h.session.spells.effects).toEqual([]);
   });
+  it('GetInventarioHechizos flips the panel request; a followed client reports its panel with NotifyInventarioHechizos, an unfollowed one stays silent', () => {
+    const h = harness();
+    h.recv({ id: SS.GetInventarioHechizos, value: 2, hechiSel: 4, scrollSel: 1 });
+    expect(h.session.spells.panelRequest).toEqual({ value: 2, selected: 4, scroll: 1, seq: 1 });
+    const notified = () => h.clientPackets().filter(p => p.id === SC.NotifyInventarioHechizos);
+    h.session.spells.notifyPanel(2, 4, 1); expect(notified()).toEqual([]);
+    h.session.spells.followed = true; h.session.spells.notifyPanel(1, 0, 0);
+    expect(notified()).toEqual([{ id: SC.NotifyInventarioHechizos, value: 1, hechiSel: 0, scrollSel: 0 }]);
+  });
   it('records spell effects, cools down and prints locale and token console text', () => {
     spellTables.spells = hechizos;
     const h = harness(); h.session.ui.chat.locale = chatLocale;
