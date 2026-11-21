@@ -5,7 +5,7 @@ import { SkillsClientPacketId as SK } from '@ao/protocol';
 import type { ClientPacket } from '@ao/protocol';
 import { step } from '../harness.js';
 import type { Ctx } from '../harness.js';
-import { ensureEquipped, attack, actor, dbEdit, setUser, useSlot, equipSlot, slotOf, amountOf, series, localeIds, Msg, gmGoto, spawnCreature, killMine } from './sc-util.js';
+import { setSlot, ensureEquipped, attack, actor, dbEdit, setUser, useSlot, equipSlot, slotOf, amountOf, series, localeIds, Msg, gmGoto, spawnCreature, killMine } from './sc-util.js';
 import { attributes } from './util.js';
 
 const APPLE = 3684, WATER = 3685, RED = 4335, BLUE = 4336, YELLOW = 4337, VIOLET = 4334;
@@ -17,7 +17,8 @@ step('SUR-01', async c => {
   // HambreYSed (General.bas) runs once per second from PasarSegundo: AGUACounter counts to IntervaloSed = 4000/25 = 160 (FileIO.LoadIntervalos divides by 25), so
   // thirst loses 10 on the 161st second after login; COMCounter counts to IntervaloHambre = 4500/25 = 180, so hunger loses 10 on the 181st.
   const p = await mage(c);
-  await dbEdit(c, 'mage', setUser('min_ham=50, min_sed=50'));
+  // baseline for the whole category: alive, unpoisoned, a citizen of level 1 in Forgat (an earlier run may have left the mage elsewhere)
+  await dbEdit(c, 'mage', setUser('is_dead=0, is_poisoned=0, status=1, level=1, exp=0, min_hp=20, min_sta=60, pos_map=751, pos_x=60, pos_y=57, min_ham=50, min_sed=50'));
   const t0 = Date.now(), m = c.player.mark(); c.eq([food(c).food, food(c).water], [50, 50], 'logged in with 50/50');
   await c.player.until(() => (food(c).water ?? 50) < 50, 200_000, 'thirst tick');
   const sThirst = (Date.now() - t0) / 1000;
@@ -33,7 +34,7 @@ step('SUR-01', async c => {
 
 step('SUR-03', async c => {
   // UseInvItem otUseOnce (InvUsuario.bas): MinHam += obj.MinHam (Obj.dat OBJ3684 Manzana Roja (P): MinHAM=15), capped at MaxHam = 100, then QuitarUserInvItem 1.
-  await dbEdit(c, 'mage', setUser('min_ham=50, min_sed=100'));
+  await dbEdit(c, 'mage', setUser('min_ham=50, min_sed=100'), setSlot(9, APPLE, 100)); // the row is restored here because CMB-16 turns the spare rows into scrolls
   const p = c.player, slot = slotOf(p, APPLE)!, before = slot.amount;
   c.eq(food(c).food, 50, 'hunger 50 before'); useSlot(p, slot.slot);
   await p.until(() => food(c).food !== 50, 4000, 'UpdateHungerAndThirst');
@@ -47,7 +48,7 @@ step('SUR-03', async c => {
 
 step('SUR-04', async c => {
   // UseInvItem otDrinks: MinAGU += obj.MinSed (Obj.dat OBJ3685 Botella de Agua (P): MinAgu=15; its Texto says 30, the code uses the field), cap MaxAGU 100, consume 1.
-  await dbEdit(c, 'mage', setUser('min_ham=100, min_sed=50'));
+  await dbEdit(c, 'mage', setUser('min_ham=100, min_sed=50'), setSlot(10, WATER, 50));
   const p = c.player, slot = slotOf(p, WATER)!, before = slot.amount;
   c.eq(food(c).water, 50, 'thirst 50 before'); useSlot(p, slot.slot);
   await p.until(() => food(c).water !== 50, 4000, 'UpdateHungerAndThirst');

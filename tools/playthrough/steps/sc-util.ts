@@ -114,8 +114,9 @@ export async function dbEditBoth(c: Ctx, edits: { mage: string[]; war: string[] 
 }
 
 /**
- * Characters come back from a relog WITHOUT their armour (observed on every harness character: the creation session shows the tunic equipped, the saved row says is_naked = 1 and
- * every inventory_item.is_equipped = 0, body 3000), and a naked character loses stamina (SUR-12) and cannot regenerate. EquipItem toggles, ensureEquipped checks the answer.
+ * A fresh create -> /SALIR -> relog keeps the armour equipped (checked by the coordinator). Characters of this harness come back naked for two upstream reasons: UserDie unequips all
+ * gear and a revive does not re-equip it, and OBJ3500/3502 are Newbie=1, which EquiparInvItem refuses at login above level 12 (the server then sets Desnudo). A naked character
+ * loses stamina and cannot regenerate (SUR-12), so steps that need clothes re-equip explicitly: EquipItem toggles, ensureEquipped checks the answer.
  */
 export async function dress(c: Ctx, w: Who) {
   const s = w === 'mage' ? c.player : (c.shared.p2 as Sess);

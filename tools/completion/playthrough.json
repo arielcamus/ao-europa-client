@@ -397,7 +397,7 @@
     {
      "id": "SUR-02",
      "step": "Effects of hunger or thirst at 0",
-     "expected": "No damage, but: no HP regen (EfectoStamina skips Sanar), stamina regen turns into stamina LOSS (PierdeEnergia), SubirSkill returns early (no skill gain by use), spell scrolls refused ('demasiado hambriento/sediento'), and a resurrection spell sets both to 0.",
+     "expected": "No damage, but: no HP regen (EfectoStamina skips Sanar), stamina regen turns into stamina LOSS (PierdeEnergia), SubirSkill returns early (no skill gain by use), spell scrolls refused ('demasiado hambriento/sediento'), and a resurrection spell sets both to 0. Clothing note: a revive does not re-equip the gear UserDie took off, and the Newbie=1 starter armour (OBJ3500, 3502) is refused above level 12 (the character is then Desnudo); tests that need clothes re-equip with EquipItem or wear a non-newbie item (OBJ32).",
      "source": "General.bas:EfectoStamina; Modulo_UsUaRiOs.bas:SubirSkill; InvUsuario.bas:UseInvItem (otParchment)",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, DB UPDATE MinHam=0, compare HP over 30 s and try SubirSkill action",
@@ -415,7 +415,7 @@
     {
      "id": "SUR-04",
      "step": "Drink water or a drink (otDrinks)",
-     "expected": "Adds obj.MinSed to thirst up to MaxAGU=100, consumes 1, applies obj.ApplyEffectId if any, plays SND_BEBER (135) or obj.Snd1.",
+     "expected": "Adds obj.MinSed to thirst up to MaxAGU=100, consumes 1, applies obj.ApplyEffectId if any, plays SND_BEBER (135) or obj.Snd1. Check (21 Nov, live): Obj.dat OBJ3685 has MinAgu=15 although its text says 30; the server adds 15.",
      "source": "InvUsuario.bas:UseInvItem (otDrinks)",
      "mode": "auto",
      "how": "recorded: tests/fixtures/vb6/items/use-items.jsonl",
@@ -433,7 +433,7 @@
     {
      "id": "SUR-06",
      "step": "Drink a blue potion (Pocion de Mana (P), obj 4336)",
-     "expected": "TipoPocion 4: adds Porcentaje(MaxMAN, 3) = 3% of max mana, capped at MaxMAN (and at 20000). Consumes 1.",
+     "expected": "TipoPocion 4: adds Porcentaje(MaxMAN, 3) = 3% of max mana, capped at MaxMAN (and at 20000). Consumes 1. Check (21 Nov): 150 * 3 / 100 = 4.5 and the VB6 Long conversion rounds half to even, so a 150 mana mage gains 4.",
      "source": "InvUsuario.bas:UseInvItem (ModifiesMp); obj.dat OBJ4336",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, mage char",
@@ -460,7 +460,7 @@
     {
      "id": "SUR-09",
      "step": "Poison tick",
-     "expected": "A poisoned char (Envenenado) loses 1 + (3..5)*MaxHp\\100 HP every IntervaloVeneno+1 = 91 game ticks (~3.64 s); the poison has NO expiry, only cure (violet potion, antidote spell, priest heal or death) ends it. Each tick cancels /SALIR. Poison can kill.",
+     "expected": "A poisoned char (Envenenado) loses 1 + (3..5)*MaxHp\\100 HP every IntervaloVeneno+1 = 91 game ticks (~3.64 s); the poison has NO expiry, only cure (violet potion, antidote spell, priest heal or death) ends it. Each tick cancels /SALIR. Poison can kill. Check (21 Nov): a 20 HP character takes 1 per tick (2 when the roll is 5); ticks measured 3.9 s apart on the live server.",
      "source": "General.bas:EfectoVeneno; intervalos.ini IntervaloVeneno=90",
      "mode": "auto",
      "how": "recorded: tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
@@ -469,7 +469,7 @@
     {
      "id": "SUR-10",
      "step": "Natural HP regeneration",
-     "expected": "EfectoStamina (every 40 ms tick) calls Sanar only if neither hungry nor thirsty and Counters.EnCombate = 0: counter reaches SanaIntervaloSinDescansar = 200 ticks (~8.0 s) standing, SanaIntervaloDescansar = 50 ticks (~2.0 s) while resting at a campfire. Each heal = random(5%..10% of MaxHp) * self-healing bonus. Naked chars do not heal. IntervaloEnCombate = 10 s after hitting or being hit blocks regeneration.",
+     "expected": "EfectoStamina (every 40 ms tick) calls Sanar only if neither hungry nor thirsty and Counters.EnCombate = 0: counter reaches SanaIntervaloSinDescansar = 200 ticks (~8.0 s) standing, SanaIntervaloDescansar = 50 ticks (~2.0 s) while resting at a campfire. Each heal = random(5%..10% of MaxHp) * self-healing bonus. Naked chars do not heal. IntervaloEnCombate = 10 s after hitting or being hit blocks regeneration. Clothing note: a revive does not re-equip the gear UserDie took off, and the Newbie=1 starter armour (OBJ3500, 3502) is refused above level 12 (the character is then Desnudo); tests that need clothes re-equip with EquipItem or wear a non-newbie item (OBJ32).",
      "source": "General.bas:EfectoStamina, Sanar; intervalos.ini SanaIntervalo*; IntervaloEnCombate=10",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, DB UPDATE MinHp low, sample UpdateHP",
@@ -478,7 +478,7 @@
     {
      "id": "SUR-11",
      "step": "Natural stamina regeneration",
-     "expected": "RecStamina: every StaminaIntervaloSinDescansar = 10 ticks (~0.44 s) standing, StaminaIntervaloDescansar = 5 ticks (~0.24 s) resting, adds random(1, MaxSta*Suerte%) (divided by 1.6 for non-Trabajador) where Suerte = 5,7,9,...,25 by Supervivencia band 0-10,11-20,...,91-99,100. Not while working (Counters.Trabajando), while naked, hungry/thirsty, or in an AutomatedAction. Rain outdoors stops regen (Lloviendo And Intemperie).",
+     "expected": "RecStamina: every StaminaIntervaloSinDescansar = 10 ticks (~0.44 s) standing, StaminaIntervaloDescansar = 5 ticks (~0.24 s) resting, adds random(1, MaxSta*Suerte%) (divided by 1.6 for non-Trabajador) where Suerte = 5,7,9,...,25 by Supervivencia band 0-10,11-20,...,91-99,100. Not while working (Counters.Trabajando), while naked, hungry/thirsty, or in an AutomatedAction. Rain outdoors stops regen (Lloviendo And Intemperie). Clothing note: a revive does not re-equip the gear UserDie took off, and the Newbie=1 starter armour (OBJ3500, 3502) is refused above level 12 (the character is then Desnudo); tests that need clothes re-equip with EquipItem or wear a non-newbie item (OBJ32).",
      "source": "General.bas:RecStamina, EfectoStamina; intervalos.ini",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, drain stamina by attacking, sample UpdateSta",
@@ -487,7 +487,7 @@
     {
      "id": "SUR-12",
      "step": "Stamina loss: naked, hungry or raining",
-     "expected": "PierdeEnergia every IntervaloPerderStamina = 40 ticks (1.6 s) (20 ticks in rain outdoors, 80 ticks resting) removes random(1, MaxSta * (150 - Supervivencia)*0.25 %) stamina.",
+     "expected": "PierdeEnergia every IntervaloPerderStamina = 40 ticks (1.6 s) (20 ticks in rain outdoors, 80 ticks resting) removes random(1, MaxSta * (150 - Supervivencia)*0.25 %) stamina. Clothing note: a revive does not re-equip the gear UserDie took off, and the Newbie=1 starter armour (OBJ3500, 3502) is refused above level 12 (the character is then Desnudo); tests that need clothes re-equip with EquipItem or wear a non-newbie item (OBJ32).",
      "source": "General.bas:PierdeEnergia, EfectoStamina",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, unequip armor (Desnudo) and sample UpdateSta",
@@ -547,7 +547,7 @@
     {
      "id": "CMB-03",
      "step": "Melee attack another player (PvP)",
-     "expected": "PuedeAtacar must allow it: not dead, not same party (Grupo.Id), not EnConsulta, not Maldicion (cursed), not mounted, not safe map/ZonaSegura, not own guild if SeguroClan and guild level >= 4. Hit chance = clamp(50 + (AttackPower - victim PoderEvasion)*0.4 + weapon bonus, 5, 95) where victim evasion = (Tacticas + 3*Tacticas/100*AGI)*classEvasion + 2.5*max(ELV-12,0) + shield term (Defensa*classShield/2 * shield%/100). Meditating victims are hit with ProbEvadir=(100-p)*0.75 (cap 90%). A shield block (probability 10..90% from shield % and Defensa vs Tacticas) calls SubirSkill(Defensa).",
+     "expected": "PuedeAtacar must allow it: not dead, not same party (Grupo.Id), not EnConsulta, not Maldicion (cursed), not mounted, not safe map/ZonaSegura, not own guild if SeguroClan and guild level >= 4. Hit chance = clamp(50 + (AttackPower - victim PoderEvasion)*0.4 + weapon bonus, 5, 95) where victim evasion = (Tacticas + 3*Tacticas/100*AGI)*classEvasion + 2.5*max(ELV-12,0) + shield term (Defensa*classShield/2 * shield%/100). Meditating victims are hit with ProbEvadir=(100-p)*0.75 (cap 90%). A shield block (probability 10..90% from shield % and Defensa vs Tacticas) calls SubirSkill(Defensa). Order in PuedeAtacar: the citizen safe toggle (1057) is tested BEFORE the map: with the toggle off a Seguro=1 map (Forgat, maps 11 and 31) answers 1062 \"zona segura\" and a ZonaSegura trigger tile 1063.",
      "source": "SistemaCombate.bas:PuedeAtacar, UsuarioImpacto, PoderEvasion, PoderEvasionEscudo",
      "mode": "auto",
      "how": "two bridge sessions (two throwaway accounts), /CI weapons, DB UPDATE level, A attacks B outside safe zones",
@@ -565,7 +565,7 @@
     {
      "id": "CMB-05",
      "step": "Citizen attacks a citizen or Armada member",
-     "expected": "While the safe toggle is on the attack is refused (msg 1057/1058). With the toggle off (/SEG), UsuarioAtacadoPorUsuario calls VolverCriminal(attacker) -> Faccion.Status = 0 (Criminal), FactionScore reset to 0 if he was a citizen, removed from party (FinalizarGrupo/SalirDeGrupo), pushed out of NoPKs maps. There is NO numeric reputation: status is a flag (Criminal 0, Ciudadano 1, Caos 2, Armada 3, Concilio 4, Consejo 5).",
+     "expected": "While the safe toggle is on the attack is refused (msg 1057/1058). With the toggle off (/SEG), UsuarioAtacadoPorUsuario calls VolverCriminal(attacker) -> Faccion.Status = 0 (Criminal), FactionScore reset to 0 if he was a citizen, removed from party (FinalizarGrupo/SalirDeGrupo), pushed out of NoPKs maps. There is NO numeric reputation: status is a flag (Criminal 0, Ciudadano 1, Caos 2, Armada 3, Concilio 4, Consejo 5). UsuarioAtacadoPorUsuario runs BEFORE the hit roll: even a miss turns a citizen attacker into a criminal; a criminal then gets 696 from /SEG.",
      "source": "SistemaCombate.bas:PuedeAtacar, UsuarioAtacadoPorUsuario; Modulo_UsUaRiOs.bas:VolverCriminal; Declares.bas:e_Facciones",
      "mode": "auto",
      "how": "recorded: tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl (toggle packets); combat/safezone-attack-blocked.jsonl",
@@ -585,7 +585,7 @@
      "step": "Become a criminal by attacking a citizen creature or stealing",
      "expected": "UserCanAttackNpc TurnPK=True attacks on citizen-faction NPCs call VolverCriminal. Stealing (DoRobar) as a citizen makes the thief Criminal; needs 15 stamina, not on safe maps, not on a victim in fight zones, thief needs the Robar skill; citizens with safe on cannot steal. SubirSkill(Robar) on success.",
      "source": "SistemaCombate.bas:UsuarioAtacaNpc; Trabajo.bas:DoRobar (line 1388)",
-     "mode": "auto",
+     "mode": "manual",
      "how": "two bridge sessions (two throwaway accounts), thief steals from a citizen",
      "status": "untested"
     },
@@ -594,14 +594,14 @@
      "step": "Become a citizen again (pardon by donating to a priest)",
      "expected": "HandleDonateGold: target a Revividor NPC within 3 tiles, you must be Criminal (citizens/army/chaos refused). Cost = ciudadanosMatados * GoldMult * CostoPerdonPorCiudadano (5000 in Example.Configuracion.ini), or CostoPerdon/2 = 2500 if none killed. Clan of criminal/chaotic alignment blocks it. On success VolverCiudadano: Status 1, safe toggle ON, left party if mixed.",
      "source": "Protocol.bas:HandleDonateGold; Modulo_UsUaRiOs.bas:VolverCiudadano",
-     "mode": "auto",
+     "mode": "manual",
      "how": "one bridge session on a throwaway account, make char criminal via DB (Faccion.Status 0), DB UPDATE gold",
      "status": "untested"
     },
     {
      "id": "CMB-09",
      "step": "Kill a player: faction points and kill counters",
-     "expected": "ContarMuerte (skipped if victim is newbie ELV<=12, in a safe fight zone, or attacker >10 levels above): kills of criminals/chaos increment CriminalesMatados, kills of citizens/army increment ciudadanosMatados, only once per killer per FactionReKillTime=600000 ms (10 min). A citizen/army killer gets FactionScore = 10 +/- level difference (10 + victimELV - ELV if attacker lower; else 10 - (ELV - victimELV)), x1.5 for Armada vs Caos and vice versa, cap 20, minus 1 for each valid assist (8000 ms window).",
+     "expected": "ContarMuerte (skipped if victim is newbie ELV<=12, in a safe fight zone, or attacker >10 levels above): kills of criminals/chaos increment CriminalesMatados, kills of citizens/army increment ciudadanosMatados, only once per killer per FactionReKillTime=600000 ms (10 min). A citizen/army killer gets FactionScore = 10 +/- level difference (10 + victimELV - ELV if attacker lower; else 10 - (ELV - victimELV)), x1.5 for Armada vs Caos and vice versa, cap 20, minus 1 for each valid assist (8000 ms window). Check (21 Nov): EsNewbie(victim) (ELV <= LimiteNewbie 12) exits ContarMuerte first, so killing a starter character moves no counter.",
      "source": "Modulo_UsUaRiOs.bas:ContarMuerte, CalculateBaseFactionScore, HandleFactionScoreForKill; Balance.dat FactionReKillTime, AssistDamageValidTime",
      "mode": "auto",
      "how": "two bridge sessions (two throwaway accounts), DB UPDATE levels and kill with GM-set HP",
@@ -612,7 +612,7 @@
      "step": "Enlist in the Royal Army (talk to Enlistador, /ENLISTAR flow)",
      "expected": "EnlistarArmadaReal refuses: already in army; Caos; Criminal status; class Ladron; ciudadanosMatados > 0; no inventory slot; Reenlistadas > MAX_FACTION_ENLISTMENTS (=0) i.e. you can only enlist ONCE in a lifetime; FactionScore < first rank score; ELV < first-rank level; neutral guild leader. Rank 1 requires level 25 and 100 faction points (rangos_faccion.dat). On success Status = Armada(3), RecompensasReal = 1, armour given.",
      "source": "ModFacciones.bas:EnlistarArmadaReal; rangos_faccion.dat [ArmadaReal]; ModFacciones.bas:MAX_FACTION_ENLISTMENTS",
-     "mode": "auto",
+     "mode": "manual",
      "how": "one bridge session on a throwaway account, DB UPDATE level 25 + FactionScore 100, stand near the army enlister",
      "status": "untested"
     },
@@ -621,7 +621,7 @@
      "step": "Enlist in the Dark Legion (Caos enlister)",
      "expected": "EnlistarCaos requires Status criminal (Armada/Ciudadano refused with msg 1369), a free inventory slot, FactionScore >= first rank (100) and level >= 25, one enlistment only (MAX_FACTION_ENLISTMENTS=0), neutral clan leaders refused. Status becomes Caos(2); Legion armour given on first entry.",
      "source": "ModFacciones.bas:EnlistarCaos; rangos_faccion.dat [LegionCaos]",
-     "mode": "auto",
+     "mode": "manual",
      "how": "one bridge session on a throwaway account",
      "status": "untested"
     },
@@ -630,7 +630,7 @@
      "step": "Ask the enlister for a rank reward (/RECOMPENSA)",
      "expected": "RecompensaArmadaReal/RecompensaCaos: within 4 tiles of an Enlistador of your faction; next rank needs FactionScore and ELV: Army ranks 1-5 = levels 25/30/35/40/43 and scores 100/500/2500/5000/10000 (Soldado, Caballero, Capitan, Protector del Reino, Campeon de la Luz); Legion = Acolito, Emisario del Caos, Sanguinario, Caballero de la Oscuridad, Devorador de Almas with the same numbers. Gives every item for ranks above the last received (recompensas_faccion.dat); inventory space required.",
      "source": "Protocol.bas:HandleReward; ModFacciones.bas:RecompensaArmadaReal, DarRecompensas; rangos_faccion.dat; recompensas_faccion.dat",
-     "mode": "auto",
+     "mode": "manual",
      "how": "one bridge session on a throwaway account, DB UPDATE FactionScore and ELV",
      "status": "untested"
     },
@@ -639,7 +639,7 @@
      "step": "Leave the faction (LeaveFaction)",
      "expected": "Handler for armies/legion: inside faction NPC proximity; ExpulsarFaccionReal/Caos set Status Ciudadano/Criminal, remove all items with Real=1/Caos=1 from inventory (PerderItemsFaccionarios). Re-enlisting is impossible afterwards (Reenlistadas=1 > 0).",
      "source": "Protocol.bas:HandleLeaveFaction; ModFacciones.bas:ExpulsarFaccionReal, PerderItemsFaccionarios",
-     "mode": "auto",
+     "mode": "manual",
      "how": "one bridge session on a throwaway account, after CMB-10 setup",
      "status": "untested"
     },
@@ -648,7 +648,7 @@
      "step": "Army member attacks a citizen or another army member",
      "expected": "esArmada attacker: refused vs Armada (msg 1055) and vs Ciudadano (1056). Chaos vs chaos is allowed unless LegionarySecure is on. Armada attacking Caos/Criminal does not turn them criminal.",
      "source": "SistemaCombate.bas:PuedeAtacar",
-     "mode": "auto",
+     "mode": "manual",
      "how": "two bridge sessions (two throwaway accounts)",
      "status": "untested"
     },
@@ -682,7 +682,7 @@
     {
      "id": "CMB-18",
      "step": "Spell types: self, heal, buff/debuff state, summon, area",
-     "expected": "Hechizos.Tipo: 1 uPropiedades (HP/mana/sta/hunger/thirst), 2 uEstado (paralysis, invisibility, poison, curses, mimetism...), 3 materializa, 4 invocacion (summons, MaxMascotas 3 per user), 5 area, 6 portals, 8 combinados, 9 multishot, 10 physical skill. Heal: Curar heridas leves (id 12) heals 5..15 for 10 mana, MinSkill 10; Aliento de Dragon (id 4) 92..96 for 1100 mana needs Magia 100 and a staff power 2.",
+     "expected": "Hechizos.Tipo: 1 uPropiedades (HP/mana/sta/hunger/thirst), 2 uEstado (paralysis, invisibility, poison, curses, mimetism...), 3 materializa, 4 invocacion (summons, MaxMascotas 3 per user), 5 area, 6 portals, 8 combinados, 9 multishot, 10 physical skill. Heal: Curar heridas leves (id 12) heals 5..15 for 10 mana, MinSkill 10; Aliento de Dragon (id 4) 92..96 for 1100 mana needs Magia 100 and a staff power 2. The starter data has no scroll for Curar heridas leves (12); Curar heridas graves (13, scroll OBJ1651) heals 20..50 for 40 mana and Magia 38. At level 13+ a character cannot wear Newbie=1 items (OBJ3502, 3500), so high-level mage tests wear OBJ32 Vestimenta Comun.",
      "source": "modHechizos.bas:HandleHechizoUsuario, HechizoInvocacion; Hechizos.dat header",
      "mode": "auto",
      "how": "recorded: tests/fixtures/vb6/spells/* (self, orb, summon, invalid target)",
@@ -729,7 +729,7 @@
      "step": "Tame a creature (Domar skill, click with taming selected)",
      "expected": "DoDomar: needs NroMascotas < 3 and a free pet slot; target must have no master; NPC MinTameLevel <= ELV; taming points = CHA*Domar divided by 6 (Druid) or 118 (every other class, effectively druid-only); success requires NPC Domable <= points AND a 1-in-5 roll. SubirSkill(Domar) every attempt. Creature is re-spawned and follows you (not allowed in NoMascotas safe zones: pet waits outside).",
      "source": "Trabajo.bas:DoDomar; Trabajo.bas:ModDomar (class mod 6/6/7/10 for display)",
-     "mode": "auto",
+     "mode": "manual",
      "how": "recorded (empty tile refusal + pet commands): tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl, tame-and-pet-commands.jsonl",
      "status": "recorded"
     },
@@ -738,7 +738,7 @@
      "step": "Backstab (Apunalar) with a dagger",
      "expected": "Apunalar needs a dagger weapon; chance depends on class base from Balance.dat [BACKSTAB] (AssasinStabbingChance, HunterStabbingChance, BardStabbingChance, ExtraBackstabChance) and the Apunalar skill; damage multiplied by class MODAPUNALAR; hides are broken. SubirSkill(Apunalar) on hit.",
      "source": "SistemaCombate.bas:PuedeApunalar, GetStabbingChanceBase; Balance.dat [BACKSTAB]",
-     "mode": "auto",
+     "mode": "manual",
      "how": "two bridge sessions (two throwaway accounts), assassin with dagger",
      "status": "untested"
     },
