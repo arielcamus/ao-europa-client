@@ -1,5 +1,5 @@
 import { assetUrl } from './assets.js';
-import { CAPTIONS, captionedUrl, captionsFor, renderCaptioned, verifyCaptions } from './ui-captions.js';
+import { CAPTIONS, captionState, captionedUrl, captionsFor, renderCaptioned, verifyCaptions } from './ui-captions.js';
 // Original BMP files remain untouched. Some true-color BI_RGB headers declare
 // important palette colors; WebKit rejects these, although there is no palette.
 // Normalize only unused palette metadata in a browser-local copy. Pixel bytes,
@@ -86,6 +86,7 @@ async function withCaptions(name: string, original: string, url: string): Promis
     const image = new Image(); image.src = url; await image.decode();
     const captioned = await captionedUrl(image, specs, original.split('?')[0]!.split('/').pop());
     if (!captioned) return url;
+    if (url.startsWith('blob:')) URL.revokeObjectURL(url); // the decodable copy of the BMP, no longer handed out
     urls.set(original, captioned); return captioned;
   } catch { return url; } // the original picture, letters and all
 }
@@ -95,6 +96,14 @@ if (typeof location !== 'undefined' && new URLSearchParams(location.search).has(
   (globalThis as { __aoCaptions?: unknown }).__aoCaptions = {
     names: Object.keys(CAPTIONS),
     texts: (name: string) => (CAPTIONS[name] ?? []).map(spec => spec.text),
+    /** Every element under `root` that shows a captioned picture right now, with the caption text drawn on it (none = a bare picture). */
+    audit(root: Element = document.body) {
+      return [...root.querySelectorAll('*')].filter(element => !(element instanceof SVGElement)).flatMap(element => {
+        const { captioned, drawn } = captionState(element);
+        if (!captioned || (element as HTMLElement).offsetParent === null) return [];
+        return [{ id: element.id || element.getAttribute('aria-label') || element.className.toString(), drawn }];
+      });
+    },
     async check(file: string) {
       const url = await fetchInterface(interfaceUrl(file)).catch(() => fetchInterface(interfaceUrl(file, false))).catch(() => undefined); if (!url) return undefined;
       const image = new Image(); image.src = url; await image.decode();

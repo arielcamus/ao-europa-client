@@ -1,5 +1,4 @@
 /* Cinzel (SIL OFL 1.1, see NOTICE): the engraved capitals of the original button and title captions, redrawn as text by ui-captions.ts. */
-@font-face { font-family: Cinzel; font-weight: 600; font-display: block; src: url('./fonts/cinzel-latin-600-normal.woff2') format('woff2'); }
 @font-face { font-family: Cinzel; font-weight: 700; font-display: block; src: url('./fonts/cinzel-latin-700-normal.woff2') format('woff2'); }
 :root { color-scheme: dark; font-family: Tahoma, Arial, sans-serif; color: #c8bebe; background: #000; --classic-scale: 1; }
 * { box-sizing: border-box; }
@@ -31,6 +30,12 @@ img, canvas { image-rendering: pixelated; }
    is scaled nearest neighbour while it grows. Shrunk below one device pixel per art pixel (phones) the backgrounds keep the smooth filter. */
 #classic[data-crisp="true"] { image-rendering: pixelated; }
 .ui-caption { overflow: visible; text-rendering: geometricPrecision; }
+/* A VbWindow button carries one caption layer per picture (ui-captions.ts): the one shown follows the same :hover / :active as its picture. */
+.ui-caption[data-state="over"], .ui-caption[data-state="off"] { display: none; }
+.vb-art-ready:hover > .ui-caption[data-state="normal"] { display: none; }
+.vb-art-ready:hover > .ui-caption[data-state="over"] { display: inline; }
+.vb-art-ready:active:has(> .ui-caption[data-state="off"]) > .ui-caption[data-state="over"] { display: none; }
+.vb-art-ready:active > .ui-caption[data-state="off"] { display: inline; }
 button, input { border-radius: 0; }
 .hotspot, .art-button { border: 0; padding: 0; background: transparent; color: transparent; }
 .hotspot:hover { background: #ffffff12; }

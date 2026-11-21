@@ -92,30 +92,52 @@ function overlay(info: Captioned): SVGSVGElement {
   return svg;
 }
 
-const pictureUrl = (element: Element) => {
-  if (element instanceof HTMLImageElement) return element.getAttribute('src') ?? '';
-  const background = (element as HTMLElement).style?.backgroundImage ?? '';
-  return /^url\("?(.*?)"?\)$/.exec(background)?.[1] ?? '';
+const cssUrl = (value: string) => /^url\("?(.*?)"?\)$/.exec(value.trim())?.[1] ?? '';
+/**
+ * The pictures an element shows, by state: an <img> its src, a background its inline background-image, and a VbWindow button (vb-window.ts)
+ * its --normal / --over / --off pictures, which style.css swaps on :hover / :active.
+ */
+const pictures = (element: Element): [state: string, url: string][] => {
+  if (element instanceof HTMLImageElement) return [['', element.getAttribute('src') ?? '']];
+  const style = (element as HTMLElement).style; if (!style) return [];
+  const states = (['normal', 'over', 'off'] as const).map(state => [state, cssUrl(style.getPropertyValue(`--${state}`))] as [string, string]).filter(([, url]) => url);
+  return states.length ? states : [['', cssUrl(style.backgroundImage ?? '')]];
 };
-const OWNER = new WeakMap<Element, { url: string; svg: SVGSVGElement }>();
+const OWNER = new WeakMap<Element, { key: string; svgs: SVGSVGElement[] }>();
 
-/** Put (or move, or remove) the live captions of one element's picture: inside it for a background, next to it for an <img>. */
+/** Put (or move, or remove) the live captions of one element's pictures: inside it for a background, next to it for an <img>. */
 function sync(element: Element) {
-  const url = pictureUrl(element), info = registry.get(url), current = OWNER.get(element);
-  if (current && (current.url !== url || !info)) { current.svg.remove(); OWNER.delete(element); }
-  if (!info) return;
+  const shown = pictures(element).filter(([, url]) => registry.has(url)), key = shown.map(([state, url]) => `${state}=${url}`).join(' ');
+  const current = OWNER.get(element);
+  if (current && current.key !== key) { current.svgs.forEach(svg => svg.remove()); OWNER.delete(element); }
+  if (!shown.length) return;
   let entry = OWNER.get(element);
-  if (!entry) { entry = { url, svg: overlay(info) }; OWNER.set(element, entry); }
-  const svg = entry.svg;
-  if (element instanceof HTMLImageElement) {
-    if (svg.previousElementSibling !== element) element.after(svg);
-    Object.assign(svg.style, { position: 'absolute', pointerEvents: 'none', left: `${element.offsetLeft}px`, top: `${element.offsetTop}px`, width: `${element.offsetWidth || info.width}px`, height: `${element.offsetHeight || info.height}px` });
-    svg.style.display = element.hidden || getComputedStyle(element).display === 'none' ? 'none' : '';
-  } else {
-    if (svg.parentElement !== element) element.append(svg);
-    const stretched = getComputedStyle(element).backgroundSize.startsWith('100%');
-    Object.assign(svg.style, { position: 'absolute', pointerEvents: 'none', left: '0', top: '0', width: stretched ? '100%' : `${info.width}px`, height: stretched ? '100%' : `${info.height}px` });
+  if (!entry) {
+    entry = { key, svgs: shown.map(([state, url]) => { const svg = overlay(registry.get(url)!); if (state) svg.dataset.state = state; return svg; }) };
+    OWNER.set(element, entry);
   }
+  const info = registry.get(shown[0]![1])!;
+  for (const svg of entry.svgs) {
+    if (element instanceof HTMLImageElement) {
+      if (svg.previousElementSibling !== element) element.after(svg);
+      Object.assign(svg.style, { position: 'absolute', pointerEvents: 'none', left: `${element.offsetLeft}px`, top: `${element.offsetTop}px`, width: `${element.offsetWidth || info.width}px`, height: `${element.offsetHeight || info.height}px` });
+      svg.style.display = element.hidden || getComputedStyle(element).display === 'none' ? 'none' : '';
+    } else {
+      if (svg.parentElement !== element) element.append(svg);
+      const stretched = svg.dataset.state !== undefined || getComputedStyle(element).backgroundSize.startsWith('100%');
+      Object.assign(svg.style, { position: 'absolute', pointerEvents: 'none', left: '0', top: '0', width: stretched ? '100%' : `${info.width}px`, height: stretched ? '100%' : `${info.height}px` });
+    }
+  }
+}
+
+/** The element shows a captioned picture right now (tests: computed style, so CSS states count) and the caption drawn on it. */
+export function captionState(element: Element): { captioned: boolean; drawn: string[] } {
+  const url = element instanceof HTMLImageElement ? element.getAttribute('src') ?? '' : cssUrl(getComputedStyle(element).backgroundImage);
+  if (!registry.has(url)) return { captioned: false, drawn: [] };
+  const layers = element instanceof HTMLImageElement ? [element.nextElementSibling] : [...element.children];
+  const drawn = layers.filter((svg): svg is SVGSVGElement => svg instanceof SVGSVGElement && svg.classList.contains('ui-caption') && getComputedStyle(svg).display !== 'none' && svg.getBoundingClientRect().width > 0)
+    .flatMap(svg => [...svg.querySelectorAll('text[data-role="text"]')].map(text => text.textContent ?? ''));
+  return { captioned: true, drawn };
 }
 
 /** Watch `root` for captioned pictures (any window, any state change) and keep their live captions in place. */

@@ -82,6 +82,8 @@ export class WorldRenderer {
   private readonly labelLayer = new Container();
   private labels: Text[] = [];
   private labelsUsed = 0;
+  /** Names over characters: at least 2x as always, more when ?scale=fill|whole renders the canvas at more device pixels. */
+  private get labelResolution() { return Math.max(2, this.app.renderer?.resolution ?? 1); }
   private sprites: CharacterSprites | undefined;
   private colors = new Map<string, Rgb>();
   /** Tile under the mouse: NPC names are only drawn there, as in Char_Render (TX, TY). */
@@ -116,7 +118,10 @@ export class WorldRenderer {
     this.observer = new ResizeObserver(() => this.app.renderer.resize(this.host.clientWidth, this.host.clientHeight));
     // With ?scale=fill|whole the backing store follows the classic window's on-screen size (device pixels), so the browser never resamples the
     // frame: a 736x608 canvas shown at 2.56 device px per pixel renders 1882x1555, not 1472x1216 stretched again by the CSS scale.
-    this.unscale = onClassicScale((scale, dpr, mode) => this.app.renderer.resize(this.host.clientWidth, this.host.clientHeight, canvasResolution(scale, dpr, mode)));
+    this.unscale = onClassicScale((scale, dpr, mode) => {
+      this.app.renderer.resize(this.host.clientWidth, this.host.clientHeight, canvasResolution(scale, dpr, mode));
+      for (const label of this.labels) label.resolution = this.labelResolution;
+    });
     this.observer.observe(this.host);
     this.app.ticker.maxFPS = 60;
   }
@@ -401,6 +406,7 @@ export class WorldRenderer {
     let label = this.labels[this.labelsUsed++];
     if (!label) {
       label = new Text({ text, style: { fontFamily: 'Tahoma, Verdana, sans-serif', fontSize: size, fontWeight: 'bold', fill: '#ffffff', stroke: { color: '#000000', width: 3 }, align: 'center', wordWrap: true, wordWrapWidth: 170 } });
+      label.resolution = this.labelResolution;
       this.labels.push(label); this.labelLayer.addChild(label);
     }
     if (label.text !== text) label.text = text;

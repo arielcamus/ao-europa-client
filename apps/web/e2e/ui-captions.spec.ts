@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { installFakeServer } from '../../../tools/party-guild-fake-server.mjs';
 
 // Captions baked into the interface bitmaps are painted out and redrawn as live text (ui-captions.ts). Ariel, 21 Nov: "Many items in the GUI
 // look pixeled/blurry" ... "The UI texts look great!".
@@ -103,4 +105,44 @@ test('the frmMain buttons and the options window show live captions; ?captions=o
   await page.locator('#connect').click();
   await expect(page.locator('#viewport')).toHaveAttribute('data-rendered', 'true');
   expect(await page.locator('.ui-caption').count()).toBe(0);
+});
+
+test('every element showing a captioned picture has its caption drawn on it, in every window and button state', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop-chrome', 'desktop flow');
+  type Audit = { id: string; drawn: string[] }[];
+  const bare = () => page.evaluate(() => (globalThis as unknown as { __aoCaptions: { audit(): Audit } }).__aoCaptions.audit().filter(e => !e.drawn.length).map(e => e.id));
+  const all = () => page.evaluate(() => (globalThis as unknown as { __aoCaptions: { audit(): Audit } }).__aoCaptions.audit());
+  await installFakeServer(page, { role: 'none' });
+  await page.goto('/?captiondebug');
+  await expect(page.locator('#classic')).toHaveAttribute('data-ui-ready', 'true');
+  await page.locator('#connect').click();
+  await expect(page.locator('#viewport')).toHaveAttribute('data-rendered', 'true');
+  await expect.poll(async () => (await all()).length).toBeGreaterThan(1);
+  expect(await bare()).toEqual([]);
+  // VbWindow buttons (vb-window.ts) show their pictures through --normal / --over / --off: FUNDAR CLAN, DETALLES on frmGuildLeader's list.
+  await page.locator('#menu-tab').click(); await page.getByRole('button', { name: 'Clanes', exact: true }).click();
+  const list = page.locator('#frm-guild-list');
+  await expect(list.locator('.vb-row').first()).toBeVisible();
+  const found = list.getByRole('button', { name: 'Fundar clan' });
+  await expect.poll(async () => (await all()).find(e => e.id === 'Fundar clan')?.drawn).toEqual(['FUNDAR CLAN']);
+  expect(await bare()).toEqual([]);
+  await found.hover();
+  await expect.poll(async () => (await all()).find(e => e.id === 'Fundar clan')?.drawn).toEqual(['FUNDAR CLAN']);
+  expect(await bare()).toEqual([]);
+  await mkdir('artifacts/screenshots', { recursive: true });
+  await list.screenshot({ path: 'artifacts/screenshots/ui-captions-guild-list-hover.png' });
+  await page.mouse.down();
+  expect(await bare()).toEqual([]);
+  await page.mouse.move(0, 0); await page.mouse.up();
+  await list.locator('.vb-row').first().click();
+  await list.getByRole('button', { name: 'Detalles' }).click();
+  await expect(page.locator('#frm-guild-brief')).toBeVisible();
+  await expect.poll(async () => (await all()).find(e => e.id === 'Solicitar ingreso')?.drawn).toEqual(['SOLICITAR INGRESO']);
+  expect(await bare()).toEqual([]);
+  // The options window and its tabs.
+  await page.keyboard.press('Escape'); await page.keyboard.press('Escape');
+  await page.locator('#settings').click();
+  await page.getByRole('tab', { name: 'Audio' }).click();
+  await expect.poll(async () => (await all()).length).toBeGreaterThan(4);
+  expect(await bare()).toEqual([]);
 });
