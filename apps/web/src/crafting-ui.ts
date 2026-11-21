@@ -14,10 +14,10 @@ import type { ClassicUI } from './classic-ui.js';
 import type { Session } from './session.js';
 import './crafting.css';
 
-const place = (node: HTMLElement, x: number, y: number, width: number, height: number) => {
+export const place = (node: HTMLElement, x: number, y: number, width: number, height: number) => {
   Object.assign(node.style, { left: `${x}px`, top: `${y}px`, width: `${width}px`, height: `${height}px` });
 };
-const make = <T extends keyof HTMLElementTagNameMap>(tag: T, className: string, parent?: HTMLElement, id = '') => {
+export const make = <T extends keyof HTMLElementTagNameMap>(tag: T, className: string, parent?: HTMLElement, id = '') => {
   const node = document.createElement(tag); node.className = className; if (id) node.id = id; parent?.append(node); return node;
 };
 /** A button that is only artwork: default, over and off bitmaps from the interface folder. */
@@ -33,7 +33,7 @@ function artButton(parent: HTMLElement, id: string, label: string, art: string, 
 }
 
 /** VB.ListBox: flat, black, white Tahoma 8.25; one selected row. */
-class ListBox {
+export class ListBox {
   readonly element: HTMLElement;
   private rows: HTMLElement[] = [];
   private selected = -1;
@@ -155,6 +155,8 @@ export class CraftingUI {
     }
   }
   private tabArt(tab: SmithTab, state: 'over' | 'off') {
+    // boton-runas-over / -off are not in the original interface folder either (VB6 LoadInterface gets nothing and the tab keeps its picture): no request.
+    if (tab === 'runes') return Promise.resolve();
     const spec = SMITH_TABS.find(item => item.tab === tab)!, button = this.tabButtons.get(tab)!;
     return loadInterface(`${spec.art}-${state}`).then(url => { button.style.backgroundImage = `url("${url}")`; }).catch(() => { /* runes art is not in every install */ });
   }

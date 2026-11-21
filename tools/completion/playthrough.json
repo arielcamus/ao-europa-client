@@ -151,8 +151,8 @@
      "expected": "NPC: blocked (unless NPC flag eDontBlockTile; then SwapNpcPos pushes it opposite). Other ALIVE player: the walker is blocked by LegalWalk only if that player is not admin-invisible and not dead; in MoveUserChar a user on the target tile is swapped back (ForceCharMove) when two users collide. Blocked: WritePosUpdate resends the old position.",
      "source": "Modulo_UsUaRiOs.bas:MoveUserChar, GameLogic.bas:LegalWalk; Modulo_UsUaRiOs.bas:SwapNpcPos",
      "mode": "auto",
-     "how": "two bridge sessions (two throwaway accounts), walk A into B [in flight: fix/walk-into-char]",
-     "status": "in flight"
+     "how": "two bridge sessions (two throwaway accounts), walk A into B [fix merged in #59]",
+     "status": "untested"
     },
     {
      "id": "MOV-03",
@@ -1144,8 +1144,8 @@
      "expected": "AddItemCrafting, RemoveItemCrafting, AddCatalyst, RemoveCatalyst, MoveCraftItem, CraftItem and CloseCrafting drive the crafting window (clsCrafteo / modCrafteos); station-not-open and automated-action-refused are the recorded refusals.",
      "source": "Protocol.bas:HandleAddItemCrafting ... HandleCloseCrafting; modCrafteos.bas",
      "mode": "auto",
-     "how": "recorded (refusals only): tests/fixtures/vb6/crafting/station-not-open.jsonl, automated-action-refused.jsonl [in flight: #57]",
-     "status": "in flight"
+     "how": "recorded (refusals only): tests/fixtures/vb6/crafting/station-not-open.jsonl, automated-action-refused.jsonl [window/recordings merged in #57]",
+     "status": "untested"
     },
     {
      "id": "TRD-11",
@@ -1303,8 +1303,8 @@
      "expected": "PuedeFundarUnClan: not already in a guild, ELV >= 23, Liderazgo >= 50, and the 4 Foundation Gems (objs 407, 408, 409, 412, one each, consumed on success). NO gold cost in the code. Alignment rules: Neutral = citizen or criminal only, Armada = army member, Caotica = legion, Ciudadana = citizen/army with safe toggle ON, Criminal = criminal/legion. On success a global announce and sound 44.",
      "source": "modGuilds.bas:PuedeFundarUnClan, CrearNuevoClan; Protocol.bas:HandleCreateNewGuild",
      "mode": "auto",
-     "how": "one bridge session on a throwaway account, DB UPDATE ELV 23 + Liderazgo 50, /CI gems 407 408 409 412 [in flight: #57]",
-     "status": "in flight"
+     "how": "one bridge session on a throwaway account, DB UPDATE ELV 23 + Liderazgo 50, /CI gems 407 408 409 412 [window/recordings merged in #57]",
+     "status": "untested"
     },
     {
      "id": "ECO-14",
@@ -1312,8 +1312,8 @@
      "expected": "Applicant sends a message to the leader; leader accepts (the LEADER pays PriceAcceptMemberGuild[guild level] gold: 500/1000/1500/2000/3000/4500/6000 for levels 1..7, refused with 'necesitas N monedas' if short) or rejects. Member cap by guild level: 3/5/7/9/11/13/15 (Clanes.dat MEMBERSBYLEVEL). Faction restrictions apply (m_EstadoPermiteEntrarChar).",
      "source": "modGuilds.bas:a_AceptarAspirante (lines 903-970), m_EstadoPermiteEntrarChar; Clanes.dat [MEMBERSBYLEVEL], [GUILDPRICEACCEPTMEMBER]; Protocol.bas:HandleGuildRequestMembership, HandleGuildAcceptNewMember",
      "mode": "auto",
-     "how": "recorded (no-guild queries only): tests/fixtures/vb6/party/guild-without-guild.jsonl [in flight: #57]",
-     "status": "in flight"
+     "how": "recorded (no-guild queries only): tests/fixtures/vb6/party/guild-without-guild.jsonl [window/recordings merged in #57]",
+     "status": "untested"
     },
     {
      "id": "ECO-15",
@@ -1321,8 +1321,8 @@
      "expected": "Guild exp per level (Clanes.dat GUILDEXP): 750/1500/3000/6000/12000/24000 for levels 1..6; rewards unlock: call support level 3, safe-clan (SeguroClan) level 4, HP bar of members level 5, see invisible level 6. Leader updates news (GuildUpdateNews), codex (ClanCodexUpdate), kicks (GuildKickMember), website, details; members can GuildLeave. Guild chat uses GuildMessage; /ONLINECLAN lists online members.",
      "source": "FileIO.bas:LoadGuildsConfig; Clanes.dat; Protocol.bas:HandleGuildLeave, HandleGuildKickMember, HandleGuildUpdateNews, HandleClanCodexUpdate",
      "mode": "auto",
-     "how": "two bridge sessions (two throwaway accounts) [in flight: #57]",
-     "status": "in flight"
+     "how": "two bridge sessions (two throwaway accounts) [window/recordings merged in #57]",
+     "status": "untested"
     },
     {
      "id": "ECO-16",

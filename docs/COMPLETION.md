@@ -14,13 +14,13 @@
 | Check | Done | Of | Left |
 |---|---|---|---|
 | Packets with a codec | 512 | 513 | 1 |
-| Screens complete (all controls) | 52 | 58 | 6 (5 partial, 0 not started, 1 covered but missing controls) |
-| Behaviour items | 0 | 34 | **34 open** (26 to do, 4 in flight, 4 blocked on data or a decision) |
-| Playthrough steps passing end to end | 0 | 164 | 164 (56 recorded at protocol level on main, 7 in flight, 143 automatable, 21 manual) |
+| Screens complete (all controls) | 55 | 58 | 3 (2 partial, 0 not started, 1 covered but missing controls) |
+| Behaviour items | 0 | 32 | **32 open** (27 to do, 1 in flight, 4 blocked on data or a decision) |
+| Playthrough steps passing end to end | 0 | 164 | 164 (56 recorded at protocol level on main, 2 in flight, 143 automatable, 21 manual) |
 
 Scope. Packets: the 8 post-pin packets are excluded (docs/COVERAGE.md "post-pin"); "codec" is a registered `[Table.Name]` entry, and the handling check is a name search in apps/web and the bridge. Screens: covered + partial + class a; classes b (account server), c (AO20 extras) and d (dead forms) are out. Playthrough: "passing" means an end-to-end run against the real server; none exists yet (WP-D).
 
-In flight now: PR #54 (feat/prehoo-lock: pins, asset lock, pinned coverage map); PR #57 (fix/windows: alchemy, tailor, crafting station, special fish, guild recordings); branches `fix/char-create`, `fix/walk-into-char`, `fix/codecs-pinned` (no commits yet). Items marked **in flight** are not for new agents.
+In flight now: PR #54 (feat/prehoo-lock: pins, asset lock, pinned coverage map); branches `fix/char-create`, `fix/walk-into-char`, `fix/codecs-pinned` (no commits yet). Items marked **in flight** are not for new agents.
 
 ## 1. Packets
 
@@ -42,14 +42,11 @@ Server packets whose name never appears in apps/web or the bridge (name search: 
 
 ## 2. Screens
 
-**52 of 58** player-facing forms are complete: 53 have a surface (1 of them still miss controls), 5 partial, 0 not started. Out of scope: 12 class b, 4 class c, 12 class d.
+**55 of 58** player-facing forms are complete: 56 have a surface (1 of them still miss controls), 2 partial, 0 not started. Out of scope: 12 class b, 4 class c, 12 class d.
 
 ### Partial or not started
 
 - [ ] `frmMain` Main game window: viewport, HUD bars, inventory/spell panels, chat console and input. Missing: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not
-- [ ] `frmAlqui` Alchemy crafting. **in flight (#57)** Missing: crafting state and packets only; no alchemy window yet
-- [ ] `FrmSastre` Tailor crafting. **in flight (#57)** Missing: crafting state and packets only; no tailor window yet
-- [ ] `frmCrafteo` Generic crafting window with catalyst. **in flight (#57)** Missing: crafting state and packets only; no catalyst crafting window yet
 - [ ] `frmMapaGrande` Large world map. Missing: see below
 
 ### Covered forms that still miss controls
@@ -66,7 +63,7 @@ Server packets whose name never appears in apps/web or the bridge (name search: 
 
 ## 3. Behaviour: open issues and reported bugs
 
-**34 items** from the open issues (#58 #44 #43 #39 #38 #35 #34 #28 #24 #22 #20 #19 #17 #16 #15) and Ariel's reports. In flight: 4; blocked on data or a decision: 4.
+**32 items** from the open issues (#58 #44 #43 #39 #38 #35 #34 #28 #24 #22 #20 #19 #17 #16 #15) and Ariel's reports. In flight: 1; blocked on data or a decision: 4.
 
 ### #15
 
@@ -113,7 +110,6 @@ Server packets whose name never appears in apps/web or the bridge (name search: 
 
 ### #35
 
-- [ ] Alchemy, tailor and generic crafting windows, special fish, RomperCania on walk, RGB prompts, runes art 404: merge #57 (**in flight (#57)**)
 - [ ] Work-macro key: no VB6 binding found, CraftingController.macroEnabled never set
 - [ ] ParticleFX continues after FlagTrabajar: find what stops the server's automated extraction before relying on ResetearUserMacro
 
@@ -128,7 +124,6 @@ Server packets whose name never appears in apps/web or the bridge (name search: 
 ### #39
 
 - [ ] Guild leader-only controls UI: elections, peace/alliance lists, declare war
-- [ ] Guild recordings (applicant card, accept/reject, member news): merge #57 (**in flight (#57)**)
 
 ### #43
 
@@ -148,22 +143,22 @@ Server packets whose name never appears in apps/web or the bridge (name search: 
 ### Reported by Ariel
 
 - [ ] Character creation fails silently (Ariel) (**in flight (fix/char-create)**, Ariel bug)
-- [ ] Walking into an occupied tile predicts a step and the attack then misses (Ariel) (**in flight (fix/walk-into-char)**, Ariel bug)
+- [ ] Walking into an occupied tile predicts a step and the attack then misses (Ariel): fix merged in #59, verify live and close (Ariel bug)
 
 ## 4. End-to-end playthrough
 
-Full list with expected results and VB6 sources: [PLAYTHROUGH.md](PLAYTHROUGH.md). **164 steps, 0 passing**, 56 recorded, 7 in flight, 143 automatable, 21 manual.
+Full list with expected results and VB6 sources: [PLAYTHROUGH.md](PLAYTHROUGH.md). **164 steps, 0 passing**, 56 recorded, 2 in flight, 143 automatable, 21 manual.
 
 | Category | Steps | Recorded | In flight | Auto | Manual |
 |---|---|---|---|---|---|
 | Account, character creation and session | 14 | 4 | 2 | 13 | 1 |
-| Movement and world | 27 | 8 | 1 | 23 | 4 |
+| Movement and world | 27 | 8 | 0 | 23 | 4 |
 | Survival: hunger, thirst, potions, regeneration | 15 | 5 | 0 | 13 | 2 |
 | Combat, magic, factions and pets | 26 | 9 | 0 | 23 | 3 |
 | Death, ghost state and resurrection | 16 | 2 | 0 | 15 | 1 |
 | Progression: exp, levels, skills | 15 | 3 | 0 | 14 | 1 |
-| Trades: chop, mine, smelt, fish, craft, tame, steal | 14 | 8 | 1 | 13 | 1 |
-| Economy, social, guilds, quests and chat | 25 | 15 | 3 | 22 | 3 |
+| Trades: chop, mine, smelt, fish, craft, tame, steal | 14 | 8 | 0 | 13 | 1 |
+| Economy, social, guilds, quests and chat | 25 | 15 | 0 | 22 | 3 |
 | Other player actions in the packet table | 12 | 2 | 0 | 7 | 5 |
 
 ## Work packages for parallel agents

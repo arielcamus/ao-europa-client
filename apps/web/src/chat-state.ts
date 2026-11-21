@@ -105,6 +105,10 @@ export class ChatState {
     }
   }
 
+  /** Char_Dialog_Set called by the client itself (HandlePelearConPezEspecial); no console copy. */
+  showOwnDialog(charIndex: number, text: string, color: readonly [number, number, number]) {
+    if (this.characters(charIndex)) this.setDialog(charIndex, text, color, false, 200, 130); // Char_Dialog_Set(.., 200, 130) of HandlePelearConPezEspecial
+  }
   /** Char_Dialog_Set. */
   private setDialog(charIndex: number, text: string, color: readonly [number, number, number], isSpell: boolean, minTime: number, maxTime: number) {
     const now = this.clock(), current = this.dialogs.get(charIndex);

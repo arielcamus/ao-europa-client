@@ -12,7 +12,7 @@ Scanned refs: `main`
 
 - **Packets covered (merged + open branches): 512 of 513 = 99.8%.** Merged on main only: 512 = 99.8%.
   - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 262.
-- **Forms covered: 53 of 86 = 61.6%** (5 more partially, 67.4% started).
+- **Forms covered: 56 of 86 = 65.1%** (2 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
 
@@ -30,7 +30,7 @@ Scanned refs: `main`
 | 10 | Guild / clan | 41/41 | 100% | 41 | 11/11 | 100% | 0 |
 | 11 | Quests | 10/10 | 100% | 10 | 2/2 | 100% | 0 |
 | 12 | Skills / training / stats | 19/19 | 100% | 19 | 2/3 | 66.7% | 0 |
-| 13 | Crafting (smith / carpenter / alchemy / tailor) | 25/25 | 100% | 25 | 2/5 | 40% | 3 |
+| 13 | Crafting (smith / carpenter / alchemy / tailor) | 25/25 | 100% | 25 | 5/5 | 100% | 0 |
 | 14 | Fishing / mining / lumber (work skills) | 10/10 | 100% | 10 | 0/0 | n/a | 0 |
 | 15 | Options / keybinds | 2/2 | 100% | 2 | 3/4 | 75% | 0 |
 | 16 | Minimap / world map | 2/2 | 100% | 2 | 0/1 | 0% | 1 |
@@ -62,6 +62,12 @@ The map above is computed against the pinned pre-HOO server and client code (`to
 | c2s | 314 | HooTargetedSpellCast | only post-pin |
 | c2s | 315 | HooHouseDoorAction | only post-pin |
 | c2s | 316 | ToggleAutoCombat | only post-pin |
+
+## Problems found by the scan
+
+- form evidence missing: frmAlqui -> main:apps/web/src/crafting-extra-ui.ts
+- form evidence missing: FrmSastre -> main:apps/web/src/crafting-extra-ui.ts
+- form evidence missing: frmCrafteo -> main:apps/web/src/crafting-extra-ui.ts
 
 ## (b) VB6 forms
 
@@ -119,11 +125,11 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | FrmEstadisticas | Character statistics and attributes | skills | merged | src/skills-window.ts |
 | frmSkills3 | Skill allocation | skills | not started | (d) Never opened by the classic client code; the skill help texts it held live in the skill window (game-text.ts) |
 | frmStatistics | Mini statistics | skills | merged | src/skills-window.ts |
-| frmAlqui | Alchemy crafting | crafting | merged (partial) | src/crafting.ts: crafting state and packets only; no alchemy window yet |
+| frmAlqui | Alchemy crafting | crafting | merged | src/crafting.ts |
 | frmCarp | Carpenter crafting | crafting | merged | src/crafting-ui.ts |
-| frmCrafteo | Generic crafting window with catalyst | crafting | merged (partial) | src/crafting.ts: crafting state and packets only; no catalyst crafting window yet |
+| frmCrafteo | Generic crafting window with catalyst | crafting | merged | src/crafting.ts |
 | frmHerrero | Blacksmith crafting | crafting | merged | src/crafting-ui.ts |
-| FrmSastre | Tailor crafting | crafting | merged (partial) | src/crafting.ts: crafting state and packets only; no tailor window yet |
+| FrmSastre | Tailor crafting | crafting | merged | src/crafting.ts |
 | frmBindKey | Bind a key to an action | options | merged | src/keys-ui.ts |
 | frmCustomKeys | Custom key bindings | options | merged | src/keys-ui.ts |
 | frmMasOpciones | More options | options | not started | (b) Only opened from the account recovery and account creation forms |
@@ -158,7 +164,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 
 ### Genuinely missing screens
 
-32 forms have no complete screen yet.
+29 forms have no complete screen yet.
 
 **(a) Player-facing and worth building** (0)
 
@@ -200,12 +206,9 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 - frmMSG: Never opened by the classic client code (dead form)
 - frmProcesses: Never opened by the classic client code (anti-cheat leftover)
 
-**Partial** (5)
+**Partial** (2)
 
 - frmMain: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not
-- frmAlqui: crafting state and packets only; no alchemy window yet
-- frmCrafteo: crafting state and packets only; no catalyst crafting window yet
-- FrmSastre: crafting state and packets only; no tailor window yet
 - frmMapaGrande: null
 
 
@@ -806,7 +809,7 @@ Skill allocation, level up, attributes, statistics forms, rest/meditate.
 Smith, carpenter, alchemy, tailor, crafting window, fishing, mining, lumber.
 
 - Packets (0): none left
-- Forms (3): frmAlqui, FrmSastre, frmCrafteo
+- Forms (0): none left
 
 ### wp11: Options, keybinds and extras
 

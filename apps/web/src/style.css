@@ -98,6 +98,7 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1
 .vb-command:hover { background: #e5f1fb; }
 .vb-text { border: 0; padding: 1px 2px; background: #000; color: #fff; font: 11px Arial, sans-serif; resize: none; scrollbar-width: thin; }
 .vb-text.vb-light { background: #fff; color: #000; border: 1px solid #7a7a7a; }
+.vb-label.vb-autosize { overflow: visible; }  /* VB6 AutoSize labels grow to the right of their Left */
 .vb-label { overflow: hidden; white-space: nowrap; pointer-events: none; font: 11px/13px Tahoma, Arial, sans-serif; text-shadow: 1px 1px #000; }
 .vb-window.vb-plain .vb-label, .vb-light-label { color: #000; text-shadow: none; }
 .vb-center { text-align: center; } .vb-bold { font-weight: bold; } .vb-small { font-size: 9px; } .vb-multi { white-space: pre-wrap; overflow: hidden; line-height: 13px; }

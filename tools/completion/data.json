@@ -1,7 +1,6 @@
 {
  "inFlight": {
   "prs": {
-   "57": "fix/windows: alchemy, tailor, crafting station, special fish, guild recordings",
    "54": "feat/prehoo-lock: pins, asset lock, pinned coverage map"
   },
   "branches": [
@@ -9,11 +8,7 @@
    "fix/walk-into-char",
    "fix/codecs-pinned"
   ],
-  "forms": {
-   "frmAlqui": "#57",
-   "FrmSastre": "#57",
-   "frmCrafteo": "#57"
-  }
+  "forms": {}
  },
  "packetNotes": {
   "c2s:307": "ChangeSkinSlot: item skins (frmSkins, class c). Possibly covered by fix/codecs-pinned (branch has no commits yet)."
@@ -74,12 +69,6 @@
    "area": "guild"
   },
   {
-   "issue": 39,
-   "text": "Guild recordings (applicant card, accept/reject, member news): merge #57",
-   "area": "guild",
-   "inFlight": "#57"
-  },
-  {
    "issue": 38,
    "text": "SKILL_DESCRIPTIONS in game-text.ts is unused: show on skill-name click or drop it",
    "area": "skills"
@@ -103,12 +92,6 @@
    "issue": 38,
    "text": "Optional: draggable quest and skill windows (MoverForm), PlayQuestDescAudio",
    "area": "skills"
-  },
-  {
-   "issue": 35,
-   "text": "Alchemy, tailor and generic crafting windows, special fish, RomperCania on walk, RGB prompts, runes art 404: merge #57",
-   "area": "crafting",
-   "inFlight": "#57"
   },
   {
    "issue": 35,
@@ -211,9 +194,8 @@
   },
   {
    "issue": 0,
-   "text": "Walking into an occupied tile predicts a step and the attack then misses (Ariel)",
+   "text": "Walking into an occupied tile predicts a step and the attack then misses (Ariel): fix merged in #59, verify live and close",
    "area": "movement",
-   "inFlight": "fix/walk-into-char",
    "label": "Ariel bug"
   }
  ],

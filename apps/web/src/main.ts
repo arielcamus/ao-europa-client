@@ -19,6 +19,8 @@ import { parseWorlds } from './world-map.js';
 import type { World } from './world-map.js';
 import { ItemsUI } from './items-ui.js';
 import { CraftingUI } from './crafting-ui.js';
+import { CraftingExtraUI } from './crafting-extra-ui.js';
+import { FishingUI } from './fishing-ui.js';
 import { KeyAction, keyAction } from './keymap.js';
 import { SkillsWindows } from './skills-window.js';
 import { KeysClientPacketId as K, WorkSkill } from '@ao/protocol';
@@ -114,6 +116,8 @@ element('minimap-zoom-in').addEventListener('click', () => zoomMinimap(-20));
 element('minimap-zoom-out').addEventListener('click', () => zoomMinimap(20));
 const itemsUi = new ItemsUI(ui, element('classic'), report);
 const craftingUi = new CraftingUI(ui, element('classic'), report);
+const craftingExtraUi = new CraftingExtraUI(element('classic'), ui, renderer, report); // frmAlqui, FrmSastre, frmCrafteo
+const fishingUi = new FishingUI(viewport, renderer); // the special-fish bar (RenderScreen)
 ui.onActivate = slot => guard(() => session?.itemActions.activate(slot));
 const audio = new AudioSystem(element('classic'), renderer, report);
 const bankUi = new BankUI(element('classic'), ui, report);
@@ -158,7 +162,7 @@ const papiroUi = new PapiroUI(element('classic'));
 // IsDialogOpen / IsDragDropBlockedByPanel: no drop onto the world while a shop, vault, trade, amount form or the key ring is up.
 const inventoryExtras = new InventoryExtras(element('classic'), ui, {
   dropSelected: () => guard(() => itemsUi.dropSelected()),
-  dropBlocked: () => transacting() || itemsUi.dialogOpen || keyringUi.isOpen || travelUi.isOpen || craftingUi.windowOpen || (session?.items.shopOpen ?? false),
+  dropBlocked: () => transacting() || itemsUi.dialogOpen || keyringUi.isOpen || travelUi.isOpen || craftingUi.windowOpen || craftingExtraUi.windowOpen || (session?.items.shopOpen ?? false),
 });
 const fpsLabel = document.createElement('span'); fpsLabel.id = 'fps'; fpsLabel.hidden = true; element('classic').append(fpsLabel);
 let lastFps = 0;
@@ -251,6 +255,7 @@ async function boot() {
       signOverlay.update(session);
       questWindows.update(session);
       combatOverlay.update(session, now);
+      fishingUi.update(session, now);
       audio.tick();
       skillsWindows.update(session);
     } catch (error) { if (session?.phase !== 'closed') close(error instanceof Error ? error.message : String(error)); }
@@ -285,6 +290,7 @@ function updateUi(now: number) {
   ui.update(session); bankUi.update(session); tradeUi.update(session); partyUi.update(session); guildUi.update(session); travelUi.update(session); gmUi.update(session); extrasUi.update(session);
   itemsUi.update(session); keyringUi.update(session); papiroUi.update(session); inventoryExtras.update(session);
   guard(() => craftingUi.update(session));
+  guard(() => craftingExtraUi.update(session));
   if (!session) { hotkeysUi.update(undefined, false); return; }
   const playing = session.ready && renderer.readyMap === session.resourceMap;
   // ModSettings.LoadHotkeys: once per entry into the game, send the saved slots to the server.
@@ -326,6 +332,7 @@ function connectSession(email: string, secret: string, create = false) {
     ws.send(bytes.slice().buffer);
   });
   session.interactive = interactiveFlow;
+  { const mine = session; mine.terrain = (x, y) => renderer.readyMap === mine.resourceMap ? renderer.legalTileAt(x, y) : undefined; } // LegalPos reads MapData(x, y).Blocked / Trigger
   password.value = '';
   npcDialog.hide();
   const owner = session;
@@ -439,7 +446,7 @@ function gameKey(action: KeyAction) {
 window.addEventListener('keydown', event => {
   // HandleKeyUp: Esc while UserSaliendo sends CancelarExit instead of HandleEsc (the windows keep their own Esc via the window stack).
   if (event.key === 'Escape' && session?.cancelExit()) return;
-  if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); itemsUi.closeDialogs(); bankUi.closeDialogs(); tradeUi.closeDialogs(); craftingUi.closeAll(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
+  if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); itemsUi.closeDialogs(); bankUi.closeDialogs(); tradeUi.closeDialogs(); craftingUi.closeAll(); craftingExtraUi.closeAll(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
   // IsDialogOpen: while the vault, Goliath or a trade window is up the game keys (attack, use, drop...) do nothing. The options and key windows are modal too.
   if (transacting() || optionsUi.visible) return;
   // PermitirMoverse ("Moverse al escribir"): the movement keys still walk while the chat box has focus.
@@ -464,7 +471,11 @@ window.addEventListener('keydown', event => {
   const heading = directions.get(event.code);
   if (heading) { event.preventDefault(); keys.set(event.code, heading); walk(heading); }
 });
-window.addEventListener('keyup', event => { keys.delete(event.code); });
+window.addEventListener('keyup', event => {
+  keys.delete(event.code);
+  // ModGameplayUI KeyUp: P (80) while PescandoEspecial is the try at the special fish (only when no text box has the focus).
+  if (event.code === 'KeyP' && session?.craftingState.fishing.active && !transacting() && !(session.items.shopOpen) && !(event.target instanceof HTMLElement && event.target.closest('input, textarea'))) guard(() => session?.crafting.fishingKey());
+});
 window.addEventListener('blur', clearInput);
 window.addEventListener('resize', clearInput);
 document.addEventListener('focusin', event => {

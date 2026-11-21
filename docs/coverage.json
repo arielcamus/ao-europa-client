@@ -16,12 +16,12 @@
   "s2cCovered": 202,
   "c2sCovered": 310,
   "forms": 86,
-  "formsCovered": 53,
-  "formsPartial": 5,
+  "formsCovered": 56,
+  "formsPartial": 2,
   "fixturePackets": 262,
   "packetsPct": 99.8,
   "packetsMergedPct": 99.8,
-  "formsPct": 61.6,
+  "formsPct": 65.1,
   "formsStartedPct": 67.4
  },
  "groups": [
@@ -177,9 +177,9 @@
    "packetsMerged": 25,
    "packetsPct": 100,
    "forms": 5,
-   "formsCovered": 2,
-   "formsPartial": 3,
-   "formsPct": 40
+   "formsCovered": 5,
+   "formsPartial": 0,
+   "formsPct": 100
   },
   {
    "id": "work",
@@ -14158,20 +14158,25 @@
    "group": "crafting",
    "package": "wp10",
    "lines": 460,
-   "status": "merged (partial)",
-   "covered": false,
-   "partial": true,
+   "status": "merged",
+   "covered": true,
+   "partial": false,
    "evidence": [
     {
      "ref": "main",
      "path": "apps/web/src/crafting.ts",
-     "partial": true,
-     "note": "crafting state and packets only; no alchemy window yet",
+     "note": "state, packets and the work macro",
      "ok": true
+    },
+    {
+     "ref": "main",
+     "path": "apps/web/src/crafting-extra-ui.ts",
+     "note": "the alchemy window",
+     "ok": false
     }
    ],
    "missing": null,
-   "partialNote": "crafting state and packets only; no alchemy window yet"
+   "partialNote": null
   },
   {
    "name": "FrmSastre",
@@ -14179,20 +14184,25 @@
    "group": "crafting",
    "package": "wp10",
    "lines": 438,
-   "status": "merged (partial)",
-   "covered": false,
-   "partial": true,
+   "status": "merged",
+   "covered": true,
+   "partial": false,
    "evidence": [
     {
      "ref": "main",
      "path": "apps/web/src/crafting.ts",
-     "partial": true,
-     "note": "crafting state and packets only; no tailor window yet",
+     "note": "state, packets and the work macro",
      "ok": true
+    },
+    {
+     "ref": "main",
+     "path": "apps/web/src/crafting-extra-ui.ts",
+     "note": "the tailor window",
+     "ok": false
     }
    ],
    "missing": null,
-   "partialNote": "crafting state and packets only; no tailor window yet"
+   "partialNote": null
   },
   {
    "name": "frmCrafteo",
@@ -14200,20 +14210,25 @@
    "group": "crafting",
    "package": "wp10",
    "lines": 234,
-   "status": "merged (partial)",
-   "covered": false,
-   "partial": true,
+   "status": "merged",
+   "covered": true,
+   "partial": false,
    "evidence": [
     {
      "ref": "main",
      "path": "apps/web/src/crafting.ts",
-     "partial": true,
-     "note": "crafting state and packets only; no catalyst crafting window yet",
+     "note": "state, packets and the work macro",
      "ok": true
+    },
+    {
+     "ref": "main",
+     "path": "apps/web/src/crafting-extra-ui.ts",
+     "note": "the crafting-station window",
+     "ok": false
     }
    ],
    "missing": null,
-   "partialNote": "crafting state and packets only; no catalyst crafting window yet"
+   "partialNote": null
   },
   {
    "name": "frmOpciones",
@@ -14825,11 +14840,7 @@
    "scope": "Smith, carpenter, alchemy, tailor, crafting window, fishing, mining, lumber",
    "packetIds": [],
    "packetNames": [],
-   "forms": [
-    "frmAlqui",
-    "FrmSastre",
-    "frmCrafteo"
-   ]
+   "forms": []
   },
   {
    "id": "wp11",
@@ -14932,5 +14943,9 @@
    "kind": "only post-pin"
   }
  ],
- "problems": []
+ "problems": [
+  "form evidence missing: frmAlqui -> main:apps/web/src/crafting-extra-ui.ts",
+  "form evidence missing: FrmSastre -> main:apps/web/src/crafting-extra-ui.ts",
+  "form evidence missing: frmCrafteo -> main:apps/web/src/crafting-extra-ui.ts"
+ ]
 }
