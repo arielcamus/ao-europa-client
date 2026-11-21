@@ -155,7 +155,9 @@ async function fight(s: Sess, target: number, maxMs = 150_000) {
 }
 /** The GM helper spawns ONE creature on a walkable tile right next to the player (its own tile), then the player fights it. Only that creature is ever killed. */
 async function spawnNext(c: Ctx, s: Sess, npc: number) {
-  const f = loadMap(s.map)!.map, occ = occupied(s), spot = ([[1, 0], [-1, 0], [0, 1], [0, -1]] as const).map(([dx, dy]) => [s.x + dx, s.y + dy] as const).find(([x, y]) => walkable(f, x, y) && !occ.has(y * 101 + x));
+  const f = loadMap(s.map)!.map, occ = occupied(s), ring: [number, number][] = [];
+  for (let r = 1; r <= 3; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) if (Math.abs(dx) + Math.abs(dy) === r) ring.push([s.x + dx, s.y + dy]);
+  const spot = ring.find(([x, y]) => walkable(f, x, y) && !occ.has(y * 101 + x) && !exitTiles(s.map).includes(y * 101 + x));
   if (!spot) throw new Error(`no free tile next to the player at ${s.x},${s.y}`);
   await gmGoto(c, s.map, spot[0], spot[1]); return spawnCreature(c, npc);
 }
@@ -326,13 +328,19 @@ step('ECO-05', async c => {
   const gold = s.stats!.gold; if (gold < 20) c.blocked(`the newbie has only ${gold} gold (needs the quest reward)`);
   // Ullathorpe's bank hall (banker Krix 77,47) is closed by a door at 77,55: like a player, click the door from the side (never from the tile right
   // below it, see approach()), then walk in.
-  await walk(s, 76, 56, 0);
-  const dm = s.mark(); s.send({ id: DOOR.LeftClick, x: 77, y: 55, counter: 0 } as ClientPacket); await s.sleep(1200);
-  const opened = s.since(dm).some(r => r.name === 'BlockPosition' && (r.packet as any).x === 77 && (r.packet as any).y === 55 && (r.packet as any).sides === 0);
-  c.note(`door 77,55: ${s.since(dm).filter(r => r.name === 'BlockPosition' || r.name === 'ObjectCreate').map(r => r.name + JSON.stringify(r.packet)).join(' ') || 'no answer'}`);
-  await s.step(2, 400);
-  for (let i = 0; i < 6 && s.y > 51; i++) { const r = await s.step(1, 400); if (!r.moved) break; }
-  c.ok(s.y <= 54, `walked through the opened door into the bank hall (at ${s.x},${s.y}; door answer ${opened ? 'unblocked' : 'see note'})`);
+  // a door toggles (HandleDoorAction): another player may have left it open, so try the doorway first and click only when it is shut
+  await walk(s, 76, 56, 0); let clicks = 0, opened = false; const answers: string[] = [];
+  for (let k = 0; k < 3 && s.y > 54; k++) {
+    if (s.x !== 77) { await s.step(2, 400); }
+    const r = await s.step(1, 400);
+    if (r.moved) { for (let i = 0; i < 5 && s.y > 51; i++) { if (!(await s.step(1, 400)).moved) break; } break; }
+    if (s.x === 77) await s.step(4, 400); // back to 76,56: a click from the tile right below the door hits yourself
+    const dm = s.mark(); s.send({ id: DOOR.LeftClick, x: 77, y: 55, counter: 0 } as ClientPacket); clicks++; await s.sleep(1200);
+    const bp = s.since(dm).find(x => x.name === 'BlockPosition' && (x.packet as any).x === 77 && (x.packet as any).y === 55);
+    answers.push(bp ? `sides ${(bp.packet as any).sides}` : 'no answer'); if (bp && (bp.packet as any).sides === 0) opened = true;
+  }
+  c.note(`door 77,55: ${clicks} click(s), answers ${answers.join(' / ') || 'none (it was open)'}`);
+  c.ok(s.y <= 54, `walked through the opened door into the bank hall (at ${s.x},${s.y}; door ${opened ? 'opened by a click' : clicks ? 'see note' : 'already open'})`);
   const banker = charNamed(s, /Krix|Banquer/i); c.ok(!!banker, `the banker is on screen (${banker?.name} at ${banker?.x},${banker?.y})`);
   await approach(s, banker!.x, banker!.y, 3);
   const m = s.mark(); s.send({ id: DOOR.LeftClick, x: banker!.x, y: banker!.y, counter: 0 } as ClientPacket); await s.sleep(1500);
@@ -359,16 +367,19 @@ step('DTH-02', async c => {
   const lvl = n.s.stats!.level, gold = BILLETERA * lvl + 600;
   const empty = sql(`select min(number) from inventory_item where user_id=${userId(n)} and item_id=0;`) || '20';
   await dbNb(c, `update user set pos_map=2, pos_x=${spot![0]}, pos_y=${spot![1]}, min_hp=1, gold=${gold} where id={id} and is_logged=0;`, `update inventory_item set item_id=1, amount=5, is_equipped=0 where user_id={id} and number=${empty};`);
-  const s = n.s; c.eq([s.map, s.stats!.gold, s.stats!.hp], [2, gold, 1], 'on map 2 with 1 HP and the gold');
-  c.ok(!!slotOf(s, 1), `5 Manzana Roja in slot ${empty}`);
-  const newbieItems = [...s.inventory.values()].filter(i => i.object !== 1).map(i => i.object);
-  const from = s.mark(); let died = false, mine: Awaited<ReturnType<typeof spawnCreature>> | undefined;
+  // a wild creature may kill the 1 HP newbie before the GM's Gallo arrives: then the death is already in the login stream, which is read from its start
+  const s = n.s, login = s.rx.filter(r => r.name === 'ChangeInventorySlot').map(r => r.packet as any), stats0 = s.rx.find(r => r.name === 'UpdateUserStats')?.packet as any;
+  c.eq([s.map, stats0?.gold, stats0?.hp], [2, gold, 1], 'logged in on map 2 with 1 HP and the gold');
+  c.ok(login.some(i => i.object === 1 && i.amount === 5), `5 Manzana Roja in slot ${empty}`);
+  const newbieItems = [...new Set(login.filter(i => i.object > 1).map(i => i.object as number))];
+  const already = (s.stats?.hp ?? 1) <= 0, from = already ? 0 : s.mark(); let died = already, mine: Awaited<ReturnType<typeof spawnCreature>> | undefined;
+  if (already) c.note('a wild creature on map 2 killed the newbie right after login (no GM spawn needed)');
   for (const [dx, dy] of [[2, 0], [-2, 0], [0, 2]] as const) {
     if (died) break;
     await gmGoto(c, 2, s.x + dx, s.y + dy); mine = await spawnCreature(c, 501);
     try { await s.until(() => (s.stats?.hp ?? 1) <= 0, 25_000, 'HP 0').then(() => { died = true; }).catch(() => undefined); } finally { await killMine(c, mine); }
   }
-  c.ok(died, 'a spawned Gallo killed the 1 HP newbie');
+  c.ok(died, 'a creature killed the 1 HP newbie');
   await s.sleep(2000);
   const dropped = s.since(from).filter(r => r.name === 'ObjectCreate').map(r => r.packet as any);
   c.ok(dropped.some(o => o.amount === 5), `the 5 apples fell to the floor (ObjectCreate ${JSON.stringify(dropped.map(o => [o.x, o.y, o.objIndex, o.amount]))})`);
