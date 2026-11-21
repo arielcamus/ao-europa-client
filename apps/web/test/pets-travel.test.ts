@@ -106,4 +106,13 @@ describe('LocaleChatOverHead before the locale file has loaded (issue #12)', () 
     ui.chat.flushPending();
     expect(ui.chat.dialogs.get(1)?.text).toBe('Hola');
   });
+  it('keeps at most 200 waiting bubbles', () => {
+    const ui = new ClassicState();
+    ui.chat.locale = new ChatLocale(); ui.chat.characters = (index: number) => ({ ...character, charIndex: index });
+    for (let i = 1; i <= 250; i++) ui.receive({ id: NS.LocaleChatOverHead, chatId: 2, params: '', charIndex: i, color: 0, isSpell: false, x: 0, y: 0, minChatTime: 0, maxChatTime: 0 });
+    ui.chat.locale.load('[SP_MSG]\r\nMsg2=Hola');
+    ui.chat.flushPending();
+    expect(ui.chat.dialogs.size).toBe(200);
+    expect(ui.chat.dialogs.has(1)).toBe(true); expect(ui.chat.dialogs.has(201)).toBe(false);
+  });
 });

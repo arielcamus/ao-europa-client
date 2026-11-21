@@ -27,6 +27,10 @@ describe('travel (server WriteViajarForm, client WriteCompletarViaje)', () => {
     expect(decodeServerPacket(bytes('93000002'))).toEqual({ id: 147, destinations: [], interface: 2 });
     expect(() => decodeServerPacket(bytes('930002'))).toThrow();
   });
+  it('rejects a destination with no dash or a non-numeric price', () => {
+    expect(() => decodeServerPacket(bytes('9300' + '01' + '03' + ascii('Nix') + '00'))).toThrow();
+    expect(() => decodeServerPacket(bytes('9300' + '01' + '06' + ascii('Nix-ab') + '00'))).toThrow();
+  });
   it('CompletarViaje is destination Int8 then cost Int32', () => {
     const golden = 'fc00' + '02' + 'e8030000';
     expect(hex(encodeClientPacket({ id: PC.CompletarViaje, destination: 2, cost: 1000 }))).toBe(golden);

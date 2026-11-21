@@ -26,7 +26,9 @@ export const petsTravelServerCodecs = {
       const count = r.readInt8(), destinations: TravelDestination[] = [];
       for (let i = 0; i < count; i++) {
         const text = r.readString(), cut = text.lastIndexOf('-');
-        destinations.push({ city: cut < 0 ? '' : text.slice(0, cut), cost: Number(text.slice(cut + 1)) });
+        const cost = Number(text.slice(cut + 1)); // CLng of a non-number would be a VB runtime error: a NaN price is a malformed packet
+        if (cut < 0 || !Number.isFinite(cost)) throw new Error(`ViajarForm: malformed destination ${JSON.stringify(text)}`);
+        destinations.push({ city: text.slice(0, cut), cost });
       }
       return { destinations, interface: r.readInt8() };
     },
