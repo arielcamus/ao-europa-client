@@ -135,6 +135,13 @@ describe('time of day and light', () => {
     const grid = new LightGrid(); grid.recompute({ r: 80, g: 90, b: 100 });
     expect(grid.tileTint(5, 5)).toEqual({ r: 80, g: 90, b: 100 }); expect(grid.tileTint(0, 5)).toEqual({ r: 255, g: 255, b: 255 });
   });
+  it('tileCorners keeps the four vertex colours of a lit tile (roof layer 5 shades with them, not their mean)', () => {
+    const grid = new LightGrid(); grid.recompute({ r: 80, g: 90, b: 100 });
+    grid.lightToFloor(20, 20, 0x00ffffff, 103); grid.recompute({ r: 80, g: 90, b: 100 }); // a round light (range > 100): corners facing it are brighter
+    const [bl, tl, br, tr] = grid.tileCorners(22, 20); // two tiles east of the light: the west corners are nearer, so brighter
+    expect(bl.r).toBeGreaterThan(br.r); expect(tl.r).toBeGreaterThan(tr.r);
+    expect(grid.tileCorners(0, 5)[0]).toEqual({ r: 255, g: 255, b: 255 });
+  });
 });
 
 describe('projectiles (InitializeProjectile / UpdateProjectile)', () => {

@@ -161,8 +161,8 @@ export class FxRenderer {
     stage.addChild(this.screenLayer);
   }
 
-  /** The tint a roof sprite takes from the tile's light (the light map does not cover the roof layer, which sits above the particles). */
-  roofTint(fx: WorldFx, x: number, y: number): number { return rgbToTint(fx.lights.tileTint(x, y)); }
+  /** The four vertex colours of a roof tile (the light map does not cover the roof layer; RenderScreen passes .light_value to Draw_Grh). */
+  roofCorners(fx: WorldFx, x: number, y: number) { return fx.lights.tileCorners(x, y); }
 
   private frameFor(grh: number, elapsed: number): GraphicFrame | undefined {
     if (!this.host.hasGraphic(grh)) return undefined;

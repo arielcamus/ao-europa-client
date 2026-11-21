@@ -4,7 +4,7 @@
  * Char_Dialog_Set) and Protocol.bas HandleCharacter*. Copyright (C) 2022-2026
  * Noland Studios. AGPL-3.0-or-later; no warranty. See ../../../LICENSE and NOTICE.
  */
-import { CharValueType, NpcsServerPacketId as N, QuestServerPacketId as Q, ServerPacketId as S, SessionServerPacketId as SS, Heading } from '@ao/protocol';
+import { AudioServerPacketId as A, CharValueType, NpcsServerPacketId as N, QuestServerPacketId as Q, ServerPacketId as S, SessionServerPacketId as SS, Heading } from '@ao/protocol';
 import type { CharacterCreate, ServerPacket } from '@ao/protocol';
 import { splitName } from './character-data.js';
 
@@ -25,6 +25,8 @@ export interface Character {
   /** Quest marker over an NPC (HandleCharacterCreate / HandleUpdateNPCSimbolo): 0 none, else grh 5257 + symbol. */
   symbol: number;
   motion?: CharMotion | undefined;
+  /** HandlePlayWaveStep took the (invisible, far) walker off MapData so its stale tile does not block; the next position puts it back. */
+  offTile?: boolean;
 }
 export type NpcDescription = { npcNumber: number; charIndex: number };
 
@@ -110,9 +112,11 @@ export class CharacterTracker {
       case S.PosUpdateChar:
       case S.PosUpdateUserChar: {
         const char = this.chars.get(packet.charIndex);
-        if (char) { char.x = packet.x; char.y = packet.y; char.motion = undefined; }
+        if (char) { char.x = packet.x; char.y = packet.y; char.motion = undefined; char.offTile = false; }
         break;
       }
+      // HandlePlayWaveStep: "Esta invisible, lo sacamos del mapa para que no tosquee" (MapData(.Pos).charindex = 0; charlist keeps the position).
+      case A.PlayWaveStep: { const char = this.chars.get(packet.charIndex); if (char) char.offTile = true; break; }
       // Overhead speech is drawn once, by ChatBubbles from ChatState (chat #7); here only the NPC description opens the dialog window.
       case N.ChatOverHead: this.describe(packet.chat, packet.charIndex); break;
       case S.ChangeMap: this.clear(); break;
@@ -139,7 +143,7 @@ export class CharacterTracker {
     const char = this.chars.get(charIndex);
     if (!char || x < 1 || y < 1 || x > 100 || y > 100 || char.x < 1 || char.y < 1) return;
     const from = { x: char.x, y: char.y };
-    char.x = x; char.y = y; char.idle = true;
+    char.x = x; char.y = y; char.idle = true; char.offTile = false;
     char.motion = time > 0 && (from.x !== x || from.y !== y) ? { from, to: { x, y }, started: now, duration: time, translate: true } : undefined;
     this.revision++;
   }
@@ -153,7 +157,7 @@ export class CharacterTracker {
     if (!heading) return;
     const from = { x: char.x, y: char.y }; // VB6 restarts the offset from the previous tile
     char.heading = heading; char.idle = false;
-    char.x = x; char.y = y;
+    char.x = x; char.y = y; char.offTile = false; // Char_Move_by_Pos sets MapData(nX, nY).charindex
     char.motion = Math.abs(dx) + Math.abs(dy) > 2 ? undefined
       : { from, to: { x, y }, started: now, duration: TILE_MS / char.speeding };
   }
@@ -183,7 +187,7 @@ export class CharacterTracker {
   /** The character whose sprite covers tile x,y; the server also checks y+1 first, mirroring LookatTile. */
   at(x: number, y: number): Character | undefined {
     let found: Character | undefined;
-    for (const char of this.chars.values()) if (char.x === x && char.y === y) found = char;
+    for (const char of this.chars.values()) if (char.x === x && char.y === y && !char.offTile) found = char;
     return found;
   }
 }

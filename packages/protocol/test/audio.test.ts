@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { AudioServerPacketId as A, codecTables, decodeServerPacket, encodeServerPacket } from '../src/index.js';
 
@@ -24,5 +25,19 @@ describe('audio and weather packet codecs (hand-derived VB6 bytes)', () => {
   it('uses the enum order of PacketId.bas and leaves PlayWave (55) to the spells table', () => {
     expect([A.PlayMIDI, A.RainToggle, A.NieveToggle, A.PlayWaveStep]).toEqual([54, 59, 122, 188]);
     expect(Object.keys(codecTables.server.audio).map(Number)).not.toContain(55);
+  });
+});
+
+// Real recordings (tests/fixtures/vb6/audio, #28): the bytes the VB6 server actually sent.
+const recorded = (file: string, id: number) => readFileSync(new URL(`../../../tests/fixtures/vb6/audio/${file}`, import.meta.url), 'utf8').trim().split('\n')
+  .map(line => JSON.parse(line) as { dir: string; id: number; hex: string }).filter(r => r.dir === 's2c' && r.id === id).map(r => decodeServerPacket(bytes(r.hex)));
+describe('audio packets as the real VB6 server sends them', () => {
+  it('PlayMIDI from /FORCEMIDIMAP 5 and /FORCEMIDIMAP 0 (map 1 music_numberLow 4): loops is the default -1', () => {
+    expect(recorded('force-midi-map.jsonl', A.PlayMIDI)).toEqual([{ id: A.PlayMIDI, file: 5, loop: -1 }, { id: A.PlayMIDI, file: 4, loop: -1 }]);
+  });
+  it('PlayWaveStep of an invisible walker: the first step, three tiles east of the watcher (Grh 6002 under it)', () => {
+    const steps = recorded('invisible-walker-steps.jsonl', A.PlayWaveStep);
+    expect(steps.length).toBe(17);
+    expect(steps[0]).toEqual({ id: A.PlayWaveStep, charIndex: 0x1537, grh: 6002, grh2: 0, distance: 3, balance: 1, step: false });
   });
 });

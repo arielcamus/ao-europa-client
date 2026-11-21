@@ -132,10 +132,10 @@ describe('combat sounds the client makes itself', () => {
 
 describe('map music, ambient and weather', () => {
   const music = (t: ReturnType<typeof setup>) => t.engine.events.filter(e => e.kind === 'music').map(e => e.id);
-  it('starts the map music (header number, ost_<n>) and the day ambient when a map becomes ready', () => {
+  it('starts the map music (header number, ost_<n>) and the ambient (first number of "3-4", PlayAmbientAudio) when a map becomes ready', () => {
     const t = setup(); t.director.tick(); t.director.tick();
     expect(music(t)).toEqual(['ost_5']);
-    expect(t.engine.events.filter(e => e.kind === 'ambient').map(e => e.id)).toEqual(['4']);
+    expect(t.engine.events.filter(e => e.kind === 'ambient').map(e => e.id)).toEqual(['3']);
   });
   it('prefers the zone music under the player and switches when the player enters another zone', () => {
     const t = setup(); t.director.zones = [{ map: 7, music: 9, x1: 60, x2: 70, y1: 1, y2: 100 }];
@@ -158,7 +158,7 @@ describe('map music, ambient and weather', () => {
     t.director.receive({ id: A.RainToggle, raining: true } as ServerPacket);
     t.state.roof = true; t.director.tick();
     t.director.receive({ id: A.RainToggle, raining: false } as ServerPacket);
-    expect(t.engine.events.filter(e => e.kind === 'ambient').map(e => e.id)).toEqual(['4', '194', '191', '4']);
+    expect(t.engine.events.filter(e => e.kind === 'ambient').map(e => e.id)).toEqual(['3', '194', '191', '3']);
     expect(t.engine.events.at(-1)).toMatchObject({ kind: 'wave', id: '192', category: 'ambient' });
     const dry = setup({ audio: { music: 5, ambient: '3-4', rain: false, snow: false, fog: false } }); dry.director.tick();
     dry.director.receive({ id: A.RainToggle, raining: true } as ServerPacket);
@@ -172,14 +172,16 @@ describe('map music, ambient and weather', () => {
 });
 
 describe('night ambient, meditation, pets and global waves (#28)', () => {
-  it('picks the first ambient field at night and the second by day (PlayAmbientAudio, EsNoche)', () => {
+  it('plays the first ambient number at night AND by day (PlayAmbientAudio splits val(ambient), already a single number)', () => {
     const night = setup(); night.state.night = true; night.director.tick();
     expect(night.engine.events.filter(e => e.kind === 'ambient').map(e => e.id)).toEqual(['3']);
     const day = setup(); day.director.tick();
-    expect(day.engine.events.filter(e => e.kind === 'ambient').map(e => e.id)).toEqual(['4']);
-    // Real map data is a single number ("514"): the VB6 client plays it at night and is silent by day.
-    const single = setup({ audio: { music: 0, ambient: '514', rain: false, snow: false, fog: false } }); single.state.night = true; single.director.tick();
-    expect(single.engine.events.filter(e => e.kind === 'ambient').map(e => e.id)).toEqual(['514']);
+    expect(day.engine.events.filter(e => e.kind === 'ambient').map(e => e.id)).toEqual(['3']);
+    // Real map data is a single number ("514", maps 100, 120, 224): the VB6 client plays it day and night.
+    for (const night of [true, false]) {
+      const single = setup({ audio: { music: 0, ambient: '514', rain: false, snow: false, fog: false } }); single.state.night = night; single.director.tick();
+      expect(single.engine.events.filter(e => e.kind === 'ambient').map(e => e.id)).toEqual(['514']);
+    }
   });
   it('does not restart the ambient when the hour flips on a map that is already playing', () => {
     const t = setup(); t.director.tick(); t.state.night = true; t.director.tick(); t.director.tick();

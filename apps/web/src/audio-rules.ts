@@ -86,10 +86,25 @@ export function waveFile(wave: number, localize: number, language: string, fog: 
 /** Pasos: the foot alternates per character each step (Char.Pie toggles before use, so the first step is index 1). */
 export const stepWave = (terrain: Terrain, foot: boolean) => STEP_SOUNDS[terrain][foot ? 0 : 1];
 
-/** Map ambient "night-day" (MapDat.ambient, PlayAmbientAudio): field 1 at night, field 2 by day; 0 or empty is silence. */
+/** VB6 `Val`: leading blanks, an optional sign, digits and one decimal point; stops at the first other character ("12-34" -> 12). */
+export function vbVal(text: string): number {
+  const match = /^[ \t]*([+-]?(?:\d+\.?\d*|\.\d+))/.exec(text);
+  return match ? Number(match[1]) : 0;
+}
+/** General.ReadField: the pos-th field split by `separator`; when the separator is missing, the WHOLE text (any pos). */
+export function readField(pos: number, text: string, separator: string): string {
+  let last = 0, current = 0;
+  for (let i = 1; i <= pos; i++) { last = current; current = text.indexOf(separator, last) + 1; }
+  return current === 0 ? text.slice(last) : text.slice(last, current - 1);
+}
+/**
+ * PlayAmbientAudio: `wav = ReadField(IIf(EsNoche, 1, 2), val(MapDat.ambient), Asc("-"))`. The `val()` is applied BEFORE the split, so the text
+ * is already a single number ("12-34" -> "12") and ReadField returns it whole for either field: the VB6 client plays the FIRST number day and
+ * night. Every pre-HOO map has an empty ambient or a single number (511, 514, 517). 0 or empty is silence.
+ */
 export function ambientWave(ambient: string, night: boolean): number {
-  const parts = ambient.split('-');
-  const value = Number.parseInt((night ? parts[0] : parts[1]) ?? '', 10);
+  const field = readField(night ? 1 : 2, String(vbVal(ambient)), '-');
+  const value = Math.round(Number(field || 0)); // Integer assignment (CInt rounds)
   return Number.isFinite(value) && value > 0 ? value : 0;
 }
 

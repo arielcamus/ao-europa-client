@@ -180,6 +180,13 @@ export class LightGrid {
     for (let x = minX + 1; x <= maxX - 1; x++) for (let y = minY + 1; y <= maxY - 1; y++) for (let v = 0; v < 4; v++) this.set(x, y, v, color);
   }
 
+  /** The four vertex colours of a tile (light_value(0..3): bottom-left, top-left, bottom-right, top-right, the clsBatch.Draw corner order), for roofs. */
+  tileCorners(x: number, y: number): [Rgb, Rgb, Rgb, Rgb] {
+    if (!inMap(x, y)) return [WHITE, WHITE, WHITE, WHITE];
+    const at = ((y - 1) * SIZE + x - 1) * 12, d = this.data;
+    const corner = (v: number): Rgb => ({ r: d[at + v * 3]!, g: d[at + v * 3 + 1]!, b: d[at + v * 3 + 2]! });
+    return [corner(0), corner(1), corner(2), corner(3)];
+  }
   /** The mean colour of a tile's four vertices: a single tint for sprites the lightmap does not cover (roofs). */
   tileTint(x: number, y: number): Rgb {
     if (!inMap(x, y)) return WHITE;

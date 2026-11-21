@@ -17,12 +17,14 @@ const REDACTED = new Set([304, 305]);
 describe('VB6 fixture round-trip (all tests/fixtures/vb6/**)', () => {
   // tests/fixtures/vb6/playthrough/ was recorded on the pre-HOO 9ccd server: re-encode it under that wire profile ('live', the default, re-appends
   // the HOO-era clanAlignment byte to NPC CharacterCreate, issue #70). Older fixtures were recorded on the HOO-era server and keep 'live'.
+  // Single files recorded on the 9ccd server outside playthrough/ (same reason).
+  const PREHOO_FILES = new Set(['audio/invisible-walker-steps.jsonl', 'audio/force-midi-map.jsonl']);
   const before = getWireProfile();
   afterAll(() => setWireProfile(before));
   it('finds fixtures', () => { expect(files.length).toBeGreaterThan(0); });
   for (const file of files) {
     it(file.slice(root.length + 1), () => {
-      setWireProfile(file.startsWith(join(root, 'playthrough') + '/') ? 'prehoo' : before);
+      setWireProfile(file.startsWith(join(root, 'playthrough') + '/') || PREHOO_FILES.has(file.slice(root.length + 1)) ? 'prehoo' : before);
       const rows = readFileSync(file, 'utf8').trim().split('\n').map(line => JSON.parse(line) as { dir: string; id: number; hex: string });
       let known = 0;
       for (const [index, row] of rows.entries()) {
