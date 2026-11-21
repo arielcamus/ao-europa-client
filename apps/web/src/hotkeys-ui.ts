@@ -1,7 +1,8 @@
 /*
  * The hotkey bar (TileEngine_RenderScreen: DrawHotkey / the arrow, frmMain.OnDragEnd / HandleHotkeyArrowInput): ten 32 px slots every
  * 36 px from x=188, 45 px above the bottom of the 736x608 renderer, labelled with the key bound to each (GetHotkeyLabel). A spell is put
- * on a slot by dragging it from the spell list with the RIGHT mouse button (frmMain.picHechiz_MouseDown, only IsBindable spells);
+ * on a slot by dragging it from the spell list with the RIGHT mouse button (frmMain.picHechiz_MouseDown, only IsBindable spells; on a Mac
+ * Control+click counts as the right button, see secondary-button.ts);
  * the bound key then sends UseHKeySlot. The bar exists only when the server enables "hotokey-enabled" (SendClientToggles).
  * AGPL-3.0-or-later; see NOTICE. Artwork is read only from the local mount.
  */
@@ -13,6 +14,7 @@ import { getActiveBindings } from './keymap.js';
 import { sharedLocale } from './chat-locale.js';
 import type { GraphicFrame } from './assets.js';
 import type { Session } from './session.js';
+import { isSecondaryPress } from './secondary-button.js';
 
 export const HOTKEY_X = 188, HOTKEY_FROM_BOTTOM = 45, HOTKEY_STEP = 36, HOTKEY_SIZE = 32;
 const GRH_INVENTORYSLOT = 47743, GRH_ARROW_HIDE = 19204, GRH_ARROW_SHOW = 19205;
@@ -38,7 +40,7 @@ export class HotkeysUI {
   private readonly arrow: HTMLButtonElement;
   private readonly ghost: HTMLElement;
   private key = '';
-  private drag: { slot: number; index: number; type: number } | undefined;
+  private drag: { slot: number; index: number; type: number; button: number } | undefined;
   constructor(private readonly classic: HTMLElement, private readonly viewport: HTMLElement, private readonly art: HotkeyArt) {
     this.root = make('div', '', viewport, 'hotkeys'); this.root.hidden = true; this.root.setAttribute('role', 'group'); this.root.setAttribute('aria-label', 'Atajos de hechizos');
     for (let i = 0; i < HOTKEY_COUNT; i++) {
@@ -64,22 +66,22 @@ export class HotkeysUI {
   /** picHechiz_MouseDown: IsBindable comes from the server (ChangeSpellSlot), never from the client's Hechizos.dat. */
   private start(event: PointerEvent) {
     const s = this.session;
-    if (event.button !== 2 || !s?.ready || !s.options.hotkeysEnabled) return;
+    if (!isSecondaryPress(event) || !s?.ready || !s.options.hotkeysEnabled) return;
     const row = (event.target as HTMLElement | null)?.closest<HTMLElement>('.spell'), slot = Number(row?.dataset.slot);
     const entry = s.ui.spells.get(slot), index = entry?.index ?? 0;
     if (!row || !(index > 0) || !entry?.bindable) return;
-    event.preventDefault(); this.drag = { slot, index, type: HotkeyType.Spell };
+    event.preventDefault(); this.drag = { slot, index, type: HotkeyType.Spell, button: event.button };
     this.ghost.replaceChildren(); this.ghost.hidden = true;
     const icon = Number(sharedLocale.spellData.get(`hechizo${index}`)?.get('iconoindex'));
     if (icon > 0) void this.art.itemArt(icon).then(canvas => { if (this.drag?.index === index) { this.ghost.replaceChildren(canvas); this.ghost.hidden = false; this.place(event); } }).catch(() => {});
   }
   private startItem(event: PointerEvent, inventory: HTMLElement) {
     const s = this.session;
-    if (event.button !== 2 || !s?.ready || !s.options.hotkeysEnabled) return;
+    if (!isSecondaryPress(event) || !s?.ready || !s.options.hotkeysEnabled) return;
     const button = (event.target as HTMLElement | null)?.closest?.('.inventory-slot'), slot = button ? [...inventory.children].indexOf(button) + 1 : 0;
     const entry = slot ? s.ui.inventory.get(slot) : undefined;
     // The inventory draws its own ghost for the item; this only remembers what a drop on the bar binds.
-    if (entry && entry.object > 0 && entry.bindable) this.drag = { slot, index: entry.object, type: HotkeyType.Item };
+    if (entry && entry.object > 0 && entry.bindable) this.drag = { slot, index: entry.object, type: HotkeyType.Item, button: event.button };
   }
   private place(event: PointerEvent) {
     const rect = this.classic.getBoundingClientRect(), scale = this.scale();
@@ -89,7 +91,7 @@ export class HotkeysUI {
   private cancel() { this.drag = undefined; this.ghost.hidden = true; }
   /** frmMain.OnDragEnd: dropping on a slot of the bar binds the spell (SetHotkey). */
   private end(event: PointerEvent) {
-    const drag = this.drag; if (!drag) return;
+    const drag = this.drag; if (!drag || event.button !== drag.button) return;
     this.cancel();
     const rect = this.viewport.getBoundingClientRect(), scale = this.scale();
     const slot = hotkeySlotAt((event.clientX - rect.left) / scale, (event.clientY - rect.top) / scale);

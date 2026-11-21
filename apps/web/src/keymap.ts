@@ -39,6 +39,10 @@ export function vbKeyCode(code: string): number | undefined {
     ControlLeft: 17, ControlRight: 17, ShiftLeft: 16, ShiftRight: 16, Enter: 13, NumpadEnter: 13, PrintScreen: 44, NumpadMultiply: 106,
     NumpadAdd: 107, NumpadDecimal: 110, ArrowLeft: 37, ArrowUp: 38, ArrowRight: 39, ArrowDown: 40, Delete: 46, Insert: 45, Home: 36, End: 35,
     PageUp: 33, PageDown: 34, Space: 32, Tab: 9, Backspace: 8, Minus: 189, Comma: 188, Period: 190, IntlBackslash: 226,
+    // frmCustomKeys.txConfig_KeyUp takes ANY key code > 0: the rest of the Windows virtual keys a keyboard can send (the VK_OEM_* punctuation
+    // keys, where a Spanish layout has ñ ´ ç º ¡ ` +, and the numeric keypad's - and /).
+    NumpadSubtract: 109, NumpadDivide: 111, Semicolon: 186, Equal: 187, Slash: 191, Backquote: 192, BracketLeft: 219, Backslash: 220,
+    BracketRight: 221, Quote: 222,
   } as Record<string, number>)[code];
 }
 

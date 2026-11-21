@@ -489,49 +489,54 @@ const WALK: Partial<Record<KeyAction, Heading>> = { [KeyAction.MoveUp]: Heading.
 const directions = { get: (code: string) => { const action = keyAction(code); return action === undefined ? undefined : WALK[action]; } };
 const DEAD = '¡¡Estás muerto!!'; // MENSAJE_ESTAS_MUERTO
 let lastClanCall = -Infinity;
-/** modBindKeys.Accionar: what each [DEFAULTSMODERN] binding does. */
-function gameKey(action: KeyAction) {
+/**
+ * modBindKeys.Accionar: what each [DEFAULTSMODERN] binding does. False when the action bailed out early (Accionar's Exit Function before
+ * `Accionar = True`: dead, or Meditar with full mana), so HandleKeyUp goes on to its own keys (an action bound to Delete then opens the clan chat).
+ */
+function gameKey(action: KeyAction): boolean {
   const s = session;
-  if (!s?.ready) return;
+  if (!s?.ready) return true;
   const dead = s.dead, slot = ui.selectedSlot;
-  const ifAlive = (run: () => unknown) => { if (dead) s.ui.message(DEAD); else guard(run); };
+  const ifAlive = (run: () => unknown) => { if (dead) { s.ui.message(DEAD); return false; } guard(run); return true; };
   switch (action) {
-    case KeyAction.Attack: attack(); return;
-    case KeyAction.Loot: ifAlive(() => s.itemActions.pickUp()); return;
-    case KeyAction.Drop: ifAlive(() => itemsUi.dropSelected()); return;
-    case KeyAction.UseItem: guard(() => s.itemActions.useKey(slot)); return;
-    case KeyAction.EquipItem: ifAlive(() => s.itemActions.equip(slot)); return;
+    case KeyAction.Attack: attack(); return true;
+    case KeyAction.Loot: return ifAlive(() => s.itemActions.pickUp());
+    case KeyAction.Drop: return ifAlive(() => itemsUi.dropSelected());
+    case KeyAction.UseItem: guard(() => s.itemActions.useKey(slot)); return true;
+    case KeyAction.EquipItem: return ifAlive(() => s.itemActions.equip(slot));
     case KeyAction.ChangeSafe: // SeguroGame on: the key never turns it off (/SEG does)
       if (s.safeMode !== false) s.ui.message('Para desactivar el seguro escribe /SEG o usa el botón en la pestaña MENU en la esquina inferior derecha.');
       else guard(() => s.sendAction({ id: K.SafeToggle }));
-      return;
-    case KeyAction.HideNames: renderer.showNames = !renderer.showNames; return;
-    case KeyAction.PartyToggle: guard(() => s.sendAction({ id: K.PartySafeToggle })); return;
-    case KeyAction.Steal: ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Steal, counter: 0 })); return;
-    case KeyAction.RefreshPosition: guard(() => s.refreshPosition()); return;
-    case KeyAction.Hide: ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Hide, counter: 0 })); return;
+      return true;
+    case KeyAction.HideNames: renderer.showNames = !renderer.showNames; return true;
+    case KeyAction.PartyToggle: guard(() => s.sendAction({ id: K.PartySafeToggle })); return true;
+    case KeyAction.Steal: return ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Steal, counter: 0 }));
+    case KeyAction.RefreshPosition: guard(() => s.refreshPosition()); return true;
+    case KeyAction.Hide: return ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Hide, counter: 0 }));
     // VB6 Accionar: eShowOnline flips MostrarOnline, which nothing reads; eScreenShoot (13) has no case at all. Both are faithful no-ops (issue #20 item 7).
-    case KeyAction.ShowOnline: showOnline = !showOnline; return;
-    case KeyAction.ScreenShot: return;
+    case KeyAction.ShowOnline: showOnline = !showOnline; return true;
+    // eScreenShoot has no Case in Accionar: Case Else, Accionar = False.
+    case KeyAction.ScreenShot: return false;
     case KeyAction.ClanCall: case KeyAction.ClanMark: { // IntervaloPermiteLLamadaClan: 5 s between clan calls/marks
       const now = performance.now();
-      if (now - lastClanCall < 5000) return;
+      if (now - lastClanCall < 5000) return true;
       lastClanCall = now; guard(() => s.sendAction({ id: action === KeyAction.ClanCall ? K.ClanCall : K.ClanMark }));
-      return;
+      return true;
     }
     // VB6 eGameStats only runs SaveSetting("OPCIONES", "FPSFLAG", FPSFLAG): it persists the flag, the FPS checkbox of frmOpciones is what toggles it.
-    case KeyAction.GameStats: gameOptions.update({ showFps: gameOptions.value.showFps }); return;
-    case KeyAction.Meditate: // WriteMeditate: not with full mana, not dead, not while walking
-      if (s.ui.stats.mana !== undefined && s.ui.stats.mana === s.ui.stats.maxMana) return;
-      if (s.motion) return;
-      ifAlive(() => s.sendAction({ id: K.Meditate }));
-      return;
-    case KeyAction.ExitGame: guard(() => s.sendAction({ id: K.Quit })); return;
-    case KeyAction.Taming: ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Tame, counter: 0 })); return;
-    case KeyAction.SendText: openChat(); return;
+    case KeyAction.GameStats: gameOptions.update({ showFps: gameOptions.value.showFps }); return true;
+    // Accionar eMeditate: nothing with full mana (minman = maxman, silent), the dead message when dead, else WriteMeditate. There is no
+    // walking test in the VB6 client (the old `s.motion` test here never cleared after a step, so the key went dead after the first walk).
+    case KeyAction.Meditate:
+      if (s.ui.stats.mana !== undefined && s.ui.stats.mana === s.ui.stats.maxMana) return false;
+      return ifAlive(() => s.sendAction({ id: K.Meditate }));
+    case KeyAction.ExitGame: guard(() => s.sendAction({ id: K.Quit })); return true;
+    case KeyAction.Taming: return ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Tame, counter: 0 }));
+    case KeyAction.SendText: openChat(); return true;
     default:
       // Hotkeys 1-0: DoHotKey (needs the server's "hotokey-enabled" toggle, see options-state.ts).
-      if (action >= KeyAction.HotKey1 && action <= KeyAction.HotKey10) guard(() => s.optionsActions.useHotkey(action - KeyAction.HotKey1));
+      if (action >= KeyAction.HotKey1 && action <= KeyAction.HotKey10) { guard(() => s.optionsActions.useHotkey(action - KeyAction.HotKey1)); return true; }
+      return false;
   }
 }
 window.addEventListener('keydown', event => {
@@ -557,7 +562,8 @@ window.addEventListener('keydown', event => {
   if (action !== undefined && action !== KeyAction.MoveUp && action !== KeyAction.MoveDown && action !== KeyAction.MoveLeft && action !== KeyAction.MoveRight) {
     event.preventDefault();
     // Attack repeats like the VB6 key (paced by Intervals.hit); every other action fires once per press.
-    if (!event.repeat || action === KeyAction.Attack) gameKey(action);
+    // HandleKeyUp: when Accionar bails out (dead, full mana) an action bound to Delete falls through to the clan chat, as in VB6.
+    if ((!event.repeat || action === KeyAction.Attack) && !gameKey(action) && event.code === 'Delete') openChat(true);
     return;
   }
   const heading = directions.get(event.code);

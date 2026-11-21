@@ -12,6 +12,7 @@ import type { ObjectInfo } from './object-catalog.js';
 import type { ClassicUI } from './classic-ui.js';
 import type { Session } from './session.js';
 import { windows } from './window-stack.js';
+import { isSecondaryPress } from './secondary-button.js';
 
 /** e_ElementalTags (Declares.bas): Fire 1, Water 2, Earth 4, Wind 8. */
 export function elementalTagsText(tags: number): string {
@@ -48,7 +49,7 @@ export class InventoryExtras {
   private readonly ghost: HTMLElement;
   private readonly deleteButton: HTMLButtonElement;
   private readonly confirm: HTMLElement;
-  private drag: { slot: number } | undefined;
+  private drag: { slot: number; button: number } | undefined;
   private pendingDelete = 0;
 
   constructor(private readonly root: HTMLElement, private readonly ui: ClassicUI, private readonly hooks: InventoryExtrasHooks) {
@@ -84,14 +85,15 @@ export class InventoryExtras {
     inventory.addEventListener('pointermove', event => this.hover(slotOf(event.target)));
     inventory.addEventListener('pointerleave', () => { this.label.hidden = true; });
     // clsGrapchicalInventory.InventoryWindow_MouseDown: only the right button starts a drag, and only on a slot with an object.
+    // On a Mac, Control+click is the right button too (secondary-button.ts); the drag ends when THAT button is let go.
     inventory.addEventListener('pointerdown', event => {
-      if (event.button !== 2) return;
+      if (!isSecondaryPress(event)) return;
       const slot = slotOf(event.target);
       if (!slot || !this.session?.ui.inventory.has(slot)) return;
-      event.preventDefault(); this.drag = { slot }; this.showGhost(slot, event);
+      event.preventDefault(); this.drag = { slot, button: event.button }; this.showGhost(slot, event);
     });
     window.addEventListener('pointermove', event => { if (this.drag) this.placeGhost(event); });
-    window.addEventListener('pointerup', event => { if (event.button === 2 && this.drag) this.drop(event, slotOf); });
+    window.addEventListener('pointerup', event => { if (this.drag && event.button === this.drag.button) this.drop(event, slotOf); });
     window.addEventListener('blur', () => this.cancelDrag());
   }
 

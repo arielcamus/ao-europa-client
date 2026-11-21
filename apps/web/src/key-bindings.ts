@@ -14,7 +14,7 @@ export function keyName(code: number): string {
   const fixed: Record<number, string> = {
     16: 'Shift', 37: 'Flecha Izquierda', 38: 'Flecha Arriba', 39: 'Flecha Derecha', 40: 'Flecha Abajo', 17: 'Control', 34: 'Page Down', 33: 'Page Up',
     32: 'Barra Espaciadora', 46: 'Delete', 35: 'Fin', 36: 'Inicio', 45: 'Insert', 44: 'Impr. Pant', 106: '*', 107: 'Numerico +', 110: 'Numerico .',
-    226: '<', 189: '-', 188: ',', 190: '.', 13: 'Enter', 8: 'Borrar', 9: 'Tab',
+    226: '<', 189: '-', 109: '-', 188: ',', 190: '.', 13: 'Enter', 8: 'Borrar', 9: 'Tab',
   };
   if (fixed[code]) return fixed[code];
   if (code >= 112 && code <= 123) return `F${code - 111}`;
