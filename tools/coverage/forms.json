@@ -623,8 +623,12 @@
    {
     "ref": "main",
     "path": "apps/web/src/crafting.ts",
-    "partial": true,
-    "note": "crafting state and packets only; no alchemy window yet"
+    "note": "state, packets and the work macro"
+   },
+   {
+    "ref": "main",
+    "path": "apps/web/src/crafting-extra-ui.ts",
+    "note": "the alchemy window"
    }
   ]
  },
@@ -636,8 +640,12 @@
    {
     "ref": "main",
     "path": "apps/web/src/crafting.ts",
-    "partial": true,
-    "note": "crafting state and packets only; no tailor window yet"
+    "note": "state, packets and the work macro"
+   },
+   {
+    "ref": "main",
+    "path": "apps/web/src/crafting-extra-ui.ts",
+    "note": "the tailor window"
    }
   ]
  },
@@ -649,8 +657,12 @@
    {
     "ref": "main",
     "path": "apps/web/src/crafting.ts",
-    "partial": true,
-    "note": "crafting state and packets only; no catalyst crafting window yet"
+    "note": "state, packets and the work macro"
+   },
+   {
+    "ref": "main",
+    "path": "apps/web/src/crafting-extra-ui.ts",
+    "note": "the crafting-station window"
    }
   ]
  },
