@@ -307,7 +307,7 @@ export class Session {
         }
         case S.ChangeMap:
           this.map = packet.map; this.resourceMap = packet.resourceMap;
-          this.position = undefined; this.motion = undefined; this.pending = undefined;
+          this.position = undefined; this.motion = undefined; this.pending = undefined; this.serverSilentSince = undefined; // the probe it waited on is void
           this.placementDeadline = this.clock() + 10_000;
           this.mapObjects.clear(); // the tracker drops every character on ChangeMap itself
           // Retain self index across warps; require a fresh CharacterCreate for placement.
@@ -662,7 +662,7 @@ export class Session {
   backToAccount() { if (this.phase === 'login' && !this.self) { this.phase = 'account'; this.loginAttempt = undefined; } }
   finish(message = 'Disconnected'): void {
     this.phase = 'closed'; this.error = message; this.credentials = undefined;
-    this.pending = undefined; this.motion = undefined;
+    this.pending = undefined; this.motion = undefined; this.serverSilentSince = undefined;
     this.decoder.finish();
   }
   visualPosition(now: number): Position | undefined {
