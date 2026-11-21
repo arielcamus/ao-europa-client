@@ -18,7 +18,7 @@
   "forms": 86,
   "formsCovered": 56,
   "formsPartial": 2,
-  "fixturePackets": 262,
+  "fixturePackets": 275,
   "packetsPct": 99.8,
   "packetsMergedPct": 99.8,
   "formsPct": 65.1,
@@ -296,8 +296,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -373,8 +379,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -803,6 +815,8 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl"
    ]
   },
@@ -858,6 +872,10 @@
     "tests/fixtures/vb6/extras/live-events-commands.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -901,7 +919,9 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl"
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
    ]
   },
   {
@@ -998,6 +1018,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
@@ -1072,7 +1094,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
-    "tests/fixtures/vb6/gm/admin-commands.jsonl"
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl"
    ]
   },
   {
@@ -1157,8 +1180,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -1215,6 +1244,8 @@
     "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -1393,10 +1424,16 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/papiro-sign.jsonl",
     "tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -1457,8 +1494,11 @@
    "codecFiles": [
     "main:packages/protocol/src/packets.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "s2c:40",
@@ -1555,10 +1595,16 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/drop-pickup.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -1664,6 +1710,8 @@
     "tests/fixtures/vb6/extras/live-events-commands.jsonl",
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
@@ -1747,8 +1795,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -1824,8 +1878,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -1866,7 +1926,9 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
    ]
   },
   {
@@ -1903,6 +1965,8 @@
     "tests/fixtures/vb6/extras/live-events-commands.jsonl",
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
@@ -1961,8 +2025,12 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -2069,6 +2137,8 @@
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -2151,9 +2221,15 @@
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
@@ -2185,6 +2261,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -2241,8 +2318,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -2340,6 +2423,8 @@
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
@@ -2405,9 +2490,15 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -2519,12 +2610,18 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/delete-item.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/move-item.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -2656,8 +2753,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -2959,9 +3062,15 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -3058,8 +3167,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -3141,7 +3256,9 @@
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
     "tests/fixtures/vb6/extras/live-events-commands.jsonl",
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
-    "tests/fixtures/vb6/gm/admin-commands.jsonl"
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
    ]
   },
   {
@@ -3254,8 +3371,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -3313,8 +3436,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl"
+   ]
   },
   {
    "key": "s2c:90",
@@ -3389,8 +3514,11 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "s2c:94",
@@ -3408,8 +3536,11 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "s2c:95",
@@ -3427,8 +3558,11 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl"
+   ]
   },
   {
    "key": "s2c:96",
@@ -3505,8 +3639,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/bank-trade.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "s2c:100",
@@ -3553,6 +3689,10 @@
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
    ]
@@ -3610,9 +3750,15 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -3707,8 +3853,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -3937,12 +4089,18 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/move-item.jsonl",
     "tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -4138,8 +4296,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -4260,10 +4424,16 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/drop-pickup.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -4350,6 +4520,10 @@
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl"
    ]
   },
@@ -4493,6 +4667,10 @@
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl"
    ]
   },
@@ -4633,9 +4811,15 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -4736,8 +4920,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -4903,12 +5093,18 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/delete-item.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
     "tests/fixtures/vb6/items/drop-pickup.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -5114,8 +5310,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "s2c:150",
@@ -5342,8 +5540,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -5440,8 +5644,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -5517,8 +5727,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -5580,7 +5796,9 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-lobby.jsonl"
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
    ]
   },
   {
@@ -5890,8 +6108,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -6300,8 +6524,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -6396,8 +6626,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -6492,8 +6728,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -6588,8 +6830,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -6701,8 +6949,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:4",
@@ -6752,7 +7002,9 @@
     "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
-    "tests/fixtures/vb6/items/equip-unequip.jsonl"
+    "tests/fixtures/vb6/items/equip-unequip.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
    ]
   },
   {
@@ -6771,8 +7023,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/session.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
+   ]
   },
   {
    "key": "c2s:7",
@@ -7153,8 +7407,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:26",
@@ -7252,8 +7508,11 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:31",
@@ -7271,8 +7530,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:32",
@@ -7290,8 +7551,11 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:33",
@@ -7330,6 +7594,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -7370,6 +7636,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -7391,6 +7659,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -8176,8 +8446,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -8311,6 +8587,8 @@
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
     "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -8351,6 +8629,8 @@
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
     "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -8379,7 +8659,9 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
-    "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl"
+    "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
    ]
   },
   {
@@ -8464,6 +8746,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -9047,7 +9333,9 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
-    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
    ]
   },
   {
@@ -10434,7 +10722,9 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
-    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
    ]
   },
   {
@@ -11897,6 +12187,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -12962,8 +13253,14 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -14172,7 +14469,7 @@
      "ref": "main",
      "path": "apps/web/src/crafting-extra-ui.ts",
      "note": "the alchemy window",
-     "ok": false
+     "ok": true
     }
    ],
    "missing": null,
@@ -14198,7 +14495,7 @@
      "ref": "main",
      "path": "apps/web/src/crafting-extra-ui.ts",
      "note": "the tailor window",
-     "ok": false
+     "ok": true
     }
    ],
    "missing": null,
@@ -14224,7 +14521,7 @@
      "ref": "main",
      "path": "apps/web/src/crafting-extra-ui.ts",
      "note": "the crafting-station window",
-     "ok": false
+     "ok": true
     }
    ],
    "missing": null,
@@ -14943,9 +15240,5 @@
    "kind": "only post-pin"
   }
  ],
- "problems": [
-  "form evidence missing: frmAlqui -> main:apps/web/src/crafting-extra-ui.ts",
-  "form evidence missing: FrmSastre -> main:apps/web/src/crafting-extra-ui.ts",
-  "form evidence missing: frmCrafteo -> main:apps/web/src/crafting-extra-ui.ts"
- ]
+ "problems": []
 }
