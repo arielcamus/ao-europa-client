@@ -12,9 +12,11 @@ export interface BridgeOptions {
   tcpHost: string;
   tcpPort: number;
   log?: (message: string) => void;
-  /** WebSocket ping period; a browser that misses a whole period is dropped. Default 15 s. Tests shorten it. */
+  /** WebSocket ping period; a browser that misses HEARTBEAT_MAX_MISSED periods in a row is dropped. Default 15 s. Tests shorten it. */
   heartbeatMs?: number;
 }
+/** Unanswered pings tolerated before the browser is dropped: 3 x 15 s, so it is dropped after 45-60 s of silence and a brief Wi-Fi/Tailscale blip or nap survives. */
+export const HEARTBEAT_MAX_MISSED = 3;
 /** First TCP keepalive probe after this much silence, on both sockets (the browser's crosses Tailscale). */
 export const TCP_KEEPALIVE_MS = 10_000;
 
@@ -38,11 +40,11 @@ export async function startBridge(options: BridgeOptions) {
     tcp.setKeepAlive(true, TCP_KEEPALIVE_MS);
     // The client waits out a stalled server instead of disconnecting, so a half-open browser connection (a laptop that slept, a dropped
     // network) must still end the session: browsers answer pings in the network stack, even with the tab throttled or the game stalled.
-    let alive = true;
-    ws.on('pong', () => { alive = true; });
+    let missed = 0;
+    ws.on('pong', () => { missed = 0; });
     const heartbeat = setInterval(() => {
-      if (!alive) { log('WebSocket heartbeat missed; closing'); ws.terminate(); tcp.destroy(); return; }
-      alive = false;
+      if (missed >= HEARTBEAT_MAX_MISSED) { log('WebSocket heartbeat missed; closing'); ws.terminate(); tcp.destroy(); return; }
+      missed++;
       if (ws.readyState === WebSocket.OPEN) ws.ping();
     }, options.heartbeatMs ?? 15_000);
     heartbeat.unref();
