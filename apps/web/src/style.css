@@ -106,3 +106,4 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1
 .vb-expbar.vb-picture { background-repeat: no-repeat; background-color: transparent; }
 .vb-frame { margin: 0; padding: 0; border: 1px solid #a0a0a0; pointer-events: none; }
 .vb-frame legend { margin-left: 8px; padding: 0 3px; color: #000; font: 11px Tahoma, Arial, sans-serif; }
+.tag-icon { position: absolute; pointer-events: none; image-rendering: pixelated; }

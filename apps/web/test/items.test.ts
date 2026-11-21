@@ -195,3 +195,12 @@ describe('catalog and display helpers', () => {
     expect(buffColor(18, 18)).toBe('#fff'); expect(buffColor(36, 18)).toBe('rgb(204,0,0)');
   });
 });
+
+import { elementalTagIcons } from '../src/classic-ui.js';
+describe('elemental tag icons (clsGrapchicalInventory.DrawInventory)', () => {
+  it('draws the set tags in the fixed order Fire, Water, Earth, Wind with their icon graphics', () => {
+    expect(elementalTagIcons(0)).toEqual([]);
+    expect(elementalTagIcons(1 | 8).map(i => i.grh)).toEqual([10484, 10485]);
+    expect(elementalTagIcons(15).map(i => i.grh)).toEqual([10484, 10486, 10483, 10485]);
+  });
+});
