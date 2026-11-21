@@ -10,7 +10,7 @@
  * codec tables below.
  */
 import { Reader, Writer } from '../binary.js';
-import { isPreHoo } from '../profile.js';
+import { hooTail, isPreHoo } from '../profile.js';
 
 export interface ItemsCodec<T> {
   read(reader: Reader): T;
@@ -84,7 +84,7 @@ export interface Fya { strength: number; agility: number; drugCounter: number; s
 const fya: ItemsCodec<Fya> = {
   read(reader) {
     const strength = reader.readInt8(), agility = reader.readInt8(), drugCounter = reader.readInt16();
-    return reader.remaining >= 2 ? { strength, agility, drugCounter, strengthBase: reader.readInt8(), agilityBase: reader.readInt8() } : { strength, agility, drugCounter };
+    return hooTail(reader, 2) ? { strength, agility, drugCounter, strengthBase: reader.readInt8(), agilityBase: reader.readInt8() } : { strength, agility, drugCounter };
   },
   write(writer, value) {
     writer.writeInt8(value.strength); writer.writeInt8(value.agility); writer.writeInt16(value.drugCounter);

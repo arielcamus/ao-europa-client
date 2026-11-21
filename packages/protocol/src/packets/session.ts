@@ -6,7 +6,7 @@
  * Own file so parallel feature branches do not conflict; packets.ts only spreads the two tables.
  */
 import type { Reader, Writer } from '../binary.js';
-import { isPreHoo } from '../profile.js';
+import { hooTail, isPreHoo } from '../profile.js';
 
 export const SessionServerPacketId = {
   NavigateToggle: 5, EquiteToggle: 6, ShowMessageBox: 40, MostrarCuenta: 41, CharacterTranslate: 45, UserIndexInServer: 46,
@@ -52,7 +52,7 @@ export const sessionServerCodecs = {
   [SessionServerPacketId.UpdateTagAndStatus]: codec<{ charIndex: number; status: number; tag: string; groupIndex: number; clanIndex?: number; clanAlignment?: number }>(
     r => {
       const head = { charIndex: r.readInt16(), status: r.readInt8(), tag: r.readString(), groupIndex: r.readInt16() };
-      return r.remaining >= 3 ? { ...head, clanIndex: r.readInt16(), clanAlignment: r.readInt8() } : head;
+      return hooTail(r, 3) ? { ...head, clanIndex: r.readInt16(), clanAlignment: r.readInt8() } : head;
     },
     (w, v) => {
       w.writeInt16(v.charIndex); w.writeInt8(v.status); w.writeString(v.tag); w.writeInt16(v.groupIndex);

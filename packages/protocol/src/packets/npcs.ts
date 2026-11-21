@@ -6,7 +6,7 @@
  * packets.ts only spreads `npcsServerCodecs` / `npcsClientCodecs` into its tables.
  */
 import { Reader, Writer } from '../binary.js';
-import { isPreHoo } from '../profile.js';
+import { hooTail, isPreHoo } from '../profile.js';
 
 export enum NpcsServerPacketId {
   RemoveDialogs = 3,
@@ -51,11 +51,11 @@ const characterChange = struct({
   charIndex: int16, flags: byte, body: int16, head: int16, heading: byte,
   weapon: int16, shield: int16, helmet: int16, cart: int16, backpack: int16, fx: int16, fxLoops: int16,
 });
-/** server PrepareMessageLocaleMsg / client HandleLocaleMsg (the channel byte exists only on the HOO-era server: read when present, written on the 'live' profile). `messageId` is the locale id; `id` stays the packet id. */
+/** server PrepareMessageLocaleMsg / client HandleLocaleMsg (the channel byte exists only on the HOO-era server: read and written on the 'live' profile only, see hooTail). `messageId` is the locale id; `id` stays the packet id. */
 const localeMsg: NpcsCodec<{ messageId: number; text: string; font: number; channel?: number }> = {
   read(reader) {
     const messageId = reader.readInt16(), text = reader.readString(), font = reader.readInt8();
-    return reader.remaining ? { messageId, text, font, channel: reader.readInt8() } : { messageId, text, font };
+    return hooTail(reader, 1) ? { messageId, text, font, channel: reader.readInt8() } : { messageId, text, font };
   },
   write(writer, value) {
     writer.writeInt16(value.messageId); writer.writeString(value.text); writer.writeInt8(value.font);

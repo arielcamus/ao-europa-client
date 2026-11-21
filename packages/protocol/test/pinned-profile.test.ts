@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   GuildServerPacketId as GS, ItemsServerPacketId as IS, NpcsServerPacketId as NS, QuestServerPacketId as QS, ServerPacketId as S, SessionServerPacketId as SS,
-  decodeServerPacket, encodeServerPacket, getWireProfile, parseWireProfile, setWireProfile, withWireProfile,
+  decodeServerFrame, decodeServerPacket, encodeServerPacket, getWireProfile, parseWireProfile, setWireProfile, withWireProfile,
 } from '../src/index.js';
 import type { ServerPacket } from '../src/index.js';
 import { serverFixtures } from './fixtures.js';
@@ -11,7 +11,8 @@ import { serverFixtures } from './fixtures.js';
  * Pre-HOO (server-classic 9ccd7fad, client-classic 619e69d) vs live (HOO-era caac3133) layouts of the eight server->client packets that
  * changed after the pin. Every hex string is written by hand from the VB6 writer of the matching tree (server Protocol_Writes.bas), little
  * endian, String8 = byte length + UTF-8; it does not come from the codecs under test. The 'live' halves are the writers at caac3133.
- * Decoding is version-tolerant, so both layouts must decode under EITHER profile; encoding follows the profile.
+ * Decoding on 'live' is version-tolerant, so both layouts decode there; on 'prehoo' only the pinned layout is read and a HOO-era tail is
+ * left unread (decodeServerFrame returns it, as the pinned client drains it). Encoding follows the profile.
  */
 const bytes = (hex: string) => Uint8Array.from(Buffer.from(hex.replaceAll(' ', ''), 'hex'));
 const hex = (value: Uint8Array) => Buffer.from(value).toString('hex');
@@ -91,11 +92,18 @@ describe.each(cases)('$name, pinned (619e69d / 9ccd7fad) vs live (caac3133)', ({
       setWireProfile(profile);
       expect(decodeServerPacket(bytes(pinned))).toMatchObject(pinnedPacket);
     });
-    it(`decodes the live bytes under the ${profile} profile`, () => {
-      setWireProfile(profile);
-      expect(decodeServerPacket(bytes(live))).toMatchObject(livePacket);
-    });
   }
+  it('decodes the live bytes under the live profile', () => {
+    expect(decodeServerPacket(bytes(live))).toMatchObject(livePacket);
+  });
+  it('under the prehoo profile reads only the pinned fields of the live bytes and leaves the HOO-era tail as trailing bytes', () => {
+    setWireProfile('prehoo');
+    expect(() => decodeServerPacket(bytes(live))).toThrow(/trailing bytes/);
+    const { packet, trailing } = decodeServerFrame(bytes(live));
+    expect(trailing.length).toBe(bytes(live).length - bytes(pinned).length);
+    // GuildNews / GuildLeaderInfo: the HOO-era Int32 exp pair is not a tail, so the Int16 pair reads its low halves; every other packet is exact.
+    if (packet.id !== GS.GuildNews && packet.id !== GS.GuildLeaderInfo) expect(packet).toEqual(decodeServerPacket(bytes(pinned)));
+  });
   it('a pinned frame carries no field the pinned server does not send', () => {
     const decoded = decodeServerPacket(bytes(pinned)) as Record<string, unknown>;
     for (const key of ['channel', 'strengthBase', 'agilityBase']) if (key in decoded) expect(decoded[key]).toBeUndefined();

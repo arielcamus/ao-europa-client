@@ -2,7 +2,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, describe, expect, it } from 'vitest';
-import { decodeClientPacket, decodeServerPacket, encodeClientPacket, encodeServerPacket, getWireProfile, setWireProfile } from '../src/index.js';
+import { decodeClientPacket, decodeServerFrame, encodeClientPacket, encodeServerPacket, getWireProfile, setWireProfile } from '../src/index.js';
 
 // docs/CONFORMANCE.md: `hex` is the full frame body, the 2-byte LE id included. Every known packet must re-encode byte for byte.
 const root = fileURLToPath(new URL('../../../tests/fixtures/vb6', import.meta.url));
@@ -21,7 +21,7 @@ describe('VB6 fixture round-trip (all tests/fixtures/vb6/**)', () => {
   const PREHOO_FILES = new Set(['audio/invisible-walker-steps.jsonl', 'audio/force-midi-map.jsonl', 'spells/dardo-magico-kills-creature.jsonl', 'spells/dardo-magico-training-dummy.jsonl']);
   const before = getWireProfile();
   // Folders recorded against the pinned pre-HOO server (9ccd7fad), whose layouts the 'prehoo' profile writes.
-  const PREHOO_DIRS = ['playthrough', 'followups'];
+  const PREHOO_DIRS = ['playthrough', 'followups', 'prehoo-sweep'];
   afterAll(() => setWireProfile(before));
   it('finds fixtures', () => { expect(files.length).toBeGreaterThan(0); });
   for (const file of files) {
@@ -33,10 +33,14 @@ describe('VB6 fixture round-trip (all tests/fixtures/vb6/**)', () => {
         const body = Uint8Array.from(Buffer.from(row.hex, 'hex'));
         expect(Buffer.from(body).readInt16LE(0), `row ${index} hex must start with its id`).toBe(row.id);
         if (row.dir === 'c2s' && REDACTED.has(row.id)) { expect(row.hex, `row ${index} credentials must be redacted`).toHaveLength(4); continue; }
-        const packet = row.dir === 's2c' ? decodeServerPacket(body) : decodeClientPacket(body);
+        // A frame holds one packet, except where the pinned server concatenates: WriteConsoleMsg(PrepareMessageLocaleMsg(...)) leaves an
+        // empty ConsoleMsg (25 00 00 <font>) after the LocaleMsg (packages/protocol/src/profile.ts). Any other leftover is a codec bug.
+        const { packet, trailing } = row.dir === 's2c' ? decodeServerFrame(body) : { packet: decodeClientPacket(body), trailing: new Uint8Array(0) };
         if ('unknown' in packet) continue;
+        const extra = Buffer.from(trailing).toString('hex');
+        if (extra) expect(`${row.id}:${extra}`, `row ${index} leaves bytes unread`).toMatch(/^141:250000[0-9a-f]{2}$/);
         const again = row.dir === 's2c' ? encodeServerPacket(packet as never) : encodeClientPacket(packet as never);
-        expect(Buffer.from(again).toString('hex'), `row ${index} id ${row.id}`).toBe(row.hex);
+        expect(Buffer.from(again).toString('hex') + extra, `row ${index} id ${row.id}`).toBe(row.hex);
         known++;
       }
       expect(known).toBeGreaterThan(0);

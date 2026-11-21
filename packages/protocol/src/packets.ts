@@ -11,7 +11,7 @@
 import { ProtocolError, Reader, Writer } from './binary.js';
 import type { SafeArrayInt8 } from './binary.js';
 import { encodeFrame } from './frame.js';
-import { isPreHoo } from './profile.js';
+import { hooTail, isPreHoo } from './profile.js';
 import { doorClientCodecs, doorServerCodecs } from './packets/doors.js';
 import { npcsServerCodecs } from './packets/npcs.js';
 import { chatClientCodecs, chatServerCodecs } from './packets/chat.js';
@@ -160,7 +160,7 @@ const accountList: Codec<{ characters: AccountCharacter[] }> = {
   },
 };
 
-// clanAlignment is the one field added after the pin (HOO-era server only): read when a byte remains, written only on the 'live' profile.
+// clanAlignment is the one field added after the pin (HOO-era server only): read and written only on the 'live' profile (hooTail).
 const characterCreateBase = struct({
   charIndex: int16, body: int16, head: int16, heading: byte, x: byte, y: byte,
   weapon: int16, shield: int16, helmet: int16, cart: int16, backpack: int16,
@@ -174,7 +174,7 @@ const characterCreateBase = struct({
 const characterCreate: Codec<Value<typeof characterCreateBase> & { clanAlignment: number }> = {
   read(reader) {
     const base = characterCreateBase.read(reader);
-    return { ...base, clanAlignment: reader.remaining ? reader.readInt8() : 0 };
+    return { ...base, clanAlignment: hooTail(reader, 1) ? reader.readInt8() : 0 };
   },
   write(writer, value) {
     characterCreateBase.write(writer, value);
@@ -209,7 +209,7 @@ export type SpellSlot = Value<typeof spellSlot>;
 const consoleMessage: Codec<{ message: string; font: number; channel?: number }> = {
   read(reader) {
     const message = reader.readString(), font = reader.readInt8();
-    return reader.remaining ? { message, font, channel: reader.readInt8() } : { message, font };
+    return hooTail(reader, 1) ? { message, font, channel: reader.readInt8() } : { message, font };
   },
   write(writer, value) {
     writer.writeString(value.message); writer.writeInt8(value.font);
@@ -312,6 +312,30 @@ function decode<R extends Record<number, Codec<object>>>(body: Uint8Array, codec
     const packet = { id, ...codec.read(reader) };
     reader.end(); // A frame holds exactly ONE packet; never guess a second packet boundary.
     return packet as Packet<R>;
+  } catch (error) {
+    throw new ProtocolError(`Packet id=${id}: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+/**
+ * A decoded frame and the bytes its packet left unread. The pinned VB6 client never rejects those: HandleIncomingData runs the handler, then
+ * logs "Server message ID: N unhandled or too many bytes; K extra bytes found" and drains them (client-classic 619e69d Protocol.bas).
+ */
+export interface ServerFrame { packet: ServerPacket | UnknownPacket; trailing: Uint8Array }
+
+/**
+ * Like decodeServerPacket, but bytes after the packet are returned instead of thrown, exactly as the pinned client tolerates them. The pinned
+ * server sends them by accident (LocaleMsg + an empty ConsoleMsg in one frame, see profile.ts); a codec that reads TOO FEW bytes
+ * shows up here too, so callers must log `trailing` rather than ignore it. A codec that reads too MANY bytes still throws (ProtocolError).
+ */
+export function decodeServerFrame(body: Uint8Array): ServerFrame {
+  const reader = new Reader(body);
+  const id = reader.readInt16();
+  const codec = (serverCodecs as Record<number, Codec<object>>)[id];
+  if (!codec) return { packet: { unknown: true, id, payload: reader.readBytes(reader.remaining) }, trailing: new Uint8Array(0) };
+  try {
+    const packet = { id, ...codec.read(reader) } as ServerPacket;
+    return { packet, trailing: reader.readBytes(reader.remaining) };
   } catch (error) {
     throw new ProtocolError(`Packet id=${id}: ${error instanceof Error ? error.message : String(error)}`);
   }

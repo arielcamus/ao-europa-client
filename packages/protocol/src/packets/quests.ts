@@ -9,7 +9,7 @@
  * Ids follow the PacketId.bas enum order (verified against the live VB6 server).
  */
 import type { Reader, Writer } from '../binary.js';
-import { isPreHoo } from '../profile.js';
+import { hooTail, isPreHoo } from '../profile.js';
 
 export interface QuestCodec<T> { read(reader: Reader): T; write(writer: Writer, value: T): void }
 
@@ -80,7 +80,7 @@ const questDetails: QuestCodec<QuestDetails> = {
       questIndex, requiredLevel, limitLevel, requiredClasses, requiredQuest, npcs, objs, spells: spellList,
       skillType, skillValue, rewardGold, rewardExp, rewardObjs: rewardObjs.read(r), rewardSpells: spells.read(r),
       // talkTo / deliverMap exist only on the HOO-era server (turn-in NPC and map); absent on the pinned one.
-      talkTo: r.remaining >= 4 ? r.readInt16() : 0, deliverMap: r.remaining >= 2 ? r.readInt16() : 0,
+      talkTo: hooTail(r, 4) ? r.readInt16() : 0, deliverMap: hooTail(r, 2) ? r.readInt16() : 0,
     };
   },
   write(w, v) {

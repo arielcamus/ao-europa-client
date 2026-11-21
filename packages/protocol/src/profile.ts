@@ -6,10 +6,14 @@
  * ConsoleMsg and LocaleMsg (+channel), CharacterCreate (+clanAlignment), UpdateTagAndStatus (+clanIndex, +clanAlignment),
  * FYA (+strength/agility base), GuildNews and GuildLeaderInfo (exp and exp-needed Int16 -> Int32), QuestDetails (+talkTo, +deliverMap).
  *
- * DECODING is version-tolerant and needs no profile: the trailing fields are read only when bytes remain (a frame holds exactly one
- * packet) and the two exp pairs are told apart by how many bytes are left (4 = Int16 pair, 8 = Int32 pair).
+ * DECODING on 'live' is version-tolerant: the trailing fields are read only when bytes remain and the two exp pairs are told apart by how
+ * many bytes are left (4 = Int16 pair, 8 = Int32 pair). DECODING on 'prehoo' reads exactly the pinned layout and never a HOO-era field
+ * (hooTail), because a pinned-server frame CAN carry bytes after its packet: 138 call sites of the pinned server write
+ * `WriteConsoleMsg(UserIndex, PrepareMessageLocaleMsg(...))`, so the LocaleMsg is followed by an empty ConsoleMsg (25 00 00 <font>) in the
+ * same frame. The tolerant read took that 0x25 as the LocaleMsg channel and left 3 "trailing bytes" (Ariel's /EST disconnect, 21 Nov).
+ * The pinned client reads its fields and drains the rest (HandleIncomingData, "extra bytes found"); see decodeServerFrame.
  * ENCODING (the stand-in server, the mock servers, the tests) follows the profile, because a writer must pick one layout.
- * 'live' stays the default until the server swap; flip it with setWireProfile('prehoo') or AO_WIRE_PROFILE=prehoo.
+ * 'live' stays the library default (the HOO-era fixtures and mocks); the web client talks to the pinned server and sets 'prehoo' at startup.
  */
 export type WireProfile = 'prehoo' | 'live';
 export const WIRE_PROFILES: readonly WireProfile[] = ['prehoo', 'live'];
@@ -18,6 +22,8 @@ let current: WireProfile = 'live';
 
 export const getWireProfile = (): WireProfile => current;
 export const isPreHoo = (): boolean => current === 'prehoo';
+/** Read a HOO-era trailing field? Only on 'live', and only when `bytes` remain; on 'prehoo' the pinned layout ends before it. */
+export const hooTail = (reader: { readonly remaining: number }, bytes: number): boolean => current !== 'prehoo' && reader.remaining >= bytes;
 
 export function parseWireProfile(value: unknown): WireProfile {
   if (value === 'prehoo' || value === 'live') return value;
