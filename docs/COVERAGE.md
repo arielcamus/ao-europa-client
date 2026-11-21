@@ -11,7 +11,7 @@ Scanned refs: `main`
 ## Headline
 
 - **Packets covered (merged + open branches): 512 of 523 = 97.9%.** Merged on main only: 512 = 97.9%.
-  - Server to client: 202 of 207. Client to server: 310 of 316. Packets with a recorded VB6 fixture: 274.
+  - Server to client: 202 of 207. Client to server: 310 of 316. Packets with a recorded VB6 fixture: 275.
 - **Forms covered: 56 of 86 = 65.1%** (2 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
@@ -412,7 +412,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 3 | CreateNewGuild | server Protocol.bas:HandleCreateNewGuild | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 4 | SpellInfo | server Protocol.bas:HandleSpellInfo | spells | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 5 | EquipItem | server Protocol.bas:HandleEquipItem | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
-| 6 | ChangeHeading | server Protocol.bas:HandleChange_Heading | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
+| 6 | ChangeHeading | server Protocol.bas:HandleChange_Heading | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 7 | ModifySkills | server Protocol.bas:HandleModifySkills | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 8 | Train | server Protocol.bas:HandleTrain | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
 | 9 | CommerceBuy | server Protocol.bas:HandleCommerceBuy | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |

@@ -5,7 +5,7 @@
  */
 import { TRAP_GRH, TRAP_ALPHA } from './status.js';
 import { Application, Container, Rectangle, Sprite, Text, Texture } from 'pixi.js';
-import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody } from './assets.js';
+import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody, tileIndex } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
 import type { Session } from './session.js';
 import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, roofTriggers, TreeFade, fixedObjects, nearRoof, objectDraws, objectGraphicsFromIni, treeCoversPlayer } from './map-objects.js';
@@ -212,6 +212,8 @@ export class WorldRenderer {
     return x >= 1 && y >= 1 && x <= 100 && y <= 100 ? { x, y } : undefined;
   }
   /** Sound data of the loaded map (tMapDat music, ambient, weather flags). */
+  /** Static Blocked byte and trigger of a tile of the loaded map (MapData(x, y).Blocked / .Trigger), for the walk legality check. */
+  legalTileAt(x: number, y: number) { return this.map ? { blocked: this.map.blocked[tileIndex(x, y)]!, trigger: this.map.triggers[tileIndex(x, y)]! } : undefined; }
   get mapAudio() { return this.map?.audio; }
   /** TileEngine.HayTecho at a tile: the player is under a roof (indoor rain sounds). */
   roofAt(x: number, y: number) { return hayTecho(this.roofTrig[(y - 1) * 100 + x - 1] ?? 0); }
