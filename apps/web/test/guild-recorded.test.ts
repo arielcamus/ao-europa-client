@@ -100,3 +100,22 @@ describe('recorded guild lifecycle: accept, member news, kick', () => {
     expect(after.leader?.members).toEqual(['Wintest']);
   });
 });
+
+/**
+ * tools/real-server/record-guild-leader-lists.mjs, 21 Nov 2026: the leader-only requests frmGuildLeader.frm has handlers for but no control
+ * (peace list, alliance list, declare war, election vote) all get one LocaleMsg back, "... desactivadas por el momento" (server Protocol.bas
+ * HandleGuildPeacePropList etc., SP_LocalMsg Msg1149-1151 and Msg1172). That is why the pinned client form has no buttons for them.
+ */
+describe('recorded leader-only requests: clan relations and elections are switched off on the server', () => {
+  const data = rows('guild-leader-relations-disabled');
+  const sent = data.filter(r => r.dir === 'c2s' && r.id !== 305 && r.id !== 73);
+  it('sent the four requests and the leader panel request', () => {
+    expect(sent.map(r => r.id)).toEqual([GC.RequestGuildLeaderInfo, GC.GuildPeacePropList, GC.GuildAlliancePropList, GC.GuildDeclareWar, GC.GuildVote]);
+  });
+  it('each of the four is answered by exactly one LocaleMsg and never by a proposal list', () => {
+    const after = data.filter(r => r.dir === 's2c');
+    expect(after.some(r => r.id === GS.PeaceProposalsList || r.id === GS.AlianceProposalsList)).toBe(false);
+    const messages = after.map(server).filter(p => p.id === 141).map(p => (p as { messageId: number }).messageId);
+    expect(messages).toEqual(expect.arrayContaining([1150, 1149, 1151, 1172]));
+  });
+});

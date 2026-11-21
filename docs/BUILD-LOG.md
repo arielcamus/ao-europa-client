@@ -680,3 +680,26 @@ Local evidence (ignored): `artifacts/server-attempts/adapter-{before,after}.log`
 `artifacts/screenshots/classic-real-community-{desktop.png,mobile.png,proof.json}`.
 The task's server and preview remain available on loopback ports 17666/5191.
 No credentials, artwork, database or compiled artifacts are committed.
+
+## 2026-11-21, WP-A: the last three screens (frmGuildLeader, frmMain buttons, frmMapaGrande)
+
+Spec = the pinned VB6 client 619e69d (the reference checkout is at b648c1a, 84 lines of frmMain later: use `git show 619e69d:CODIGO/<form>`).
+
+- **frmGuildLeader: nothing to build.** The .frm has no control for `cmdElecciones_Click`, `Command7_Click` (peace list), `Command9_Click` (alliance list); frmGuildBrief
+  has none for `Guerra_Click` / `Command1-3`. Those handlers are dead code. The server explains why: `HandleGuildPeacePropList`, `...AlliancePropList`, `...DeclareWar`,
+  `...OfferPeace/Alliance` and `HandleGuildOpenElections` / `HandleGuildVote` only answer a LocaleMsg "Relaciones / Elecciones de clan desactivadas por el momento"
+  (Msg1149-1151, Msg1172). Recorded against the live server: `tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl` (`tools/real-server/record-guild-leader-lists.mjs`,
+  leader Wintest of WinGuild, read-only requests plus two refusals on names that do not exist; GuildOpenElections is not sent). The only command the pinned
+  client has for any of it is `/VOTO <nick>`, added to chat-input.ts.
+- **frmMain, audited control by control** (pinned frmMain.frm vs apps/web): built btnTotalExp / btnExp / btnExp2 / btnExpRemaining with their four labels (`exp-display.ts`,
+  UpdateExpBar captions, default `exp`), imgManual / imgMAO (MsgBox, then the page), CombateIcon / globalIcon (WriteMacroPos 239; ChatGlobal now filters FONTTYPE_GLOBAL and
+  faction console lines, ChatCombate gates the meditation lines, both only once the server has sent BindKeys), Hogar (`/HOGAR`), Retos (`/RETAR`), imgBugReport (FrmGmAyuda).
+  The settings button no longer also prints the old help lines. Not built, on purpose: buttonskins (frmSkins is class c), Label1 (frmBancoCuenta, class b), Image4(0) (minimise),
+  PicCorreo / imgSwitchWorld (no handler in the form), and the `lblPorcLvl` / `exp` click toggle (only active with ButtonsExpBar = 0, which no pinned form writes).
+- **frmMapaGrande**: the creature list, the four stat labels, the drop list with its picture and percentage, and the animated preview (tmrPreview, 120 ms, a quarter turn per
+  18 ticks). **QuestNPCsMapData.bin is not what this form reads** (it is ListNPCMapData, the minimap's NPC dots): the list comes from the NPC section of the map's .csm
+  (`parseMap().npcs`) and the stats from `init/sp_localindex.dat`. That file has no DropCount / Drop<n> / NroItems keys, so drops fall back to the server's `Dat/npcs.dat`
+  NROITEMS rule (100 %). Gotcha: `assets.parseIni` folds a section header with a trailing comment (`[NPC560] 'Ogro`) into the previous NPC; `parseNpcSections` does not.
+  The search box writes "name (n)" with a space, a click on the picture "name(n)" (both as in the form).
+- Real-server checks (own account wpa@local.test / char Wpascreens, own bridge 7794, web 5794, `tools/wp-a-screens-shot.mjs`, `tools/wp-a-map-shot.mjs`): BindKeys 0x88 `0101`, MacroPos
+  sends `ef00 0001` / `ef00 0000`, `/HOGAR` = 264, map 4 "Lobo Negro": HP 400, 20/35, EXP 220, drop "Piel de Lobo Negro" 100 %.

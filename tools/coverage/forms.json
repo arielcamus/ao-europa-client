@@ -6,57 +6,47 @@
   "evidence": [
    {
     "ref": "main",
-    "path": "apps/web/src/classic-layout.ts",
-    "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+    "path": "apps/web/src/classic-layout.ts"
    },
    {
     "ref": "main",
-    "path": "apps/web/src/chat-box.ts",
-    "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+    "path": "apps/web/src/chat-box.ts"
    },
    {
     "ref": "main",
-    "path": "apps/web/src/items-ui.ts",
-    "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+    "path": "apps/web/src/items-ui.ts"
    },
    {
     "ref": "main",
-    "path": "apps/web/src/spells.ts",
-    "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+    "path": "apps/web/src/spells.ts"
    },
    {
     "ref": "main",
-    "path": "apps/web/src/look-at.ts",
-    "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+    "path": "apps/web/src/look-at.ts"
    },
    {
     "ref": "main",
-    "path": "apps/web/src/map-objects.ts",
-    "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+    "path": "apps/web/src/map-objects.ts"
    },
    {
     "ref": "main",
-    "path": "apps/web/src/hotkeys-ui.ts",
-    "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+    "path": "apps/web/src/hotkeys-ui.ts"
    },
    {
     "ref": "main",
-    "path": "apps/web/src/inventory-extras.ts",
-    "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+    "path": "apps/web/src/inventory-extras.ts"
    },
    {
     "ref": "main",
-    "path": "apps/web/src/minimap.ts",
-    "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+    "path": "apps/web/src/minimap.ts"
+   },
+   {
+    "ref": "main",
+    "path": "apps/web/src/frm-main-buttons.ts"
+   },
+   {
+    "ref": "main",
+    "path": "apps/web/src/exp-display.ts"
    }
   ]
  },
@@ -715,8 +705,11 @@
   "evidence": [
    {
     "ref": "main",
-    "path": "apps/web/src/world-map-ui.ts",
-    "partial": true
+    "path": "apps/web/src/world-map-ui.ts"
+   },
+   {
+    "ref": "main",
+    "path": "apps/web/src/world-map-npcs.ts"
    }
   ]
  },

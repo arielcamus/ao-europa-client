@@ -5,14 +5,17 @@
  * the map search box and the map name and description labels. Left click selects a cell, right click sends `/TELEP YO <map> 50 50`
  * (the server refuses it for players). Positions are the .frm values / 15. Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; see NOTICE.
  *
- * Not ported: the NPC list, the drop list and the animated NPC preview (ListView1, listdrop, PlayerView). They read ListNPCMapData
- * (QuestNPCsMapData.bin), which the local resource mount does not serve.
+ * The creature panel (ListView1, the four stat labels, listdrop with its icon and percentage, and the animated PlayerView preview) reads the
+ * NPC section of the shown map's .csm and the NPC table (world-map-npcs.ts); QuestNPCsMapData.bin is the minimap's, not this form's.
  */
-import { VbWindow } from './vb-window.js';
+import { VbWindow, VbList } from './vb-window.js';
 import { loadInterface } from './interface-assets.js';
 import { BIG_TILE, bigMapCell, bigMapPlayer, clanCallMarker, findMap } from './world-map.js';
 import type { World } from './world-map.js';
 import type { Session } from './session.js';
+import type { Animation, GraphicFrame } from './assets.js';
+import { PREVIEW_INTERVAL_MS, previewStart, previewStep } from './world-map-npcs.js';
+import type { NpcInfo, NpcRow, PreviewState } from './world-map-npcs.js';
 
 /** JsonLanguage MENSAJE_573 (frmMapaGrande.Label1 for a map with no description). */
 export const NO_MAP_INFO = 'Sin información relevante.';
@@ -27,6 +30,40 @@ export interface WorldMapDeps {
   teleport: (map: number) => void;
   /** AddtoRichTextBox frmMain.RecTxt: a line in the console. */
   say: (text: string) => void;
+  /** The creature panel's data; without it the panel stays empty. */
+  creatures?: CreatureData;
+}
+
+export interface CreatureData {
+  /** CargarDatosMapa: the creatures of a map's file, one row per NpcIndex. */
+  rows: (map: number) => Promise<NpcRow[]>;
+  info: (npc: number) => NpcInfo | undefined;
+  /** ObjData(n).Name and GrhIndex; undefined for an unknown object. */
+  object: (index: number) => { name: string; grh: number } | undefined;
+  preview: (body: number, head: number) => Promise<{ walk: (Animation | undefined)[]; head: (Animation | undefined)[]; headOffsetY: number }>;
+  graphic: (grh: number) => Promise<GraphicFrame>;
+}
+
+const PREVIEW_W = 180, PREVIEW_H = 196;
+const sheets = new Map<number, Promise<HTMLImageElement>>();
+const sheet = (file: number) => {
+  let pending = sheets.get(file);
+  if (!pending) { const image = new Image(); image.src = `/ao-assets/Graficos/${file}.png`; pending = image.decode().then(() => image); sheets.set(file, pending); }
+  return pending;
+};
+/** A frame as a canvas whose pure black is see-through (Grh_Render_To_Hdc skips black). */
+const keyed = new Map<string, HTMLCanvasElement>();
+async function frameCanvas(frame: GraphicFrame): Promise<HTMLCanvasElement> {
+  const key = `${frame.file}/${frame.x}/${frame.y}/${frame.width}/${frame.height}`;
+  let canvas = keyed.get(key);
+  if (canvas) return canvas;
+  const image = await sheet(frame.file);
+  canvas = document.createElement('canvas'); canvas.width = frame.width; canvas.height = frame.height;
+  const ctx = canvas.getContext('2d')!; ctx.drawImage(image, frame.x, frame.y, frame.width, frame.height, 0, 0, frame.width, frame.height);
+  const pixels = ctx.getImageData(0, 0, frame.width, frame.height);
+  for (let i = 0; i < pixels.data.length; i += 4) if (!pixels.data[i] && !pixels.data[i + 1] && !pixels.data[i + 2]) pixels.data[i + 3] = 0;
+  ctx.putImageData(pixels, 0, 0); keyed.set(key, canvas);
+  return canvas;
 }
 
 export class WorldMapUI {
@@ -37,6 +74,11 @@ export class WorldMapUI {
   private picture!: HTMLElement; private player!: HTMLElement; private selected!: HTMLElement; private clanCell!: HTMLElement; private clanDot!: HTMLElement;
   private title!: HTMLElement; private info!: HTMLElement; private dungeonCheck!: HTMLElement; private referencesCheck!: HTMLElement; private search!: HTMLInputElement;
   private checkArt = ''; private token = 0;
+  private creatures!: VbList; private stats!: { hp: HTMLElement; exp: HTMLElement; gold: HTMLElement; hit: HTMLElement };
+  private drops!: VbList; private dropIcon!: HTMLCanvasElement; private dropPercent!: HTMLElement; private previewCanvas!: HTMLCanvasElement;
+  private rows: NpcRow[] = []; private shownDrops: { name: string; grh: number; percent: number }[] = [];
+  private pv: { body: number; head: number; walk: (Animation | undefined)[]; heads: (Animation | undefined)[]; offset: number; state: PreviewState; timer: number } | undefined;
+  private creatureToken = 0;
   /** Test hook: the selected cell and what the form shows. */
   state = { cell: 0, map: 0, world: 1 };
 
@@ -49,7 +91,7 @@ export class WorldMapUI {
   open(session: Session) {
     this.session = session;
     if (this.isOpen) { this.calculate(); return; }
-    const win = new VbWindow(this.parent, { id: 'world-map-window', art: 'ventanamapa', size: [771, 719], title: 'Mapa del mundo', onClose: () => { this.window = undefined; } });
+    const win = new VbWindow(this.parent, { id: 'world-map-window', art: 'ventanamapa', size: [771, 719], title: 'Mapa del mundo', onClose: () => { this.stopPreview(); this.window = undefined; } });
     this.window = win;
     win.root.tabIndex = -1;
     this.picture = win.add(document.createElement('div'), [32, 94, 513, 594]); this.picture.className = 'wm-picture';
@@ -86,6 +128,7 @@ export class WorldMapUI {
     this.search.addEventListener('keydown', event => { if (event.key === 'Enter') this.runSearch(); });
     win.button('boton-buscar', [664, 30, 25, 25], 'Buscar', () => this.runSearch());
     win.closeButton([740, 0, 31, 28]);
+    this.buildCreatures(win);
     win.root.focus();
     this.calculate();
   }
@@ -113,13 +156,14 @@ export class WorldMapUI {
     this.showMap(map);
     this.moveSelected(at?.cell ?? 0);
     this.update(session);
+    void this.loadCreatures(map, true); // Form_Activate: CargarDatosMapa, then ListView1_ItemClick on the first row
   }
-  private showMap(map: number) {
+  private showMap(map: number, spaced = false) {
     this.state.map = map;
     this.title.textContent = `(${map})`; this.title.dataset.map = String(map);
     const desc = this.deps.description(map);
     this.info.textContent = desc || NO_MAP_INFO;
-    void this.deps.mapName(map).then(name => { if (this.state.map === map && this.title) this.title.textContent = `${name}(${map})`; });
+    void this.deps.mapName(map).then(name => { if (this.state.map === map && this.title) this.title.textContent = `${name}${spaced ? ' ' : ''}(${map})`; });
   }
   private moveSelected(cell: number) {
     this.state.cell = cell;
@@ -164,6 +208,7 @@ export class WorldMapUI {
     if (!map || cell > (world?.indice.length ?? 0)) return; // Mundo(WorldActual).MapIndice(Mapa) = 0: nothing happens
     this.showMap(map);
     if (event.button === 2) this.deps.teleport(map);
+    this.clearStats(); void this.loadCreatures(map, true);
     this.moveSelected(cell);
   }
 
@@ -173,8 +218,9 @@ export class WorldMapUI {
     const at = findMap(this.deps.worlds() as World[], number);
     if (!at) return; // SearchMap False: nothing changes (the text stays)
     if (at.world !== this.world) this.toggleDungeon(); else void this.setPicture();
-    this.showMap(number); this.moveSelected(at.cell);
+    this.showMap(number, true); this.moveSelected(at.cell);
     this.search.value = '';
+    void this.loadCreatures(number, false).then(() => { if (this.state.map === number) this.clearPreview(); }); // PreviewNPC_Clear
   }
   /** ToggleDungeonView: worlds 1 and 2 swap (the code only knows those two). */
   toggleDungeon() {
@@ -182,6 +228,105 @@ export class WorldMapUI {
     this.state.world = this.world; this.paintChecks(); void this.setPicture();
     if (this.session) this.update(this.session);
   }
+  // ---- the creature panel: ListView1, Label2..5, listdrop, Picture1, PlayerView ----
+
+  private buildCreatures(win: VbWindow) {
+    // Controls (twips / 15): ListView1 8520,3900 2700x960; PlayerView 8520,5355 2700x2940; Label2/5 (hp, hit) 8550/9780,8355; Label3/4 (exp, gold) 8550/9780,8745,
+    // 1500x255; listdrop 9360,9600 1800x780; Picture1 8685,9750 480x480; lblPercentageDrop 8730,9570.
+    const dark = (el: HTMLElement) => Object.assign(el.style, { background: '#070707', font: '12px Arial, sans-serif', fontWeight: 'normal' });
+    this.creatures = win.list([568, 260, 180, 64]); dark(this.creatures.el);
+    this.creatures.el.setAttribute('aria-label', 'Criaturas del mapa');
+    this.creatures.onSelect = index => { void this.showCreature(this.rows[index]); };
+    this.previewCanvas = win.add(document.createElement('canvas'), [568, 357, PREVIEW_W, PREVIEW_H]);
+    this.previewCanvas.width = PREVIEW_W; this.previewCanvas.height = PREVIEW_H; this.previewCanvas.setAttribute('aria-label', 'Vista de la criatura');
+    const stat = (box: readonly [number, number, number, number]) => {
+      const el = win.label('', box, 'vb-center'); Object.assign(el.style, { font: '12px Arial, sans-serif', color: '#fff' }); return el;
+    };
+    this.stats = { hp: stat([570, 557, 100, 17]), hit: stat([652, 557, 100, 17]), exp: stat([570, 583, 100, 17]), gold: stat([652, 583, 100, 17]) };
+    this.drops = win.list([624, 640, 120, 52]); dark(this.drops.el); this.drops.el.setAttribute('aria-label', 'Objetos que suelta');
+    this.drops.onSelect = index => this.showDrop(index);
+    this.dropIcon = win.add(document.createElement('canvas'), [579, 650, 32, 33]);
+    this.dropIcon.width = 32; this.dropIcon.height = 33; this.dropIcon.style.background = '#000'; this.dropIcon.setAttribute('aria-label', 'Imagen del objeto');
+    this.dropPercent = win.label('', [582, 638, 28, 14], 'vb-center'); Object.assign(this.dropPercent.style, { font: '11px Arial, sans-serif', color: '#fff' });
+  }
+
+  /** CargarDatosMapa fills ListView1; with `first` the first creature is shown (ListView1_ItemClick). */
+  private async loadCreatures(map: number, first: boolean) {
+    const data = this.deps.creatures; if (!data || !this.isOpen) return;
+    const token = ++this.creatureToken;
+    const rows = await data.rows(map).catch(() => [] as NpcRow[]);
+    if (token !== this.creatureToken || !this.isOpen) return;
+    this.rows = rows;
+    this.creatures.set(rows.map(row => row.name));
+    // The count column is right-aligned, 30 px wide (50 when a scroll bar will show: more than four rows).
+    [...this.creatures.el.children].forEach((child, i) => {
+      const count = document.createElement('span'); count.textContent = String(rows[i]!.count);
+      Object.assign(count.style, { float: 'right', width: '30px', textAlign: 'right' }); child.prepend(count); child.setAttribute('title', rows[i]!.name);
+    });
+    this.creatures.el.dataset.rows = String(rows.length);
+    if (first && rows.length) this.creatures.select(0); else if (!rows.length) this.clearPreview();
+  }
+
+  /** ListView1_ItemClick: stats, drops and the animated preview of one creature. */
+  private async showCreature(row: NpcRow | undefined) {
+    const data = this.deps.creatures; const info = row ? data?.info(row.index) : undefined;
+    this.creatureToken++; // a preview still loading for the previous row is dropped
+    this.clearPreview();
+    if (!data || !info) return;
+    this.stats.hp.textContent = String(info.hp); this.stats.exp.textContent = String(info.exp); this.stats.gold.textContent = String(info.gold);
+    this.stats.hit.textContent = `${info.minHit}/${info.maxHit}`;
+    const shown = info.drops.flatMap(drop => { const object = data.object(drop.object); return object ? [{ name: object.name, grh: object.grh, percent: drop.percent }] : []; });
+    this.shownDrops = shown; this.drops.set(shown.map(drop => drop.name));
+    if (shown.length) this.drops.select(0);
+    await this.startPreview(info);
+  }
+  /** listdrop_Click: the object's picture in Picture1 and its chance in lblPercentageDrop. */
+  private showDrop(index: number) {
+    const drop = this.shownDrops[index], data = this.deps.creatures;
+    const ctx = this.dropIcon.getContext('2d')!; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 32, 33);
+    if (!drop || !data) { this.dropPercent.textContent = ''; return; }
+    this.dropPercent.textContent = `${drop.percent}%`;
+    void data.graphic(drop.grh).then(frameCanvas).then(canvas => { if (this.shownDrops[index] === drop) ctx.drawImage(canvas, 0, 0); }).catch(() => undefined);
+  }
+  private clearStats() { for (const el of Object.values(this.stats)) el.textContent = ''; this.drops.set([]); this.shownDrops = []; this.dropPercent.textContent = ''; this.showDrop(-1); }
+  /** PreviewNPC_Clear: stop the animation, empty the labels, the drop list and the picture boxes. */
+  private clearPreview() { this.stopPreview(); this.clearStats(); const ctx = this.previewCanvas.getContext('2d')!; ctx.clearRect(0, 0, PREVIEW_W, PREVIEW_H); }
+  private stopPreview() { if (this.pv) { window.clearInterval(this.pv.timer); this.pv = undefined; } }
+
+  /** PreviewNPC_Setup_ByIndex + tmrPreview: south first, one frame every 120 ms, a quarter turn every 18 ticks. */
+  private async startPreview(info: NpcInfo) {
+    const data = this.deps.creatures; if (!data) return;
+    const token = this.creatureToken;
+    const art = await data.preview(info.body, info.head).catch(() => undefined);
+    if (!art || token !== this.creatureToken || !this.isOpen) return;
+    // Warm the sheets so the first frames do not skip.
+    await Promise.all([...art.walk, ...art.head].flatMap(animation => animation ? animation.frames.map(frameCanvas) : [])).catch(() => undefined);
+    if (token !== this.creatureToken || !this.isOpen) return;
+    this.stopPreview();
+    this.pv = { body: info.body, head: info.head, walk: art.walk, heads: art.head, offset: art.headOffsetY, state: previewStart(), timer: window.setInterval(() => this.tick(), PREVIEW_INTERVAL_MS) };
+    this.drawPreview();
+  }
+  private tick() {
+    const pv = this.pv; if (!pv) return;
+    const h = pv.state.heading - 1;
+    pv.state = previewStep(pv.state, pv.walk[h]?.frames.length ?? 1, pv.heads[h]?.frames.length ?? 1);
+    this.drawPreview();
+  }
+  /** PreviewNPC_RenderFrame: the body centred, the head over it (DibujarNPC's rule), or the head alone for a body-less NPC. */
+  private drawPreview() {
+    const pv = this.pv; if (!pv) return;
+    const h = pv.state.heading - 1, body = pv.walk[h], head = pv.heads[h];
+    const bodyFrame = body?.frames[(pv.state.frame - 1) % Math.max(1, body.frames.length)], headFrame = head?.frames[(pv.state.frame - 1) % Math.max(1, head.frames.length)];
+    const ctx = this.previewCanvas.getContext('2d')!;
+    ctx.fillStyle = 'rgb(30,30,30)'; ctx.fillRect(0, 0, PREVIEW_W, PREVIEW_H);
+    const draw = (frame: GraphicFrame, x: number, y: number) => { const canvas = keyed.get(`${frame.file}/${frame.x}/${frame.y}/${frame.width}/${frame.height}`); if (canvas) ctx.drawImage(canvas, x, y); };
+    if (bodyFrame) {
+      const x = Math.floor((PREVIEW_W - bodyFrame.width) / 2), y = Math.floor((PREVIEW_H - bodyFrame.height) / 2);
+      draw(bodyFrame, x, y);
+      if (headFrame && pv.body) draw(headFrame, Math.floor((PREVIEW_W - headFrame.width) / 2) + 1, y + bodyFrame.height - headFrame.height + pv.offset);
+    } else if (headFrame) draw(headFrame, Math.floor((PREVIEW_W - headFrame.width) / 2), Math.floor((PREVIEW_H - headFrame.height) / 2));
+  }
+
   /** Image3_Click (not in the dungeon world). */
   toggleReferences() {
     if (this.world === 2) return; // `If Dungeon Then Exit Sub`

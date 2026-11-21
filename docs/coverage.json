@@ -16,12 +16,12 @@
   "s2cCovered": 202,
   "c2sCovered": 310,
   "forms": 86,
-  "formsCovered": 56,
-  "formsPartial": 2,
-  "fixturePackets": 276,
+  "formsCovered": 58,
+  "formsPartial": 0,
+  "fixturePackets": 278,
   "packetsPct": 99.8,
   "packetsMergedPct": 99.8,
-  "formsPct": 65.1,
+  "formsPct": 67.4,
   "formsStartedPct": 67.4
  },
  "groups": [
@@ -33,9 +33,9 @@
    "packetsMerged": 68,
    "packetsPct": 100,
    "forms": 21,
-   "formsCovered": 10,
-   "formsPartial": 1,
-   "formsPct": 47.6
+   "formsCovered": 11,
+   "formsPartial": 0,
+   "formsPct": 52.4
   },
   {
    "id": "chat",
@@ -213,9 +213,9 @@
    "packetsMerged": 2,
    "packetsPct": 100,
    "forms": 1,
-   "formsCovered": 0,
-   "formsPartial": 1,
-   "formsPct": 0
+   "formsCovered": 1,
+   "formsPartial": 0,
+   "formsPct": 100
   },
   {
    "id": "extras",
@@ -301,6 +301,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -384,6 +385,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -877,6 +879,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -1185,6 +1188,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -1429,6 +1433,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/papiro-sign.jsonl",
     "tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
@@ -1498,7 +1503,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
-    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl"
    ]
   },
   {
@@ -1600,6 +1606,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/drop-pickup.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
@@ -1800,6 +1807,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -1883,6 +1891,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -2323,6 +2332,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -2495,6 +2505,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
@@ -2615,6 +2626,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/delete-item.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/move-item.jsonl",
@@ -2758,6 +2770,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -3067,6 +3080,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
@@ -3172,6 +3186,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -3376,6 +3391,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -3540,7 +3556,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
-    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl"
    ]
   },
   {
@@ -3755,6 +3772,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
@@ -3858,6 +3876,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -4094,6 +4113,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/move-item.jsonl",
     "tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
@@ -4301,6 +4321,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -4429,6 +4450,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/drop-pickup.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
@@ -4816,6 +4838,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
@@ -4925,6 +4948,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -5098,6 +5122,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/delete-item.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
@@ -5545,6 +5570,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -5649,6 +5675,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -5732,6 +5759,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -6113,6 +6141,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -6529,6 +6558,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -6631,6 +6661,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -6734,6 +6765,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -6836,6 +6868,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -7432,6 +7465,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -7453,6 +7487,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -7472,8 +7507,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl"
+   ]
   },
   {
    "key": "c2s:29",
@@ -8249,8 +8286,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl"
+   ]
   },
   {
    "key": "c2s:66",
@@ -8452,6 +8491,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -8754,6 +8794,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -13262,6 +13303,7 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -13418,76 +13460,68 @@
    "group": "core",
    "package": "wp01",
    "lines": 4326,
-   "status": "merged (partial)",
-   "covered": false,
-   "partial": true,
+   "status": "merged",
+   "covered": true,
+   "partial": false,
    "evidence": [
     {
      "ref": "main",
      "path": "apps/web/src/classic-layout.ts",
-     "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/chat-box.ts",
-     "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/items-ui.ts",
-     "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/spells.ts",
-     "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/look-at.ts",
-     "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/map-objects.ts",
-     "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/hotkeys-ui.ts",
-     "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/inventory-extras.ts",
-     "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/minimap.ts",
-     "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
+     "ok": true
+    },
+    {
+     "ref": "main",
+     "path": "apps/web/src/frm-main-buttons.ts",
+     "ok": true
+    },
+    {
+     "ref": "main",
+     "path": "apps/web/src/exp-display.ts",
      "ok": true
     }
    ],
    "missing": null,
-   "partialNote": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+   "partialNote": null
   },
   {
    "name": "frmConnect",
@@ -14611,14 +14645,18 @@
    "group": "minimap",
    "package": "wp02",
    "lines": 1209,
-   "status": "merged (partial)",
-   "covered": false,
-   "partial": true,
+   "status": "merged",
+   "covered": true,
+   "partial": false,
    "evidence": [
     {
      "ref": "main",
      "path": "apps/web/src/world-map-ui.ts",
-     "partial": true,
+     "ok": true
+    },
+    {
+     "ref": "main",
+     "path": "apps/web/src/world-map-npcs.ts",
      "ok": true
     }
    ],
@@ -15053,7 +15091,6 @@
    "packetIds": [],
    "packetNames": [],
    "forms": [
-    "frmMain",
     "frmOldPersonaje",
     "frmDeleteChar",
     "frmPasswd",
@@ -15072,9 +15109,7 @@
    "scope": "Light, weather, particles, sound, projectiles, auras, area changes, world map form",
    "packetIds": [],
    "packetNames": [],
-   "forms": [
-    "frmMapaGrande"
-   ]
+   "forms": []
   },
   {
    "id": "wp03",

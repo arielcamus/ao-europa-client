@@ -151,6 +151,17 @@ export class WorldRenderer {
     await this.loadMetadata();
     return this.animation(id).frames[0]!;
   }
+  /** frmMapaGrande preview: the walk animation and head graphic of an NPC body / head for headings 1..4, and BodyData(body).HeadOffset.y. */
+  async npcPreview(body: number, head: number): Promise<{ walk: (Animation | undefined)[]; head: (Animation | undefined)[]; headOffsetY: number }> {
+    await this.loadMetadata();
+    const data = body ? this.sprites?.body(body) : undefined;
+    const headOffsetY = Number((this.bodies.get(`body${body}`)?.get('headoffsety') ?? '0').split("'")[0]);
+    return {
+      walk: [1, 2, 3, 4].map(h => data?.walk[h - 1]),
+      head: [1, 2, 3, 4].map(h => { const grh = head ? this.heads[head]?.[h - 1] : 0; return grh ? this.animation(grh) : undefined; }),
+      headOffsetY,
+    };
+  }
   private texture(frame: GraphicFrame): Texture {
     const key = `${frame.file}/${frame.x}/${frame.y}/${frame.width}/${frame.height}`;
     const cached = this.textures.get(key);

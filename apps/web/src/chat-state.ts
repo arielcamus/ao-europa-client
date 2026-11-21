@@ -6,10 +6,12 @@
  */
 import { NpcsServerPacketId as NS, ServerPacketId as S, vbColor } from '@ao/protocol';
 import type { CharacterCreate, ServerPacket } from '@ao/protocol';
-import { privilegeLevel } from './chat-fonts.js';
+import { FONTTYPE, privilegeLevel } from './chat-fonts.js';
 import { readField, vbVal } from './chat-console.js';
 import type { ChatLine } from './chat-console.js';
 import { ChatLocale, sharedLocale } from './chat-locale.js';
+
+const GLOBAL_FONT = FONTTYPE.GLOBAL;
 
 /** A speech bubble over a character (Char_Dialog_Set). Times are in the session clock's milliseconds. */
 export interface Dialog {
@@ -42,6 +44,8 @@ export class ChatState {
   copyToConsole = true;
   /** QUESTFIN over the head: the quest's DESCFINALAUDIO id to voice (main.ts wires it to QuestVoice). */
   onQuestFinal: ((audio: string) => void) | undefined;
+  /** frmMain globalIcon / ChatGlobal: with it off, HandleConsoleMessage drops FONTTYPE_GLOBAL lines and HandleConsoleFactionMessage everything. */
+  globalEnabled: () => boolean = () => true;
 
   constructor(private readonly push: (line: ChatLine) => void) {}
 
@@ -65,9 +69,9 @@ export class ChatState {
     if (!this.locale.ready && this.needsLocale(packet)) { if (this.pending.length < 200) this.pending.push(packet); return true; }
     if (this.pending.length) this.flushPending();
     switch (packet.id) {
-      case S.ConsoleMsg: this.push({ kind: 'console', message: packet.message, font: packet.font }); return true;
+      case S.ConsoleMsg: if (packet.font === GLOBAL_FONT && !this.globalEnabled()) return true; this.push({ kind: 'console', message: packet.message, font: packet.font }); return true;
       case NS.LocaleMsg: this.push({ kind: 'locale', id: packet.messageId, extra: packet.text, font: packet.font }); return true;
-      case S.ConsoleFactionMessage: this.push({ kind: 'faction', message: packet.message, font: packet.font, label: packet.label }); return true;
+      case S.ConsoleFactionMessage: if (!this.globalEnabled()) return true; this.push({ kind: 'faction', message: packet.message, font: packet.font, label: packet.label }); return true;
       case S.GuildChat: this.push({ kind: 'guild', status: packet.status, message: packet.message }); return true;
       case S.ConsoleCharText: {
         const c = vbColor(packet.color);

@@ -11,14 +11,14 @@ Scanned refs: `main`
 ## Headline
 
 - **Packets covered (merged + open branches): 512 of 513 = 99.8%.** Merged on main only: 512 = 99.8%.
-  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 276.
-- **Forms covered: 56 of 86 = 65.1%** (2 more partially, 67.4% started).
+  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 278.
+- **Forms covered: 58 of 86 = 67.4%** (0 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
 
 | # | Group | Packets covered | % | Merged | Forms covered | % | Partial forms |
 |---|---|---|---|---|---|---|---|
-| 1 | Core movement / world / session | 68/68 | 100% | 68 | 10/21 | 47.6% | 1 |
+| 1 | Core movement / world / session | 68/68 | 100% | 68 | 11/21 | 52.4% | 0 |
 | 2 | Chat | 28/28 | 100% | 28 | 0/0 | n/a | 0 |
 | 3 | Combat | 41/41 | 100% | 41 | 0/0 | n/a | 0 |
 | 4 | Spells | 8/8 | 100% | 8 | 0/0 | n/a | 0 |
@@ -33,7 +33,7 @@ Scanned refs: `main`
 | 13 | Crafting (smith / carpenter / alchemy / tailor) | 25/25 | 100% | 25 | 5/5 | 100% | 0 |
 | 14 | Fishing / mining / lumber (work skills) | 10/10 | 100% | 10 | 0/0 | n/a | 0 |
 | 15 | Options / keybinds | 2/2 | 100% | 2 | 3/4 | 75% | 0 |
-| 16 | Minimap / world map | 2/2 | 100% | 2 | 0/1 | 0% | 1 |
+| 16 | Minimap / world map | 2/2 | 100% | 2 | 1/1 | 100% | 0 |
 | 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 49/50 | 98% | 49 | 2/13 | 15.4% | 0 |
 | 18 | GM / admin (lowest) | 142/142 | 100% | 142 | 9/13 | 69.2% | 0 |
 
@@ -80,7 +80,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | frmDeleteChar | Delete character confirmation | core | not started | (b) DeleteCharacter needs the account server; PYMMO=0 does nothing, the client says so (connect-text.ts deleteUnsupported) |
 | frmKeypad | On-screen keypad for character password | core | not started | (b) On-screen password keypad, only opened from frmOldPersonaje |
 | FrmLogear | Server/port connection dialog | core | merged | src/main.ts |
-| frmMain | Main game window: viewport, HUD bars, inventory/spell panels, chat console and input | core | merged (partial) | src/classic-layout.ts, src/chat-box.ts, src/items-ui.ts, src/spells.ts, src/look-at.ts, src/map-objects.ts, src/hotkeys-ui.ts, src/inventory-extras.ts, src/minimap.ts: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not |
+| frmMain | Main game window: viewport, HUD bars, inventory/spell panels, chat console and input | core | merged | src/classic-layout.ts, src/chat-box.ts, src/items-ui.ts, src/spells.ts, src/look-at.ts, src/map-objects.ts, src/hotkeys-ui.ts, src/inventory-extras.ts, src/minimap.ts, src/frm-main-buttons.ts, src/exp-display.ts |
 | frmMensaje | Generic message box | core | merged | src/session-windows.ts |
 | frmNewAccount | New account details | core | merged | src/session-windows.ts |
 | frmNewPassword | Set new password | core | not started | (b) Set new password: account server |
@@ -128,7 +128,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | frmCustomKeys | Custom key bindings | options | merged | src/keys-ui.ts |
 | frmMasOpciones | More options | options | not started | (b) Only opened from the account recovery and account creation forms |
 | frmOpciones | Options (sound, light, display) | options | merged | src/options-ui.ts |
-| frmMapaGrande | Large world map | minimap | merged (partial) | src/world-map-ui.ts |
+| frmMapaGrande | Large world map | minimap | merged | src/world-map-ui.ts, src/world-map-npcs.ts |
 | frmCollectibleCard | Collectible card viewer | extras | not started | (c) AO20 collectible card viewer, local to the AO20 client |
 | frmCreateBattleground | Create battleground | extras | not started | (c) AO20 battleground creation (LobbyCommand) |
 | frmEligeAlineacion | Faction alignment choice | extras | not started | (d) Never opened by the classic client code (dead form) |
@@ -158,7 +158,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 
 ### Genuinely missing screens
 
-29 forms have no complete screen yet.
+28 forms have no complete screen yet.
 
 **(a) Player-facing and worth building** (0)
 
@@ -200,10 +200,8 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 - frmMSG: Never opened by the classic client code (dead form)
 - frmProcesses: Never opened by the classic client code (anti-cheat leftover)
 
-**Partial** (2)
+**Partial** (0)
 
-- frmMain: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not
-- frmMapaGrande: null
 
 
 ## (a) VB6 packets
@@ -446,7 +444,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 25 | GuildRequestJoinerInfo | server Protocol.bas:HandleGuildRequestJoinerInfo | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 26 | GuildAlliancePropList | server Protocol.bas:HandleGuildAlliancePropList | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 27 | GuildPeacePropList | server Protocol.bas:HandleGuildPeacePropList | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
-| 28 | GuildDeclareWar | server Protocol.bas:HandleGuildDeclareWar | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
+| 28 | GuildDeclareWar | server Protocol.bas:HandleGuildDeclareWar | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 29 | GuildNewWebsite | server Protocol.bas:HandleGuildNewWebsite | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 30 | GuildAcceptNewMember | server Protocol.bas:HandleGuildAcceptNewMember | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 31 | GuildRejectNewMember | server Protocol.bas:HandleGuildRejectNewMember | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
@@ -483,7 +481,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 62 | FactionMessage | server Protocol.bas:HandleFactionMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 63 | RoleMasterRequest | server Protocol.bas:HandleRoleMasterRequest | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 64 | ChangeDescription | server Protocol.bas:HandleChangeDescription | options | merged | `main:packages/protocol/src/packets/extras.ts` | no |
-| 65 | GuildVote | server Protocol.bas:HandleGuildVote | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
+| 65 | GuildVote | server Protocol.bas:HandleGuildVote | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 66 | Punishments | server Protocol.bas:HandlePunishments | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 67 | Gamble | server Protocol.bas:HandleGamble | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 68 | MapPriceEntrance | server Protocol.bas:HandleMapPriceEntrance | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
@@ -740,14 +738,14 @@ Disjoint by construction: every uncovered packet and form belongs to exactly one
 Account create/select/delete, character create, loading screens, HUD stat updates, remaining chat packets.
 
 - Packets (0): none left
-- Forms (11): frmMain, frmOldPersonaje, frmDeleteChar, frmPasswd, frmNewPassword, FrmRecuperar, frmPasswordReset, frmCargando, frmPres, frmtip, frmKeypad
+- Forms (10): frmOldPersonaje, frmDeleteChar, frmPasswd, frmNewPassword, FrmRecuperar, frmPasswordReset, frmCargando, frmPres, frmtip, frmKeypad
 
 ### wp02: World FX, environment and minimap
 
 Light, weather, particles, sound, projectiles, auras, area changes, world map form.
 
 - Packets (0): none left
-- Forms (1): frmMapaGrande
+- Forms (0): none left
 
 ### wp03: Combat and spells completion
 

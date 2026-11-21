@@ -19,6 +19,8 @@ export class OptionsState {
   /** HandleBindKeys: the chat-combat / chat-global icon states. */
   chatCombat = 0;
   chatGlobal = 0;
+  /** True once the server has sent BindKeys: before that the icons say nothing about the filters. */
+  bindKeysSeen = false;
   hotkeys: HotkeyEntry[] = Array.from({ length: HOTKEY_COUNT }, emptyHotkey);
   /** HideHotkeys: the arrow button collapses the bar. */
   hideHotkeys = false;
@@ -27,7 +29,7 @@ export class OptionsState {
     switch (packet.id) {
       case OS.SendClientToggles:
         this.toggles = [...packet.toggles]; this.hotkeysEnabled = packet.toggles.includes(HOTKEY_TOGGLE); break;
-      case OS.BindKeys: this.chatCombat = packet.chatCombat; this.chatGlobal = packet.chatGlobal; break;
+      case OS.BindKeys: this.chatCombat = packet.chatCombat; this.chatGlobal = packet.chatGlobal; this.bindKeysSeen = true; break;
       default: return;
     }
     this.revision++;

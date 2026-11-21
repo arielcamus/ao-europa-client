@@ -13,23 +13,7 @@
  "packetNotes": {
   "c2s:307": "ChangeSkinSlot: item skins (frmSkins, class c). Possibly covered by fix/codecs-pinned (branch has no commits yet)."
  },
- "formGaps": [
-  {
-   "form": "frmGuildLeader",
-   "missing": "leader-only controls: elections (open/vote), peace and alliance proposal lists, declare war. State and codecs exist, no UI.",
-   "ref": "#39"
-  },
-  {
-   "form": "frmMain",
-   "missing": "a few buttons are not built. Audit every Private Sub *_Click/_MouseUp of frmMain.frm (btnExp*, btnZoomIn/Out, ImgSeg/ImgSegClan/ImgSegParty/ImgSegResu, ImgHogar, imgManual, imgBugReport, imgMAO, onlines, GlobalIcon, CombateIcon, Retar, buttonSkins) against apps/web/src and list the ones with no handler.",
-   "ref": "docs/COVERAGE.md"
-  },
-  {
-   "form": "frmMapaGrande",
-   "missing": "partial per forms.json (world-map-ui.ts); the exact missing controls are not listed. Compare with frmMapaGrande.frm (dungeon toggle, search, right-click teleport for GMs).",
-   "ref": "#52"
-  }
- ],
+ "formGaps": [],
  "behaviour": [
   {
    "issue": 58,
@@ -62,11 +46,6 @@
    "text": "Real blind / dumb / stun (no spell or object in the data can cause them; see docs/DATA-PATCHES.md)",
    "area": "recordings",
    "blocked": "data"
-  },
-  {
-   "issue": 39,
-   "text": "Guild leader-only controls UI: elections, peace/alliance lists, declare war",
-   "area": "guild"
   },
   {
    "issue": 38,
@@ -140,12 +119,6 @@
   }
  ],
  "workPackages": [
-  {
-   "id": "WP-A",
-   "title": "Missing screens: guild leader controls, frmMain buttons, world map",
-   "files": "apps/web/src/guild-*.ts (leader window), classic-layout.ts and the frmMain handlers, world-map-ui.ts",
-   "closes": "formGaps (all three), #39"
-  },
   {
    "id": "WP-B",
    "title": "Chat, hotkeys, spells, skills and quests cleanups",

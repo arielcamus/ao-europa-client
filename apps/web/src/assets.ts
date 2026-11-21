@@ -14,9 +14,11 @@ export interface WorldMap {
    * (trees, signs, deposits, decorations; ModAreas.EsObjetoFijo), so the map file is the only source for them.
    */
   objects: MapFileObject[];
+  /** NPCs stored in the map file (frmMapaGrande's creature list counts them per NpcIndex). */
+  npcs: MapFileNpc[];
   /** The sound-related part of tMapDat (Recursos.bas): the map's music number, the "night-day" ambient wave and its weather flags. */
   audio: { music: number; ambient: string; rain: boolean; snow: boolean; fog: boolean };
-  /** The NPC and tile-exit sections after the objects stay opaque. */
+  /** The tile-exit section after the NPCs stays opaque. */
   trailingBytes: number;
   /** tMapDat fields the world FX read (Recursos.CargarMapa): zone ("DUNGEON" lights the dungeon colour), base light, rain/snow/fog flags. */
   info: MapInfo;
@@ -28,6 +30,8 @@ export interface WorldMap {
 export interface MapInfo { zone: string; baseLight: number; rain: boolean; snow: boolean; fog: boolean }
 export interface MapLight { x: number; y: number; r: number; g: number; b: number; range: number }
 export interface MapParticle { x: number; y: number; stream: number }
+/** One tDatosNPC of the CSM NPC section. */
+export interface MapFileNpc { x: number; y: number; npcIndex: number }
 export interface MapFileObject { x: number; y: number; objIndex: number; amount: number;
 }
 export interface GraphicFrame { file: number; x: number; y: number; width: number; height: number }
@@ -81,7 +85,7 @@ export function parseMap(bytes: Uint8Array): WorldMap {
   const blockedCount = count(five ? r.i32() : first);
   const counts = Array.from({ length: five ? 5 : 4 }, () => count(r.i32()));
   // Header order (tMapHeader): triggers, lights, particles, NPCs, objects, tile exits.
-  const [triggerCount, lightCount, particleCount, , objectCount] = Array.from({ length: 6 }, () => count(r.i32())) as [number, number, number, number, number, number];
+  const [triggerCount, lightCount, particleCount, npcCount, objectCount] = Array.from({ length: 6 }, () => count(r.i32())) as [number, number, number, number, number, number];
   r.take(8); // tMapSize is often all zero; the classic world bounds are 1..100.
   const name = r.text();
   r.u8(); r.text(); const musicAt = r.take(9); // backup, restrict, then music_numberHi, music_numberLow (Int32 each) and safe
@@ -124,12 +128,17 @@ export function parseMap(bytes: Uint8Array): WorldMap {
     const x = r.i16(), y = r.i16(), objIndex = r.i16(), amount = r.i16();
     if (objIndex > 0 && x >= 1 && y >= 1 && x <= 100 && y <= 100) objects.push({ x, y, objIndex, amount });
   }
+  // The NPC section follows the objects (tDatosNPC: x, y, NpcIndex); frmMapaGrande lists them. The tile exits after it stay opaque.
+  const npcs: MapFileNpc[] = [];
+  if (npcCount > 0 && r.offset + npcCount * 6 <= bytes.length) {
+    for (let i = 0; i < npcCount; i++) { const x = r.i16(), y = r.i16(), npcIndex = r.i16(); if (npcIndex > 0) npcs.push({ x, y, npcIndex }); }
+  }
   const audio = {
     music: r.view.getInt32(musicAt + 4, true), ambient,
     rain: bytes[weatherAt] === 1, snow: bytes[weatherAt + 1] === 1, fog: bytes[weatherAt + 2] !== 0,
   };
   const info: MapInfo = { zone, baseLight, rain: bytes[weatherAt] !== 0, snow: bytes[weatherAt + 1] !== 0, fog: bytes[weatherAt + 2] !== 0 };
-  return { name, layers, blocked, triggers, objects, audio, trailingBytes: bytes.length - r.offset, info, lights, particles };
+  return { name, layers, blocked, triggers, objects, npcs, audio, trailingBytes: bytes.length - r.offset, info, lights, particles };
 }
 
 export function parseIni(text: string): Ini {

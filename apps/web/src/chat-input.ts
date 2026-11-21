@@ -5,7 +5,7 @@
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; see NOTICE.
  * GM and gameplay slash commands belong to other features: they get an explicit "not available" line.
  */
-import { PetsTravelClientPacketId as PT, CombatClientPacketId as CC, ClientPacketId as C, BankTradeClientPacketId as BC, KeysClientPacketId as K, SkillsClientPacketId as SC, SessionClientPacketId as SE } from '@ao/protocol';
+import { PetsTravelClientPacketId as PT, CombatClientPacketId as CC, ClientPacketId as C, BankTradeClientPacketId as BC, KeysClientPacketId as K, SkillsClientPacketId as SC, SessionClientPacketId as SE, GuildClientPacketId } from '@ao/protocol';
 import type { ClientPacket } from '@ao/protocol';
 import { FONTTYPE } from './chat-fonts.js';
 import { parseGmCommand } from './gm-commands.js';
@@ -150,6 +150,10 @@ export class ChatInput {
           if (hasArguments) outcome.packet = { id: C.GroupMessage, message: args }; else note(MESSAGES.empty);
           return;
         case '/ONLINECLAN': outcome.packet = { id: C.GuildOnline }; return;
+        // ProtocolCmdParse /VOTO: the only way to cast a guild-election vote (frmGuildLeader has no control for it), WriteGuildVote.
+        case '/VOTO': case '/VOTE':
+          if (args !== '') outcome.packet = { id: GuildClientPacketId.GuildVote, userName: args }; else note('Faltan parámetros');
+          return;
         // Combat (#11): act on the priest selected with a left click (WriteResucitate / WriteHeal, no fields).
         case '/RESUCITAR': case '/RESURRECT': outcome.packet = { id: CC.Resucitate }; return;
         case '/CURAR': case '/CURE': outcome.packet = { id: CC.Heal }; return;
