@@ -14,8 +14,8 @@
 | Check | Done | Of | Left |
 |---|---|---|---|
 | Packets with a codec | 512 | 513 | 1 |
-| Screens complete (all controls) | 55 | 58 | 3 (2 partial, 0 not started, 1 covered but missing controls) |
-| Behaviour items | 0 | 32 | **32 open** (27 to do, 1 in flight, 4 blocked on data or a decision) |
+| Screens complete (all controls) | 58 | 58 | 0 (0 partial, 0 not started, 0 covered but missing controls) |
+| Behaviour items | 0 | 19 | **19 open** (14 to do, 1 in flight, 4 blocked on data or a decision) |
 | Playthrough steps passing end to end | 14 | 169 | 155 (52 recorded at protocol level on main, 0 in flight, 148 automatable, 21 manual) |
 
 Scope. Packets: the 8 post-pin packets are excluded (docs/COVERAGE.md "post-pin"); "codec" is a registered `[Table.Name]` entry, and the handling check is a name search in apps/web and the bridge. Screens: covered + partial + class a; classes b (account server), c (AO20 extras) and d (dead forms) are out. Playthrough: "passing" means an end-to-end run against the real server; none exists yet (WP-D).
@@ -24,7 +24,7 @@ In flight now: PR #54 (feat/prehoo-lock: pins, asset lock, pinned coverage map);
 
 ## 1. Packets
 
-**512 of 513 have a codec** (server to client 202/202, client to server 310/311); 275 have a recorded VB6 fixture.
+**512 of 513 have a codec** (server to client 202/202, client to server 310/311); 278 have a recorded VB6 fixture.
 
 ### Missing codecs
 
@@ -34,26 +34,17 @@ In flight now: PR #54 (feat/prehoo-lock: pins, asset lock, pinned coverage map);
 
 Server packets whose name never appears in apps/web or the bridge (name search: a handler registered by number shows here by mistake). Each needs a one-line answer: handled where, or "VB6 ignores it too".
 
-- [ ] `s2c:46` UserIndexInServer (core)
-- [ ] `s2c:51` Fxpiso (core)
-- [ ] `s2c:82` ShowForumForm (gm)
-- [ ] `s2c:137` ShowFrmLogear (core)
-- [ ] `s2c:185` NotificarClienteCasteo (extras)
+None.
 
 ## 2. Screens
 
-**55 of 58** player-facing forms are complete: 56 have a surface (1 of them still miss controls), 2 partial, 0 not started. Out of scope: 12 class b, 4 class c, 12 class d.
+**58 of 58** player-facing forms are complete: 58 have a surface (0 of them still miss controls), 0 partial, 0 not started. Out of scope: 12 class b, 4 class c, 12 class d.
 
 ### Partial or not started
 
-- [ ] `frmMain` Main game window: viewport, HUD bars, inventory/spell panels, chat console and input. Missing: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not
-- [ ] `frmMapaGrande` Large world map. Missing: see below
 
 ### Covered forms that still miss controls
 
-- [ ] `frmGuildLeader` (#39): leader-only controls: elections (open/vote), peace and alliance proposal lists, declare war. State and codecs exist, no UI.
-- [ ] `frmMain` (docs/COVERAGE.md): a few buttons are not built. Audit every Private Sub *_Click/_MouseUp of frmMain.frm (btnExp*, btnZoomIn/Out, ImgSeg/ImgSegClan/ImgSegParty/ImgSegResu, ImgHogar, imgManual, imgBugReport, imgMAO, onlines, GlobalIcon, CombateIcon, Retar, buttonSkins) against apps/web/src and list the ones with no handler.
-- [ ] `frmMapaGrande` (#52): partial per forms.json (world-map-ui.ts); the exact missing controls are not listed. Compare with frmMapaGrande.frm (dungeon toggle, search, right-click teleport for GMs).
 
 ### Out of scope (for the record)
 
@@ -63,7 +54,7 @@ Server packets whose name never appears in apps/web or the bridge (name search: 
 
 ## 3. Behaviour: open issues and reported bugs
 
-**32 items** from the open issues (#58 #44 #43 #39 #38 #35 #34 #28 #24 #22 #20 #19 #17 #16 #15) and Ariel's reports. In flight: 1; blocked on data or a decision: 4.
+**19 items** from the open issues (#58 #44 #43 #38 #35 #34 #28 #24 #22 #17 #16 #15) and Ariel's reports. In flight: 1; blocked on data or a decision: 4.
 
 ### #15
 
@@ -71,25 +62,11 @@ Server packets whose name never appears in apps/web or the bridge (name search: 
 
 ### #16
 
-- [ ] chat-box.ts never passes dead to ChatInput.submit (/GLOBAL while dead)
-- [ ] Wrong comments in chat.test.ts:64 and vb6-chat-record.mjs:28
-- [ ] chat-input.ts filters by code point, not windows-1252 representability
-- [ ] Document the LOCMSG field-3 deviation (VB6 client bug)
-- [ ] Merge the two parsers of sp_localindex.dat (ChatLocale and LocaleData)
-- [ ] CharacterTracker still computes an overhead dialog state no longer drawn; bubbles jump tile to tile for walking NPCs
-- [ ] ChatBubbles and the door rule read session.characters, a second character store next to the tracker
+- [ ] session.characters (raw CharacterCreate copies: hp, cart, self copy) is still a second store next to the tracker; chat bubbles, the door rule and the tap-to-select rule already read the tracker. Remaining readers: session.ts, combat.ts, combat-overlay.ts, extras-ui.ts (other packages' files)
 
 ### #17
 
 - [ ] Record death by a hostile creature, NPCHitUser/NPCKillUser on a non-GM char and the revival after it
-
-### #19
-
-- [ ] hotkeys-ui still reads spellTables.spells: use the shared spellData and delete the copy
-
-### #20
-
-- [ ] Keybound features not in the client (ShowOnline M, ScreenShot, GameStats *): say so in the console; hotkeys 1-0 need eEnableHotkeys
 
 ### #22
 
@@ -115,15 +92,7 @@ Server packets whose name never appears in apps/web or the bridge (name search: 
 
 ### #38
 
-- [ ] SKILL_DESCRIPTIONS in game-text.ts is unused: show on skill-name click or drop it
-- [ ] SkillsState.reset() never called: call on disconnect/relogin or delete
-- [ ] Trainer window empty-list case: what the VB6 form does with zero creatures
 - [ ] Record ObjQuestListSend (S174) with a level-appropriate char holding a quest item
-- [ ] Optional: draggable quest and skill windows (MoverForm), PlayQuestDescAudio
-
-### #39
-
-- [ ] Guild leader-only controls UI: elections, peace/alliance lists, declare war
 
 ### #43
 
@@ -165,7 +134,6 @@ Full list with expected results and VB6 sources: [PLAYTHROUGH.md](PLAYTHROUGH.md
 
 Disjoint by files. Do not start anything marked in flight; rebase after #54 and #57 merge.
 
-- **WP-A Missing screens: guild leader controls, frmMain buttons, world map.** Files: apps/web/src/guild-*.ts (leader window), classic-layout.ts and the frmMain handlers, world-map-ui.ts. Closes: formGaps (all three), #39.
 - **WP-B Chat, hotkeys, spells, skills and quests cleanups.** Files: apps/web/src/chat-*.ts, chat-locale/locale data, hotkeys-ui.ts, spells.ts, skills-window.ts, game-text.ts, quest window. Closes: #16, #19, #20, #38 (code items).
 - **WP-C Renderer fidelity.** Files: apps/web/src/character-render.ts, renderer.ts, roof/light code, map-objects.ts. Closes: #58, #34, #22, #15 live forest pass.
 - **WP-D End-to-end playthrough harness and the missing real recordings.** Files: apps/web/e2e/playthrough.*, tools/playthrough/, tools/conformance/, tests/fixtures/vb6/ (new dirs only), docs/DATA-PATCHES.md. Closes: docs/PLAYTHROUGH.md (every step passing), #17, #28 (188), #38 (ObjQuestListSend), #44 (record travel/trainer).

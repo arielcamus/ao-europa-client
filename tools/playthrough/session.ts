@@ -181,7 +181,7 @@ export class Sess {
     return { ok: true as const };
   }
   /** fixture jsonl in the format of tests/fixtures/vb6 */
-  jsonl(from = 0) { return this.wire.slice(from).map((w, i) => JSON.stringify({ ...w, t_ms: i })).join('\n') + '\n'; }
+  jsonl(from = 0) { return this.wire.slice(from).map((w, i) => JSON.stringify({ ...w, t_ms: i, hex: (w.id === 305 || w.id === 304) ? w.hex.slice(0, 4) : w.hex })).join('\n') + '\n'; }
 
   // ---- movement helpers ----
   /**
