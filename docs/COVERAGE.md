@@ -11,7 +11,7 @@ Scanned refs: `main`
 ## Headline
 
 - **Packets covered (merged + open branches): 256 of 523 = 48.9%.** Merged on main only: 256 = 48.9%.
-  - Server to client: 133 of 207. Client to server: 123 of 316. Packets with a recorded VB6 fixture: 186.
+  - Server to client: 133 of 207. Client to server: 123 of 316. Packets with a recorded VB6 fixture: 187.
 - **Forms covered: 4 of 86 = 4.7%** (5 more partially, 10.5% started).
 
 ## (c) Feature groups, ordered by player value
@@ -168,7 +168,7 @@ Ids only: .
 | 23 | PartySafeOff | client Protocol.bas:HandlePartySafeOff | combat | not started |  | yes |
 | 24 | CantUseWhileMeditating | client Protocol.bas:HandleCantUseWhileMeditating | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
 | 25 | UpdateSta | client Protocol.bas:HandleUpdateSta | core | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 26 | UpdateMana | client Protocol.bas:HandleUpdateMana | core | merged | `main:packages/protocol/src/packets.ts` | no |
+| 26 | UpdateMana | client Protocol.bas:HandleUpdateMana | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 27 | UpdateHP | client Protocol.bas:HandleUpdateHP | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 28 | UpdateGold | client Protocol.bas:HandleUpdateGold | items | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 29 | UpdateExp | client Protocol.bas:HandleUpdateExp | skills | merged | `main:packages/protocol/src/packets.ts` | yes |

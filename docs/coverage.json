@@ -18,7 +18,7 @@
   "forms": 86,
   "formsCovered": 4,
   "formsPartial": 5,
-  "fixturePackets": 186,
+  "fixturePackets": 187,
   "packetsPct": 48.9,
   "packetsMergedPct": 48.9,
   "formsPct": 4.7,
@@ -287,6 +287,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -346,6 +347,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -792,6 +794,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -910,7 +913,8 @@
     "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
     "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
-    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl"
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
   {
@@ -929,8 +933,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
+   ]
   },
   {
    "key": "s2c:27",
@@ -950,7 +956,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat/melee-dummy.jsonl"
+    "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
   {
@@ -1045,6 +1052,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -1180,6 +1188,7 @@
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -1206,7 +1215,8 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/far-from-banker.jsonl",
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
-    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
   {
@@ -1254,6 +1264,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -1394,6 +1405,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -1549,6 +1561,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -1608,6 +1621,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -1715,6 +1729,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -1810,6 +1825,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -1885,6 +1901,7 @@
     "tests/fixtures/vb6/items/use-items.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -1960,6 +1977,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -2100,6 +2118,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -2137,6 +2156,7 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
     "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
@@ -2192,6 +2212,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -2305,6 +2326,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -2585,6 +2607,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -2665,6 +2688,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -2828,6 +2852,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -3157,6 +3182,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -3231,6 +3257,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -3417,6 +3444,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -3479,6 +3507,7 @@
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
@@ -3590,6 +3619,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -3696,6 +3726,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -3815,6 +3846,7 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl"
    ]
@@ -4030,6 +4062,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -4114,6 +4147,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -4253,6 +4287,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -4652,6 +4687,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -4728,6 +4764,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -4787,6 +4824,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -5122,6 +5160,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -5489,6 +5528,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -5563,6 +5603,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -5639,6 +5680,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -5715,6 +5757,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -5876,6 +5919,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
@@ -7310,6 +7354,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -7843,6 +7888,7 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
@@ -10077,7 +10123,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl"
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
   {
@@ -11518,7 +11565,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl"
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
   {
@@ -11539,7 +11587,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl"
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
   {
@@ -11637,6 +11686,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
