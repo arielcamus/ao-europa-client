@@ -87,7 +87,7 @@ export class ClassicUI {
       this.menuButtons.set(name, button);
       element('menu-actions').append(button);
     }
-    // The five safe toggles of panelInf (frmMain ImgSegParty, ImgSegClan, ImgSeg, ImgSegResu, ImgLegionarySecure), 408 twips square at y=3060.
+    // The five safe toggles of panelInf (frmMain ImgSegParty, ImgSegClan, ImgSeg, ImgSegResu, ImgLegionarySecure), 408 twips (27.2 px) is only the designed slot: the Image controls have no Stretch, so VB6 sizes each to its 34x34 bitmap from Left/Top (7.2,204 ...) and the picture covers the baked slot art in ventanaprincipal_info.
     for (const [key, x, name, tip, act] of [
       ['party', 7.2, 'seguro-party', 'Seguro de grupo', () => this.session?.sendAction({ id: KeysClientPacketId.PartySafeToggle })],
       ['clan', 42.4, 'seguro-clan', 'Seguro de clan', () => this.session?.toggleSafe('clan')],
@@ -97,7 +97,7 @@ export class ClassicUI {
     ] as const) {
       const button = document.createElement('button'); button.className = 'safe-toggle'; button.type = 'button'; button.id = `safe-${key}`;
       button.dataset.art = name; button.title = tip; button.setAttribute('aria-label', tip);
-      button.style.cssText = `position:absolute;left:${x}px;top:204px;width:27.2px;height:27.2px;border:0;padding:0;background-size:100% 100%`;
+      button.style.cssText = `position:absolute;left:${x}px;top:204px;width:34px;height:34px;border:0;padding:0;background-size:100% 100%`;
       button.onclick = () => { try { act(); } catch (error) { this.report(String(error)); } };
       element('menu-actions').append(button); this.safeButtons.set(key, button);
     }
