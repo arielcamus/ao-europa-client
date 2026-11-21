@@ -10,6 +10,7 @@ import { loadObjectIni } from './object-catalog.js';
 import { parseGmLine } from './gm-commands.js';
 import type { Session } from './session.js';
 import { VbWindow, combo } from './vb-window.js';
+import { loadInterface } from './interface-assets.js';
 import type { Box, VbList } from './vb-window.js';
 
 const t = (l: number, tp: number, w: number, h: number): Box => [Math.round(l / 15), Math.round(tp / 15), Math.round(w / 15), Math.round(h / 15)];
@@ -284,25 +285,50 @@ export class GmUI {
   }
 
   // ---- FrmGmAyuda (/GM) -------------------------------------------------------------------------------------------------------
+  /**
+   * FrmGmAyuda (pinned 619e69d): ventanagm.bmp carries every caption, the seven reason rows and the CANCELAR / ENVIAR buttons; txtMotivo is a
+   * borderless black multi-line box (Tahoma 8.25, white). optConsult(i) are Image controls with no picture until chosen (radio-on.bmp; an
+   * Image without Stretch takes the picture's 19x19 size); their rows are not in index order, and the reason sent is optConsulta(i).Caption.
+   * cmdEnviarMensaje / cmdCancelar / cmdCerrar are clsGraphicalButtons (boton-enviar / boton-cancelar / boton-cerrar). Aplicar_Transparencia 240.
+   */
   openHelp() {
     const win = new VbWindow(this.parent, { id: 'gm-help', art: 'ventanagm', size: [470, 435], title: 'Formulario de mensaje a administradores' });
+    win.root.classList.add('gm-help-form');
     const kinds = ['Consulta regular', 'Descargo', 'Acusación', 'Sugerencia', 'Reporte de bug', 'Otro', 'Queja'];
+    /** optConsult(i).Top, twips. */
+    const tops = [1590, 2310, 3405, 2670, 1950, 3765, 3045];
+    /** optConsult_Click: one console line per reason (index 0 asks JsonLanguage for a key that does not exist: an empty line). */
+    const hints = ['', 'Deje el nombre del personaje del que está pidiendo descargo por una medida, junto con el administrador relacionado.',
+      'Se dará prioridad a su consulta enviando un mensaje a los administradores conectados. Por favor, utilice esta opción responsablemente.',
+      'Su sugerencia será leída por un miembro del staff y será tomada en cuenta para futuros cambios.',
+      'Explique de la forma más detallada cómo repetir el error. El staff de programación lo resolverá lo antes posible.',
+      'Deje la mayor cantidad de datos posibles. Esta opción es para consultas que no entran en otras secciones.',
+      'En caso de ser una queja hacia un miembro del staff, indique a quién está referida la queja y los motivos, dejando todos los detalles posibles.'];
     let chosen = -1;
     const radios = kinds.map((kind, i) => {
-      const radio = document.createElement('input'); radio.type = 'radio'; radio.name = 'gm-help-kind'; radio.setAttribute('aria-label', kind);
-      radio.addEventListener('change', () => { chosen = i; });
-      win.add(radio, t(3915, 1590 + i * 360, 225, 210)); win.label(kind, t(4200, 1590 + i * 360, 1900, 240)); return radio;
+      const radio = document.createElement('button'); radio.type = 'button'; radio.className = 'gm-help-radio'; radio.id = `gm-help-reason-${i}`;
+      radio.setAttribute('role', 'radio'); radio.setAttribute('aria-checked', 'false'); radio.setAttribute('aria-label', kind);
+      radio.addEventListener('click', () => {
+        chosen = i;
+        radios.forEach((other, j) => {
+          other.setAttribute('aria-checked', String(j === i));
+          const [x, y, w, h] = t(3915, tops[j]!, 225, 210);
+          Object.assign(other.style, { left: `${x}px`, top: `${y}px`, width: `${j === i ? 19 : w}px`, height: `${j === i ? 19 : h}px`, backgroundImage: '' });
+        });
+        void loadInterface('radio-on').then(url => { if (chosen === i) radio.style.backgroundImage = `url("${url}")`; }).catch(() => undefined);
+        this.session?.ui.message(hints[i]!);
+      });
+      return win.add(radio, t(3915, tops[i]!, 225, 210));
     });
-    void radios;
-    const text = win.input(t(720, 3000, 2415, 2175), { multiline: true, light: true }) as HTMLTextAreaElement;
-    win.command('Enviar', t(3855, 5715, 1920, 360), () => {
+    const text = win.input(t(720, 3000, 2415, 2175), { multiline: true }) as HTMLTextAreaElement; text.id = 'gm-help-text'; text.classList.add('gm-help-text');
+    win.button('boton-enviar', t(3855, 5715, 1920, 360), 'Enviar', () => {
       if (text.value === '') { this.session?.ui.message('Debes escribir tu mensaje.'); return; }
       if (chosen < 0) { this.session?.ui.message('Debes elegir el motivo de tu consulta.'); return; }
       this.send({ id: G.QuestionGM, consulta: text.value, tipoDeConsulta: kinds[chosen]!, counter: 0 }); win.close();
-    });
-    win.command('Cancelar', t(1335, 5715, 1920, 360), () => win.close());
-    win.closeButton(t(6585, 0, 420, 420));
-    win.focus();
+    }).id = 'gm-help-send';
+    win.button('boton-cancelar', t(1335, 5715, 1920, 360), 'Cancelar', () => win.close()).id = 'gm-help-cancel';
+    win.closeButton(t(6585, 0, 420, 420)).id = 'gm-help-close';
+    text.focus();
     return win;
   }
 }

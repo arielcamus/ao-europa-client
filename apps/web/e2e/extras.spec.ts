@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { installFakeServer } from '../../../tools/party-guild-fake-server.mjs';
 import { ExtrasClientPacketId as X, ExtrasServerPacketId as XS } from '../../../packages/protocol/src/index.js';
+import { readForm } from './form-reference.js';
 
 // Events, duels, battleground lobbies, the invasion bar and the right-click interaction menu, against the scripted stand-in of the party and
 // guild spec (tools/party-guild-fake-server.mjs): it logs "TGuild" in with a second player, "Aotesta", two tiles to the east.
@@ -71,6 +72,49 @@ test.describe('events, duels and the interaction menu', () => {
     await expect(win).toHaveCount(0);
   });
 
+  test('frmRetos: ventanaretos.bmp, every control where the pinned .frm puts it, the Image states and the checkboxes', async ({ page }) => {
+    await login(page);
+    await say(page, '/RETAR');
+    const win = page.locator('#duel-window');
+    await expect(win).toBeVisible();
+    await expect(win).toHaveCSS('background-image', /ventanaretos\.bmp/);
+    await expect(page.locator('#duel-field-0')).toHaveCSS('background-image', /campo-retar\.bmp/);
+    // Seven players per side would need txtPPT > 5: txtPPT_Change clamps to MAX_JUGADORES, and every Jugador / Campo pair shows.
+    await page.locator('#duel-per-team').fill('9');
+    await expect(page.locator('#duel-per-team')).toHaveValue('5');
+    await page.locator('#duel-red-potions').check();
+    await expect(page.locator('#duel-red-potions')).toHaveCSS('background-image', /check-amarillo\.bmp/);
+    await expect(page.locator('#duel-potions')).toHaveValue('10000');
+    await expect(page.locator('#duel-bet')).toHaveValue('20000');
+    const pairs: [string, string][] = [['txtPPT', 'per-team'], ['Apuesta', 'bet'], ['txtPociones', 'potions'], ['CAMPO_CORTO', 'short-field'], ['Image1', 'red-potions'],
+      ['Image2', 'drop-items'], ['Cerrar', 'close'], ['SumarJugadores', 'plus'], ['RestarJugadores', 'minus'], ['Retar', 'send'], ['Error', 'error']];
+    for (let i = 0; i < 10; i++) pairs.push([`Jugador-${i}`, `player-${i}`], [`Campo-${i}`, `field-${i}`]);
+    const measured = await win.evaluate((root: HTMLElement, list) => {
+      const frame = root.getBoundingClientRect(), scale = frame.width / root.offsetWidth, out: Record<string, number[]> = {};
+      for (const [control, id] of list) { const r = document.getElementById(`duel-${id}`)!.getBoundingClientRect(); out[control] = [(r.x - frame.x) / scale, (r.y - frame.y) / scale, r.width / scale, r.height / scale]; }
+      return { out, size: [root.offsetWidth, root.offsetHeight] };
+    }, pairs);
+    expect(measured.size).toEqual([291, 487]); // ClientWidth 4365 x ClientHeight 7305 twips
+    const { rectangles } = await readForm('frmRetos.frm');
+    for (const [control] of pairs) {
+      const source = rectangles[control]!, actual = measured.out[control]!;
+      expect(source, `form has ${control}`).toBeDefined();
+      // Twips / 15 rounded to whole pixels: at most 0.67 px off.
+      ['x', 'y', 'width', 'height'].forEach((field, i) => expect(Math.abs(actual[i]! - source[field as 'x']), `${control}.${field}`).toBeLessThan(0.7));
+    }
+    // SumarJugadores_MouseUp: the count goes up and (as in the VB6 code) RestarJugadores is the one left showing its -over picture.
+    await page.locator('#duel-per-team').fill('1');
+    await page.locator('#duel-plus').click();
+    await expect(page.locator('#duel-per-team')).toHaveValue('2');
+    await expect(page.locator('#duel-minus')).toHaveCSS('background-image', /boton-sm-menos-over\.bmp/);
+    // Form_MouseMove clears every Image picture again.
+    const frame = (await win.boundingBox())!;
+    await page.mouse.move(frame.x + 10, frame.y + 200);
+    await expect(page.locator('#duel-minus')).toHaveCSS('background-image', 'none');
+    await expect(page.locator('#duel-player-4')).toBeHidden();
+    await win.screenshot({ path: 'artifacts/screenshots/window-sweep-duel-web.png' });
+  });
+
   test('right click on a player opens the player menu; RETAR fills the duel form, INVITAR GRUPO sends the group skill', async ({ page }) => {
     const fake = await login(page);
     const view = (await page.locator('#viewport').boundingBox())!;
@@ -81,6 +125,11 @@ test.describe('events, duels and the interaction menu', () => {
     const menu = page.locator('#interaction-menu');
     await expect(menu).toBeVisible();
     await expect(menu.getByRole('menuitem')).toHaveText(['COMERCIAR', 'INVITAR GRUPO', 'PRIVADO', 'RETAR', 'DENUNCIAR']);
+    // MenuUser.frm: 1950 x 1800 twips, black, one 360-twip OpcionImg row per option, OpcionLbl Tahoma 8.25 bold white.
+    const shape = await menu.evaluate((el: HTMLElement) => { const k = el.getBoundingClientRect().width / el.offsetWidth; const rows = [...el.children].map(row => row.getBoundingClientRect());
+      return { w: el.offsetWidth, h: el.offsetHeight, rows: rows.map(r => Math.round((r.y - rows[0]!.y) / k)), color: getComputedStyle(el).backgroundColor, font: getComputedStyle(el.children[0]!).font }; });
+    expect(shape).toMatchObject({ w: 130, h: 120, rows: [0, 24, 48, 72, 96], color: 'rgb(0, 0, 0)' });
+    expect(shape.font).toMatch(/^700 11px/);
     // ShowInteractionMenu first writes LeftClick on the tile so the server describes the player.
     await expect.poll(() => only(fake.received, 95).length).toBeGreaterThan(0);
     await menu.getByRole('menuitem', { name: 'RETAR' }).click();
