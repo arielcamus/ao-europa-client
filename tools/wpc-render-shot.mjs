@@ -8,6 +8,8 @@ const browser = await chromium.launch({ channel: 'chrome', args: ['--use-gl=swif
 const page = await browser.newPage({ viewport: { width: 1024, height: 768 }, deviceScaleFactor: 2 });
 const problems = []; page.on('pageerror', e => problems.push(e.message));
 mkdirSync('artifacts/screenshots', { recursive: true });
+const fail = async e => { console.error('screen:', await page.locator('#connect-stage').getAttribute('data-screen', { timeout: 2000 }).catch(() => '?'), (await page.evaluate(() => document.body.innerText.slice(0, 400)).catch(() => '?')).replace(/\n+/g, ' | ')); await page.screenshot({ path: `artifacts/screenshots/wpc-${process.env.AO_NAME ?? 'login'}-FAILED.png` }).catch(() => {}); console.error('failed:', e.message.split('\n')[0]); await browser.close(); process.exit(1); };
+process.on('unhandledRejection', fail); process.on('uncaughtException', fail);
 await page.goto(base);
 await page.locator('#email').fill(need('AO_EMAIL')); await page.locator('#password').fill(need('AO_PASSWORD'));
 await page.locator('#connect').click();
@@ -18,6 +20,7 @@ await page.locator('#viewport[data-rendered="true"]').waitFor({ timeout: 60_000 
 await page.getByRole('button', { name: 'Aceptar' }).click({ timeout: 1500 }).catch(() => {}); await page.waitForTimeout(500);
 const say = async text => { await page.keyboard.press('Enter'); await page.keyboard.type(text); await page.keyboard.press('Enter'); await page.waitForTimeout(1200); };
 for (const cmd of (process.env.AO_CMDS ?? '').split(';;').filter(Boolean)) await say(cmd);
+if (process.env.AO_DEBUG) console.log((await page.locator('#console').innerText().catch(() => '')).split('\n').slice(-8).join('\n'));
 // AO_GOTO="x,y;x,y": walk (arrow keys held until the HUD position matches), screenshot at each stop.
 const here = async () => (await page.locator('#position').innerText()).split(',').map(n => Number(n.trim()));
 for (const stop of (process.env.AO_GOTO ?? '').split(';').filter(Boolean)) {

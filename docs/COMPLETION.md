@@ -15,7 +15,7 @@
 |---|---|---|---|
 | Packets with a codec | 512 | 513 | 1 |
 | Screens complete (all controls) | 58 | 58 | 0 (0 partial, 0 not started, 0 covered but missing controls) |
-| Behaviour items | 0 | 7 | **7 open** (5 to do, 1 in flight, 1 blocked on data or a decision) |
+| Behaviour items | 0 | 6 | **6 open** (4 to do, 1 in flight, 1 blocked on data or a decision) |
 | Playthrough steps passing end to end | 26 | 169 | 143 (48 recorded at protocol level on main, 0 in flight, 148 automatable, 21 manual) |
 
 Scope. Packets: the 8 post-pin packets are excluded (docs/COVERAGE.md "post-pin"); "codec" is a registered `[Table.Name]` entry, and the handling check is a name search in apps/web and the bridge. Screens: covered + partial + class a; classes b (account server), c (AO20 extras) and d (dead forms) are out. Playthrough: "passing" means an end-to-end run against the real server; none exists yet (WP-D).
@@ -54,7 +54,7 @@ None.
 
 ## 3. Behaviour: open issues and reported bugs
 
-**7 items** from the open issues (#58 #34 #28 #24) and Ariel's reports. In flight: 1; blocked on data or a decision: 1.
+**6 items** from the open issues (#34 #28 #24) and Ariel's reports. In flight: 1; blocked on data or a decision: 1.
 
 ### #24
 
@@ -68,10 +68,6 @@ None.
 ### #34
 
 - [ ] roofTint: roofs shaded with the 4 tile vertices need a vertex-colour mesh
-
-### #58
-
-- [ ] Port the live engine.bas Char_Render offsets (no +1 body x; head y OffHead = HeadOffset.y - ease - 1 - BodyOffset.y), with a unit test and before/after screenshots
 
 ### Reported by Ariel
 
