@@ -1,10 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 import {
-  FrameDecoder, QuestClientPacketId as QC, QuestServerPacketId as QS, decodeClientPacket, encodeServerFrame,
+  FrameDecoder, QuestClientPacketId as QC, QuestServerPacketId as QS, decodeClientPacket, encodeServerFrame, setWireProfile,
 } from '../../../packages/protocol/src/index.js';
 import type { ServerPacket } from '../../../packages/protocol/src/index.js';
 import { serverFixtures } from '../../../packages/protocol/test/fixtures.js';
+
+// The page decodes the pinned pre-HOO layouts (dev-web serves wireProfile 'prehoo'); the replies below are encoded the same way.
+setWireProfile('prehoo');
 
 // Quest forms against the stand-in server. The stand-in knows no quest packets, so the page's WebSocket is intercepted: quest
 // requests (258..262) are answered here with VB6-shaped packets and everything else goes to the stand-in.
@@ -59,7 +62,8 @@ test('quests: Quests button, log, details, abandon with confirmation, NPC offer 
   await expect(log.locator('.q-repeatable')).toBeHidden();
   await expect(log.locator('.q-center')).toContainText('serpientes');
   await expect(log.locator('.q-table').first().locator('.q-trow')).toHaveText(['Serpiente4/10', 'Fluido de serpiente2/10']);
-  await expect(log.locator('.q-left')).toHaveText('Mapa de entrega: 44');
+  // The pinned server's WriteQuestDetails has no talkTo / deliverMap (HOO-era fields), so no delivery line, as in the pinned client.
+  await expect(log.locator('.q-left')).toHaveText('');
   expect(requests).toEqual([{ id: QC.QuestListRequest }, { id: QC.QuestDetailsRequest, slot: 1 }]);
   await page.screenshot({ path: 'artifacts/screenshots/quests-log.png' });
   // MoverForm: dragging the form background moves the log; a list row stays clickable and does not start a drag.
