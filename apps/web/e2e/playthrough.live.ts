@@ -35,7 +35,7 @@ test('playthrough', async ({ page, baseURL }) => {
     try {
       if (i === 0) await s.createAccount(email, password); else await s.loginAccount(email, password);
       charName = `Pt${letters(7)}`;
-      const r = await s.createChar({ name: charName, race: 1, gender: 1, characterClass: 1, head: 1 });
+      const r = await s.createChar({ name: charName, race: 1, gender: 1, characterClass: 1, head: 1, home: Number(process.env.AO_HOME ?? 2) }); // Nix: the city picker's 2nd entry (ACC-04)
       if (r.ok) { creation.ok = true; player = s; mkdirSync('artifacts/playthrough', { recursive: true }); writeFileSync(CACHE, JSON.stringify({ email, password, charName })); } else { creation.errors.push(r.error); s.close(); await s.sleep(3000); }
     } catch (e) { creation.errors.push(String(e)); s.close(); }
   }

@@ -92,6 +92,7 @@ export class Sess {
       default: {
         const anyp = p as unknown as { message?: string; id: number; privileges?: number };
         if (p.id === 177 /* Privilegios */) this.isGM = !!(p as any).isGM;
+        if ((p.id as number) === 43 /* CharacterRemove */) this.chars.delete((p as any).charIndex);
         if (p.id === 141 /* LocaleMsg */) this.messages.push(`[${(p as any).messageId}] ${(p as any).text}`);
       }
     }

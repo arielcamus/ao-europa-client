@@ -34,10 +34,10 @@
     {
      "id": "ACC-04",
      "step": "Read the starting position of a new character",
-     "expected": "Code sets .Hogar = cForgat regardless of the Hogar value the client sent (the client value is only range-checked 1..CITY_COUNT), and spawns at Cities(Hogar) = Forgat; Dat/Ciudades.Dat says map 517 x48 y65, but the server's documented Forgat data patch (docs/DATA-PATCHES.md section 6) moves the spawn to 751:60,57. CONTRADICTS the common belief that the chosen home city decides the spawn. The /HOGAR target after death is the same Hogar.",
-     "source": "TCP.bas:ConnectNewUser (.Hogar = cForgat; .pos = Cities(.Hogar)); Ciudades.Dat [Forgat]",
+     "expected": "LIVE SERVER (since 21 Nov, home-city backport #76 of upstream 07009f8a, not HOO): ConnectNewUser honours the e_City the client picked when it is one of the five start cities (1 Ullathorpe 1:57,44, 2 Nix 34:40,87, 3 Banderbill 59:47,41, 4 Lindos 64:50,59, 5 Arghal 151:61,43, Ciudades.Dat on the server); anything else (Forgat 7 included) starts in Ullathorpe. The pinned code alone set .Hogar = cForgat whatever the client sent (751:60,57 after DATA-PATCHES 6). The /HOGAR target after death is the same Hogar.",
+     "source": "TCP.bas:ConnectNewUser + docs/patches home-city backport; Dat/Ciudades.Dat (live server copy)",
      "mode": "auto",
-     "how": "one bridge session on a throwaway account, create two chars with different Hogar bytes and compare first PosUpdate / map",
+     "how": "the harness's own mage is created with AO_HOME (default 2 = Nix), the newbie character (NWB-01) with 1 = Ullathorpe; first ChangeMap + position compared with Ciudades.Dat",
      "status": "untested"
     },
     {
@@ -133,6 +133,84 @@
    ]
   },
   {
+   "id": "newbie",
+   "title": "Newbie path: city, Cartelera, Newbie Dungeon, quest 190, graduation",
+   "steps": [
+    {
+     "id": "NWB-01",
+     "step": "New character picks its city and reads the welcome text",
+     "expected": "Since the home-city backport (#76) ConnectNewUser starts the character in the e_City it picked (1-5; anything else falls back to Ullathorpe): home 1 spawns at Ciudades.Dat [Ullathorpe] 1:57,44, level 1, exp 0. The MOTD (Dat/Motd.ini, 11 lines since 21 Nov) carries the rates line 'EXP X4 - RECOLECCIÓN X2 - ORO X1', '¿Eres nuevo? Hasta el nivel 12 entrena en el Dungeon Newbie: su entrada está en tu ciudad.' and 'Busca la Cartelera de tu ciudad y toma los encargos de Makrom...'.",
+     "source": "TCP.bas:ConnectNewUser (+ docs/patches home-city backport); Dat/Ciudades.Dat; Dat/Motd.ini (DATA-PATCHES 8)",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-02",
+     "step": "Take Makrom's first quest at the city's Cartelera",
+     "expected": "Clicking the Cartelera (NPC 1331, NpcType Quest) within 5 tiles: EnviarQuest sends NpcQuestListSend with 190, 191, 192, 193, 194, 4, 154, 163, 164, 165 (DATA-PATCHES 8); 190 'Primeros Pasos' is available at level 1 (state 0), 191-194 are not (RequiredLevel 3/5/6/9 or RequiredQuest). QuestAccept(slot) answers Msg1264 and the log holds 190 with four kill counters at 0: Hormiga 508 x2, Murciélago 506 x7, Serpiente 502 x10, Gallo 501 x8.",
+     "source": "ModQuest.bas:EnviarQuest, CanUserAcceptQuest; Protocol.bas:HandleQuestAccept; Dat/Quests.DAT [QUEST190]; Dat/npcs.dat [NPC1331]",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-03",
+     "step": "Walk from the city into the Newbie Dungeon",
+     "expected": "The city's dungeon door is a tile exit: Ullathorpe 1:74,22 -> 168:50,32 'Dungeon Newbie Central' (Nix 34:59,78 -> 168, Banderbill 59:60,42 -> 168, Lindos via 62:63,41 -> 168, Arghal 151:46,40 -> 264). Newbie maps (168, 37, 167, 264) have restrict_mode bit 1: only ELV <= LimiteNewbie 12.",
+     "source": "Mapas/Mapa1.csm tile exits; MapInfo restrict_mode; Declares.bas:LimiteNewbie",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-04",
+     "step": "Kill a creature in the Newbie Dungeon",
+     "expected": "A full kill at a level with no penalty gives GiveEXP x ExpMult: Configuracion.ini ExpMult=4 since 21 Nov 19:37, so a Hormiga (GiveEXP 11) gives 44, a Serpiente 88, a Gallo or Murciélago 72. The matching quest-190 counter ticks (QuestDetails killed + 1).",
+     "source": "SistemaCombate.bas:GetExpForUser; MODULO_NPCs.bas:MuereNpc (quest kill counters); Configuracion.ini ExpMult",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-05",
+     "step": "Hand quest 190 in at Makrom",
+     "expected": "With all four counters complete, clicking Makrom (NPC 407, Ullathorpe 77,18 by the dungeon door, 54,56 in the square, or 37:73,84 in the dungeon) runs EnviarQuest -> FinishQuest: ChatOverHead 'QUESTFIN*190', gold + RewardGLD 60 x OroMult 1, exp + RewardEXP 250 x ExpMult 4 = 1000, the quest leaves the log (Repetible=1). The way back is the dungeon exit 168:50,33 -> 1:74,23.",
+     "source": "ModQuest.bas:EnviarQuest, FinishQuest; Dat/Quests.DAT [QUEST190]; Dat/npcs.dat [NPC407]",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-06",
+     "step": "Level up from the quest reward",
+     "expected": "CheckUserLevel: Exp >= ExpLevelUp[ELV] (500 at level 1, 750 at 2) raises the level, the surplus carries; LevelUp is sent with the free skill points; MaxSta +15 per level (AumentoSta). A level-1 character with a first kill's 44-88 exp reaches level 2 with the 1000 reward.",
+     "source": "Modulo_UsUaRiOs.bas:CheckUserLevel; Balance.dat [EXP], [AUMENTO_STA]",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-07",
+     "step": "Graduate at level 13 inside the Newbie Dungeon",
+     "expected": "Reaching ELV 13 (ExpLevelUp[12] = 43248): QuitarNewbieObj removes every Newbie=1 item (inventory and bank), Msg671 'Has dejado de ser Newbie', and with the -c server (21 Nov 20:18) sends the character to its OWN home city only when it graduates on a newbie map; elsewhere it stays put.",
+     "source": "InvUsuario.bas:QuitarNewbieObj + docs/patches/2026-11-21-server-9ccd-newbie-graduation.patch (SERVER-PREHOO-BUILD.md 'Newbie graduation')",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-08",
+     "step": "The browser client shows the same character",
+     "expected": "The classic UI logs the newbie in (login, character list, Jugar), renders the world and shows the MOTD in the console, including the windows-1252 text of the newbie lines.",
+     "source": "client frmMain console (RecTxt); apps/web #messages",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    }
+   ]
+  },
+  {
    "id": "movement",
    "title": "Movement and world",
    "steps": [
@@ -178,7 +256,7 @@
      "expected": "Refused with a locale message and no warp: MapInfo.Newbie needs ELV<=12 (EsNewbie, LimiteNewbie=12); NoPKs refuses status Criminal(0)/Caos(2); NoCiudadanos refuses Ciudadano(1)/Armada(3); SoloClanes needs GuildIndex>0; MinLevel/MaxLevel (ELV >= MaxLevel is refused); OnlyGroups needs a party; OnlyPatreon needs patron.",
      "source": "GameLogic.bas:CheckMapRestrictions",
      "mode": "auto",
-     "how": "one bridge session on a throwaway account, DB UPDATE level to 13 and try a Newbie map; level 12 vs MaxLevel maps",
+     "how": "the newbie character after graduating (NWB-07, level 13) walks onto Ullathorpe's Newbie Dungeon door 1:74,22 (newbie.ts)",
      "status": "untested"
     },
     {
@@ -1000,7 +1078,7 @@
     {
      "id": "PRG-10",
      "step": "Newbie limits",
-     "expected": "EsNewbie = ELV <= LimiteNewbie = 12. Newbies: keep newbie-flag items on death (DTH-02), cannot sell newbie items (NPC refuses), cannot drop newbie items, can use ResucitadorNewbie priests, can enter Newbie maps, exempt from ContarMuerte (no faction points for killing them). On reaching 13 QuitarNewbieObj deletes every newbie-flag item from inventory AND bank and warps to Renacimiento with MSG_DEJADO_NEWBIE.",
+     "expected": "EsNewbie = ELV <= LimiteNewbie = 12. Newbies: keep newbie-flag items on death (DTH-02), cannot sell newbie items (NPC refuses), cannot drop newbie items, can use ResucitadorNewbie priests, can enter Newbie maps, exempt from ContarMuerte (no faction points for killing them). On reaching 13 QuitarNewbieObj deletes every newbie-flag item from inventory AND bank and sends MSG_DEJADO_NEWBIE (671). LIVE SERVER (-c build, 21 Nov 20:18): the graduate is warped to its OWN home city only when it graduates on a newbie map, elsewhere it stays put (the pinned code warped everybody to Renacimiento). See NWB-07.",
      "source": "GameLogic.bas:EsNewbie; Declares.bas:LimiteNewbie; Modulo_UsUaRiOs.bas:CheckUserLevel; InvUsuario.bas:QuitarNewbieObj",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, DB UPDATE ELV 12 with exp just below, kill a creature",

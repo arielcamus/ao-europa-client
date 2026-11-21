@@ -3,7 +3,7 @@ import { step } from '../harness.js';
 import { Heading, SCP, C } from '../session.js';
 import type { ClientPacket } from '@ao/protocol';
 import { KeysClientPacketId as K, ItemsClientPacketId as I, SkillsClientPacketId as SK } from '@ao/protocol';
-import { gmGoto, ensureLand, dbUpdateOwn, second, loadMap, walkTo, HEAD } from './util.js';
+import { gmGoto, ensureLand, dbUpdateOwn, second, loadMap, walkTo, HEAD, relocate } from './util.js';
 import { path as bfs, walkable } from '../maps.js';
 
 const DX: Record<number, [number, number]> = { [Heading.North]: [0, -1], [Heading.East]: [1, 0], [Heading.South]: [0, 1], [Heading.West]: [-1, 0] };
@@ -51,9 +51,15 @@ step('MOV-02', async c => {
     const seen = [...p.chars.values()].find(ch => ch.name === p2.characters[0]?.name);
     const t = (seen ? [seen.x, seen.y] : [p2.x, p2.y]) as [number, number]; // where the FIRST player sees it
     c.note(`second character at ${p2.map}:${t[0]},${t[1]}; first at ${p.map}:${p.x},${p.y}`);
-    if (p2.map !== p.map) c.blocked('second character is not on the same map (spawn differs)');
+    if (p2.map !== p.map) { // since the home-city backport the two characters start in different cities: bring the first one next to the second (own char, DB)
+      const f2 = loadMap(p2.map)!; let near: [number, number] | undefined;
+      for (let r = 2; r < 8 && !near; r++) for (const [dx, dy] of [[r, 0], [-r, 0], [0, r], [0, -r]] as const) if (!near && walkable(f2.map, t[0] + dx, t[1] + dy) && bfs(f2.map, [t[0] + dx, t[1] + dy], t)) near = [t[0] + dx, t[1] + dy];
+      if (!near) c.blocked('no walkable tile near the second character');
+      await relocate(c, p2.map, near![0], near![1]); c.note(`first character moved next to the second through the DB (${p2.map}:${near![0]},${near![1]})`);
+    }
+    const p1 = c.player; if (p1.map !== p2.map) c.blocked('second character is not on the same map (spawn differs)');
     // walk straight at the second character: every step up to the last must succeed, the last (into its tile) must be refused
-    const route = bfs(f.map, [p.x, p.y], t); if (!route) c.blocked('no walkable route to the second character');
+    const route = bfs(loadMap(p1.map)!.map, [p1.x, p1.y], t); if (!route) c.blocked('no walkable route to the second character');
     let failedAt = 0; try { await walkTo(c, t[0], t[1]); } catch (e) { failedAt = Number(/step (\d+)\//.exec(String(e))?.[1] ?? 0); }
     c.eq(failedAt, route!.length, `the step into the second character's tile (step ${route!.length} of ${route!.length}) was refused, all earlier steps moved`);
   }
@@ -73,7 +79,6 @@ step('MOV-03', async c => {
   c.eq((ch!.packet as any).heading, target, 'broadcast heading');
 });
 
-step('MOV-05', async c => c.blocked('needs the ids of a Newbie / MaxLevel map from the server map files (MapInfo) and a level-13 character; the harness has no map-info reader yet. Route: GM /MOD level 13 on the own character, /TELEP to that map, expect the refusal locale message and no warp'));
 step('MOV-06', async c => c.blocked('same missing map-info data as MOV-05 (a map with MaxLevel and Salida)'));
 step('MOV-09', async c => c.blocked('needs a locked door + its key object from the map files; recorded in tests/fixtures/vb6/items-2/use-key-locked-door.jsonl'));
 step('MOV-10', async c => c.blocked('needs a dock tile and a boat object id plus Navegacion skill and level 25 via GM /MOD; map data not parsed yet'));
