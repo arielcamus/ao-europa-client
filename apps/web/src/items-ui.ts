@@ -4,6 +4,7 @@
  * Geometry is the original VB6 twips / 15. AGPL-3.0-or-later; see NOTICE.
  * Artwork is read only from the local mount.
  */
+import { windows } from './window-stack.js';
 import { loadInterface } from './interface-assets.js';
 import { controls } from './classic-layout.js';
 import { GOLD_SLOT } from './items.js';
@@ -131,6 +132,7 @@ export class ItemsUI {
     artButton(this.shop, 'shop-buy', 'Comprar', 'boton-comprar', 55, 431, 122, 28, () => this.buy());
     artButton(this.shop, 'shop-sell', 'Vender', 'boton-vender', 367, 431, 122, 28, () => this.sell());
     artButton(this.shop, 'shop-close', 'Cerrar', 'boton-cerrar', 512, 0, 31, 28, () => this.closeShop());
+    windows.watchElement('shop', this.shop, () => this.closeShop());
     this.shop.addEventListener('keydown', event => { if (event.key === 'Escape') { event.stopPropagation(); this.closeShop(); } });
   }
 

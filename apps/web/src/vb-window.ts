@@ -4,6 +4,7 @@
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; see NOTICE. Artwork is read only from the local mount.
  */
 import { loadInterface } from './interface-assets.js';
+import { windows } from './window-stack.js';
 
 /** left, top, width, height in form pixels. */
 export type Box = readonly [number, number, number, number];
@@ -16,6 +17,8 @@ export interface WindowOptions {
   title: string;
   /** Called when the window is closed by Escape, the X button or `close()`. */
   onClose?: () => void;
+  /** A top-level panel (opened from the info menu): opening it closes the other panels. Windows opened from inside a panel stay on top of it. */
+  panel?: boolean;
 }
 
 const place = (el: HTMLElement, [x, y, w, h]: Box) => { el.style.left = `${x}px`; el.style.top = `${y}px`; el.style.width = `${w}px`; el.style.height = `${h}px`; };
@@ -66,6 +69,7 @@ export class VbWindow {
     if (options.art) void loadInterface(options.art).then(url => { this.root.style.backgroundImage = `url("${url}")`; }).catch(() => { this.root.classList.add('vb-plain'); });
     this.root.addEventListener('keydown', event => { if (event.key === 'Escape') { event.stopPropagation(); this.close(); } });
     parent.append(this.root);
+    windows.watch(options.id, () => !this.closed, () => this.close(), options.panel === true);
   }
   get isOpen() { return !this.closed; }
   add<T extends HTMLElement>(el: T, box: Box): T { place(el, box); this.root.append(el); return el; }
@@ -100,7 +104,7 @@ export class VbWindow {
   focus() { (this.root.querySelector('input, textarea, [tabindex]') as HTMLElement | null)?.focus(); }
   close() {
     if (this.closed) return;
-    this.closed = true; this.root.remove(); this.options.onClose?.();
+    this.closed = true; this.root.remove(); windows.unwatch(this.options.id); this.options.onClose?.();
   }
 }
 

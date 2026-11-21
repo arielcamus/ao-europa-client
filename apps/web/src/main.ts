@@ -31,8 +31,11 @@ import { OptionsUI } from './options-ui.js';
 import { KeyBindings } from './key-bindings.js';
 import { KeysUI } from './keys-ui.js';
 import { HotkeysUI } from './hotkeys-ui.js';
+import { windows } from './window-stack.js';
+import { displayName } from './character-data.js';
 
 applyClassicLayout();
+windows.install();
 const form = element<HTMLFormElement>('login'), account = element<HTMLInputElement>('email'), password = element<HTMLInputElement>('password');
 const connect = element<HTMLButtonElement>('connect'), disconnect = element<HTMLButtonElement>('disconnect');
 const errorBox = element('error'), viewport = element('viewport'), connection = element('connection');
@@ -138,7 +141,7 @@ async function boot() {
   element('mode-note').textContent = config.mode === 'standin' ? 'Prueba local · standin@local / testpass' : 'Conecta con tu cuenta. Se seleccionará el primer personaje.';
   element('scope-note').textContent = config.mode === 'standin'
     ? 'Mundo de prueba local. Objetos y estadísticas de muestra; sin combate ni persistencia.'
-    : community ? 'Servidor comunitario · movimiento y persistencia. Chat aún no disponible.' : 'Cliente clásico · movimiento, inventario, hechizos y chat.';
+    : community ? 'Servidor comunitario · movimiento y persistencia. Chat aún no disponible.' : 'Cliente clásico · movimiento, combate, objetos, hechizos, banco y chat.';
   if (config.mode === 'standin') { account.value = 'standin@local'; password.value = 'testpass'; }
   await Promise.all([renderer.init(), ui.init(), bubbles.init(), audio.init(), questWindows.init().catch(error => report(`Misiones no disponibles: ${String(error)}`))]);
   // Chat text that the server sends as locale ids; the console is redrawn once it arrives.
@@ -184,7 +187,7 @@ function updateUi(now: number) {
   if (playing) {
     form.hidden = true; disconnect.hidden = false;
     element('map-name').textContent = renderer.mapName; element('map-name').title = renderer.mapName;
-    element('character-name').textContent = session.self!.name;
+    element('character-name').textContent = displayName(session.self!.name);
     connection.textContent = 'Connected';
     element('map-number').textContent = String(session.map);
   } else if (session.phase !== 'closed') connection.textContent = session.ready ? 'Loading map…' : 'Connecting…';

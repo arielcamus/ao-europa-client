@@ -2,6 +2,7 @@
  * Bank windows: the vault (frmBancoObj.frm, drawn by engine.DrawInterfaceBoveda) and the Goliath gold window (frmGoliath.frm).
  * Geometry is the original VB6 twips / 15. AGPL-3.0-or-later; see NOTICE. Artwork is read only from the local mount.
  */
+import { windows } from './window-stack.js';
 import { BANK_SLOTS } from '@ao/protocol';
 import { make, place, artButton, digitsInput, windowBackground, paintSlot, withDots } from './bank-trade-dom.js';
 import type { SlotView } from './bank-trade-dom.js';
@@ -92,6 +93,7 @@ export class BankUI {
     artButton(this.frame, 'goliath-plus', 'Más', 'boton-sm-mas', 132, 76, 21, 21, () => bump(1));
     this.depositAll = artButton(this.frame, 'goliath-deposit-all', 'Depositar todo', 'boton-depositartodo', 25, 131, 132, 28, () => this.depositEverything());
     artButton(this.frame, 'goliath-accept', 'Aceptar', 'boton-aceptar', 25, 168, 132, 28, () => this.acceptFrame());
+    windows.watchElement('bank', this.bank, () => this.closeBank()); windows.watchElement('goliath', this.goliath, () => this.closeGoliath());
     this.goliath.addEventListener('keydown', event => { if (event.key === 'Escape') { event.stopPropagation(); this.closeGoliath(); } });
     // Form_MouseDown: a click outside the panel hides it.
     this.goliath.addEventListener('pointerdown', event => { if (!this.frame.contains(event.target as Node)) this.frame.hidden = true; });

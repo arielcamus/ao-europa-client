@@ -73,8 +73,8 @@ export class ClassicUI {
       if (this.session?.ready && spell && spell.index > 0) this.session.spells.cast(this.selectedSpell, this.spellName(spell.index));
     };
     for (const id of ['settings', 'manual']) element(id).onclick = () => {
-      this.session?.ui.message('Flechas / WASD: caminar. En el teléfono, mantén pulsado el mapa en la dirección deseada. Enter: chat. Escape: cerrar chat.');
-      this.session?.ui.message('Gráficos originales © AO / Noland Studios · CC BY-NC-ND · cargados localmente. Combate y uso de objetos aún no disponibles.');
+      this.session?.ui.message('Flechas / WASD: caminar. En el teléfono, mantén pulsado el mapa en la dirección deseada. Enter: chat. Escape: cerrar la ventana de arriba o el chat.');
+      this.session?.ui.message('Gráficos originales © AO / Noland Studios · CC BY-NC-ND · cargados localmente.');
     };
     element('menu-tab').onclick = () => this.showMenu(true);
     element('stats-tab').onclick = () => this.showMenu(false);

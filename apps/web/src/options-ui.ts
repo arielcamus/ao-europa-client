@@ -4,6 +4,7 @@
  * this client implements are live; the rest of the VB6 checks are drawn disabled with their artwork captions so nothing pretends to work.
  * The key editor (frmCustomKeys) opens from the "Configurar teclas" button. AGPL-3.0-or-later; see NOTICE.
  */
+import { windows } from './window-stack.js';
 import './options.css';
 import { loadInterface } from './interface-assets.js';
 import { make, place, artButton, windowBackground } from './bank-trade-dom.js';
@@ -42,6 +43,7 @@ export class OptionsUI {
     artButton(root, 'options-keys', 'Configurar teclas', 'boton-config-teclas', 32, 452, 151, 28, () => { this.keys.show(); }).classList.add('opt-button');
     artButton(root, 'options-close', 'Cerrar', 'boton-cerrar', 505, 0, 29, 20, () => this.hide()).classList.add('opt-button');
     root.addEventListener('keydown', event => { if (event.key === 'Escape') { event.stopPropagation(); if (!this.keys.visible) this.hide(); } });
+    windows.watchElement('options', root, () => this.hide(), true);
     document.addEventListener('fullscreenchange', () => this.sync(this.settings.value));
     this.settings.subscribe(options => this.sync(options));
     this.select('jugabilidad'); this.sync(this.settings.value);
@@ -76,7 +78,6 @@ export class OptionsUI {
     this.check(panel, 'lock-spell-scroll', 'Bloquear scroll de lista de hechizos', 267, 97);
     this.check(panel, 'invert-click', 'Invertir click', 18, 213);
     this.check(panel, 'graphic-cursors', 'Cursores gráficos', 125, 213);
-    make('span', 'opt-note', panel).textContent = 'Sensibilidad del mouse, idioma, estilo de equipo, texto de NPCs y tutorial: aún no disponibles.';
     return panel;
   }
   /** PanelVideo. Rows at y = 46, 73, 100, 127, 154, 181, 206, 231, 256, 281. */

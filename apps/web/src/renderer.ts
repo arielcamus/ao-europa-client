@@ -8,7 +8,7 @@ import { Application, Container, Rectangle, Sprite, Text, Texture } from 'pixi.j
 import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
 import type { Session } from './session.js';
-import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, TreeFade, fixedObjects, nearRoof, objectDraws, parseObjectGraphics, treeCoversPlayer } from './map-objects.js';
+import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, roofTriggers, TreeFade, fixedObjects, nearRoof, objectDraws, parseObjectGraphics, treeCoversPlayer } from './map-objects.js';
 import type { GroundObject, ObjectGraphic } from './map-objects.js';
 import { CharacterSprites } from './character-render.js';
 import { NPC_NAME_COLOR, parseColors, parseLocale, playerNameColor, privilegeTitle } from './character-data.js';
@@ -57,6 +57,7 @@ export class WorldRenderer {
   private readonly world = new Container();
   private objectGraphics = new Map<number, ObjectGraphic>();
   private readonly roofs = new RoofLights();
+  private roofTrig: Uint16Array = new Uint16Array(10_000);
   /** Light map, particles, projectiles, auras and weather (feat/world-fx); created in init(). */
   private fx: FxRenderer | undefined;
   private readonly trees = new TreeFade();
@@ -137,7 +138,7 @@ export class WorldRenderer {
     this.textures.clear(); this.sources.clear(); this.pending.clear(); this.failed.clear(); this.loadedSheets = 0; this.clippedFrames = 0;
     const [bytes] = await Promise.all([fetchBytes(`Mapas/mapa${id}.csm`), this.loadMetadata()]);
     if (epoch !== this.epoch) return;
-    this.map = parseMap(bytes); this.fixed = fixedObjects(this.map.objects, this.objectGraphics); this.mapName = this.map.name; this.roofs.reset(this.map.triggers); this.readyMap = id;
+    this.map = parseMap(bytes); this.fixed = fixedObjects(this.map.objects, this.objectGraphics); this.mapName = this.map.name; this.roofTrig = roofTriggers(this.map.triggers); this.roofs.reset(this.roofTrig); this.readyMap = id;
   }
   private animation(id: number) {
     let animation = this.animations.get(id);
@@ -216,7 +217,7 @@ export class WorldRenderer {
   /** Sound data of the loaded map (tMapDat music, ambient, weather flags). */
   get mapAudio() { return this.map?.audio; }
   /** TileEngine.HayTecho at a tile: the player is under a roof (indoor rain sounds). */
-  roofAt(x: number, y: number) { return hayTecho(this.map?.triggers[(y - 1) * 100 + x - 1] ?? 0); }
+  roofAt(x: number, y: number) { return hayTecho(this.roofTrig[(y - 1) * 100 + x - 1] ?? 0); }
   /**
    * What DoPasosFx reads under a character: the file number of layer 1 (GrhData(Graphic(1)).FileNum; an animation uses its first
    * frame's file) and the layer-3 (else layer-2) graphic that covers it.
@@ -245,7 +246,7 @@ export class WorldRenderer {
     const cameraY = position.y * 32 + 16 - height / 2;
     this.world.position.set(-Math.round(cameraX * zoom), -Math.round(cameraY * zoom));
     const dt = this.lastRender ? Math.min(100, now - this.lastRender) : 16; this.lastRender = now;
-    this.roofs.update(this.map.triggers[(session.position!.y - 1) * 100 + session.position!.x - 1] ?? 0, dt);
+    this.roofs.update(this.roofTrig[(session.position!.y - 1) * 100 + session.position!.x - 1] ?? 0, dt);
     this.pools.forEach(pool => pool.reset());
     const minX = Math.max(1, Math.floor(cameraX / 32) - 10), maxX = Math.min(100, Math.ceil((cameraX + width) / 32) + 10);
     const minY = Math.max(1, Math.floor(cameraY / 32) - 2), maxY = Math.min(100, Math.ceil((cameraY + height) / 32) + 10);
@@ -271,7 +272,7 @@ export class WorldRenderer {
         if (!id) continue;
         if (layer === 4) {
           // Live VB6 roof rule: one alpha per roof trigger, 3x3 NearRoof, the player's own roof fades out.
-          const trigger = nearRoof(this.map.triggers, x, y);
+          const trigger = nearRoof(this.roofTrig, x, y);
           // Roofs sit above the light map and the particles, so they take their tile's light as a tint (RenderScreen draws them with light_value).
           this.draw(pool, this.animation(id), x * 32, y * 32, now, true, trigger ? this.roofs.alphaOf(trigger) : 1, this.fx!.roofTint(session.world, x, y));
         } else this.draw(pool, this.animation(id), x * 32, y * 32, now, layer !== 0);

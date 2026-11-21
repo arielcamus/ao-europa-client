@@ -51,6 +51,22 @@ export class RoofLights {
   get size() { return this.alpha.size; }
 }
 
+/**
+ * Client-side data deviation (QA 21 Nov). The classic server marks building interiors with castle-entry triggers (bank 29, carpinteria 32,
+ * 26..33, 51..54 on mapa1) and NO tile of mapa1 carries a roof trigger (1, 4, 16 or >= 60), so the faithful HayTecho/RoofsLight rule never
+ * fades any roof there and the body disappears under it. The client treats the 21..59 interior markers as roof triggers (+60 keeps them apart
+ * from the real ones). Only the roof/indoor logic reads this copy; the server and every other reader keep the file's own triggers.
+ */
+export const INTERIOR_TRIGGERS = { first: 21, last: 59, offset: 60 };
+export function roofTriggers(triggers: Uint16Array): Uint16Array {
+  const out = new Uint16Array(triggers);
+  for (let i = 0; i < out.length; i++) {
+    const t = out[i]!;
+    if (t >= INTERIOR_TRIGGERS.first && t <= INTERIOR_TRIGGERS.last) out[i] = t + INTERIOR_TRIGGERS.offset;
+  }
+  return out;
+}
+
 /** TileEngine.NearRoof: trigger of the first HayTecho tile in the 3x3 block around (x, y), or 0. */
 export function nearRoof(triggers: Uint16Array, x: number, y: number): number {
   for (let ly = y - 1; ly <= y + 1; ly++) for (let lx = x - 1; lx <= x + 1; lx++) {

@@ -3,6 +3,7 @@
  * yes/no question that asks the other player (TileEngine_RenderScreen "Pregunta", answered in frmMain.renderer_MouseDown).
  * Geometry is the original VB6 twips / 15. AGPL-3.0-or-later; see NOTICE. Artwork is read only from the local mount.
  */
+import { windows } from './window-stack.js';
 import { TRADE_OFFER_SLOTS } from '@ao/protocol';
 import { make, place, artButton, digitsInput, windowBackground, paintSlot, withDots } from './bank-trade-dom.js';
 import type { SlotView } from './bank-trade-dom.js';
@@ -83,6 +84,7 @@ export class TradeUI {
       if (this.chatBox.value && this.session?.bankTradeActions.sendTradeChat(this.chatBox.value)) this.chatBox.value = '';
     });
     // Form_KeyPress 27 unloads the window; the client then tells the server with WriteUserCommerceEnd so nobody is left waiting.
+    windows.watchElement('trade', this.trade, () => this.session?.bankTradeActions.endTrade());
     this.trade.addEventListener('keydown', event => { if (event.key === 'Escape') { event.stopPropagation(); this.session?.bankTradeActions.endTrade(); } });
 
     // frmUserRequest.frm: a plain tool window, 310x162, text box and a Cerrar button.
