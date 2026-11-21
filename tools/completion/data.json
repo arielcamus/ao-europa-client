@@ -21,21 +21,6 @@
    "area": "render"
   },
   {
-   "issue": 38,
-   "text": "Record ObjQuestListSend (S174) with a level-appropriate char holding a quest item",
-   "area": "recordings"
-  },
-  {
-   "issue": 35,
-   "text": "Work-macro key: no VB6 binding found, CraftingController.macroEnabled never set",
-   "area": "crafting"
-  },
-  {
-   "issue": 35,
-   "text": "ParticleFX continues after FlagTrabajar: find what stops the server's automated extraction before relying on ResetearUserMacro",
-   "area": "crafting"
-  },
-  {
    "issue": 34,
    "text": "roofTint: roofs shaded with the 4 tile vertices need a vertex-colour mesh",
    "area": "render"

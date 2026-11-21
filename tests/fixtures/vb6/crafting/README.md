@@ -24,4 +24,11 @@ Logins are redacted (`LoginAccount` is the bare id). Two kinds of session:
 | `chop-extraction.jsonl` | axe: StartAutomatedAction (38,71,17) |
 | `smelt-extraction.jsonl` | WorkRequestTarget 26 then StartAutomatedAction at the forge |
 
+**Throw-away Trabajador `Craftuno`** (account `crafting35@local.test`, 21 Nov, 9ccd7fad server; recorded with `tools/real-server/crafting-quest-record.mjs`):
+
+| file | what it proves |
+| --- | --- |
+| `mine-flag-then-walk.jsonl` | pickaxe on map 50 (67,63) at the deposit (68,63): one attempt every 4 s (UpdateSta -5, PlayWave), **FlagTrabajar does not stop it** (attempts and a successful ParticleFX 253 + mineral come after it: the 9ccd `HandleFlagTrabajar` only clears `Counters.Trabajando`, `UsandoMacro`, `TargetObj`), the next **accepted step** does (`HandleWalk` -> `ResetUserAutomatedActions`, answered by MacroTrabajoToggle off); after it only stamina regeneration. Other stops in the server source: dropping an item, the tool leaving the hand, being hit, running out of stamina ("Estás muy cansado", seen in earlier runs), the deposit running dry |
+| `alchemy-tailor-open.jsonl` | Olla (887) -> AlquimistaObj [891] + ShowAlquimiaForm; Costurero (886) -> SastreObj [3578, 240, 3822] + ShowSastreForm; CraftSastre 0 (what FrmSastre sends with no row selected) gets no answer |
+
 Still hand-built goldens (`packages/protocol/test/crafting.test.ts`, VB6 writer field order): OpenCrafting, CraftingItem/Catalyst/Result (the shipped NPC data has no NPC with `Craftea`), PelearConPezEspecial, FinalizarPescaEspecial, RomperCania (it deletes a slot), and list edge cases.

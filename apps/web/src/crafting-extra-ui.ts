@@ -12,62 +12,82 @@ import { grhCanvas } from './grh-canvas.js';
 import { ALCHEMY_MATERIAL_GRH, TAILOR_SKIN_GRH, TAILOR_SKIN_OBJECTS, alchemyMaterials, splitTailor, tailorMaterials } from './crafting-recipes.js';
 import { MAX_CRAFT_SLOTS } from './crafting.js';
 import { ListBox, make, place } from './crafting-ui.js';
+import { VbWindow } from './vb-window.js';
+import { makeDraggable } from './window-drag.js';
 import type { ClassicUI } from './classic-ui.js';
 import type { Session } from './session.js';
 import type { WorldRenderer } from './renderer.js';
 import { paintSlot } from './bank-trade-dom.js';
 import type { SlotView } from './bank-trade-dom.js';
 
-const MSG_SELECT_OBJECT = 'Debes seleccionar un objeto.';
-/** A control that is only background artwork until the pointer is over it (clsGraphicalButton with no default picture). */
-function hoverButton(parent: HTMLElement, id: string, label: string, art: string, x: number, y: number, width: number, height: number, onClick: () => void) {
-  const button = make('button', 'craft-button', parent, id); button.type = 'button'; button.setAttribute('aria-label', label);
-  place(button, x, y, width, height); button.onclick = onClick;
-  void loadInterface(art).then(url => {
-    button.onpointerenter = () => { button.style.backgroundImage = `url("${url}")`; };
-    button.onpointerleave = () => { button.style.backgroundImage = ''; };
-  }).catch(() => { /* usable without artwork */ });
-  return button;
+/** Languages/1.json MENSAJE_SELECCIONAR_OBJETO, shown by frmAlqui.Command3_Click in a MsgBox (vbExclamation + vbOKOnly). */
+export const MSG_SELECT_OBJECT = 'Debes seleccionar un objeto de la lista.';
+/** VB6 Str(): a non-negative number gets a leading space (the sign position). */
+export const vbStr = (value: number) => (value < 0 ? String(value) : ` ${value}`);
+/** VB6 Val(): the leading number of a string, spaces ignored, 0 when there is none. */
+export const vbVal = (text: string) => { const match = /^[+-]?\d+/.exec(text.replace(/\s/g, '')); return match ? Number(match[0]) : 0; };
+
+/** An Image control whose only artwork is the "over" bitmap set by its own MouseMove (Command3 / Command4 of both forms). */
+class OverImage {
+  readonly button: HTMLButtonElement;
+  private url = '';
+  constructor(parent: HTMLElement, id: string, label: string, art: string, rect: Rect, onClick: () => void) {
+    this.button = make('button', 'craft-button', parent, id); this.button.type = 'button'; this.button.setAttribute('aria-label', label);
+    place(this.button, ...rect); this.button.onclick = onClick;
+    void loadInterface(art).then(url => { this.url = url; }).catch(() => { /* usable without artwork */ });
+  }
+  /** Picture = LoadInterface(...) / Picture = Nothing. */
+  show(on: boolean) { this.button.style.backgroundImage = on && this.url ? `url("${this.url}")` : ''; this.button.dataset.over = String(on); }
 }
-/** A +/- control: nothing at rest, the "off" bitmap while pressed (cmdMasMenos_MouseDown). */
-function pressButton(parent: HTMLElement, id: string, label: string, art: string, x: number, y: number, width: number, height: number, onPress: () => void) {
-  const button = make('button', 'craft-button', parent, id); button.type = 'button'; button.setAttribute('aria-label', label);
-  place(button, x, y, width, height);
-  void loadInterface(art).then(url => {
-    button.onpointerdown = () => { button.style.backgroundImage = `url("${url}")`; };
-    const release = () => { button.style.backgroundImage = ''; };
-    button.onpointerup = release; button.onpointerleave = release;
-  }).catch(() => {});
-  button.onclick = onPress;
-  return button;
+/** clsGraphicalButton: default bitmap, "over" on MouseMove, "off" while pressed, back to "over" on release; only a MouseMove over
+ *  the form itself (clsFormMovementManager.ToggleToNormal) restores the default. SND_CLICK / SND_CLICK_OVER come from the art-button class. */
+class GraphicalButton {
+  readonly button: HTMLButtonElement;
+  private urls: Record<'default' | 'over' | 'off', string> = { default: '', over: '', off: '' };
+  private over = false;
+  constructor(parent: HTMLElement, id: string, label: string, art: string, rect: Rect, onClick: () => void) {
+    this.button = make('button', 'craft-button art-button', parent, id); this.button.type = 'button'; this.button.setAttribute('aria-label', label);
+    place(this.button, ...rect); this.button.onclick = onClick;
+    void Promise.all((['default', 'over', 'off'] as const).map(state => loadInterface(`${art}-${state}`))).then(([normal, over, off]) => {
+      this.urls = { default: normal!, over: over!, off: off! }; this.paint(this.over ? 'over' : 'default');
+    }).catch(() => {});
+    this.button.addEventListener('pointermove', () => { if (!this.over) { this.over = true; this.paint('over'); } });
+    this.button.addEventListener('pointerdown', () => this.paint('off'));
+    this.button.addEventListener('pointerup', () => this.paint('over'));
+  }
+  normal() { if (this.over) { this.over = false; this.paint('default'); } }
+  private paint(state: 'default' | 'over' | 'off') { if (this.urls[state]) this.button.style.backgroundImage = `url("${this.urls[state]}")`; this.button.dataset.state = state; }
 }
 type Rect = readonly [number, number, number, number];
 
 /** What differs between frmAlqui and FrmSastre. */
 interface ListLayout {
   id: 'alchemy' | 'tailor'; label: string; background: string; size: readonly [number, number];
-  list: Rect; materials: Rect; amounts: Rect; picture: readonly [number, number]; desc: Rect; descSize: number; quantity: Rect;
-  minus: Rect; plus: Rect; build: Rect; cancel: Rect; close: Rect; closeArt?: string;
+  list: Rect; materials: Rect; amounts: Rect; picture: Rect; desc: Rect; descSize: number; quantity: Rect;
+  minus: Rect; plus: Rect; build: Rect; cancel: Rect; close: Rect;
 }
 /** frmAlqui: ClientWidth 6480 x ClientHeight 7080 twips = 432 x 472. */
 const ALCHEMY: ListLayout = {
   id: 'alchemy', label: 'Trabajar con alquimista', background: 'ventanaalquimia', size: [432, 472],
-  list: [39, 99, 194, 236], materials: [272, 256, 83, 80], amounts: [368, 256, 29, 80], picture: [319, 126],
+  list: [39, 99, 194, 236], materials: [272, 256, 83, 80], amounts: [368, 256, 29, 80], picture: [319, 126, 32, 31],
   desc: [272, 176, 121, 49], descSize: 9, quantity: [256, 378, 44, 17], minus: [220, 376, 21, 21], plus: [312, 376, 21, 21],
   build: [235, 423, 130, 27], cancel: [72, 423, 130, 27], close: [400, 0, 33, 25],
 };
 /** FrmSastre: 6480 x 7125 twips = 432 x 475. */
 const TAILOR: ListLayout = {
   id: 'tailor', label: 'Trabajar de sastre', background: 'sastreria', size: [432, 475],
-  list: [32, 144, 208, 184], materials: [268, 256, 107, 80], amounts: [377, 256, 22, 80], picture: [319, 123],
+  list: [32, 144, 208, 184], materials: [268, 256, 107, 80], amounts: [377, 256, 22, 80], picture: [319, 123, 32, 31],
   desc: [264, 256, 137, 17], descSize: 11, quantity: [264, 376, 31, 17], minus: [224, 376, 17, 21], plus: [312, 376, 17, 21],
-  build: [235, 423, 130, 27], cancel: [72, 423, 130, 27], close: [400, 0, 34, 27], closeArt: 'boton-cerrar',
+  build: [235, 423, 130, 27], cancel: [72, 423, 130, 27], close: [400, 0, 34, 27],
 };
 
 class ListCraftForm {
   readonly root: HTMLElement;
   readonly objects: ListBox; readonly names: ListBox; readonly values: ListBox;
   readonly picture: HTMLElement; readonly desc: HTMLElement; readonly quantity: HTMLInputElement;
+  private readonly build: OverImage; private readonly cancel: OverImage;
+  private readonly pressed: HTMLButtonElement[] = [];
+  private closer: GraphicalButton | undefined;
   constructor(parent: HTMLElement, readonly layout: ListLayout, callbacks: { select: (index: number) => void; material: (row: number) => void; build: () => void; close: () => void }) {
     const { id } = layout;
     this.root = make('section', 'craft-window', parent, `${id}-window`); this.root.hidden = true;
@@ -78,41 +98,73 @@ class ListCraftForm {
     this.desc = make('span', 'craft-desc', this.root, `${id}-desc`); place(this.desc, ...layout.desc); this.desc.style.fontSize = `${layout.descSize}px`;
     this.objects = new ListBox(this.root, `${id}-objects`, 'Objetos', layout.list, index => callbacks.select(index));
     this.names = new ListBox(this.root, `${id}-materials`, 'Materiales', layout.materials, row => callbacks.material(row));
-    this.values = new ListBox(this.root, `${id}-amounts`, 'Cantidades', layout.amounts);
-    this.picture = make('div', 'craft-picture', this.root, `${id}-picture`); place(this.picture, layout.picture[0], layout.picture[1], 32, 32);
-    this.quantity = make('input', 'craft-quantity', this.root, `${id}-quantity`); this.quantity.value = '1'; this.quantity.maxLength = 3;
+    // List2 is Enabled = False in both forms: grey text, no selection.
+    this.values = new ListBox(this.root, `${id}-amounts`, 'Cantidades', layout.amounts); this.values.element.classList.add('craft-list-disabled');
+    this.values.element.setAttribute('aria-disabled', 'true');
+    this.picture = make('div', 'craft-picture', this.root, `${id}-picture`); place(this.picture, ...layout.picture);
+    this.quantity = make('input', 'craft-quantity craft-quantity-black', this.root, `${id}-quantity`); this.quantity.value = '1'; this.quantity.maxLength = 3;
     this.quantity.inputMode = 'numeric'; this.quantity.setAttribute('aria-label', 'Cantidad'); place(this.quantity, ...layout.quantity);
     this.quantity.addEventListener('input', () => { this.quantity.value = this.quantity.value.replace(/\D/g, '').slice(0, 3); });
-    const step = (delta: number) => { this.quantity.value = String(Math.max(0, Number(this.quantity.value || 0) + delta)); };
     if (id === 'alchemy') {
-      pressButton(this.root, `${id}-minus`, 'Menos', 'boton-sm-menos-off', ...layout.minus, () => step(-1));
-      pressButton(this.root, `${id}-plus`, 'Más', 'boton-sm-mas-off', ...layout.plus, () => step(1));
+      // cmdMasMenos_MouseDown: SND_CLICK, the "off" bitmap (nothing ever clears it while the form is loaded) and
+      // cantidad = Str(Val(cantidad) -/+ 1), with no lower bound. The tmrNumber auto-repeat it starts does not exist on the form.
+      for (const [name, rect, delta, art] of [['minus', layout.minus, -1, 'boton-sm-menos-off'], ['plus', layout.plus, 1, 'boton-sm-mas-off']] as const) {
+        const button = make('button', 'craft-button hotspot', this.root, `${id}-${name}`); button.type = 'button'; button.setAttribute('aria-label', delta < 0 ? 'Menos' : 'Más');
+        place(button, ...rect); this.pressed.push(button);
+        const url = loadInterface(art).catch(() => '');
+        button.addEventListener('pointerdown', () => {
+          void url.then(u => { if (u) button.style.backgroundImage = `url("${u}")`; });
+          this.quantity.value = vbStr(vbVal(this.quantity.value) + delta);
+        });
+      }
     } else {
-      // Image2 / Image3 only change the number; they have no artwork of their own.
+      // Image2_Click: If cantidad > 0 Then cantidad = cantidad - 1. Image3_Click: cantidad = cantidad + 1. No artwork, no sound.
       for (const [name, rect, delta] of [['minus', layout.minus, -1], ['plus', layout.plus, 1]] as const) {
         const button = make('button', 'craft-button', this.root, `${id}-${name}`); button.type = 'button'; button.setAttribute('aria-label', delta < 0 ? 'Menos' : 'Más');
-        place(button, ...rect); button.onclick = () => step(delta);
+        place(button, ...rect);
+        button.onclick = () => { const value = vbVal(this.quantity.value); if (delta > 0 || value > 0) this.quantity.value = String(value + delta); };
       }
     }
-    hoverButton(this.root, `${id}-build`, 'Elaborar', 'boton-elaborar-over', ...layout.build, callbacks.build);
-    hoverButton(this.root, `${id}-cancel`, 'Cancelar', 'boton-cancelar-over', ...layout.cancel, callbacks.close);
-    if (layout.closeArt) {
-      const button = make('button', 'craft-button', this.root, `${id}-close`); button.type = 'button'; button.setAttribute('aria-label', 'Cerrar'); place(button, ...layout.close); button.onclick = callbacks.close;
-      void Promise.all(['default', 'over'].map(state => loadInterface(`${layout.closeArt}-${state}`))).then(([normal, over]) => {
-        button.style.backgroundImage = `url("${normal}")`; button.onpointerenter = () => { button.style.backgroundImage = `url("${over}")`; }; button.onpointerleave = () => { button.style.backgroundImage = `url("${normal}")`; };
-      }).catch(() => {});
-    } else { const button = make('button', 'craft-button', this.root, `${id}-close`); button.type = 'button'; button.setAttribute('aria-label', 'Salir'); place(button, ...layout.close); button.onclick = callbacks.close; }
+    this.build = new OverImage(this.root, `${id}-build`, 'Elaborar', 'boton-elaborar-over', layout.build, callbacks.build);
+    this.cancel = new OverImage(this.root, `${id}-cancel`, 'Cancelar', 'boton-cancelar-over', layout.cancel, callbacks.close);
+    // Command3_MouseMove shows its bitmap and clears Command4's, and the other way round; Form_MouseMove clears both.
+    this.build.button.addEventListener('pointermove', () => { this.build.show(true); this.cancel.show(false); });
+    this.cancel.button.addEventListener('pointermove', () => { this.cancel.show(true); this.build.show(false); });
+    this.root.addEventListener('pointermove', event => { if (event.target === this.root) { this.build.show(false); this.cancel.show(false); this.closer?.normal(); } });
+    if (id === 'tailor') this.closer = new GraphicalButton(this.root, `${id}-close`, 'Cerrar', 'boton-cerrar', layout.close, callbacks.close);
+    else { const button = make('button', 'craft-button', this.root, `${id}-close`); button.type = 'button'; button.setAttribute('aria-label', 'Salir'); place(button, ...layout.close); button.onclick = callbacks.close; }
+    // Form_MouseMove -> MoverForm: the form is dragged by its background.
+    makeDraggable(this.root);
     windows.watchElement(`${id}-window`, this.root, callbacks.close);
     this.root.addEventListener('keydown', event => { if (event.key === 'Escape') { event.stopPropagation(); callbacks.close(); } });
   }
   get visible() { return !this.root.hidden; }
-  amount() { return Number(this.quantity.value || 0); }
-  show() { this.quantity.value = '1'; this.names.set([]); this.values.set([]); this.desc.textContent = ''; this.picture.replaceChildren(); this.root.hidden = false; }
+  /** UserMacro.cantidad = cantidad (the text box, read as a number). */
+  amount() { return vbVal(this.quantity.value); }
+  /** Form_Load of a freshly loaded form: every control back to its design-time state. */
+  show() {
+    this.quantity.value = '1'; this.names.set([]); this.values.set([]); this.desc.textContent = ''; this.picture.replaceChildren();
+    for (const button of this.pressed) button.style.backgroundImage = '';
+    this.build.show(false); this.cancel.show(false); this.closer?.normal();
+    place(this.root, Math.floor((1024 - this.layout.size[0]) / 2), Math.floor((768 - this.layout.size[1]) / 2), ...this.layout.size);
+    this.root.hidden = false;
+  }
   hide() { this.root.hidden = true; }
   async draw(art: (grh: number) => Promise<HTMLCanvasElement>, grh: number) {
     this.picture.replaceChildren();
     if (grh > 0) this.picture.append(await art(grh).catch(() => document.createElement('canvas')));
   }
+}
+
+/** MsgBox text, vbExclamation + vbOKOnly: a plain system box titled with App.Title (Argentum20.vbp Title). */
+function msgBox(parent: HTMLElement, text: string) {
+  const win = new VbWindow(parent, { id: `crafting-msgbox-${Date.now()}`, size: [300, 112], title: 'Argentum20' });
+  win.root.classList.add('craft-msgbox');
+  win.label('Argentum20', [0, 0, 296, 18], 'craft-msgbox-title');
+  win.label(text, [16, 32, 268, 32]).style.whiteSpace = 'normal';
+  const ok = win.command('Aceptar', [112, 74, 75, 23], () => win.close());
+  ok.focus();
+  return win;
 }
 
 /** Items the three graphical inventories of frmCrafteo are made of. */
@@ -142,7 +194,7 @@ export class CraftingExtraUI {
   private loadingTypes = false;
   private readonly art: Pick<ClassicUI, 'itemArt' | 'slotBackground'>;
 
-  constructor(root: HTMLElement, private readonly ui: ClassicUI, private readonly renderer: WorldRenderer, private readonly report: (message: string) => void) {
+  constructor(private readonly root: HTMLElement, private readonly ui: ClassicUI, private readonly renderer: WorldRenderer, private readonly report: (message: string) => void) {
     this.art = ui;
     const itemArt = (grh: number) => this.ui.itemArt(grh);
     this.alchemy = new ListCraftForm(root, ALCHEMY, {
@@ -220,10 +272,10 @@ export class CraftingExtraUI {
     this.alchemy.desc.textContent = this.session?.catalog?.get(object)?.text ?? '';
     await this.alchemy.draw(this.itemArt, this.session?.catalog?.get(object)?.grh ?? 0);
   }
-  /** Command3_Click: nothing selected is a message box; otherwise build, and the form closes. */
+  /** Command3_Click: nothing selected is a message box (the form stays open); otherwise build, and the form closes. */
   private buildAlchemy() {
     const object = this.alchemyList[this.alchemy.objects.index];
-    if (object === undefined) { this.report(MSG_SELECT_OBJECT); return; }
+    if (object === undefined) { msgBox(this.root, MSG_SELECT_OBJECT); return; }
     this.session?.crafting.buildAlchemy(object, this.alchemy.amount());
     this.closeAlchemy();
   }
@@ -236,13 +288,13 @@ export class CraftingExtraUI {
   private paintTailorTab() {
     this.tailorButtons.forEach((button, tab) => { if (button) button.style.backgroundImage = tab === this.tailorTab && button.dataset.art ? `url("${button.dataset.art}")` : ''; });
   }
-  /** Command1_Click / Command2_Click. */
+  /** Command1_Click / Command2_Click: only lstArmas is refilled; the material lists, picture and caption keep the last object. */
   private selectTailorTab(tab: 1 | 2) {
     this.tailorTab = tab;
     const lists = splitTailor(this.session!.craftingState.tailor, this.typeOf);
     this.tailorList = tab === 1 ? lists.clothes : lists.hats;
     this.tailor.objects.set(this.tailorList.map(object => this.name(object)));
-    this.tailor.names.set([]); this.tailor.values.set([]); this.paintTailorTab();
+    this.paintTailorTab();
   }
   private async pickTailor(index: number) {
     const object = this.tailorList[index]; if (object === undefined || !this.ini) return;
@@ -251,10 +303,12 @@ export class CraftingExtraUI {
     this.tailor.desc.textContent = `Defensa: ${info?.minDef ?? 0}/${info?.maxDef ?? 0}`;
     await this.tailor.draw(this.itemArt, info?.grh ?? 0);
   }
+  /** Command3_Click: no selection check (ListIndex -1 reads SastreRopas(0) / SastreGorros(0), whose Index is 0, and sends it), and
+   *  the clothes tab's macro line looks up the key "MENSAJE_COMIENZAS_A_TRABAJAR." (trailing dot), which is not in the language file:
+   *  an empty line. The hats tab uses the real key. */
   private buildTailor() {
-    const object = this.tailorList[this.tailor.objects.index];
-    if (object === undefined) { this.report(MSG_SELECT_OBJECT); return; }
-    this.session?.crafting.buildTailor(object, this.tailor.amount());
+    const object = this.tailorList[this.tailor.objects.index] ?? 0;
+    this.session?.crafting.buildTailor(object, this.tailor.amount(), this.tailorTab === 1 ? '' : undefined);
     this.closeTailor();
   }
 

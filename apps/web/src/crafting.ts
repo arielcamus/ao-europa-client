@@ -120,9 +120,9 @@ export interface CraftingDeps {
 
 export class CraftingController {
   readonly macro: UserMacro = { active: false, type: 0, object: 0, remaining: 0, intervalMs: 0, lastTick: 0 };
-  /** frmMain.macrotrabajo (the work-macro key) and MacroBltIndex: while on, opening a station re-sends the last build instead of the window. */
-  macroEnabled = false;
-  macroBuildObject = 0;
+  // frmMain.macrotrabajo / MacroBltIndex are not ported: the timer is Enabled = False in frmMain.frm and ActivarMacroTrabajo has no
+  // caller in the pinned client (619e69d), so the "re-send the last build when a station form opens" branches of
+  // HandleShowBlacksmithForm / HandleShowAlquimiaForm / HandleShowSastreForm and of the build buttons can never run.
 
   constructor(private readonly deps: CraftingDeps, readonly state: CraftingState) {
     state.onWorkToggle = active => this.serverWorkToggle(active);
@@ -131,12 +131,7 @@ export class CraftingController {
     state.onSuperFish = () => deps.overhead?.(MSG_SUPER_FISH, [255, 255, 1]);
   }
 
-  /** The state first, then the VB6 handlers that act on it: a station form shown while the work macro is on re-sends the last build. */
-  receive(packet: ServerPacket) {
-    this.state.receive(packet);
-    if (packet.id === CS.ShowBlacksmithForm && this.repeatsBuild) { this.state.closeWindow(); this.deps.send({ id: CC.CraftBlacksmith, object: this.macroBuildObject }); }
-    else if (packet.id === CS.ShowAlquimiaForm && this.repeatsBuild) { this.state.closeWindow(); this.deps.send({ id: CC.CraftAlquimista, object: this.macroBuildObject }); }
-  }
+  receive(packet: ServerPacket) { this.state.receive(packet); }
 
   /** HandleMacroTrabajoToggle: off is ResetearUserMacro (which tells the server FlagTrabajar); on starts the type 6 macro. */
   private serverWorkToggle(active: boolean) {
@@ -174,15 +169,15 @@ export class CraftingController {
   /** frmHerrero.cmdConstruir_Click: more than one starts the build macro, one is a single request. */
   buildSmith(object: number, quantity: number): boolean { return this.build(MacroType.Smith, CC.CraftBlacksmith, object, quantity); }
   buildAlchemy(object: number, quantity: number): boolean { return this.build(MacroType.Alchemy, CC.CraftAlquimista, object, quantity); }
-  buildTailor(object: number, quantity: number): boolean { return this.build(MacroType.Tailor, CC.CraftSastre, object, quantity); }
-  private build(type: number, id: typeof CC.CraftBlacksmith | typeof CC.CraftAlquimista | typeof CC.CraftSastre, object: number, quantity: number): boolean {
-    if (!this.deps.ready() || object < 1) return false;
+  /** FrmSastre.Command3_Click has no "nothing selected" check: ListIndex -1 reads SastreRopas(0).Index, which is 0, and sends that. */
+  buildTailor(object: number, quantity: number, message = MSG_BEGIN_WORK): boolean { return this.build(MacroType.Tailor, CC.CraftSastre, object, quantity, 0, message); }
+  private build(type: number, id: typeof CC.CraftBlacksmith | typeof CC.CraftAlquimista | typeof CC.CraftSastre, object: number, quantity: number, lowest = 1, message = MSG_BEGIN_WORK): boolean {
+    if (!this.deps.ready() || object < lowest) return false;
     if (quantity > 1) {
-      this.colored(MSG_BEGIN_WORK, WORK_COLOR.build, true, true);
+      this.colored(message, WORK_COLOR.build, true, true);
       Object.assign(this.macro, { active: true, type, object, remaining: quantity, intervalMs: this.state.buildWork, lastTick: this.deps.now() });
     } else {
       this.deps.send({ id, object });
-      if (this.macroEnabled) this.macroBuildObject = object;
     }
     return true;
   }
@@ -193,8 +188,6 @@ export class CraftingController {
     else this.colored(MSG_QUANTITY_ZERO, WORK_COLOR.build, true, true);
     return true;
   }
-  /** Server forms that find the work macro already on re-send the last build (HandleShowBlacksmithForm / HandleShowAlquimiaForm). */
-  get repeatsBuild() { return this.macroEnabled && this.macroBuildObject > 0; }
 
   /** frmCrafteo. */
   addCraftItem(inventorySlot: number, craftSlot = 0) { this.send({ id: CC.AddItemCrafting, inventorySlot, craftSlot }); }

@@ -59,9 +59,37 @@ const objects = (lines: Line[], id: number) => decodeAll(lines, 's2c', id).map(p
 describe('crafting packets against real VB6 recordings', () => {
   it('has every scenario', () => {
     expect(recordings.map(r => r.name.replace('.jsonl', '')).sort()).toEqual([
-      'anvil-no-hammer', 'automated-action-refused', 'build-refused', 'carpenter-craft-walk-north', 'carpenter-craft-walk-south', 'chop-extraction', 'complete-action-none',
-      'login', 'mine-extraction', 'mine-extraction-then-walk', 'smelt-extraction', 'smith-alchemy-tailor-build', 'smith-refused-carpenter-build', 'station-not-open',
+      'alchemy-tailor-open', 'anvil-no-hammer', 'automated-action-refused', 'build-refused', 'carpenter-craft-walk-north', 'carpenter-craft-walk-south', 'chop-extraction',
+      'complete-action-none', 'login', 'mine-extraction', 'mine-extraction-then-walk', 'mine-flag-then-walk', 'smelt-extraction', 'smith-alchemy-tailor-build',
+      'smith-refused-carpenter-build', 'station-not-open',
     ]);
+  });
+  it('extraction: FlagTrabajar does not stop the server-side automated action; the next accepted step does (9ccd7fad HandleWalk -> ResetUserAutomatedActions)', () => {
+    const lines = file('mine-flag-then-walk');
+    const at = (dir: Line['dir'], id: number) => lines.findIndex(l => l.dir === dir && l.id === id);
+    const start = at('c2s', CC.StartAutomatedAction), flag = at('c2s', CC.FlagTrabajar), walk = at('c2s', 78);
+    expect(start).toBeGreaterThan(0); expect(flag).toBeGreaterThan(start); expect(walk).toBeGreaterThan(flag);
+    // Each 4 s attempt costs MIN_STA_REQUIRED (5) stamina and plays a wave; a success adds ParticleFX 253 and the mineral.
+    const attempts = (from: number, to: number) => lines.slice(from, to).filter(l => l.dir === 's2c' && l.id === 25).length;
+    expect(attempts(start, flag)).toBeGreaterThan(0);
+    expect(attempts(flag, walk)).toBeGreaterThan(0);
+    expect(lines.slice(flag, walk).some(l => l.dir === 's2c' && l.id === 113)).toBe(true);
+    // After the step: MacroTrabajoToggle off, PosUpdate, then only stamina regeneration (each UpdateSta higher than the one before).
+    const after = lines.slice(walk);
+    expect(after.find(l => l.dir === 's2c' && l.id === CS.MacroTrabajoToggle)?.hex).toBe('870000');
+    expect(after.some(l => l.dir === 's2c' && (l.id === 113 || l.id === 55))).toBe(false);
+    const stamina = after.filter(l => l.dir === 's2c' && l.id === 25).map(l => bytes(l.hex)[2]! | (bytes(l.hex)[3]! << 8));
+    expect(stamina.length).toBeGreaterThan(2); expect(stamina).toEqual([...stamina].sort((x, y) => x - y));
+  });
+  it('olla and costurero: AlquimistaObj / SastreObj then the Show*Form; CraftSastre 0 (FrmSastre with no row) gets no answer', () => {
+    const lines = file('alchemy-tailor-open');
+    expect(objects(lines, CS.AlquimistaObj)).toEqual([[891]]);
+    expect(objects(lines, CS.SastreObj)).toEqual([[3578, 240, 3822]]);
+    expect(lines[lines.findIndex(l => l.id === CS.ShowAlquimiaForm) - 1]!.id).toBe(CS.AlquimistaObj);
+    expect(lines[lines.findIndex(l => l.id === CS.ShowSastreForm) - 1]!.id).toBe(CS.SastreObj);
+    const craft = lines.findIndex(l => l.dir === 'c2s' && l.id === CC.CraftSastre);
+    expect(decodeAll(lines, 'c2s', CC.CraftSastre)).toEqual([{ id: CC.CraftSastre, object: 0 }]);
+    expect(lines[craft + 1]!.dir).toBe('c2s'); // the next frame is our own EquipItem: the server said nothing
   });
   for (const recording of recordings) {
     it(`${recording.name}: every owned packet decodes and re-encodes to the same bytes`, () => {
