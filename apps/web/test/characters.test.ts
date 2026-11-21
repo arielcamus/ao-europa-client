@@ -301,4 +301,23 @@ describe('one removal path (TileEngine_Chars.EraseChar)', () => {
     h.recv({ id: ST.SetInvisible, charIndex: me, invisible: true, x: 75, y: 78 } as ServerPacket, { id: N.CharacterRemove, charIndex: me, vanish: false, warp: true });
     expect(h.session.status.invisible.has(me)).toBe(true); // a warp removes and re-creates the own character
   });
+  // #110: EraseChar also calls Dialogos.RemoveDialog and StopAllWavsMatchingLabel("sailing_<index>").
+  it('a talking character steps out of the area: its speech bubble goes and the audio side hears the erase (every removal path)', () => {
+    const talk = { id: N.ChatOverHead, chat: 'Hola', charIndex: BAT, color: 0xffffff, isSpell: false, x: 73, y: 61, minChatTime: 0, maxChatTime: 0 } as ServerPacket;
+    for (const erase of [
+      (h: ReturnType<typeof playing>) => h.recv({ id: S.CharacterMove, charIndex: BAT, x: 73, y: 60 }, { id: S.CharacterMove, charIndex: BAT, x: 73, y: 59 }),
+      (h: ReturnType<typeof playing>) => h.recv({ id: 57, x: 75, y: 90 } as ServerPacket),
+      (h: ReturnType<typeof playing>) => h.recv({ id: N.CharacterRemove, charIndex: BAT, vanish: false, warp: false }),
+    ]) {
+      const h = playing(), erased: number[] = [];
+      h.session.onCharacterErased = index => erased.push(index);
+      h.enter('', 0); h.recv(talk);
+      expect(h.session.ui.chat.dialogs.has(BAT)).toBe(true);
+      erase(h);
+      expect(h.session.tracker.chars.has(BAT)).toBe(false);
+      expect(h.session.ui.chat.dialogs.has(BAT)).toBe(false);
+      expect(h.session.ui.chat.visibleDialogs().map(v => v.charIndex)).not.toContain(BAT);
+      expect(erased).toEqual([BAT]);
+    }
+  });
 });

@@ -83,7 +83,7 @@ export class ChatState {
         this.overHead(packet.chat, packet.charIndex, packet.color, packet.isSpell, packet.minChatTime, packet.maxChatTime); return true;
       case NS.LocaleChatOverHead:
         this.overHead(this.locale.message(packet.chatId, packet.params), packet.charIndex, packet.color, packet.isSpell, packet.minChatTime, packet.maxChatTime); return true;
-      case NS.RemoveCharDialog: this.dialogs.delete(packet.charIndex); return true;
+      case NS.RemoveCharDialog: this.removeDialog(packet.charIndex); return true;
       case NS.RemoveDialogs: this.dialogs.clear(); return true;
       default: return false;
     }
@@ -114,6 +114,9 @@ export class ChatState {
       this.push({ kind: 'user', name: characterName(character.name), text, color: [c.r, c.g, c.b], status: character.status, level: privilegeLevel(character.privileges) });
     }
   }
+
+  /** Dialogos.RemoveDialog: RemoveCharDialog, and EraseChar for a character that leaves (Session's CharacterTracker.onErase). */
+  removeDialog(charIndex: number) { this.dialogs.delete(charIndex); }
 
   /** Char_Dialog_Set called by the client itself (HandlePelearConPezEspecial); no console copy. */
   showOwnDialog(charIndex: number, text: string, color: readonly [number, number, number]) {

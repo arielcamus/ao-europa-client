@@ -75,6 +75,8 @@ export class AudioEngine {
   private readonly buffers = new Map<string, Promise<AudioBuffer | undefined>>();
   private readonly voices = new Set<Voice>();
   private readonly uniquePending = new Set<string>();
+  /** Unique labels stopped while their sound was still loading: the load ends without starting it. */
+  private readonly cancelledPending = new Set<string>();
   private ambient: Voice | undefined;
   private ambientId = 0;
   private music: { name: string; stream: MusicStream } | undefined;
@@ -159,6 +161,7 @@ export class AudioEngine {
     if (label) for (const voice of [...this.voices]) if (voice.label === label && voice.id === name) this.stopVoice(voice);
     let buffer: AudioBuffer | undefined;
     try { buffer = await this.buffer(name); } finally { this.uniquePending.delete(label); }
+    if (label && this.cancelledPending.delete(label)) return false;
     if (!buffer) { entry.result = 'missing'; return false; }
     if (!this.categoryOn(category)) return false;
     entry.result = 'played';
@@ -170,6 +173,15 @@ export class AudioEngine {
     const name = String(id);
     this.log({ kind: 'stop', id: name, ...(label ? { label } : {}) });
     for (const voice of [...this.voices]) if (voice.id === name && (!label || voice.label === label)) this.stopVoice(voice);
+  }
+  /** ao20audio.StopAllWavsMatchingLabel: stops every sound under a label, whatever its wave, including a unique one still loading. */
+  stopLabel(label: string): void {
+    const playing = label ? [...this.voices].filter(voice => voice.label === label) : [];
+    const loading = Boolean(label) && this.uniquePending.has(label);
+    if (!playing.length && !loading) return; // nothing under it: no log line (every EraseChar calls this)
+    this.log({ kind: 'stop', id: '', label });
+    if (loading) this.cancelledPending.add(label);
+    for (const voice of playing) this.stopVoice(voice);
   }
   private start(buffer: AudioBuffer, id: string, label: string, category: FxCategory, loop: boolean, volume: number, pan: number): Voice | undefined {
     const context = this.context, master = this.master;

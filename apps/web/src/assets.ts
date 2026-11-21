@@ -212,6 +212,17 @@ export function parseHeads(bytes: Uint8Array): number[][] {
 }
 
 export interface Body { walk: Animation[]; bodyX: number; bodyY: number; headX: number; headY: number }
+/**
+ * BodyData(id).HeadOffset as the pinned client loads it (Recursos.bas CargarCuerpos): the ini HeadOffsetX/Y plus BodyOffsetX/Y.
+ * Every reader of the head offset (sprites, speech bubbles, the frmMapaGrande preview) uses this one rule; a missing body is 0, 0.
+ */
+export function bodyHeadOffset(bodies: Ini, id: number): { x: number; y: number } {
+  const section = bodies.get(`body${id}`);
+  // Some bodies (the ghost, 829) carry a trailing VB comment: "Walk1=51672 ' arriba".
+  const value = (key: string) => Number((section?.get(key) ?? '0').split("'")[0]) || 0;
+  return { x: value('headoffsetx') + value('bodyoffsetx'), y: value('headoffsety') + value('bodyoffsety') };
+}
+
 export function readBody(bodies: Ini, molds: Ini, graphics: GraphicIndex, id: number): Body {
   const section = bodies.get(`body${id}`);
   if (!section) throw new Error(`Missing body ${id}`);
@@ -239,7 +250,8 @@ export function readBody(bodies: Ini, molds: Ini, graphics: GraphicIndex, id: nu
       };
     });
   }
-  return { walk, bodyX, bodyY, headX: value('headoffsetx') + bodyX, headY: value('headoffsety') + bodyY };
+  const head = bodyHeadOffset(bodies, id);
+  return { walk, bodyX, bodyY, headX: head.x, headY: head.y };
 }
 
 /**

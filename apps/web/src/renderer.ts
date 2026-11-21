@@ -5,7 +5,7 @@
  */
 import { TRAP_GRH, TRAP_ALPHA } from './status.js';
 import { Application, Container, Rectangle, Sprite, Text, Texture } from 'pixi.js';
-import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody, tileIndex, assetUrl } from './assets.js';
+import { bodyHeadOffset, clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody, tileIndex, assetUrl } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
 import type { Session } from './session.js';
 import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, roofTriggers, TreeFade, fixedObjects, nearRoof, objectDraws, objectGraphicsFromIni, treeCoversPlayer, TREE_GRH_INDICES, layer4TreeCoversPlayer, rowSlot } from './map-objects.js';
@@ -41,6 +41,13 @@ class SpritePool {
   }
   finish() { for (let i = this.used; i < this.sprites.length; i++) this.sprites[i]!.visible = false; }
 }
+
+/**
+ * TileEngine_RenderScreen "Layer 3 & chars" (pinned 619e69d): For y ... For x = MinBufferedX To MaxBufferedX draws MapData(x, y).charindex,
+ * so characters go row by row and, inside a row, strictly left to right by their logical tile, never by the interpolated position of
+ * one that is mid-step (#108).
+ */
+export const tileDrawOrder = (a: { row: number; column: number }, b: { row: number; column: number }) => a.row - b.row || a.column - b.column;
 
 export class WorldRenderer {
   readonly app = new Application();
@@ -180,7 +187,7 @@ export class WorldRenderer {
   async npcPreview(body: number, head: number): Promise<{ walk: (Animation | undefined)[]; head: (Animation | undefined)[]; headOffsetY: number }> {
     await this.loadMetadata();
     const data = body ? this.sprites?.body(body) : undefined;
-    const headOffsetY = Number((this.bodies.get(`body${body}`)?.get('headoffsety') ?? '0').split("'")[0]);
+    const headOffsetY = bodyHeadOffset(this.bodies, body).y; // BodyData.HeadOffset includes BodyOffset (CargarCuerpos), as the world sprites
     return {
       walk: [1, 2, 3, 4].map(h => data?.walk[h - 1]),
       head: [1, 2, 3, 4].map(h => { const grh = head ? this.heads[head]?.[h - 1] : 0; return grh ? this.animation(grh) : undefined; }),
@@ -423,12 +430,12 @@ export class WorldRenderer {
     const placed = chars.map(char => {
       if (char.charIndex === session.charIndex) {
         const moving = !!session.motion && !session.motion.translate && now < session.motion.started + session.motion.duration;
-        return { char, row: session.position?.y ?? Math.round(selfPosition.y), heading: session.self!.heading as number, x: selfPosition.x, y: selfPosition.y, moving, elapsed: moving ? Math.max(0, now - session.motion!.started) : 0 };
+        return { char, row: session.position?.y ?? Math.round(selfPosition.y), column: session.position?.x ?? Math.round(selfPosition.x), heading: session.self!.heading as number, x: selfPosition.x, y: selfPosition.y, moving, elapsed: moving ? Math.max(0, now - session.motion!.started) : 0 };
       }
       const view = tracker.visualPosition(char, now);
-      return { char, row: char.y, heading: char.heading as number, ...view };
+      return { char, row: char.y, column: char.x, heading: char.heading as number, ...view };
     }).filter(({ x, y }) => x * 32 > cameraX - 96 && x * 32 < cameraX + width + 96 && y * 32 > cameraY - 96 && y * 32 < cameraY + height + 96)
-      .sort((a, b) => a.y - b.y || a.x - b.x);
+      .sort(tileDrawOrder);
     const pool = this.pools[4]!;
     for (const { char, row, heading, x, y, moving, elapsed } of placed) {
       const px = x * 32, py = y * 32;

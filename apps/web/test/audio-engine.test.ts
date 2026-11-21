@@ -73,6 +73,22 @@ describe('audio engine', () => {
     engine.stopWave(50);
     expect(f.started[2]!.stopped).toBe(true);
   });
+  it('StopAllWavsMatchingLabel stops every sound under a label, also a unique one still loading, and logs nothing when none plays', async () => {
+    const f = fakeAudio(); f.files.set('/ao-assets/OGG/50.ogg', 4); f.files.set('/ao-assets/OGG/23.ogg', 4);
+    const engine = new AudioEngine(f.deps); engine.unlock();
+    await engine.playWave(50, { label: 'sailing_7', unique: true });
+    await engine.playWave(23, { label: 'sailing_8', unique: true });
+    engine.stopLabel('sailing_7');
+    expect(f.started.map(s => s.stopped)).toEqual([true, false]);
+    const events = engine.events.length;
+    engine.stopLabel('sailing_9');
+    expect(engine.events.length).toBe(events);
+    const loading = engine.playWave(50, { label: 'sailing_9', unique: true });
+    engine.stopLabel('sailing_9'); // erased while its buffer is being fetched: it never starts
+    expect(await loading).toBe(false);
+    expect(f.started).toHaveLength(2);
+    expect(await engine.playWave(50, { label: 'sailing_9', unique: true })).toBe(true); // the cancel is used up
+  });
   it('remembers the settings in localStorage and sanitizes them on load', () => {
     const storage = memoryStorage();
     const first = new AudioEngine({ ...fakeAudio().deps, storage });
