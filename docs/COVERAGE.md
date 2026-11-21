@@ -10,32 +10,32 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 466 of 523 = 89.1%.** Merged on main only: 466 = 89.1%.
-  - Server to client: 192 of 207. Client to server: 274 of 316. Packets with a recorded VB6 fixture: 241.
-- **Forms covered: 4 of 86 = 4.7%** (6 more partially, 11.6% started).
+- **Packets covered (merged + open branches): 512 of 523 = 97.9%.** Merged on main only: 512 = 97.9%.
+  - Server to client: 202 of 207. Client to server: 310 of 316. Packets with a recorded VB6 fixture: 262.
+- **Forms covered: 53 of 86 = 61.6%** (5 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
 
 | # | Group | Packets covered | % | Merged | Forms covered | % | Partial forms |
 |---|---|---|---|---|---|---|---|
-| 1 | Core movement / world / session | 68/68 | 100% | 68 | 0/21 | 0% | 2 |
+| 1 | Core movement / world / session | 68/68 | 100% | 68 | 10/21 | 47.6% | 1 |
 | 2 | Chat | 28/28 | 100% | 28 | 0/0 | n/a | 0 |
 | 3 | Combat | 41/41 | 100% | 41 | 0/0 | n/a | 0 |
 | 4 | Spells | 8/8 | 100% | 8 | 0/0 | n/a | 0 |
-| 5 | Items / commerce (NPC shop, inventory) | 27/27 | 100% | 27 | 2/4 | 50% | 0 |
-| 6 | NPCs | 7/7 | 100% | 7 | 0/2 | 0% | 0 |
-| 7 | Bank | 16/16 | 100% | 16 | 0/3 | 0% | 0 |
-| 8 | Trade (player to player) | 8/8 | 100% | 8 | 0/2 | 0% | 0 |
-| 9 | Party | 9/9 | 100% | 9 | 0/2 | 0% | 0 |
-| 10 | Guild / clan | 41/41 | 100% | 41 | 0/11 | 0% | 0 |
-| 11 | Quests | 10/10 | 100% | 10 | 0/2 | 0% | 0 |
-| 12 | Skills / training / stats | 19/19 | 100% | 19 | 0/3 | 0% | 0 |
+| 5 | Items / commerce (NPC shop, inventory) | 27/27 | 100% | 27 | 4/4 | 100% | 0 |
+| 6 | NPCs | 7/7 | 100% | 7 | 2/2 | 100% | 0 |
+| 7 | Bank | 16/16 | 100% | 16 | 2/3 | 66.7% | 0 |
+| 8 | Trade (player to player) | 8/8 | 100% | 8 | 2/2 | 100% | 0 |
+| 9 | Party | 9/9 | 100% | 9 | 2/2 | 100% | 0 |
+| 10 | Guild / clan | 41/41 | 100% | 41 | 11/11 | 100% | 0 |
+| 11 | Quests | 10/10 | 100% | 10 | 2/2 | 100% | 0 |
+| 12 | Skills / training / stats | 19/19 | 100% | 19 | 2/3 | 66.7% | 0 |
 | 13 | Crafting (smith / carpenter / alchemy / tailor) | 25/25 | 100% | 25 | 2/5 | 40% | 3 |
 | 14 | Fishing / mining / lumber (work skills) | 10/10 | 100% | 10 | 0/0 | n/a | 0 |
-| 15 | Options / keybinds | 1/2 | 50% | 1 | 0/4 | 0% | 0 |
+| 15 | Options / keybinds | 2/2 | 100% | 2 | 3/4 | 75% | 0 |
 | 16 | Minimap / world map | 2/2 | 100% | 2 | 0/1 | 0% | 1 |
-| 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 4/60 | 6.7% | 4 | 0/13 | 0% | 0 |
-| 18 | GM / admin (lowest) | 142/142 | 100% | 142 | 0/13 | 0% | 0 |
+| 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 49/60 | 81.7% | 49 | 2/13 | 15.4% | 0 |
+| 18 | GM / admin (lowest) | 142/142 | 100% | 142 | 9/13 | 69.2% | 0 |
 
 ## DUPLICATES
 
@@ -48,94 +48,149 @@ Ids only: .
 
 ## (b) VB6 forms
 
-| Form | Purpose | Group | Status | Package |
+Status is evidence-based: `covered` means every file listed in `tools/coverage/forms.json` for the form exists on the scanned ref; `partial` says what is missing; `not started` carries a class (a player-facing, b account server / not in PYMMO=0, c AO20 premium or online extra, d never opened by the classic client).
+
+| Form | Purpose | Group | Status | Implementation / what is missing |
 |---|---|---|---|---|
-| Frmcarga | Loading splash | core | not started | wp01 |
-| frmCargando | Loading screen with progress | core | not started | wp01 |
-| frmCerrar | Exit confirmation | core | not started | wp01 |
-| frmConnect | Login screen (account email and password, character list entry) | core | merged (partial) | wp01 |
-| frmConnecting | Connecting status | core | not started | wp01 |
-| frmCrearCuenta | Create account | core | not started | wp01 |
-| frmCrearPersonaje | Create character (race, class, gender, head, city) | core | not started | wp01 |
-| FrmCuenta | Account home / character selection | core | not started | wp01 |
-| frmDeleteChar | Delete character confirmation | core | not started | wp01 |
-| frmKeypad | On-screen keypad for character password | core | not started | wp01 |
-| FrmLogear | Server/port connection dialog | core | not started | wp01 |
-| frmMain | Main game window: viewport, HUD bars, inventory/spell panels, chat console and input | core | merged (partial) | wp01 |
-| frmMensaje | Generic message box | core | not started | wp01 |
-| frmNewAccount | New account details | core | not started | wp01 |
-| frmNewPassword | Set new password | core | not started | wp01 |
-| frmOldPersonaje | Pick an existing character to log in with | core | not started | wp01 |
-| frmPasswd | Change password | core | not started | wp01 |
-| frmPasswordReset | Password reset code request | core | not started | wp01 |
-| frmPres | Presentation splash | core | not started | wp01 |
-| FrmRecuperar | Recover account | core | not started | wp01 |
-| frmtip | Tip of the day | core | not started | wp01 |
-| frmCantidad | Amount prompt (drop, deposit, gold, sell) | items | merged | wp04 |
-| frmComerciar | NPC shop window (buy/sell) | items | merged | wp04 |
-| FrmKeyInv | Key ring inventory | items | not started | wp04 |
-| frmMensajePapiro | Parchment / papyrus message viewer | items | not started | wp04 |
-| frmEntrenador | Trainer: choose creature | npcs | not started | wp05 |
-| FrmViajes | Travel destinations via NPC | npcs | not started | wp05 |
-| frmBancoCuenta | Account-wide vault | bank | not started | wp06 |
-| frmBancoObj | Bank vault (items and gold) | bank | not started | wp06 |
-| frmGoliath | Bank gold deposit/withdraw (Goliath) | bank | not started | wp06 |
-| frmComerciarUsu | Player-to-player trade window | trade | not started | wp06 |
-| frmUserRequest | Incoming request prompt (trade and similar) | trade | not started | wp06 |
-| FrmGrupo | Party window | party | not started | wp07 |
-| FrmPregunta | Generic yes/no question prompt (group invites, confirmations) | party | not started | wp07 |
-| frmCharInfo | Character info / guild applicant info | guild | not started | wp07 |
-| frmCommet | Peace / alliance offer text | guild | not started | wp07 |
-| frmGuildAdm | Registered guilds list | guild | not started | wp07 |
-| frmGuildBrief | Guild brief / details of another guild | guild | not started | wp07 |
-| frmGuildDetails | Guild founding details | guild | not started | wp07 |
-| frmGuildFoundation | Found a guild | guild | not started | wp07 |
-| frmGuildLeader | Guild leader panel (members, proposals, news) | guild | not started | wp07 |
-| frmGuildNews | Guild news | guild | not started | wp07 |
-| frmGuildURL | Guild website | guild | not started | wp07 |
-| frmPeaceProp | Peace proposals list | guild | not started | wp07 |
-| frmSolicitud | Guild membership application | guild | not started | wp07 |
-| FrmQuest | Quest log | quests | not started | wp08 |
-| frmQuestInfo | Quest details / NPC quest offer | quests | not started | wp08 |
-| FrmEstadisticas | Character statistics and attributes | skills | not started | wp09 |
-| frmSkills3 | Skill allocation | skills | not started | wp09 |
-| frmStatistics | Mini statistics | skills | not started | wp09 |
-| frmAlqui | Alchemy crafting | crafting | merged (partial) | wp10 |
-| frmCarp | Carpenter crafting | crafting | merged | wp10 |
-| frmCrafteo | Generic crafting window with catalyst | crafting | merged (partial) | wp10 |
-| frmHerrero | Blacksmith crafting | crafting | merged | wp10 |
-| FrmSastre | Tailor crafting | crafting | merged (partial) | wp10 |
-| frmBindKey | Bind a key to an action | options | not started | wp11 |
-| frmCustomKeys | Custom key bindings | options | not started | wp11 |
-| frmMasOpciones | More options | options | not started | wp11 |
-| frmOpciones | Options (sound, light, display) | options | not started | wp11 |
-| frmMapaGrande | Large world map | minimap | merged (partial) | wp02 |
-| frmCollectibleCard | Collectible card viewer | extras | not started | wp11 |
-| frmCreateBattleground | Create battleground | extras | not started | wp11 |
-| frmEligeAlineacion | Faction alignment choice | extras | not started | wp11 |
-| frmForo | Forum message list | extras | not started | wp11 |
-| frmLobbyBattleground | Battleground lobby | extras | not started | wp11 |
-| frmNoticia | News at login | extras | not started | wp11 |
-| frmPatchNotes | Patch notes | extras | not started | wp11 |
-| frmRetos | Challenges / duels | extras | not started | wp11 |
-| frmShop | Premium shop | extras | not started | wp11 |
-| frmShopPjsAO20 | Character marketplace | extras | not started | wp11 |
-| frmSkins | Item skins / appearance | extras | not started | wp11 |
-| frmTransferChar | Character transfer | extras | not started | wp11 |
-| frmTransferChar2FA | Character transfer two-factor step | extras | not started | wp11 |
-| frmCambiaMotd | Edit message of the day | gm | not started | wp12 |
-| frmDebug | Debug tools | gm | not started | wp12 |
-| FrmGmAyuda | Message to administrators | gm | not started | wp12 |
-| frmMessageTxt | Predefined GM messages | gm | not started | wp12 |
-| frmMSG | GM messages list | gm | not started | wp12 |
-| FrmObjetos | Create object | gm | not started | wp12 |
-| frmPanelGm | GM panel | gm | not started | wp12 |
-| frmProcesses | User processes list (anti-cheat) | gm | not started | wp12 |
-| frmSpawnList | Spawn NPC list | gm | not started | wp12 |
-| FrmTorneo | Tournament organiser | gm | not started | wp12 |
-| MenuGM | GM context menu | gm | not started | wp12 |
-| MenuNPC | NPC context menu | gm | not started | wp12 |
-| MenuUser | Player context menu | gm | not started | wp12 |
+| Frmcarga | Loading splash | core | merged | src/session-windows.ts |
+| frmCargando | Loading screen with progress | core | not started | (d) Never opened by the classic client code (dead form) |
+| frmCerrar | Exit confirmation | core | merged | src/session-windows.ts |
+| frmConnect | Login screen (account email and password, character list entry) | core | merged | src/connect-ui.ts |
+| frmConnecting | Connecting status | core | merged | src/session-windows.ts |
+| frmCrearCuenta | Create account | core | merged | src/session-windows.ts |
+| frmCrearPersonaje | Create character (race, class, gender, head, city) | core | merged | src/connect-ui.ts |
+| FrmCuenta | Account home / character selection | core | merged | src/connect-ui.ts |
+| frmDeleteChar | Delete character confirmation | core | not started | (b) DeleteCharacter needs the account server; PYMMO=0 does nothing, the client says so (connect-text.ts deleteUnsupported) |
+| frmKeypad | On-screen keypad for character password | core | not started | (b) On-screen password keypad, only opened from frmOldPersonaje |
+| FrmLogear | Server/port connection dialog | core | merged | src/main.ts |
+| frmMain | Main game window: viewport, HUD bars, inventory/spell panels, chat console and input | core | merged (partial) | src/classic-layout.ts, src/chat-box.ts, src/items-ui.ts, src/spells.ts, src/look-at.ts, src/map-objects.ts, src/hotkeys-ui.ts, src/inventory-extras.ts, src/minimap.ts: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not |
+| frmMensaje | Generic message box | core | merged | src/session-windows.ts |
+| frmNewAccount | New account details | core | merged | src/session-windows.ts |
+| frmNewPassword | Set new password | core | not started | (b) Set new password: account server |
+| frmOldPersonaje | Pick an existing character to log in with | core | not started | (b) Character picking with a password keypad; the PYMMO=0 server uses the account screen (FrmCuenta) instead |
+| frmPasswd | Change password | core | not started | (b) Change password: account server |
+| frmPasswordReset | Password reset code request | core | not started | (b) Password reset code: account server |
+| frmPres | Presentation splash | core | not started | (d) Never opened by the classic client code (splash, dead form) |
+| FrmRecuperar | Recover account | core | not started | (b) Recover account: account server |
+| frmtip | Tip of the day | core | not started | (d) Never opened by the classic client code (dead form) |
+| frmCantidad | Amount prompt (drop, deposit, gold, sell) | items | merged | src/items-ui.ts |
+| frmComerciar | NPC shop window (buy/sell) | items | merged | src/items-ui.ts |
+| FrmKeyInv | Key ring inventory | items | merged | src/keyring-ui.ts |
+| frmMensajePapiro | Parchment / papyrus message viewer | items | merged | src/papiro-ui.ts |
+| frmEntrenador | Trainer: choose creature | npcs | merged | src/skills-window.ts |
+| FrmViajes | Travel destinations via NPC | npcs | merged | src/travel-ui.ts |
+| frmBancoCuenta | Account-wide vault | bank | not started | (b) Account-wide vault; its only opener is a hidden label on frmMain and needs the account server |
+| frmBancoObj | Bank vault (items and gold) | bank | merged | src/bank-ui.ts |
+| frmGoliath | Bank gold deposit/withdraw (Goliath) | bank | merged | src/bank-ui.ts |
+| frmComerciarUsu | Player-to-player trade window | trade | merged | src/trade-ui.ts |
+| frmUserRequest | Incoming request prompt (trade and similar) | trade | merged | src/trade-ui.ts |
+| FrmGrupo | Party window | party | merged | src/party-ui.ts |
+| FrmPregunta | Generic yes/no question prompt (group invites, confirmations) | party | merged | src/trade-ui.ts |
+| frmCharInfo | Character info / guild applicant info | guild | merged | src/guild-ui.ts |
+| frmCommet | Peace / alliance offer text | guild | merged | src/guild-ui.ts |
+| frmGuildAdm | Registered guilds list | guild | merged | src/guild-ui.ts |
+| frmGuildBrief | Guild brief / details of another guild | guild | merged | src/guild-ui.ts |
+| frmGuildDetails | Guild founding details | guild | merged | src/guild-ui.ts |
+| frmGuildFoundation | Found a guild | guild | merged | src/guild-ui.ts |
+| frmGuildLeader | Guild leader panel (members, proposals, news) | guild | merged | src/guild-ui.ts |
+| frmGuildNews | Guild news | guild | merged | src/guild-ui.ts |
+| frmGuildURL | Guild website | guild | merged | src/guild-ui.ts |
+| frmPeaceProp | Peace proposals list | guild | merged | src/guild-ui.ts |
+| frmSolicitud | Guild membership application | guild | merged | src/guild-ui.ts |
+| FrmQuest | Quest log | quests | merged | src/quest-window.ts |
+| frmQuestInfo | Quest details / NPC quest offer | quests | merged | src/quest-window.ts |
+| FrmEstadisticas | Character statistics and attributes | skills | merged | src/skills-window.ts |
+| frmSkills3 | Skill allocation | skills | not started | (d) Never opened by the classic client code; the skill help texts it held live in the skill window (game-text.ts) |
+| frmStatistics | Mini statistics | skills | merged | src/skills-window.ts |
+| frmAlqui | Alchemy crafting | crafting | merged (partial) | src/crafting.ts: crafting state and packets only; no alchemy window yet |
+| frmCarp | Carpenter crafting | crafting | merged | src/crafting-ui.ts |
+| frmCrafteo | Generic crafting window with catalyst | crafting | merged (partial) | src/crafting.ts: crafting state and packets only; no catalyst crafting window yet |
+| frmHerrero | Blacksmith crafting | crafting | merged | src/crafting-ui.ts |
+| FrmSastre | Tailor crafting | crafting | merged (partial) | src/crafting.ts: crafting state and packets only; no tailor window yet |
+| frmBindKey | Bind a key to an action | options | merged | src/keys-ui.ts |
+| frmCustomKeys | Custom key bindings | options | merged | src/keys-ui.ts |
+| frmMasOpciones | More options | options | not started | (b) Only opened from the account recovery and account creation forms |
+| frmOpciones | Options (sound, light, display) | options | merged | src/options-ui.ts |
+| frmMapaGrande | Large world map | minimap | merged (partial) | src/world-map-ui.ts |
+| frmCollectibleCard | Collectible card viewer | extras | not started | (c) AO20 collectible card viewer, local to the AO20 client |
+| frmCreateBattleground | Create battleground | extras | not started | (c) AO20 battleground creation (LobbyCommand) |
+| frmEligeAlineacion | Faction alignment choice | extras | not started | (d) Never opened by the classic client code (dead form) |
+| frmForo | Forum message list | extras | not started | (d) Never opened by the classic client code (dead form) |
+| frmLobbyBattleground | Battleground lobby | extras | merged | src/extras-ui.ts |
+| frmNoticia | News at login | extras | not started | (d) Never opened by the classic client code (dead form) |
+| frmPatchNotes | Patch notes | extras | not started | (b) Patch notes sent by the login server at login |
+| frmRetos | Challenges / duels | extras | merged | src/extras-ui.ts |
+| frmShop | Premium shop | extras | not started | (d) Dead form: the premium shop the server opens is frmShopAO20, which is not in the classic source |
+| frmShopPjsAO20 | Character marketplace | extras | not started | (c) AO20 character marketplace (ShopPjsInit, PublicarPersonajeMAO) |
+| frmSkins | Item skins / appearance | extras | not started | (c) AO20 item skins window (ChangeSkinSlot) |
+| frmTransferChar | Character transfer | extras | not started | (b) Character transfer between accounts: account server |
+| frmTransferChar2FA | Character transfer two-factor step | extras | not started | (b) Character transfer two-factor step: account server |
+| frmCambiaMotd | Edit message of the day | gm | merged | src/gm-ui.ts |
+| frmDebug | Debug tools | gm | not started | (d) Developer debug window, opened only from a hidden frmConnect control |
+| FrmGmAyuda | Message to administrators | gm | merged | src/gm-ui.ts |
+| frmMessageTxt | Predefined GM messages | gm | not started | (d) Never opened by the classic client code (dead form) |
+| frmMSG | GM messages list | gm | not started | (d) Never opened by the classic client code (dead form) |
+| FrmObjetos | Create object | gm | merged | src/gm-ui.ts |
+| frmPanelGm | GM panel | gm | merged | src/gm-ui.ts |
+| frmProcesses | User processes list (anti-cheat) | gm | not started | (d) Never opened by the classic client code (anti-cheat leftover) |
+| frmSpawnList | Spawn NPC list | gm | merged | src/gm-ui.ts |
+| FrmTorneo | Tournament organiser | gm | merged | src/extras-ui.ts |
+| MenuGM | GM context menu | gm | merged | src/extras-ui.ts |
+| MenuNPC | NPC context menu | gm | merged | src/extras-ui.ts |
+| MenuUser | Player context menu | gm | merged | src/extras-ui.ts |
+
+### Genuinely missing screens
+
+32 forms have no complete screen yet.
+
+**(a) Player-facing and worth building** (0)
+
+
+**(b) Needs a login/account server, not used with PYMMO=0** (12)
+
+- frmDeleteChar: DeleteCharacter needs the account server; PYMMO=0 does nothing, the client says so (connect-text.ts deleteUnsupported)
+- frmKeypad: On-screen password keypad, only opened from frmOldPersonaje
+- frmNewPassword: Set new password: account server
+- frmOldPersonaje: Character picking with a password keypad; the PYMMO=0 server uses the account screen (FrmCuenta) instead
+- frmPasswd: Change password: account server
+- frmPasswordReset: Password reset code: account server
+- FrmRecuperar: Recover account: account server
+- frmBancoCuenta: Account-wide vault; its only opener is a hidden label on frmMain and needs the account server
+- frmMasOpciones: Only opened from the account recovery and account creation forms
+- frmPatchNotes: Patch notes sent by the login server at login
+- frmTransferChar: Character transfer between accounts: account server
+- frmTransferChar2FA: Character transfer two-factor step: account server
+
+**(c) AO20 premium / online extras (shop, marketplace, battlegrounds, transfer)** (4)
+
+- frmCollectibleCard: AO20 collectible card viewer, local to the AO20 client
+- frmCreateBattleground: AO20 battleground creation (LobbyCommand)
+- frmShopPjsAO20: AO20 character marketplace (ShopPjsInit, PublicarPersonajeMAO)
+- frmSkins: AO20 item skins window (ChangeSkinSlot)
+
+**(d) Never opened by the classic client code (dead forms, nothing to build)** (12)
+
+- frmCargando: Never opened by the classic client code (dead form)
+- frmPres: Never opened by the classic client code (splash, dead form)
+- frmtip: Never opened by the classic client code (dead form)
+- frmSkills3: Never opened by the classic client code; the skill help texts it held live in the skill window (game-text.ts)
+- frmEligeAlineacion: Never opened by the classic client code (dead form)
+- frmForo: Never opened by the classic client code (dead form)
+- frmNoticia: Never opened by the classic client code (dead form)
+- frmShop: Dead form: the premium shop the server opens is frmShopAO20, which is not in the classic source
+- frmDebug: Developer debug window, opened only from a hidden frmConnect control
+- frmMessageTxt: Never opened by the classic client code (dead form)
+- frmMSG: Never opened by the classic client code (dead form)
+- frmProcesses: Never opened by the classic client code (anti-cheat leftover)
+
+**Partial** (5)
+
+- frmMain: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not
+- frmAlqui: crafting state and packets only; no alchemy window yet
+- frmCrafteo: crafting state and packets only; no catalyst crafting window yet
+- FrmSastre: crafting state and packets only; no tailor window yet
+- frmMapaGrande: null
+
 
 ## (a) VB6 packets
 
@@ -190,7 +245,7 @@ Ids only: .
 | 45 | CharacterTranslate | client Protocol.bas:HandleCharacterTranslate | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 46 | UserIndexInServer | client Protocol.bas:HandleUserIndexInServer | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 47 | UserCharIndexInServer | client Protocol.bas:HandleUserCharIndexInServer | core | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 48 | ForceCharMove | client Protocol.bas:HandleForceCharMove | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
+| 48 | ForceCharMove | client Protocol.bas:HandleForceCharMove | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 49 | CharacterChange | client Protocol.bas:HandleCharacterChange | core | merged | `main:packages/protocol/src/packets/npcs.ts` | yes |
 | 50 | ObjectCreate | client Protocol.bas:HandleObjectCreate | items | merged | `main:packages/protocol/src/packets/doors.ts` | yes |
 | 51 | Fxpiso | client Protocol.bas:HandleFxPiso | core | merged | `main:packages/protocol/src/packets/spells.ts` | no |
@@ -239,7 +294,7 @@ Ids only: .
 | 94 | GuildLeaderInfo | client Protocol.bas:HandleGuildLeaderInfo | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 95 | GuildDetails | client Protocol.bas:HandleGuildDetails | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 96 | ShowGuildFundationForm | client Protocol.bas:HandleShowGuildFundationForm | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
-| 97 | ParalizeOK | client Protocol.bas:HandleParalizeOK | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
+| 97 | ParalizeOK | client Protocol.bas:HandleParalizeOK | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 98 | StunStart | client Protocol.bas:HandleStunStart | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 99 | ShowUserRequest | client Protocol.bas:HandleShowUserRequest | trade | merged | `main:packages/protocol/src/packets/bank-trade.ts` | no |
 | 100 | ChangeUserTradeSlot | client Protocol.bas:HandleChangeUserTradeSlot | trade | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
@@ -281,7 +336,7 @@ Ids only: .
 | 136 | BindKeys | client Protocol.bas:HandleBindKeys | options | merged | `main:packages/protocol/src/packets/options.ts` | yes |
 | 137 | ShowFrmLogear | client Protocol.bas:HandleShowFrmLogear | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 138 | ShowFrmMapa | client Protocol.bas:HandleShowFrmMapa | minimap | merged | `main:packages/protocol/src/packets/world.ts` | yes |
-| 139 | InmovilizadoOK | client Protocol.bas:HandleInmovilizadoOK | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
+| 139 | InmovilizadoOK | client Protocol.bas:HandleInmovilizadoOK | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 140 | BarFx | client Protocol.bas:HandleBarFx | spells | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 141 | LocaleMsg | client Protocol.bas:HandleLocaleMsg | chat | merged | `main:packages/protocol/src/packets/npcs.ts` | yes |
 | 142 | ShowPregunta | client Protocol.bas:HandleShowPregunta | party | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
@@ -305,9 +360,9 @@ Ids only: .
 | 160 | UpdateRM | client Protocol.bas:HandleUpdateRM | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 161 | UpdateDM | client Protocol.bas:HandleUpdateDM | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 162 | SeguroResu | client Protocol.bas:HandleSeguroResu | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
-| 163 | LegionarySecure | client Protocol.bas:HandleLegionarySecure | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
+| 163 | LegionarySecure | client Protocol.bas:HandleLegionarySecure | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 164 | Stopped | client Protocol.bas:HandleStopped | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
-| 165 | InvasionInfo | client Protocol.bas:HandleInvasionInfo | extras | not started |  | no |
+| 165 | InvasionInfo | client Protocol.bas:HandleInvasionInfo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 166 | CommerceRecieveChatMessage | client Protocol.bas:HandleCommerceRecieveChatMessage | chat | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 167 | DoAnimation | client Protocol.bas:HandleDoAnimation | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 168 | OpenCrafting | client Protocol.bas:HandleOpenCrafting | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
@@ -320,29 +375,29 @@ Ids only: .
 | 175 | UpdateBankGld | client Protocol.bas:HandleUpdateBankGld | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 176 | PelearConPezEspecial | client Protocol.bas:HandlePelearConPezEspecial | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 177 | Privilegios | client Protocol.bas:HandlePrivilegios | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
-| 178 | ShopInit | client Protocol.bas:HandleShopInit | extras | not started |  | no |
-| 179 | UpdateShopClienteCredits | client Protocol.bas:HandleUpdateShopClienteCredits | extras | not started |  | no |
+| 178 | ShopInit | client Protocol.bas:HandleShopInit | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 179 | UpdateShopClienteCredits | client Protocol.bas:HandleUpdateShopClienteCredits | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 180 | SendSkillCdUpdate | client Protocol.bas:HandleSendSkillCdUpdate | combat | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 181 | UpdateFlag | client Protocol.bas:HandleUpdateFlag | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 182 | CharAtaca | client Protocol.bas:HandleCharAtaca | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
-| 183 | NotificarClienteSeguido | client Protocol.bas:HandleNotificarClienteSeguido | extras | not started |  | no |
-| 184 | GetInventarioHechizos | client Protocol.bas:HandleGetInventarioHechizos | extras | not started |  | no |
+| 183 | NotificarClienteSeguido | client Protocol.bas:HandleNotificarClienteSeguido | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 184 | GetInventarioHechizos | client Protocol.bas:HandleGetInventarioHechizos | extras | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 185 | NotificarClienteCasteo | client Protocol.bas:HandleNotificarClienteCasteo | extras | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 186 | PosUpdateUserChar | client Protocol.bas:HandlePosUpdateUserChar | core | merged | `main:packages/protocol/src/packets.ts` | no |
 | 187 | PosUpdateChar | client Protocol.bas:HandlePosUpdateChar | core | merged | `main:packages/protocol/src/packets.ts` | no |
 | 188 | PlayWaveStep | client Protocol.bas:HandlePlayWaveStep | core | merged | `main:packages/protocol/src/packets/audio.ts` | no |
-| 189 | ShopPjsInit | client Protocol.bas:HandleShopPjsInit | extras | not started |  | no |
+| 189 | ShopPjsInit | client Protocol.bas:HandleShopPjsInit | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 190 | DebugDataResponse | client Protocol.bas:HandleDebugDataResponse | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 191 | CreateProjectile | client Protocol.bas:HandleCreateProjectile | combat | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 192 | UpdateTrap | client Protocol.bas:HandleUpdateTrapState | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 193 | UpdateGroupInfo | client Protocol.bas:HandleUpdateGroupInfo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
 | 194 | UpdateCharValue | client Protocol.bas:HandleUpdateCharValue | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 195 | SendClientToggles | client Protocol.bas:HandleSendClientToggles | extras | merged | `main:packages/protocol/src/packets/options.ts` | yes |
-| 196 | AntiCheatMessage | client Protocol.bas:HandleAntiCheatMessage | extras | not started |  | no |
-| 197 | AntiCheatStartSession | client Protocol.bas:HandleAntiCheatStartSession | extras | not started |  | yes |
-| 198 | ReportLobbyList | client Protocol.bas:HandleReportLobbyList | extras | not started |  | no |
+| 196 | AntiCheatMessage | client Protocol.bas:HandleAntiCheatMessage | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 197 | AntiCheatStartSession | client Protocol.bas:HandleAntiCheatStartSession | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 198 | ReportLobbyList | client Protocol.bas:HandleReportLobbyList | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 199 | AccountCharacterList | client Protocol.bas:HandleAccountCharacterList | core | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 200 | ChangeSkinSlot | client Protocol.bas:HandleChangeSkinSlot | extras | not started |  | no |
+| 200 | ChangeSkinSlot | client Protocol.bas:HandleChangeSkinSlot | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 201 | GuildConfig | client Protocol.bas:HandleGuildConfig | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 202 | ShowPickUpObj | client Protocol.bas:HandleShowPickUpObj | items | merged | `main:packages/protocol/src/packets/items.ts` | no |
 | 203 | RemortState | (none in dispatcher) | extras | not started |  | no |
@@ -418,12 +473,12 @@ Ids only: .
 | 61 | CouncilMessage | server Protocol.bas:HandleCouncilMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 62 | FactionMessage | server Protocol.bas:HandleFactionMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 63 | RoleMasterRequest | server Protocol.bas:HandleRoleMasterRequest | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 64 | ChangeDescription | server Protocol.bas:HandleChangeDescription | options | not started |  | no |
+| 64 | ChangeDescription | server Protocol.bas:HandleChangeDescription | options | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 65 | GuildVote | server Protocol.bas:HandleGuildVote | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 66 | Punishments | server Protocol.bas:HandlePunishments | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 67 | Gamble | server Protocol.bas:HandleGamble | extras | not started |  | no |
-| 68 | MapPriceEntrance | server Protocol.bas:HandleMapPriceEntrance | extras | not started |  | no |
-| 69 | LeaveFaction | server Protocol.bas:HandleLeaveFaction | extras | not started |  | no |
+| 67 | Gamble | server Protocol.bas:HandleGamble | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 68 | MapPriceEntrance | server Protocol.bas:HandleMapPriceEntrance | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 69 | LeaveFaction | server Protocol.bas:HandleLeaveFaction | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 70 | BankExtractGold | server Protocol.bas:HandleBankExtractGold | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 71 | BankDepositGold | server Protocol.bas:HandleBankDepositGold | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 72 | Denounce | server Protocol.bas:HandleDenounce | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
@@ -539,7 +594,7 @@ Ids only: .
 | 182 | CreateNPCWithRespawn | server Protocol.bas:HandleCreateNPCWithRespawn | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 183 | NavigateToggle | server Protocol.bas:HandleNavigateToggle | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 184 | ServerOpenToUsersToggle | server Protocol.bas:HandleServerOpenToUsersToggle | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 185 | Participar | server Protocol.bas:HandleParticipar | extras | not started |  | no |
+| 185 | Participar | server Protocol.bas:HandleParticipar | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 186 | RemoveCharFromGuild | server Protocol.bas:HandleRemoveCharFromGuild | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 187 | AlterName | server Protocol.bas:HandleAlterName | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 188 | DoBackUp | server Protocol.bas:HandleDoBackUp | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
@@ -567,21 +622,21 @@ Ids only: .
 | 210 | DonateGold | server Protocol.bas:HandleDonateGold | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 211 | Promedio | server Protocol.bas:HandlePromedio | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 212 | GiveItem | server Protocol.bas:HandleGiveItem | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 213 | OfertaInicial | server Protocol.bas:HandleOfertaInicial | extras | not started |  | no |
-| 214 | OfertaDeSubasta | server Protocol.bas:HandleOfertaDeSubasta | extras | not started |  | no |
+| 213 | OfertaInicial | server Protocol.bas:HandleOfertaInicial | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 214 | OfertaDeSubasta | server Protocol.bas:HandleOfertaDeSubasta | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 215 | QuestionGM | server Protocol.bas:HandleQuestionGM | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 216 | CuentaRegresiva | server Protocol.bas:HandleCuentaRegresiva | extras | not started |  | no |
+| 216 | CuentaRegresiva | server Protocol.bas:HandleCuentaRegresiva | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 217 | PossUser | server Protocol.bas:HandlePossUser | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 218 | Duel | server Protocol.bas:HandleDuel | extras | not started |  | no |
-| 219 | AcceptDuel | server Protocol.bas:HandleAcceptDuel | extras | not started |  | no |
-| 220 | CancelDuel | server Protocol.bas:HandleCancelDuel | extras | not started |  | no |
-| 221 | QuitDuel | server Protocol.bas:HandleQuitDuel | extras | not started |  | no |
+| 218 | Duel | server Protocol.bas:HandleDuel | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 219 | AcceptDuel | server Protocol.bas:HandleAcceptDuel | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 220 | CancelDuel | server Protocol.bas:HandleCancelDuel | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 221 | QuitDuel | server Protocol.bas:HandleQuitDuel | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 222 | NieveToggle | server Protocol.bas:HandleNieveToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 223 | NieblaToggle | server Protocol.bas:HandleNieblaToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
 | 224 | TransFerGold | server Protocol.bas:HandleTransFerGold | extras | merged | `main:packages/protocol/src/packets/options.ts` | yes |
 | 225 | Moveitem | server Protocol.bas:HandleMoveItem | items | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
 | 226 | Genio | server Protocol.bas:HandleGenio | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 227 | Casarse | server Protocol.bas:HandleCasamiento | extras | not started |  | no |
+| 227 | Casarse | server Protocol.bas:HandleCasamiento | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 228 | CraftAlquimista | server Protocol.bas:HandleCraftAlquimia | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 229 | FlagTrabajar | server Protocol.bas:HandleFlagTrabajar | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 230 | CraftSastre | server Protocol.bas:HandleCraftSastre | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
@@ -593,19 +648,19 @@ Ids only: .
 | 236 | RequestGrupo | server Protocol.bas:HandleRequestGrupo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
 | 237 | AbandonarGrupo | server Protocol.bas:HandleAbandonarGrupo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
 | 238 | HecharDeGrupo | server Protocol.bas:HandleHecharDeGrupo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
-| 239 | MacroPossent | server Protocol.bas:HandleMacroPos | extras | not started |  | no |
-| 240 | SubastaInfo | server Protocol.bas:HandleSubastaInfo | extras | not started |  | no |
+| 239 | MacroPossent | server Protocol.bas:HandleMacroPos | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 240 | SubastaInfo | server Protocol.bas:HandleSubastaInfo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 241 | BanCuenta | server Protocol.bas:HandleBanCuenta | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 242 | UnbanCuenta | server Protocol.bas:HandleUnBanCuenta | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 243 | CerrarCliente | server Protocol.bas:HandleCerrarCliente | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 244 | EventoInfo | server Protocol.bas:HandleEventoInfo | extras | not started |  | no |
-| 245 | CrearEvento | server Protocol.bas:HandleCrearEvento | extras | not started |  | no |
+| 244 | EventoInfo | server Protocol.bas:HandleEventoInfo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 245 | CrearEvento | server Protocol.bas:HandleCrearEvento | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 246 | BanTemporal | server Protocol.bas:HandleBanTemporal | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 247 | CancelarExit | server Protocol.bas:HandleCancelarExit | extras | merged | `main:packages/protocol/src/packets/session.ts` | yes |
-| 248 | CrearTorneo | server Protocol.bas:HandleCrearTorneo | extras | not started |  | no |
-| 249 | ComenzarTorneo | server Protocol.bas:HandleComenzarTorneo | extras | not started |  | no |
-| 250 | CancelarTorneo | server Protocol.bas:HandleCancelarTorneo | extras | not started |  | no |
-| 251 | BusquedaTesoro | server Protocol.bas:HandleBusquedaTesoro | extras | not started |  | no |
+| 248 | CrearTorneo | server Protocol.bas:HandleCrearTorneo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 249 | ComenzarTorneo | server Protocol.bas:HandleComenzarTorneo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 250 | CancelarTorneo | server Protocol.bas:HandleCancelarTorneo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 251 | BusquedaTesoro | server Protocol.bas:HandleBusquedaTesoro | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 252 | CompletarViaje | server Protocol.bas:HandleCompletarViaje | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | no |
 | 253 | BovedaMoveItem | server Protocol.bas:HandleBovedaMoveItem | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 254 | QuieroFundarClan | server Protocol.bas:HandleQuieroFundarClan | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
@@ -621,14 +676,14 @@ Ids only: .
 | 264 | Home | server Protocol.bas:HandleHome | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 265 | Consulta | server Protocol.bas:HandleConsulta | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 266 | GetMapInfo | server Protocol.bas:HandleGetMapInfo | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 267 | FinEvento | server Protocol.bas:HandleFinEvento | extras | not started |  | no |
+| 267 | FinEvento | server Protocol.bas:HandleFinEvento | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 268 | SeguroResu | server Protocol.bas:HandleSeguroResu | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 269 | LegionarySecure | server Protocol.bas:HandleLegionarySecure | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 270 | CuentaExtractItem | server Protocol.bas:HandleCuentaExtractItem | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | no |
 | 271 | CuentaDeposit | server Protocol.bas:HandleCuentaDeposit | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | no |
-| 272 | CreateEvent | server Protocol.bas:HandleCreateEvent | extras | not started |  | no |
+| 272 | CreateEvent | server Protocol.bas:HandleCreateEvent | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 273 | CommerceSendChatMessage | server Protocol.bas:HandleCommerceSendChatMessage | chat | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
-| 274 | LogMacroClickHechizo | server Protocol.bas:HandleLogMacroClickHechizo | extras | not started |  | no |
+| 274 | LogMacroClickHechizo | server Protocol.bas:HandleLogMacroClickHechizo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 275 | AddItemCrafting | server Protocol.bas:HandleAddItemCrafting | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 276 | RemoveItemCrafting | server Protocol.bas:HandleRemoveItemCrafting | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 277 | AddCatalyst | server Protocol.bas:HandleAddCatalyst | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
@@ -644,28 +699,28 @@ Ids only: .
 | 287 | RomperCania | server Protocol.bas:HandleRomperCania | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 288 | UseItemU | server Protocol.bas:HandleUseItemU | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 289 | RepeatMacro | server Protocol.bas:HandleRepeatMacro | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
-| 290 | BuyShopItem | server Protocol.bas:HandleBuyShopItem | extras | not started |  | no |
-| 291 | StartEvent | server Protocol.bas:HandleStartEvent | extras | not started |  | no |
-| 292 | CancelarEvento | server Protocol.bas:HandleCancelarEvento | extras | not started |  | no |
-| 293 | NotifyInventarioHechizos | server Protocol.bas:HandleNotifyInventariohechizos | extras | not started |  | no |
-| 294 | PublicarPersonajeMAO | server Protocol.bas:HandlePublicarPersonajeMAO | extras | not started |  | no |
-| 295 | EventoFaccionario | server Protocol.bas:HandleEventoFaccionario | extras | not started |  | no |
+| 290 | BuyShopItem | server Protocol.bas:HandleBuyShopItem | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 291 | StartEvent | server Protocol.bas:HandleStartEvent | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 292 | CancelarEvento | server Protocol.bas:HandleCancelarEvento | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 293 | NotifyInventarioHechizos | server Protocol.bas:HandleNotifyInventariohechizos | extras | merged | `main:packages/protocol/src/packets/spells.ts` | no |
+| 294 | PublicarPersonajeMAO | server Protocol.bas:HandlePublicarPersonajeMAO | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 295 | EventoFaccionario | server Protocol.bas:HandleEventoFaccionario | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 296 | RequestDebug | server Protocol.bas:HandleDebugRequest | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 297 | LobbyCommand | server Protocol.bas:HandleLobbyCommand | extras | not started |  | no |
-| 298 | FeatureToggle | server Protocol.bas:HandleFeatureToggle | extras | not started |  | no |
+| 297 | LobbyCommand | server Protocol.bas:HandleLobbyCommand | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 298 | FeatureToggle | server Protocol.bas:HandleFeatureToggle | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 299 | ActionOnGroupFrame | server Protocol.bas:HandleActionOnGroupFrame | party | merged | `main:packages/protocol/src/packets/party.ts` | no |
 | 300 | SetHotkeySlot | server Protocol.bas:HandleSetHotkeySlot | items | merged | `main:packages/protocol/src/packets/options.ts` | yes |
 | 301 | UseHKeySlot | server Protocol.bas:HandleUseHKeySlot | items | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
-| 302 | AntiCheatMessage | server Protocol.bas:HandleAntiCheatMessage | extras | not started |  | no |
-| 303 | RequestLobbyList | (none in dispatcher) | extras | not started |  | no |
+| 302 | AntiCheatMessage | server Protocol.bas:HandleAntiCheatMessage | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 303 | RequestLobbyList | (none in dispatcher) | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 304 | CreateAccount | server Protocol.bas:HandleCreateAccount | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 305 | LoginAccount | server Protocol.bas:HandleLoginAccount | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 306 | DeleteCharacter | server Protocol.bas:HandleDeleteCharacter | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 307 | ChangeSkinSlot | (none in dispatcher) | extras | not started |  | no |
 | 308 | StartAutomatedAction | server Protocol.bas:HandleStartAutomatedAction | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 309 | PetFollowAll | server Protocol.bas:HandlePetFollowAll | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | yes |
-| 310 | AntiMacroMessage | server Protocol.bas:HandleAntiMacroMessage | extras | not started |  | no |
-| 311 | ModifyCastleWhiteList | server Protocol.bas:HandleModifyCastleWhiteList | extras | not started |  | no |
+| 310 | AntiMacroMessage | server Protocol.bas:HandleAntiMacroMessage | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 311 | ModifyCastleWhiteList | server Protocol.bas:HandleModifyCastleWhiteList | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 312 | HooClientCapabilities | server Protocol.bas:HandleHooClientCapabilities | extras | not started |  | no |
 | 313 | RequestRemort | server Protocol.bas:HandleRequestRemort | extras | not started |  | no |
 | 314 | HooTargetedSpellCast | server Protocol.bas:HandleHooTargetedSpellCast | extras | not started |  | no |
@@ -681,7 +736,7 @@ Disjoint by construction: every uncovered packet and form belongs to exactly one
 Account create/select/delete, character create, loading screens, HUD stat updates, remaining chat packets.
 
 - Packets (0): none left
-- Forms (21): frmMain, frmConnect, FrmCuenta, frmOldPersonaje, frmCrearCuenta, frmNewAccount, frmCrearPersonaje, frmDeleteChar, frmPasswd, frmNewPassword, FrmRecuperar, frmPasswordReset, Frmcarga, frmCargando, frmConnecting, frmPres, frmCerrar, frmMensaje, frmtip, FrmLogear, frmKeypad
+- Forms (11): frmMain, frmOldPersonaje, frmDeleteChar, frmPasswd, frmNewPassword, FrmRecuperar, frmPasswordReset, frmCargando, frmPres, frmtip, frmKeypad
 
 ### wp02: World FX, environment and minimap
 
@@ -702,42 +757,42 @@ Attack, hit/miss messages, safe modes, stun/paralysis, spell info, hotkeys, macr
 Inventory moves, key ring, gamble, gold actions, amount prompts, skins.
 
 - Packets (0): none left
-- Forms (2): frmMensajePapiro, FrmKeyInv
+- Forms (0): none left
 
 ### wp05: NPCs, pets, trainers and travel
 
 Pet commands, trainer list, NPC symbols, travel form, NPC context menus.
 
 - Packets (0): none left
-- Forms (2): frmEntrenador, FrmViajes
+- Forms (0): none left
 
 ### wp06: Bank and player trade
 
 Bank vaults (item + gold + account), user-to-user trade window and chat.
 
 - Packets (0): none left
-- Forms (5): frmBancoObj, frmGoliath, frmBancoCuenta, frmComerciarUsu, frmUserRequest
+- Forms (1): frmBancoCuenta
 
 ### wp07: Party and guild/clan
 
 Group frame/invites, every guild form, proposals, news, elections.
 
 - Packets (0): none left
-- Forms (13): FrmPregunta, FrmGrupo, frmGuildAdm, frmGuildBrief, frmGuildDetails, frmGuildFoundation, frmGuildLeader, frmGuildNews, frmGuildURL, frmCommet, frmPeaceProp, frmSolicitud, frmCharInfo
+- Forms (0): none left
 
 ### wp08: Quests
 
 Quest list/details/abandon, NPC quest markers.
 
 - Packets (0): none left
-- Forms (2): FrmQuest, frmQuestInfo
+- Forms (0): none left
 
 ### wp09: Skills, training and stats
 
 Skill allocation, level up, attributes, statistics forms, rest/meditate.
 
 - Packets (0): none left
-- Forms (3): frmSkills3, FrmEstadisticas, frmStatistics
+- Forms (1): frmSkills3
 
 ### wp10: Crafting and work skills
 
@@ -750,13 +805,13 @@ Smith, carpenter, alchemy, tailor, crafting window, fishing, mining, lumber.
 
 Options forms, custom keys, hotkeys, events, battlegrounds, duels, premium shop, remort.
 
-- Packets (57): S165 InvasionInfo, S178 ShopInit, S179 UpdateShopClienteCredits, S183 NotificarClienteSeguido, S184 GetInventarioHechizos, S189 ShopPjsInit, S196 AntiCheatMessage, S197 AntiCheatStartSession, S198 ReportLobbyList, S200 ChangeSkinSlot, S203 RemortState, S204 RemortResult, S205 HooTargetedSpellCastResult, S206 HooHouseDoorActionResult, S207 AutoCombatState, C64 ChangeDescription, C67 Gamble, C68 MapPriceEntrance, C69 LeaveFaction, C185 Participar, C213 OfertaInicial, C214 OfertaDeSubasta, C216 CuentaRegresiva, C218 Duel, C219 AcceptDuel, C220 CancelDuel, C221 QuitDuel, C227 Casarse, C239 MacroPossent, C240 SubastaInfo, C244 EventoInfo, C245 CrearEvento, C248 CrearTorneo, C249 ComenzarTorneo, C250 CancelarTorneo, C251 BusquedaTesoro, C267 FinEvento, C272 CreateEvent, C274 LogMacroClickHechizo, C290 BuyShopItem, C291 StartEvent, C292 CancelarEvento, C293 NotifyInventarioHechizos, C294 PublicarPersonajeMAO, C295 EventoFaccionario, C297 LobbyCommand, C298 FeatureToggle, C302 AntiCheatMessage, C303 RequestLobbyList, C307 ChangeSkinSlot, C310 AntiMacroMessage, C311 ModifyCastleWhiteList, C312 HooClientCapabilities, C313 RequestRemort, C314 HooTargetedSpellCast, C315 HooHouseDoorAction, C316 ToggleAutoCombat
-- Forms (17): frmSkins, frmEligeAlineacion, frmOpciones, frmMasOpciones, frmCustomKeys, frmBindKey, frmCollectibleCard, frmCreateBattleground, frmLobbyBattleground, frmRetos, frmShop, frmShopPjsAO20, frmTransferChar, frmTransferChar2FA, frmPatchNotes, frmNoticia, frmForo
+- Packets (11): S203 RemortState, S204 RemortResult, S205 HooTargetedSpellCastResult, S206 HooHouseDoorActionResult, S207 AutoCombatState, C307 ChangeSkinSlot, C312 HooClientCapabilities, C313 RequestRemort, C314 HooTargetedSpellCast, C315 HooHouseDoorAction, C316 ToggleAutoCombat
+- Forms (12): frmSkins, frmEligeAlineacion, frmMasOpciones, frmCollectibleCard, frmCreateBattleground, frmShop, frmShopPjsAO20, frmTransferChar, frmTransferChar2FA, frmPatchNotes, frmNoticia, frmForo
 
 ### wp12: GM / admin (last)
 
 All GM commands, GM panel, SOS, MOTD edit, debug.
 
 - Packets (0): none left
-- Forms (13): FrmTorneo, frmCambiaMotd, frmDebug, FrmGmAyuda, frmMessageTxt, frmMSG, FrmObjetos, frmPanelGm, frmProcesses, frmSpawnList, MenuGM, MenuNPC, MenuUser
+- Forms (4): frmDebug, frmMessageTxt, frmMSG, frmProcesses
 
