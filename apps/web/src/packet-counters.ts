@@ -5,7 +5,7 @@
  */
 export const PACKET_FAMILIES = [
   'castSpell', 'workLeftClick', 'leftClick', 'useItem', 'useItemU', 'walk', 'sailing', 'talk', 'attack', 'drop', 'work',
-  'equipItem', 'guildMessage', 'questionGM', 'changeHeading', 'hide', 'targetedSpellCast',
+  'equipItem', 'guildMessage', 'questionGM', 'changeHeading', 'hide',
 ] as const;
 export type PacketFamily = (typeof PACKET_FAMILIES)[number];
 
@@ -25,5 +25,5 @@ export class PacketCounters {
  */
 export const SEQUENCED_CLIENT_PACKETS: Readonly<Record<number, PacketFamily>> = {
   2: 'workLeftClick', 5: 'equipItem', 6: 'changeHeading', 59: 'guildMessage', 75: 'talk', 78: 'walk', 80: 'attack',
-  93: 'drop', 94: 'castSpell', 95: 'leftClick', 97: 'work', 99: 'useItem', 215: 'questionGM', 288: 'useItemU', 314: 'targetedSpellCast',
+  93: 'drop', 94: 'castSpell', 95: 'leftClick', 97: 'work', 99: 'useItem', 215: 'questionGM', 288: 'useItemU',
 };

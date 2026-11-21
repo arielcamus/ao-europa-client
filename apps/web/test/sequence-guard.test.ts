@@ -9,7 +9,7 @@ import { Session } from '../src/session.js';
 // Ids from server PacketId.bas ClientPacketID. Adding a sequenced packet to the client means adding it here and to the map.
 const VB6_SEQUENCED = {
   WorkLeftClick: 2, EquipItem: 5, ChangeHeading: 6, GuildMessage: 59, Talk: 75, Walk: 78, Attack: 80, Drop: 93, CastSpell: 94,
-  LeftClick: 95, Work: 97, UseItem: 99, QuestionGM: 215, UseItemU: 288, HooTargetedSpellCast: 314,
+  LeftClick: 95, Work: 97, UseItem: 99, QuestionGM: 215, UseItemU: 288,
 };
 
 function playing() {

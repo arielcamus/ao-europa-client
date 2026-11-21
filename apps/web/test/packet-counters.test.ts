@@ -6,7 +6,7 @@ import { Session } from '../src/session.js';
 
 describe('packet counters (VB6 PacketNames families)', () => {
   it('lists the VB6 families and counts each independently from 1', () => {
-    expect(PACKET_FAMILIES).toContain('leftClick'); expect(PACKET_FAMILIES).toContain('castSpell'); expect(PACKET_FAMILIES).toHaveLength(17);
+    expect(PACKET_FAMILIES).toContain('leftClick'); expect(PACKET_FAMILIES).toContain('castSpell'); expect(PACKET_FAMILIES).toHaveLength(16); // Declares.bas PacketNames at the pre-HOO pin (no HOO TargetedSpellCast)
     const c = new PacketCounters();
     expect([c.next('walk'), c.next('walk'), c.next('leftClick'), c.next('walk')]).toEqual([1, 2, 1, 3]);
     expect(c.current('talk')).toBe(0);
