@@ -1,0 +1,234 @@
+{
+ "inFlight": {
+  "prs": {
+   "54": "feat/prehoo-lock: pins, asset lock, pinned coverage map"
+  },
+  "branches": [
+   "fix/char-create",
+   "fix/walk-into-char",
+   "fix/codecs-pinned"
+  ],
+  "forms": {}
+ },
+ "packetNotes": {
+  "c2s:307": "ChangeSkinSlot: item skins (frmSkins, class c). Possibly covered by fix/codecs-pinned (branch has no commits yet)."
+ },
+ "formGaps": [
+  {
+   "form": "frmGuildLeader",
+   "missing": "leader-only controls: elections (open/vote), peace and alliance proposal lists, declare war. State and codecs exist, no UI.",
+   "ref": "#39"
+  },
+  {
+   "form": "frmMain",
+   "missing": "a few buttons are not built. Audit every Private Sub *_Click/_MouseUp of frmMain.frm (btnExp*, btnZoomIn/Out, ImgSeg/ImgSegClan/ImgSegParty/ImgSegResu, ImgHogar, imgManual, imgBugReport, imgMAO, onlines, GlobalIcon, CombateIcon, Retar, buttonSkins) against apps/web/src and list the ones with no handler.",
+   "ref": "docs/COVERAGE.md"
+  },
+  {
+   "form": "frmMapaGrande",
+   "missing": "partial per forms.json (world-map-ui.ts); the exact missing controls are not listed. Compare with frmMapaGrande.frm (dungeon toggle, search, right-click teleport for GMs).",
+   "ref": "#52"
+  }
+ ],
+ "behaviour": [
+  {
+   "issue": 58,
+   "text": "Port the live engine.bas Char_Render offsets (no +1 body x; head y OffHead = HeadOffset.y - ease - 1 - BodyOffset.y), with a unit test and before/after screenshots",
+   "area": "render"
+  },
+  {
+   "issue": 44,
+   "text": "Travel form Playwright e2e (inject ViajarForm, pick a row, assert CompletarViaje)",
+   "area": "tests"
+  },
+  {
+   "issue": 44,
+   "text": "TravelState.travel hard-codes packet id 252: use PetsTravelClientPacketId.CompletarViaje",
+   "area": "protocol"
+  },
+  {
+   "issue": 44,
+   "text": "Fold tools/npcs-record.mjs into tools/conformance/vb6-record.mjs",
+   "area": "tools"
+  },
+  {
+   "issue": 44,
+   "text": "Record travel and trainer against the real server (needs a Transporter / Entrenador NPC; none on a non-battle server)",
+   "area": "recordings",
+   "blocked": "data: no such NPC"
+  },
+  {
+   "issue": 43,
+   "text": "Real blind / dumb / stun (no spell or object in the data can cause them; see docs/DATA-PATCHES.md)",
+   "area": "recordings",
+   "blocked": "data"
+  },
+  {
+   "issue": 39,
+   "text": "Guild leader-only controls UI: elections, peace/alliance lists, declare war",
+   "area": "guild"
+  },
+  {
+   "issue": 38,
+   "text": "SKILL_DESCRIPTIONS in game-text.ts is unused: show on skill-name click or drop it",
+   "area": "skills"
+  },
+  {
+   "issue": 38,
+   "text": "SkillsState.reset() never called: call on disconnect/relogin or delete",
+   "area": "skills"
+  },
+  {
+   "issue": 38,
+   "text": "Trainer window empty-list case: what the VB6 form does with zero creatures",
+   "area": "skills"
+  },
+  {
+   "issue": 38,
+   "text": "Record ObjQuestListSend (S174) with a level-appropriate char holding a quest item",
+   "area": "recordings"
+  },
+  {
+   "issue": 38,
+   "text": "Optional: draggable quest and skill windows (MoverForm), PlayQuestDescAudio",
+   "area": "skills"
+  },
+  {
+   "issue": 35,
+   "text": "Work-macro key: no VB6 binding found, CraftingController.macroEnabled never set",
+   "area": "crafting"
+  },
+  {
+   "issue": 35,
+   "text": "ParticleFX continues after FlagTrabajar: find what stops the server's automated extraction before relying on ResetearUserMacro",
+   "area": "crafting"
+  },
+  {
+   "issue": 34,
+   "text": "roofTint: roofs shaded with the 4 tile vertices need a vertex-colour mesh",
+   "area": "render"
+  },
+  {
+   "issue": 28,
+   "text": "Real fixture for PlayMIDI (54): the server never sends it",
+   "area": "recordings",
+   "blocked": "server never sends it"
+  },
+  {
+   "issue": 28,
+   "text": "Real fixture for PlayWaveStep (188): needs two non-GM accounts, one invisible",
+   "area": "recordings"
+  },
+  {
+   "issue": 24,
+   "text": "Housekeeping: #52 implemented every item, close the issue",
+   "area": "housekeeping"
+  },
+  {
+   "issue": 22,
+   "text": "Player on 75,32 between two roofs stays under both roofs: VB6 trigger rule keeps them opaque, needs a data or rule decision",
+   "area": "render",
+   "blocked": "decision"
+  },
+  {
+   "issue": 20,
+   "text": "Keybound features not in the client (ShowOnline M, ScreenShot, GameStats *): say so in the console; hotkeys 1-0 need eEnableHotkeys",
+   "area": "hotkeys"
+  },
+  {
+   "issue": 19,
+   "text": "hotkeys-ui still reads spellTables.spells: use the shared spellData and delete the copy",
+   "area": "spells"
+  },
+  {
+   "issue": 17,
+   "text": "Record death by a hostile creature, NPCHitUser/NPCKillUser on a non-GM char and the revival after it",
+   "area": "recordings"
+  },
+  {
+   "issue": 16,
+   "text": "chat-box.ts never passes dead to ChatInput.submit (/GLOBAL while dead)",
+   "area": "chat"
+  },
+  {
+   "issue": 16,
+   "text": "Wrong comments in chat.test.ts:64 and vb6-chat-record.mjs:28",
+   "area": "chat"
+  },
+  {
+   "issue": 16,
+   "text": "chat-input.ts filters by code point, not windows-1252 representability",
+   "area": "chat"
+  },
+  {
+   "issue": 16,
+   "text": "Document the LOCMSG field-3 deviation (VB6 client bug)",
+   "area": "chat"
+  },
+  {
+   "issue": 16,
+   "text": "Merge the two parsers of sp_localindex.dat (ChatLocale and LocaleData)",
+   "area": "chat"
+  },
+  {
+   "issue": 16,
+   "text": "CharacterTracker still computes an overhead dialog state no longer drawn; bubbles jump tile to tile for walking NPCs",
+   "area": "chat"
+  },
+  {
+   "issue": 16,
+   "text": "ChatBubbles and the door rule read session.characters, a second character store next to the tracker",
+   "area": "chat"
+  },
+  {
+   "issue": 15,
+   "text": "Housekeeping: #52 implemented items 1-3, close the issue; do a live pass on a forest map (draw order and tree fade)",
+   "area": "housekeeping"
+  },
+  {
+   "issue": 0,
+   "text": "Character creation fails silently (Ariel)",
+   "area": "account",
+   "inFlight": "fix/char-create",
+   "label": "Ariel bug"
+  },
+  {
+   "issue": 0,
+   "text": "Walking into an occupied tile predicts a step and the attack then misses (Ariel): fix merged in #59, verify live and close",
+   "area": "movement",
+   "label": "Ariel bug"
+  }
+ ],
+ "workPackages": [
+  {
+   "id": "WP-A",
+   "title": "Missing screens: guild leader controls, frmMain buttons, world map",
+   "files": "apps/web/src/guild-*.ts (leader window), classic-layout.ts and the frmMain handlers, world-map-ui.ts",
+   "closes": "formGaps (all three), #39"
+  },
+  {
+   "id": "WP-B",
+   "title": "Chat, hotkeys, spells, skills and quests cleanups",
+   "files": "apps/web/src/chat-*.ts, chat-locale/locale data, hotkeys-ui.ts, spells.ts, skills-window.ts, game-text.ts, quest window",
+   "closes": "#16, #19, #20, #38 (code items)"
+  },
+  {
+   "id": "WP-C",
+   "title": "Renderer fidelity",
+   "files": "apps/web/src/character-render.ts, renderer.ts, roof/light code, map-objects.ts",
+   "closes": "#58, #34, #22, #15 live forest pass"
+  },
+  {
+   "id": "WP-D",
+   "title": "End-to-end playthrough harness and the missing real recordings",
+   "files": "apps/web/e2e/playthrough.*, tools/playthrough/, tools/conformance/, tests/fixtures/vb6/ (new dirs only), docs/DATA-PATCHES.md",
+   "closes": "docs/PLAYTHROUGH.md (every step passing), #17, #28 (188), #38 (ObjQuestListSend), #44 (record travel/trainer)"
+  },
+  {
+   "id": "WP-E",
+   "title": "Packets, crafting leftovers and tidy-ups, after the in-flight branches merge",
+   "files": "packages/protocol/src (ChangeSkinSlot), apps/web/src/crafting*.ts, travel/pets code, tools/npcs-record.mjs",
+   "closes": "the last packet, #35 leftovers, #44 code items, issue housekeeping (#15, #24)"
+  }
+ ]
+}
