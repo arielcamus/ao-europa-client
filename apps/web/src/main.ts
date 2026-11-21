@@ -60,6 +60,8 @@ let wsPath = '/bridge';
 let lastUi = 0;
 let stoppedAt: number | undefined;
 let chatSupported = true;
+/** The account screen, character creation and message boxes belong to the classic server; the stand-in and the community adapter keep the one-click login. */
+let interactiveFlow = true;
 const report = (message: string) => {
   errorBox.textContent = message; errorBox.hidden = false;
   element('console').scrollTop = element('console').scrollHeight;
@@ -171,9 +173,10 @@ async function boot() {
   if (config.serverProfile && !['classic', 'elixir-classic'].includes(config.serverProfile)) throw new Error('Invalid server profile');
   wsPath = config.wsPath;
   const community = config.mode === 'classic' && config.serverProfile === 'elixir-classic';
+  interactiveFlow = config.mode === 'classic' && !community;
   chatSupported = !community; // The current opt-in community adapter only supports login/movement.
   element('mode').textContent = config.mode === 'standin' ? 'TEST STAND-IN' : community ? 'AO COMMUNITY SERVER' : 'CLASSIC · UNVERIFIED';
-  element('mode-note').textContent = config.mode === 'standin' ? 'Prueba local · standin@local / testpass' : 'Conecta con tu cuenta. Se seleccionará el primer personaje.';
+  element('mode-note').textContent = config.mode === 'standin' ? 'Prueba local · standin@local / testpass' : 'Conecta con tu cuenta y elige tu personaje.';
   element('scope-note').textContent = config.mode === 'standin'
     ? 'Mundo de prueba local. Objetos y estadísticas de muestra; sin combate ni persistencia.'
     : community ? 'Servidor comunitario · movimiento y persistencia. Chat aún no disponible.' : 'Cliente clásico · movimiento, combate, objetos, hechizos, banco y chat.';
@@ -227,7 +230,7 @@ function syncConnect() {
     if (shownAccount !== s.accountRevision || connectUi.current === 'login' || connectUi.current === 'none') { shownAccount = s.accountRevision; connectUi.showAccount(s.accountCharacters); }
   } else if (!s) { shownAccount = -1; connectUi.setScreen('login'); }
   loading.visible = !!s && (s.phase === 'login' || (s.phase === 'playing' && !playing));
-  form.hidden = connectUi.current !== 'login' || s?.phase === 'connecting';
+  form.hidden = !!s || connectUi.current !== 'login';
 }
 function updateUi(now: number) {
   syncConnect();
@@ -272,7 +275,7 @@ function connectSession(email: string, secret: string, create = false) {
     if (ws.readyState !== WebSocket.OPEN || ws.bufferedAmount > 64 * 1024) throw new Error('Connection is not writable');
     ws.send(bytes.slice().buffer);
   });
-  session.interactive = true;
+  session.interactive = interactiveFlow;
   password.value = '';
   npcDialog.hide();
   const owner = session;
@@ -322,7 +325,7 @@ quitButton.addEventListener('click', () => { try { window.close(); } catch { /* 
 form.append(remember, accountButton, quitButton);
 if (remembered) { account.value = remembered; connectUi.say(TEXT.welcomeBack); }
 // frmMain Image4(1) opens frmCerrar: Menú principal = WriteQuit (the server counts down, then Disconnect), Salir = CloseClient.
-disconnect.addEventListener('click', () => showExit(element('classic'), {
+disconnect.addEventListener('click', () => !interactiveFlow ? close() : showExit(element('classic'), {
   menu: () => guard(() => session?.sendAction({ id: K.Quit })),
   exit: () => { guard(() => session?.sendAction({ id: K.Quit })); window.setTimeout(() => { close(); try { window.close(); } catch { /* ignored */ } }, 300); },
 }));

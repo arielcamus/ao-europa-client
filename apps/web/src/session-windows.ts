@@ -8,7 +8,7 @@ import { loadInterface } from './interface-assets.js';
 import { TEXT } from './connect-text.js';
 
 type Box = readonly [number, number, number, number];
-let counter = 0;
+let windowSeq = 0;
 /** An art button whose bitmap may be missing from the local resources: a plain VB button stands in. */
 function artButton(win: VbWindow, art: string, box: Box, label: string, run: () => void) {
   const b = win.button(art, box, label, run);
@@ -17,7 +17,7 @@ function artButton(win: VbWindow, art: string, box: Box, label: string, run: () 
 
 /** frmMensaje: 291x213, the message label at 40,80 (211x81), Aceptar at 80,168 and the X at 260,0. Enter or Escape closes it. */
 export function showMessage(parent: HTMLElement, text: string, onClose?: () => void): VbWindow {
-  const win = new VbWindow(parent, { id: `message-${++counter}`, art: 'mensaje', size: [291, 213], title: 'Mensaje', ...(onClose ? { onClose } : {}) });
+  const win = new VbWindow(parent, { id: `message-${++windowSeq}`, art: 'mensaje', size: [291, 213], title: 'Mensaje', ...(onClose ? { onClose } : {}) });
   const label = win.label(text, [40, 80, 211, 81], 'vb-center vb-multi vb-bold');
   label.style.fontSize = '12px'; label.style.whiteSpace = 'normal'; label.style.lineHeight = '14px';
   artButton(win, 'boton-aceptar', [80, 168, 132, 28], 'Aceptar', () => win.close());
@@ -29,7 +29,7 @@ export function showMessage(parent: HTMLElement, text: string, onClose?: () => v
 
 /** MsgBox(vbYesNo): a plain VB form. */
 export function showConfirm(parent: HTMLElement, text: string, yes: () => void): VbWindow {
-  const win = new VbWindow(parent, { id: `confirm-${++counter}`, size: [340, 130], title: 'Confirmar' });
+  const win = new VbWindow(parent, { id: `confirm-${++windowSeq}`, size: [340, 130], title: 'Confirmar' });
   const label = win.label(text, [16, 14, 308, 60]); label.style.whiteSpace = 'normal';
   win.command('Sí', [84, 88, 75, 25], () => { win.close(); yes(); });
   win.command('No', [181, 88, 75, 25], () => win.close());

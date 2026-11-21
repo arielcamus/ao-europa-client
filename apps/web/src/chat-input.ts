@@ -40,8 +40,17 @@ export interface ChatContext {
   isGM?: boolean;
 }
 
-/** SendTxt_Change: keep only characters the VB6 box accepts (space..250). */
-export const filterChatText = (text: string) => [...text].filter(ch => { const c = ch.codePointAt(0)!; return c >= 32 && c <= 250; }).join('').slice(0, CHAT_MAX_LENGTH);
+/**
+ * Characters whose windows-1252 byte is 32..250: the VB6 box works on ANSI bytes, so "€" (byte 128) stays while a C1 control such as U+0081
+ * (no byte in the table) and anything outside the code page is dropped (issue #16, item 3: it used to filter by Unicode code point).
+ */
+const ANSI_ALLOWED = (() => {
+  const decoder = new TextDecoder('windows-1252'), set = new Set<string>();
+  for (let byte = 32; byte <= 250; byte++) if (![0x81, 0x8d, 0x8f, 0x90, 0x9d].includes(byte)) set.add(decoder.decode(Uint8Array.of(byte))); // those five bytes are undefined in the code page
+  return set;
+})();
+/** SendTxt_Change: keep only characters the VB6 box accepts (windows-1252 bytes space..250). */
+export const filterChatText = (text: string) => [...text].filter(ch => ANSI_ALLOWED.has(ch)).join('').slice(0, CHAT_MAX_LENGTH);
 
 const readCommand = (raw: string) => {
   const cut = raw.indexOf(' ');

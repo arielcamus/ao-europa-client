@@ -39,3 +39,6 @@
 #loading-card { position: absolute; z-index: 50; left: 431px; top: 331px; width: 161px; height: 106px; background-size: 100% 100%; display: grid; place-items: end center; padding-bottom: 14px; font: bold 11px Tahoma, Arial, sans-serif; color: #fff; text-shadow: 1px 1px #000; }
 #loading-cancel { position: absolute; z-index: 51; }
 #connect-flash { position: absolute; z-index: 4; pointer-events: none; opacity: 0; }
+/* The stage is a backdrop: clicks reach the HUD buttons below (the options window is available from the login screen, as before); only its own controls take them. */
+#connect-stage, .cs-screen { pointer-events: none; }
+.cs-hit, .cs-name, .cs-assistant, .cs-slot-hit { pointer-events: auto; }
