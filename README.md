@@ -64,9 +64,9 @@ panel. Click an item or the spell information control to read its local descript
 Enter or the speech bubble opens chat; Enter sends, Escape closes. The console
 renders server strings as text. Inventory, spells and bars consume verified classic
 packets; unknown values remain blank/dashes. Casting: select a spell in the Hechizos
-list and press Lanzar (or double-click it); the server answers with a target request
-(the cursor changes), then click a tile (a tap on a phone) to cast, Escape cancels. Combat
-(Ctrl attacks, a click selects), using and equipping items follow the same classic packets.
+list and press Lanzar; the server answers with a target request
+(the cursor changes), then click a tile (a tap on a phone) to cast, Escape cancels. Combat,
+using and equipping items follow the same classic packets and the bound keys (Options > hotkeys).
 The explicit stand-in supplies sample UI data and echoes
 chat locally. The current `elixir-classic` adapter supports login/movement only, so
 chat is disabled for that profile rather than sending an unsupported packet.
