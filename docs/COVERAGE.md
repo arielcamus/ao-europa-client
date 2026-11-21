@@ -10,8 +10,8 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 295 of 523 = 56.4%.** Merged on main only: 295 = 56.4%.
-  - Server to client: 159 of 207. Client to server: 136 of 316. Packets with a recorded VB6 fixture: 211.
+- **Packets covered (merged + open branches): 435 of 523 = 83.2%.** Merged on main only: 435 = 83.2%.
+  - Server to client: 170 of 207. Client to server: 265 of 316. Packets with a recorded VB6 fixture: 229.
 - **Forms covered: 4 of 86 = 4.7%** (5 more partially, 10.5% started).
 
 ## (c) Feature groups, ordered by player value
@@ -35,7 +35,7 @@ Scanned refs: `main`
 | 15 | Options / keybinds | 1/2 | 50% | 1 | 0/4 | 0% | 0 |
 | 16 | Minimap / world map | 0/2 | 0% | 0 | 0/1 | 0% | 0 |
 | 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 3/60 | 5% | 3 | 0/13 | 0% | 0 |
-| 18 | GM / admin (lowest) | 2/142 | 1.4% | 2 | 0/13 | 0% | 0 |
+| 18 | GM / admin (lowest) | 142/142 | 100% | 142 | 0/13 | 0% | 0 |
 
 ## DUPLICATES
 
@@ -201,7 +201,7 @@ Ids only: .
 | 56 | GuildList | client Protocol.bas:HandleGuildList | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 57 | AreaChanged | client Protocol.bas:HandleAreaChanged | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 58 | PauseToggle | client Protocol.bas:HandlePauseToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
-| 59 | RainToggle | client Protocol.bas:HandleRainToggle | core | merged | `main:packages/protocol/src/packets/audio.ts` | no |
+| 59 | RainToggle | client Protocol.bas:HandleRainToggle | core | merged | `main:packages/protocol/src/packets/audio.ts` | yes |
 | 60 | CreateFX | client Protocol.bas:HandleCreateFX | spells | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 61 | UpdateUserStats | client Protocol.bas:HandleUpdateUserStats | skills | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 62 | WorkRequestTarget | client Protocol.bas:HandleWorkRequestTarget | spells | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
@@ -223,8 +223,8 @@ Ids only: .
 | 78 | UpdateHungerAndThirst | client Protocol.bas:HandleUpdateHungerAndThirst | items | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 79 | MiniStats | client Protocol.bas:HandleMiniStats | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 80 | LevelUp | client Protocol.bas:HandleLevelUp | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
-| 81 | AddForumMsg | client Protocol.bas:HandleAddForumMessage | gm | not started |  | no |
-| 82 | ShowForumForm | client Protocol.bas:HandleShowForumForm | gm | not started |  | no |
+| 81 | AddForumMsg | client Protocol.bas:HandleAddForumMessage | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 82 | ShowForumForm | client Protocol.bas:HandleShowForumForm | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 83 | SetInvisible | client Protocol.bas:HandleSetInvisible | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 84 | MeditateToggle | client Protocol.bas:HandleMeditateToggle | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
 | 85 | BlindNoMore | client Protocol.bas:HandleBlindNoMore | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
@@ -249,12 +249,12 @@ Ids only: .
 | 104 | Contadores | client Protocol.bas:HandleContadores | core | not started |  | yes |
 | 105 | ShowPapiro | client Protocol.bas:HandleShowPapiro | gm | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
 | 106 | UpdateCooldownType | client Protocol.bas:HandleUpdateCooldownType | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
-| 107 | SpawnListt | client Protocol.bas:HandleSpawnList | gm | not started |  | no |
-| 108 | ShowSOSForm | client Protocol.bas:HandleShowSOSForm | gm | not started |  | no |
-| 109 | ShowMOTDEditionForm | client Protocol.bas:HandleShowMOTDEditionForm | gm | not started |  | no |
-| 110 | ShowGMPanelForm | client Protocol.bas:HandleShowGMPanelForm | gm | not started |  | no |
-| 111 | UserNameList | client Protocol.bas:HandleUserNameList | gm | not started |  | no |
-| 112 | UserOnline | client Protocol.bas:HandleUserOnline | gm | not started |  | yes |
+| 107 | SpawnListt | client Protocol.bas:HandleSpawnList | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 108 | ShowSOSForm | client Protocol.bas:HandleShowSOSForm | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 109 | ShowMOTDEditionForm | client Protocol.bas:HandleShowMOTDEditionForm | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 110 | ShowGMPanelForm | client Protocol.bas:HandleShowGMPanelForm | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 111 | UserNameList | client Protocol.bas:HandleUserNameList | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 112 | UserOnline | client Protocol.bas:HandleUserOnline | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
 | 113 | ParticleFX | client Protocol.bas:HandleParticleFX | core | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 114 | ParticleFXToFloor | client Protocol.bas:HandleParticleFXToFloor | core | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 115 | ParticleFXWithDestino | client Protocol.bas:HandleParticleFXWithDestino | core | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
@@ -264,7 +264,7 @@ Ids only: .
 | 119 | AuraToChar | client Protocol.bas:HandleAuraToChar | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 120 | SpeedToChar | client Protocol.bas:HandleSpeedToChar | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 121 | LightToFloor | client Protocol.bas:HandleLightToFloor | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
-| 122 | NieveToggle | client Protocol.bas:HandleNieveToggle | core | merged | `main:packages/protocol/src/packets/audio.ts` | no |
+| 122 | NieveToggle | client Protocol.bas:HandleNieveToggle | core | merged | `main:packages/protocol/src/packets/audio.ts` | yes |
 | 123 | NieblaToggle | client Protocol.bas:HandleNieblaToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 124 | Goliath | client Protocol.bas:HandleGoliath | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 125 | TextOverChar | client Protocol.bas:HandleTextOverChar | chat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
@@ -314,12 +314,12 @@ Ids only: .
 | 169 | CraftingItem | client Protocol.bas:HandleCraftingItem | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 170 | CraftingCatalyst | client Protocol.bas:HandleCraftingCatalyst | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 171 | CraftingResult | client Protocol.bas:HandleCraftingResult | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
-| 172 | GuardNotice | (none in dispatcher) | gm | not started |  | no |
+| 172 | GuardNotice | (none in dispatcher) | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 173 | AnswerReset | client Protocol.bas:HandleAnswerReset | core | not started |  | no |
 | 174 | ObjQuestListSend | client Protocol.bas:HandleObjQuestListSend | quests | merged | `main:packages/protocol/src/packets/quests.ts` | no |
 | 175 | UpdateBankGld | client Protocol.bas:HandleUpdateBankGld | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 176 | PelearConPezEspecial | client Protocol.bas:HandlePelearConPezEspecial | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
-| 177 | Privilegios | client Protocol.bas:HandlePrivilegios | gm | not started |  | yes |
+| 177 | Privilegios | client Protocol.bas:HandlePrivilegios | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
 | 178 | ShopInit | client Protocol.bas:HandleShopInit | extras | not started |  | no |
 | 179 | UpdateShopClienteCredits | client Protocol.bas:HandleUpdateShopClienteCredits | extras | not started |  | no |
 | 180 | SendSkillCdUpdate | client Protocol.bas:HandleSendSkillCdUpdate | combat | merged | `main:packages/protocol/src/packets/spells.ts` | no |
@@ -332,7 +332,7 @@ Ids only: .
 | 187 | PosUpdateChar | client Protocol.bas:HandlePosUpdateChar | core | merged | `main:packages/protocol/src/packets.ts` | no |
 | 188 | PlayWaveStep | client Protocol.bas:HandlePlayWaveStep | core | merged | `main:packages/protocol/src/packets/audio.ts` | no |
 | 189 | ShopPjsInit | client Protocol.bas:HandleShopPjsInit | extras | not started |  | no |
-| 190 | DebugDataResponse | client Protocol.bas:HandleDebugDataResponse | gm | not started |  | no |
+| 190 | DebugDataResponse | client Protocol.bas:HandleDebugDataResponse | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 191 | CreateProjectile | client Protocol.bas:HandleCreateProjectile | combat | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 192 | UpdateTrap | client Protocol.bas:HandleUpdateTrapState | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 193 | UpdateGroupInfo | client Protocol.bas:HandleUpdateGroupInfo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
@@ -367,7 +367,7 @@ Ids only: .
 | 10 | BankExtractItem | server Protocol.bas:HandleBankExtractItem | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 11 | CommerceSell | server Protocol.bas:HandleCommerceSell | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 12 | BankDeposit | server Protocol.bas:HandleBankDeposit | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
-| 13 | ForumPost | server Protocol.bas:HandleForumPost | gm | not started |  | no |
+| 13 | ForumPost | server Protocol.bas:HandleForumPost | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 14 | MoveSpell | server Protocol.bas:HandleMoveSpell | spells | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 15 | ClanCodexUpdate | server Protocol.bas:HandleClanCodexUpdate | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 16 | UserCommerceOffer | server Protocol.bas:HandleUserCommerceOffer | trade | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
@@ -392,7 +392,7 @@ Ids only: .
 | 35 | GuildOpenElections | server Protocol.bas:HandleGuildOpenElections | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 36 | GuildRequestMembership | server Protocol.bas:HandleGuildRequestMembership | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 37 | GuildRequestDetails | server Protocol.bas:HandleGuildRequestDetails | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
-| 38 | Online | server Protocol.bas:HandleOnline | gm | not started |  | no |
+| 38 | Online | server Protocol.bas:HandleOnline | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
 | 39 | Quit | server Protocol.bas:HandleQuit | core | merged | `main:packages/protocol/src/packets/keys.ts` | no |
 | 40 | GuildLeave | server Protocol.bas:HandleGuildLeave | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 41 | RequestAccountState | server Protocol.bas:HandleRequestAccountState | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
@@ -409,24 +409,24 @@ Ids only: .
 | 52 | RequestStats | server Protocol.bas:HandleRequestStats | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 53 | CommerceStart | server Protocol.bas:HandleCommerceStart | items | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 54 | BankStart | server Protocol.bas:HandleBankStart | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
-| 55 | Information | server Protocol.bas:HandleInformation | gm | not started |  | no |
-| 56 | Reward | server Protocol.bas:HandleReward | gm | not started |  | no |
+| 55 | Information | server Protocol.bas:HandleInformation | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 56 | Reward | server Protocol.bas:HandleReward | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 57 | RequestMOTD | server Protocol.bas:HandleRequestMOTD | chat | not started |  | no |
-| 58 | UpTime | server Protocol.bas:HandleUpTime | gm | not started |  | no |
+| 58 | UpTime | server Protocol.bas:HandleUpTime | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 59 | GuildMessage | server Protocol.bas:HandleGuildMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 60 | GuildOnline | server Protocol.bas:HandleGuildOnline | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 61 | CouncilMessage | server Protocol.bas:HandleCouncilMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 62 | FactionMessage | server Protocol.bas:HandleFactionMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 63 | RoleMasterRequest | server Protocol.bas:HandleRoleMasterRequest | gm | not started |  | no |
+| 63 | RoleMasterRequest | server Protocol.bas:HandleRoleMasterRequest | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 64 | ChangeDescription | server Protocol.bas:HandleChangeDescription | options | not started |  | no |
 | 65 | GuildVote | server Protocol.bas:HandleGuildVote | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
-| 66 | Punishments | server Protocol.bas:HandlePunishments | gm | not started |  | no |
+| 66 | Punishments | server Protocol.bas:HandlePunishments | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 67 | Gamble | server Protocol.bas:HandleGamble | extras | not started |  | no |
 | 68 | MapPriceEntrance | server Protocol.bas:HandleMapPriceEntrance | extras | not started |  | no |
 | 69 | LeaveFaction | server Protocol.bas:HandleLeaveFaction | extras | not started |  | no |
 | 70 | BankExtractGold | server Protocol.bas:HandleBankExtractGold | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 71 | BankDepositGold | server Protocol.bas:HandleBankDepositGold | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
-| 72 | Denounce | server Protocol.bas:HandleDenounce | gm | not started |  | no |
+| 72 | Denounce | server Protocol.bas:HandleDenounce | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 73 | LoginExistingChar | server Protocol.bas:HandleLoginExistingChar | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 74 | LoginNewChar | server Protocol.bas:HandleLoginNewChar | core | not started |  | no |
 | 75 | Talk | server Protocol.bas:HandleTalk | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
@@ -455,123 +455,123 @@ Ids only: .
 | 98 | UseSpellMacro | server Protocol.bas:HandleUseSpellMacro | spells | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 99 | UseItem | server Protocol.bas:HandleUseItem | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 100 | CraftBlacksmith | server Protocol.bas:HandleCraftBlacksmith | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
-| 101 | GMMessage | server Protocol.bas:HandleGMMessage | gm | not started |  | no |
-| 102 | ShowName | server Protocol.bas:HandleShowName | gm | not started |  | no |
-| 103 | OnlineRoyalArmy | server Protocol.bas:HandleOnlineRoyalArmy | gm | not started |  | no |
-| 104 | OnlineChaosLegion | server Protocol.bas:HandleOnlineChaosLegion | gm | not started |  | no |
-| 105 | GoNearby | server Protocol.bas:HandleGoNearby | gm | not started |  | no |
-| 106 | Comment | server Protocol.bas:HandleComment | gm | not started |  | no |
-| 107 | Where | server Protocol.bas:HandleWhere | gm | not started |  | no |
-| 108 | CreaturesInMap | server Protocol.bas:HandleCreaturesInMap | gm | not started |  | no |
-| 109 | WarpMeToTarget | server Protocol.bas:HandleWarpMeToTarget | gm | not started |  | no |
-| 110 | WarpChar | server Protocol.bas:HandleWarpChar | gm | not started |  | no |
-| 111 | Silence | server Protocol.bas:HandleSilence | gm | not started |  | no |
-| 112 | SOSShowList | server Protocol.bas:HandleSOSShowList | gm | not started |  | no |
-| 113 | SOSRemove | server Protocol.bas:HandleSOSRemove | gm | not started |  | no |
-| 114 | GoToChar | server Protocol.bas:HandleGoToChar | gm | not started |  | no |
-| 115 | Invisible | server Protocol.bas:HandleInvisible | gm | not started |  | no |
-| 116 | GMPanel | server Protocol.bas:HandleGMPanel | gm | not started |  | no |
-| 117 | RequestUserList | server Protocol.bas:HandleRequestUserList | gm | not started |  | no |
-| 118 | Working | server Protocol.bas:HandleWorking | gm | not started |  | no |
-| 119 | Hiding | server Protocol.bas:HandleHiding | gm | not started |  | no |
-| 120 | Jail | server Protocol.bas:HandleJail | gm | not started |  | no |
-| 121 | KillNPC | server Protocol.bas:HandleKillNPC | gm | not started |  | no |
-| 122 | WarnUser | server Protocol.bas:HandleWarnUser | gm | not started |  | no |
-| 123 | EditChar | server Protocol.bas:HandleEditChar | gm | not started |  | no |
-| 124 | RequestCharInfo | server Protocol.bas:HandleRequestCharInfo | gm | not started |  | no |
-| 125 | RequestCharStats | server Protocol.bas:HandleRequestCharStats | gm | not started |  | no |
-| 126 | RequestCharGold | server Protocol.bas:HandleRequestCharGold | gm | not started |  | no |
-| 127 | RequestCharInventory | server Protocol.bas:HandleRequestCharInventory | gm | not started |  | no |
-| 128 | RequestCharBank | server Protocol.bas:HandleRequestCharBank | gm | not started |  | no |
-| 129 | RequestCharSkills | server Protocol.bas:HandleRequestCharSkills | gm | not started |  | no |
-| 130 | ReviveChar | server Protocol.bas:HandleReviveChar | gm | not started |  | no |
-| 131 | OnlineGM | server Protocol.bas:HandleOnlineGM | gm | not started |  | no |
-| 132 | OnlineMap | server Protocol.bas:HandleOnlineMap | gm | not started |  | no |
-| 133 | Forgive | server Protocol.bas:HandleForgive | gm | not started |  | no |
-| 134 | Kick | server Protocol.bas:HandleKick | gm | not started |  | no |
-| 135 | Execute | server Protocol.bas:HandleExecute | gm | not started |  | no |
-| 136 | BanChar | server Protocol.bas:HandleBanChar | gm | not started |  | no |
-| 137 | UnbanChar | server Protocol.bas:HandleUnbanChar | gm | not started |  | no |
-| 138 | NPCFollow | server Protocol.bas:HandleNPCFollow | gm | not started |  | no |
-| 139 | SummonChar | server Protocol.bas:HandleSummonChar | gm | not started |  | no |
-| 140 | SpawnListRequest | server Protocol.bas:HandleSpawnListRequest | gm | not started |  | no |
-| 141 | SpawnCreature | server Protocol.bas:HandleSpawnCreature | gm | not started |  | no |
-| 142 | ResetNPCInventory | server Protocol.bas:HandleResetNPCInventory | gm | not started |  | no |
-| 143 | CleanWorld | server Protocol.bas:HandleCleanWorld | gm | not started |  | no |
-| 144 | ServerMessage | server Protocol.bas:HandleServerMessage | gm | not started |  | no |
-| 145 | NickToIP | server Protocol.bas:HandleNickToIP | gm | not started |  | no |
-| 146 | IPToNick | server Protocol.bas:HandleIPToNick | gm | not started |  | no |
-| 147 | GuildOnlineMembers | server Protocol.bas:HandleGuildOnlineMembers | gm | not started |  | no |
-| 148 | TeleportCreate | server Protocol.bas:HandleTeleportCreate | gm | not started |  | no |
-| 149 | TeleportDestroy | server Protocol.bas:HandleTeleportDestroy | gm | not started |  | no |
+| 101 | GMMessage | server Protocol.bas:HandleGMMessage | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 102 | ShowName | server Protocol.bas:HandleShowName | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 103 | OnlineRoyalArmy | server Protocol.bas:HandleOnlineRoyalArmy | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 104 | OnlineChaosLegion | server Protocol.bas:HandleOnlineChaosLegion | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 105 | GoNearby | server Protocol.bas:HandleGoNearby | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 106 | Comment | server Protocol.bas:HandleComment | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 107 | Where | server Protocol.bas:HandleWhere | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 108 | CreaturesInMap | server Protocol.bas:HandleCreaturesInMap | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 109 | WarpMeToTarget | server Protocol.bas:HandleWarpMeToTarget | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 110 | WarpChar | server Protocol.bas:HandleWarpChar | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 111 | Silence | server Protocol.bas:HandleSilence | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 112 | SOSShowList | server Protocol.bas:HandleSOSShowList | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 113 | SOSRemove | server Protocol.bas:HandleSOSRemove | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 114 | GoToChar | server Protocol.bas:HandleGoToChar | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 115 | Invisible | server Protocol.bas:HandleInvisible | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 116 | GMPanel | server Protocol.bas:HandleGMPanel | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 117 | RequestUserList | server Protocol.bas:HandleRequestUserList | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 118 | Working | server Protocol.bas:HandleWorking | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 119 | Hiding | server Protocol.bas:HandleHiding | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 120 | Jail | server Protocol.bas:HandleJail | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 121 | KillNPC | server Protocol.bas:HandleKillNPC | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 122 | WarnUser | server Protocol.bas:HandleWarnUser | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 123 | EditChar | server Protocol.bas:HandleEditChar | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 124 | RequestCharInfo | server Protocol.bas:HandleRequestCharInfo | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 125 | RequestCharStats | server Protocol.bas:HandleRequestCharStats | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 126 | RequestCharGold | server Protocol.bas:HandleRequestCharGold | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 127 | RequestCharInventory | server Protocol.bas:HandleRequestCharInventory | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 128 | RequestCharBank | server Protocol.bas:HandleRequestCharBank | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 129 | RequestCharSkills | server Protocol.bas:HandleRequestCharSkills | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 130 | ReviveChar | server Protocol.bas:HandleReviveChar | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 131 | OnlineGM | server Protocol.bas:HandleOnlineGM | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 132 | OnlineMap | server Protocol.bas:HandleOnlineMap | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 133 | Forgive | server Protocol.bas:HandleForgive | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 134 | Kick | server Protocol.bas:HandleKick | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 135 | Execute | server Protocol.bas:HandleExecute | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 136 | BanChar | server Protocol.bas:HandleBanChar | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 137 | UnbanChar | server Protocol.bas:HandleUnbanChar | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 138 | NPCFollow | server Protocol.bas:HandleNPCFollow | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 139 | SummonChar | server Protocol.bas:HandleSummonChar | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 140 | SpawnListRequest | server Protocol.bas:HandleSpawnListRequest | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 141 | SpawnCreature | server Protocol.bas:HandleSpawnCreature | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 142 | ResetNPCInventory | server Protocol.bas:HandleResetNPCInventory | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 143 | CleanWorld | server Protocol.bas:HandleCleanWorld | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 144 | ServerMessage | server Protocol.bas:HandleServerMessage | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 145 | NickToIP | server Protocol.bas:HandleNickToIP | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 146 | IPToNick | server Protocol.bas:HandleIPToNick | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 147 | GuildOnlineMembers | server Protocol.bas:HandleGuildOnlineMembers | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 148 | TeleportCreate | server Protocol.bas:HandleTeleportCreate | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 149 | TeleportDestroy | server Protocol.bas:HandleTeleportDestroy | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 150 | RainToggle | server Protocol.bas:HandleRainToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
-| 151 | SetCharDescription | server Protocol.bas:HandleSetCharDescription | gm | not started |  | no |
-| 152 | ForceMIDIToMap | server Protocol.bas:HandleForceWAVEToMap | gm | not started |  | no |
-| 153 | ForceWAVEToMap | server Protocol.bas:HandleForceWAVEToMap | gm | not started |  | no |
-| 154 | RoyalArmyMessage | server Protocol.bas:HandleRoyalArmyMessage | gm | not started |  | no |
-| 155 | ChaosLegionMessage | server Protocol.bas:HandleChaosLegionMessage | gm | not started |  | no |
-| 156 | TalkAsNPC | server Protocol.bas:HandleTalkAsNPC | gm | not started |  | no |
-| 157 | DestroyAllItemsInArea | server Protocol.bas:HandleDestroyAllItemsInArea | gm | not started |  | no |
-| 158 | AcceptRoyalCouncilMember | server Protocol.bas:HandleAcceptRoyalCouncilMember | gm | not started |  | no |
-| 159 | AcceptChaosCouncilMember | server Protocol.bas:HandleAcceptChaosCouncilMember | gm | not started |  | no |
-| 160 | ItemsInTheFloor | server Protocol.bas:HandleItemsInTheFloor | gm | not started |  | no |
-| 161 | MakeDumb | server Protocol.bas:HandleMakeDumb | gm | not started |  | no |
-| 162 | MakeDumbNoMore | server Protocol.bas:HandleMakeDumbNoMore | gm | not started |  | no |
-| 163 | CouncilKick | server Protocol.bas:HandleCouncilKick | gm | not started |  | no |
-| 164 | SetTrigger | server Protocol.bas:HandleSetTrigger | gm | not started |  | no |
-| 165 | AskTrigger | server Protocol.bas:HandleAskTrigger | gm | not started |  | no |
-| 166 | GuildMemberList | server Protocol.bas:HandleGuildMemberList | gm | not started |  | no |
-| 167 | GuildBan | server Protocol.bas:HandleGuildBan | gm | not started |  | no |
-| 168 | CreateItem | server Protocol.bas:HandleCreateItem | gm | not started |  | no |
-| 169 | DestroyItems | server Protocol.bas:HandleDestroyItems | gm | not started |  | no |
-| 170 | ChaosLegionKick | server Protocol.bas:HandleChaosLegionKick | gm | not started |  | no |
-| 171 | RoyalArmyKick | server Protocol.bas:HandleRoyalArmyKick | gm | not started |  | no |
-| 172 | ForceMIDIAll | server Protocol.bas:HandleForceMIDIAll | gm | not started |  | no |
-| 173 | ForceWAVEAll | server Protocol.bas:HandleForceWAVEAll | gm | not started |  | no |
-| 174 | RemovePunishment | server Protocol.bas:HandleRemovePunishment | gm | not started |  | no |
-| 175 | TileBlockedToggle | server Protocol.bas:HandleTile_BlockedToggle | gm | not started |  | no |
-| 176 | KillNPCNoRespawn | server Protocol.bas:HandleKillNPCNoRespawn | gm | not started |  | no |
-| 177 | KillAllNearbyNPCs | server Protocol.bas:HandleKillAllNearbyNPCs | gm | not started |  | no |
-| 178 | ChangeMOTD | server Protocol.bas:HandleChangeMOTD | gm | not started |  | no |
-| 179 | SetMOTD | server Protocol.bas:HandleSetMOTD | gm | not started |  | no |
-| 180 | SystemMessage | server Protocol.bas:HandleSystemMessage | gm | not started |  | no |
-| 181 | CreateNPC | server Protocol.bas:HandleCreateNPC | gm | not started |  | no |
-| 182 | CreateNPCWithRespawn | server Protocol.bas:HandleCreateNPCWithRespawn | gm | not started |  | no |
+| 151 | SetCharDescription | server Protocol.bas:HandleSetCharDescription | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 152 | ForceMIDIToMap | server Protocol.bas:HandleForceWAVEToMap | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 153 | ForceWAVEToMap | server Protocol.bas:HandleForceWAVEToMap | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 154 | RoyalArmyMessage | server Protocol.bas:HandleRoyalArmyMessage | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 155 | ChaosLegionMessage | server Protocol.bas:HandleChaosLegionMessage | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 156 | TalkAsNPC | server Protocol.bas:HandleTalkAsNPC | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 157 | DestroyAllItemsInArea | server Protocol.bas:HandleDestroyAllItemsInArea | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 158 | AcceptRoyalCouncilMember | server Protocol.bas:HandleAcceptRoyalCouncilMember | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 159 | AcceptChaosCouncilMember | server Protocol.bas:HandleAcceptChaosCouncilMember | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 160 | ItemsInTheFloor | server Protocol.bas:HandleItemsInTheFloor | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 161 | MakeDumb | server Protocol.bas:HandleMakeDumb | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 162 | MakeDumbNoMore | server Protocol.bas:HandleMakeDumbNoMore | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 163 | CouncilKick | server Protocol.bas:HandleCouncilKick | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 164 | SetTrigger | server Protocol.bas:HandleSetTrigger | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 165 | AskTrigger | server Protocol.bas:HandleAskTrigger | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 166 | GuildMemberList | server Protocol.bas:HandleGuildMemberList | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 167 | GuildBan | server Protocol.bas:HandleGuildBan | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 168 | CreateItem | server Protocol.bas:HandleCreateItem | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 169 | DestroyItems | server Protocol.bas:HandleDestroyItems | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 170 | ChaosLegionKick | server Protocol.bas:HandleChaosLegionKick | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 171 | RoyalArmyKick | server Protocol.bas:HandleRoyalArmyKick | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 172 | ForceMIDIAll | server Protocol.bas:HandleForceMIDIAll | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 173 | ForceWAVEAll | server Protocol.bas:HandleForceWAVEAll | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 174 | RemovePunishment | server Protocol.bas:HandleRemovePunishment | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 175 | TileBlockedToggle | server Protocol.bas:HandleTile_BlockedToggle | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 176 | KillNPCNoRespawn | server Protocol.bas:HandleKillNPCNoRespawn | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 177 | KillAllNearbyNPCs | server Protocol.bas:HandleKillAllNearbyNPCs | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 178 | ChangeMOTD | server Protocol.bas:HandleChangeMOTD | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 179 | SetMOTD | server Protocol.bas:HandleSetMOTD | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 180 | SystemMessage | server Protocol.bas:HandleSystemMessage | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 181 | CreateNPC | server Protocol.bas:HandleCreateNPC | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 182 | CreateNPCWithRespawn | server Protocol.bas:HandleCreateNPCWithRespawn | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 183 | NavigateToggle | server Protocol.bas:HandleNavigateToggle | core | not started |  | no |
-| 184 | ServerOpenToUsersToggle | server Protocol.bas:HandleServerOpenToUsersToggle | gm | not started |  | no |
+| 184 | ServerOpenToUsersToggle | server Protocol.bas:HandleServerOpenToUsersToggle | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 185 | Participar | server Protocol.bas:HandleParticipar | extras | not started |  | no |
-| 186 | RemoveCharFromGuild | server Protocol.bas:HandleRemoveCharFromGuild | gm | not started |  | no |
-| 187 | AlterName | server Protocol.bas:HandleAlterName | gm | not started |  | no |
-| 188 | DoBackUp | server Protocol.bas:HandleDoBackUp | gm | not started |  | no |
-| 189 | ShowGuildMessages | server Protocol.bas:HandleShowGuildMessages | gm | not started |  | no |
-| 190 | ChangeMapInfoPK | server Protocol.bas:HandleChangeMapInfoPK | gm | not started |  | no |
-| 191 | ChangeMapInfoBackup | server Protocol.bas:HandleChangeMapInfoBackup | gm | not started |  | no |
-| 192 | ChangeMapInfoRestricted | server Protocol.bas:HandleChangeMapInfoRestricted | gm | not started |  | no |
-| 193 | ChangeMapInfoNoMagic | server Protocol.bas:HandleChangeMapInfoNoMagic | gm | not started |  | no |
-| 194 | ChangeMapInfoNoInvi | server Protocol.bas:HandleChangeMapInfoNoInvi | gm | not started |  | no |
-| 195 | ChangeMapInfoNoResu | server Protocol.bas:HandleChangeMapInfoNoResu | gm | not started |  | no |
-| 196 | ChangeMapInfoLand | server Protocol.bas:HandleChangeMapInfoLand | gm | not started |  | no |
-| 197 | ChangeMapInfoZone | server Protocol.bas:HandleChangeMapInfoZone | gm | not started |  | no |
-| 198 | ChangeMapSetting | server Protocol.bas:HandleChangeMapSetting | gm | not started |  | no |
-| 199 | SaveChars | server Protocol.bas:HandleSaveChars | gm | not started |  | no |
-| 200 | CleanSOS | server Protocol.bas:HandleCleanSOS | gm | not started |  | no |
-| 201 | ShowServerForm | server Protocol.bas:HandleShowServerForm | gm | not started |  | no |
-| 202 | KickAllChars | server Protocol.bas:HandleKickAllChars | gm | not started |  | no |
-| 203 | ChatColor | server Protocol.bas:HandleChatColor | gm | not started |  | no |
-| 204 | Ignored | server Protocol.bas:HandleIgnored | gm | not started |  | no |
-| 205 | CheckSlot | server Protocol.bas:HandleCheckSlot | gm | not started |  | no |
-| 206 | SetSpeed | server Protocol.bas:HandleSetSpeed | gm | not started |  | no |
+| 186 | RemoveCharFromGuild | server Protocol.bas:HandleRemoveCharFromGuild | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 187 | AlterName | server Protocol.bas:HandleAlterName | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 188 | DoBackUp | server Protocol.bas:HandleDoBackUp | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 189 | ShowGuildMessages | server Protocol.bas:HandleShowGuildMessages | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 190 | ChangeMapInfoPK | server Protocol.bas:HandleChangeMapInfoPK | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 191 | ChangeMapInfoBackup | server Protocol.bas:HandleChangeMapInfoBackup | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 192 | ChangeMapInfoRestricted | server Protocol.bas:HandleChangeMapInfoRestricted | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 193 | ChangeMapInfoNoMagic | server Protocol.bas:HandleChangeMapInfoNoMagic | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 194 | ChangeMapInfoNoInvi | server Protocol.bas:HandleChangeMapInfoNoInvi | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 195 | ChangeMapInfoNoResu | server Protocol.bas:HandleChangeMapInfoNoResu | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 196 | ChangeMapInfoLand | server Protocol.bas:HandleChangeMapInfoLand | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 197 | ChangeMapInfoZone | server Protocol.bas:HandleChangeMapInfoZone | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 198 | ChangeMapSetting | server Protocol.bas:HandleChangeMapSetting | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 199 | SaveChars | server Protocol.bas:HandleSaveChars | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 200 | CleanSOS | server Protocol.bas:HandleCleanSOS | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 201 | ShowServerForm | server Protocol.bas:HandleShowServerForm | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 202 | KickAllChars | server Protocol.bas:HandleKickAllChars | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 203 | ChatColor | server Protocol.bas:HandleChatColor | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 204 | Ignored | server Protocol.bas:HandleIgnored | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 205 | CheckSlot | server Protocol.bas:HandleCheckSlot | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 206 | SetSpeed | server Protocol.bas:HandleSetSpeed | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 207 | GlobalMessage | server Protocol.bas:HandleGlobalMessage | chat | merged | `main:packages/protocol/src/packets.ts` | no |
-| 208 | GlobalOnOff | server Protocol.bas:HandleGlobalOnOff | gm | not started |  | no |
+| 208 | GlobalOnOff | server Protocol.bas:HandleGlobalOnOff | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 209 | UseKey | server Protocol.bas:HandleUseKey | items | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
-| 210 | DonateGold | server Protocol.bas:HandleDonateGold | gm | not started |  | no |
-| 211 | Promedio | server Protocol.bas:HandlePromedio | gm | not started |  | no |
-| 212 | GiveItem | server Protocol.bas:HandleGiveItem | gm | not started |  | no |
+| 210 | DonateGold | server Protocol.bas:HandleDonateGold | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 211 | Promedio | server Protocol.bas:HandlePromedio | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 212 | GiveItem | server Protocol.bas:HandleGiveItem | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 213 | OfertaInicial | server Protocol.bas:HandleOfertaInicial | extras | not started |  | no |
 | 214 | OfertaDeSubasta | server Protocol.bas:HandleOfertaDeSubasta | extras | not started |  | no |
-| 215 | QuestionGM | server Protocol.bas:HandleQuestionGM | gm | not started |  | no |
+| 215 | QuestionGM | server Protocol.bas:HandleQuestionGM | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 216 | CuentaRegresiva | server Protocol.bas:HandleCuentaRegresiva | extras | not started |  | no |
-| 217 | PossUser | server Protocol.bas:HandlePossUser | gm | not started |  | no |
+| 217 | PossUser | server Protocol.bas:HandlePossUser | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 218 | Duel | server Protocol.bas:HandleDuel | extras | not started |  | no |
 | 219 | AcceptDuel | server Protocol.bas:HandleAcceptDuel | extras | not started |  | no |
 | 220 | CancelDuel | server Protocol.bas:HandleCancelDuel | extras | not started |  | no |
@@ -580,12 +580,12 @@ Ids only: .
 | 223 | NieblaToggle | server Protocol.bas:HandleNieblaToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
 | 224 | TransFerGold | server Protocol.bas:HandleTransFerGold | extras | merged | `main:packages/protocol/src/packets/options.ts` | yes |
 | 225 | Moveitem | server Protocol.bas:HandleMoveItem | items | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
-| 226 | Genio | server Protocol.bas:HandleGenio | gm | not started |  | no |
+| 226 | Genio | server Protocol.bas:HandleGenio | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 227 | Casarse | server Protocol.bas:HandleCasamiento | extras | not started |  | no |
 | 228 | CraftAlquimista | server Protocol.bas:HandleCraftAlquimia | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 229 | FlagTrabajar | server Protocol.bas:HandleFlagTrabajar | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 230 | CraftSastre | server Protocol.bas:HandleCraftSastre | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
-| 231 | MensajeUser | server Protocol.bas:HandleMensajeUser | gm | not started |  | no |
+| 231 | MensajeUser | server Protocol.bas:HandleMensajeUser | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 232 | TraerBoveda | server Protocol.bas:HandleTraerBoveda | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | no |
 | 233 | CompletarAccion | server Protocol.bas:HandleCompletarAccion | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 234 | InvitarGrupo | server Protocol.bas:HandleInvitarGrupo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
@@ -595,12 +595,12 @@ Ids only: .
 | 238 | HecharDeGrupo | server Protocol.bas:HandleHecharDeGrupo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
 | 239 | MacroPossent | server Protocol.bas:HandleMacroPos | extras | not started |  | no |
 | 240 | SubastaInfo | server Protocol.bas:HandleSubastaInfo | extras | not started |  | no |
-| 241 | BanCuenta | server Protocol.bas:HandleBanCuenta | gm | not started |  | no |
-| 242 | UnbanCuenta | server Protocol.bas:HandleUnBanCuenta | gm | not started |  | no |
-| 243 | CerrarCliente | server Protocol.bas:HandleCerrarCliente | gm | not started |  | no |
+| 241 | BanCuenta | server Protocol.bas:HandleBanCuenta | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 242 | UnbanCuenta | server Protocol.bas:HandleUnBanCuenta | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 243 | CerrarCliente | server Protocol.bas:HandleCerrarCliente | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 244 | EventoInfo | server Protocol.bas:HandleEventoInfo | extras | not started |  | no |
 | 245 | CrearEvento | server Protocol.bas:HandleCrearEvento | extras | not started |  | no |
-| 246 | BanTemporal | server Protocol.bas:HandleBanTemporal | gm | not started |  | no |
+| 246 | BanTemporal | server Protocol.bas:HandleBanTemporal | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 247 | CancelarExit | server Protocol.bas:HandleCancelarExit | extras | not started |  | no |
 | 248 | CrearTorneo | server Protocol.bas:HandleCrearTorneo | extras | not started |  | no |
 | 249 | ComenzarTorneo | server Protocol.bas:HandleComenzarTorneo | extras | not started |  | no |
@@ -611,7 +611,7 @@ Ids only: .
 | 254 | QuieroFundarClan | server Protocol.bas:HandleQuieroFundarClan | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 255 | Llamadadeclan | server Protocol.bas:HandleLlamadadeClan | guild | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
 | 256 | MarcaDeClanPack | server Protocol.bas:HandleMarcaDeClan | guild | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
-| 257 | MarcaDeGMPack | server Protocol.bas:HandleMarcaDeGM | gm | not started |  | no |
+| 257 | MarcaDeGMPack | server Protocol.bas:HandleMarcaDeGM | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 258 | Quest | server Protocol.bas:HandleQuest | quests | merged | `main:packages/protocol/src/packets/quests.ts` | no |
 | 259 | QuestAccept | server Protocol.bas:HandleQuestAccept | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
 | 260 | QuestListRequest | server Protocol.bas:HandleQuestListRequest | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
@@ -619,8 +619,8 @@ Ids only: .
 | 262 | QuestAbandon | server Protocol.bas:HandleQuestAbandon | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
 | 263 | SeguroClan | server Protocol.bas:HandleSeguroClan | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 264 | Home | server Protocol.bas:HandleHome | core | not started |  | no |
-| 265 | Consulta | server Protocol.bas:HandleConsulta | gm | not started |  | no |
-| 266 | GetMapInfo | server Protocol.bas:HandleGetMapInfo | gm | not started |  | no |
+| 265 | Consulta | server Protocol.bas:HandleConsulta | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 266 | GetMapInfo | server Protocol.bas:HandleGetMapInfo | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 267 | FinEvento | server Protocol.bas:HandleFinEvento | extras | not started |  | no |
 | 268 | SeguroResu | server Protocol.bas:HandleSeguroResu | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 269 | LegionarySecure | server Protocol.bas:HandleLegionarySecure | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
@@ -637,8 +637,8 @@ Ids only: .
 | 280 | CloseCrafting | server Protocol.bas:HandleCloseCrafting | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 281 | MoveCraftItem | server Protocol.bas:HandleMoveCraftItem | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 282 | PetLeaveAll | server Protocol.bas:HandlePetLeaveAll | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | yes |
-| 283 | ResetChar | server Protocol.bas:HandleResetChar | gm | not started |  | no |
-| 284 | ResetearPersonaje | server Protocol.bas:HandleResetearPersonaje | gm | not started |  | no |
+| 283 | ResetChar | server Protocol.bas:HandleResetChar | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 284 | ResetearPersonaje | server Protocol.bas:HandleResetearPersonaje | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 285 | DeleteItem | server Protocol.bas:HandleDeleteItem | items | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
 | 286 | FinalizarPescaEspecial | server Protocol.bas:HandleFinalizarPescaEspecial | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 287 | RomperCania | server Protocol.bas:HandleRomperCania | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
@@ -650,7 +650,7 @@ Ids only: .
 | 293 | NotifyInventarioHechizos | server Protocol.bas:HandleNotifyInventariohechizos | extras | not started |  | no |
 | 294 | PublicarPersonajeMAO | server Protocol.bas:HandlePublicarPersonajeMAO | extras | not started |  | no |
 | 295 | EventoFaccionario | server Protocol.bas:HandleEventoFaccionario | extras | not started |  | no |
-| 296 | RequestDebug | server Protocol.bas:HandleDebugRequest | gm | not started |  | no |
+| 296 | RequestDebug | server Protocol.bas:HandleDebugRequest | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 297 | LobbyCommand | server Protocol.bas:HandleLobbyCommand | extras | not started |  | no |
 | 298 | FeatureToggle | server Protocol.bas:HandleFeatureToggle | extras | not started |  | no |
 | 299 | ActionOnGroupFrame | server Protocol.bas:HandleActionOnGroupFrame | party | merged | `main:packages/protocol/src/packets/party.ts` | no |
@@ -757,6 +757,6 @@ Options forms, custom keys, hotkeys, events, battlegrounds, duels, premium shop,
 
 All GM commands, GM panel, SOS, MOTD edit, debug.
 
-- Packets (140): S81 AddForumMsg, S82 ShowForumForm, S107 SpawnListt, S108 ShowSOSForm, S109 ShowMOTDEditionForm, S110 ShowGMPanelForm, S111 UserNameList, S112 UserOnline, S172 GuardNotice, S177 Privilegios, S190 DebugDataResponse, C13 ForumPost, C38 Online, C55 Information, C56 Reward, C58 UpTime, C63 RoleMasterRequest, C66 Punishments, C72 Denounce, C101 GMMessage, C102 ShowName, C103 OnlineRoyalArmy, C104 OnlineChaosLegion, C105 GoNearby, C106 Comment, C107 Where, C108 CreaturesInMap, C109 WarpMeToTarget, C110 WarpChar, C111 Silence, C112 SOSShowList, C113 SOSRemove, C114 GoToChar, C115 Invisible, C116 GMPanel, C117 RequestUserList, C118 Working, C119 Hiding, C120 Jail, C121 KillNPC, C122 WarnUser, C123 EditChar, C124 RequestCharInfo, C125 RequestCharStats, C126 RequestCharGold, C127 RequestCharInventory, C128 RequestCharBank, C129 RequestCharSkills, C130 ReviveChar, C131 OnlineGM, C132 OnlineMap, C133 Forgive, C134 Kick, C135 Execute, C136 BanChar, C137 UnbanChar, C138 NPCFollow, C139 SummonChar, C140 SpawnListRequest, C141 SpawnCreature, C142 ResetNPCInventory, C143 CleanWorld, C144 ServerMessage, C145 NickToIP, C146 IPToNick, C147 GuildOnlineMembers, C148 TeleportCreate, C149 TeleportDestroy, C151 SetCharDescription, C152 ForceMIDIToMap, C153 ForceWAVEToMap, C154 RoyalArmyMessage, C155 ChaosLegionMessage, C156 TalkAsNPC, C157 DestroyAllItemsInArea, C158 AcceptRoyalCouncilMember, C159 AcceptChaosCouncilMember, C160 ItemsInTheFloor, C161 MakeDumb, C162 MakeDumbNoMore, C163 CouncilKick, C164 SetTrigger, C165 AskTrigger, C166 GuildMemberList, C167 GuildBan, C168 CreateItem, C169 DestroyItems, C170 ChaosLegionKick, C171 RoyalArmyKick, C172 ForceMIDIAll, C173 ForceWAVEAll, C174 RemovePunishment, C175 TileBlockedToggle, C176 KillNPCNoRespawn, C177 KillAllNearbyNPCs, C178 ChangeMOTD, C179 SetMOTD, C180 SystemMessage, C181 CreateNPC, C182 CreateNPCWithRespawn, C184 ServerOpenToUsersToggle, C186 RemoveCharFromGuild, C187 AlterName, C188 DoBackUp, C189 ShowGuildMessages, C190 ChangeMapInfoPK, C191 ChangeMapInfoBackup, C192 ChangeMapInfoRestricted, C193 ChangeMapInfoNoMagic, C194 ChangeMapInfoNoInvi, C195 ChangeMapInfoNoResu, C196 ChangeMapInfoLand, C197 ChangeMapInfoZone, C198 ChangeMapSetting, C199 SaveChars, C200 CleanSOS, C201 ShowServerForm, C202 KickAllChars, C203 ChatColor, C204 Ignored, C205 CheckSlot, C206 SetSpeed, C208 GlobalOnOff, C210 DonateGold, C211 Promedio, C212 GiveItem, C215 QuestionGM, C217 PossUser, C226 Genio, C231 MensajeUser, C241 BanCuenta, C242 UnbanCuenta, C243 CerrarCliente, C246 BanTemporal, C257 MarcaDeGMPack, C265 Consulta, C266 GetMapInfo, C283 ResetChar, C284 ResetearPersonaje, C296 RequestDebug
+- Packets (0): none left
 - Forms (13): FrmTorneo, frmCambiaMotd, frmDebug, FrmGmAyuda, frmMessageTxt, frmMSG, FrmObjetos, frmPanelGm, frmProcesses, frmSpawnList, MenuGM, MenuNPC, MenuUser
 

@@ -30,10 +30,7 @@ export class GmState {
   motdOpened = 0;
   /** DebugDataResponse lines (the VB6 client appends them to logs\RemoteError.log). */
   debugLines: string[] = [];
-  /** UpdateUserKey: key slot -> object index (FrmKeyInv). */
-  keys = new Map<number, number>();
-  /** ShowPapiro / ShowForumForm / GuardNotice counters: forms the classic client shows nothing for or stubs. */
-  papiros = 0;
+  /** GuardNotice counter: the classic client handles it with an empty body. */
   guardNotices = 0;
   forumMessages: { title: string; message: string }[] = [];
 
@@ -52,8 +49,6 @@ export class GmState {
       case G.SpawnListt: this.spawnFull = packet.listaCompleta; this.spawnOpened++; this.revision++; break;
       case G.ShowMOTDEditionForm: this.motd = packet.motd; this.motdOpened++; this.revision++; break;
       case G.DebugDataResponse: this.debugLines.push(...packet.messages.filter(message => message !== '')); this.revision++; break;
-      case G.UpdateUserKey: this.keys.set(packet.slot, packet.llave); this.revision++; break;
-      case G.ShowPapiro: this.papiros++; break;
       case G.GuardNotice: this.guardNotices++; break;
       case G.AddForumMsg: this.forumMessages.push({ title: packet.title, message: packet.message }); break;
     }

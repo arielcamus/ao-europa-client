@@ -49,10 +49,9 @@ describe('GM server packets (client Handle* readers, server Write* writers)', ()
   it('ShowMOTDEditionForm is the current MOTD as String8', () => {
     expect(decodeServerPacket(bytes('6d00' + '03' + ascii('Hi!')))).toEqual({ id: 109, motd: 'Hi!' });
   });
-  it('UpdateUserKey is slot then key Int16; AddForumMsg two strings; the empty ones are the id only', () => {
-    expect(decodeServerPacket(bytes('9f00' + '0300' + '8a02'))).toEqual({ id: 159, slot: 3, llave: 650 });
+  it('AddForumMsg is two strings; ShowForumForm and GuardNotice are the id only (105 and 159 belong to the keyring codecs)', () => {
     expect(decodeServerPacket(bytes('5100' + '01' + ascii('t') + '01' + ascii('m')))).toEqual({ id: 81, title: 't', message: 'm' });
-    for (const [id, hexId] of [[82, '5200'], [105, '6900'], [172, 'ac00']] as const) expect(decodeServerPacket(bytes(hexId))).toEqual({ id });
+    for (const [id, hexId] of [[82, '5200'], [172, 'ac00']] as const) expect(decodeServerPacket(bytes(hexId))).toEqual({ id });
   });
   it('DebugDataResponse is a count then that many strings', () => {
     const golden = 'be00' + '0200' + '03' + ascii('abc') + '00';

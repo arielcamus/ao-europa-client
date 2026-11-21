@@ -7,9 +7,10 @@
  */
 import { Reader, Writer } from '../binary.js';
 
+/** S105 ShowPapiro and S159 UpdateUserKey are the keyring feature's codecs (one codec per id); this table has the other 11. */
 export const GmServerPacketId = {
-  AddForumMsg: 81, ShowForumForm: 82, ShowPapiro: 105, SpawnListt: 107, ShowSOSForm: 108, ShowMOTDEditionForm: 109, ShowGMPanelForm: 110,
-  UserNameList: 111, UserOnline: 112, UpdateUserKey: 159, GuardNotice: 172, Privilegios: 177, DebugDataResponse: 190,
+  AddForumMsg: 81, ShowForumForm: 82, SpawnListt: 107, ShowSOSForm: 108, ShowMOTDEditionForm: 109, ShowGMPanelForm: 110,
+  UserNameList: 111, UserOnline: 112, GuardNotice: 172, Privilegios: 177, DebugDataResponse: 190,
 } as const;
 
 /** ClientPacketID of the GM / admin commands. */
@@ -191,7 +192,6 @@ export const gmServerCodecs = {
   /** WriteAddForumMsg (the forum form of the client is a stub). */
   [GmServerPacketId.AddForumMsg]: struct({ title: string, message: string }),
   [GmServerPacketId.ShowForumForm]: struct({}),
-  [GmServerPacketId.ShowPapiro]: struct({}),
   /** WriteSpawnList: `listaCompleta` picks the whole NPC list (true) or only the summonable ones (frmSpawnList.FillList). */
   [GmServerPacketId.SpawnListt]: struct({ listaCompleta: bool }),
   /** WriteShowSOSForm: one string, rows joined with SEPARATOR (vbNullChar). */
@@ -202,7 +202,6 @@ export const gmServerCodecs = {
   /** WriteUserNameList: one string, names joined with SEPARATOR (vbNullChar). */
   [GmServerPacketId.UserNameList]: struct({ list: string }),
   [GmServerPacketId.UserOnline]: struct({ count: int16 }),
-  [GmServerPacketId.UpdateUserKey]: struct({ slot: int16, llave: int16 }),
   [GmServerPacketId.GuardNotice]: struct({}),
   /** WritePrivilegios: True for Consejero, SemiDios, Dios and Admin (sent right after login). */
   [GmServerPacketId.Privilegios]: struct({ isGM: bool }),
