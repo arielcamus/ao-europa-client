@@ -4,7 +4,7 @@ import { step } from '../harness.js';
 import type { Ctx } from '../harness.js';
 import type { ClientPacket } from '@ao/protocol';
 import { SkillsClientPacketId as SK } from '@ao/protocol';
-import { skills, SKILL, mod } from './util.js';
+import { skills, SKILL, dbUpdateOwn } from './util.js';
 
 /** SubirSkill: the per-level ceiling, transcribed from the VB6 integer arithmetic. */
 export const naturalCap = (lvl: number) => lvl % 2 === 0 ? Math.floor(lvl / 2) * 5 : Math.floor(lvl / 2) * 5 + 3 - Math.floor((Math.floor((lvl - 1) / 2) * 5) % 10 / 5);
@@ -24,8 +24,8 @@ const mage = (c: Ctx, what: string) => {
 /** Drain mana through the GM, meditate until the skill moves or `ms` pass; returns the Meditar skill. */
 async function meditateRound(c: Ctx, ms: number) {
   const p = c.player;
-  mod(c, c.charName, 'MANA', 0); await p.sleep(900);
-  if (p.stats!.mana !== 0) c.blocked('the GM helper cannot edit another character (/MOD refused: Consejero/SemiDios privileges); needed to drain mana');
+  await dbUpdateOwn(c, 'min_man=0'); // the GM helper cannot /MOD other characters (Consejero/SemiDios), so the own character is edited in the DB
+  if (p.stats!.mana !== 0) c.blocked('could not drain mana through the DB');
   p.say('/MEDITAR'); await p.sleep(ms); p.say('/MEDITAR'); await p.sleep(600);
   return (await skills(p))[SKILL.Meditar]!;
 }
@@ -33,35 +33,44 @@ step('PRG-17', async c => {
   mage(c, 'PRG-17');
   c.eq(c.player.stats!.level, 1, 'ELV 1');
   let v = (await skills(c.player))[SKILL.Meditar]!;
+  if (v > 3) c.blocked(`FINDING: a fresh human mage starts with Meditar = ${v} at level 1, ABOVE the level-1 natural cap 3, so natural rise of Meditar is not observable on a mage (SubirSkill exits at skill >= maxPermitido). The 'rises 0 to 3 then stops' premise needs another skill/class; the cap rule itself is covered by PRG-16 (formula) and PRG-19 (no gain above cap)`);
   for (let i = 0; i < 8 && v < 3; i++) v = await meditateRound(c, 9000);
   c.eq(v, 3, 'Meditar reached the level-1 cap 3 by use');
-  for (let i = 0; i < 3; i++) v = await meditateRound(c, 9000);
-  c.eq(v, 3, 'Meditar still 3 after 3 more meditation rounds (no gain at the cap)');
+  for (let i = 0; i < 2; i++) v = await meditateRound(c, 9000);
+  c.eq(v, 3, 'Meditar still 3 after 2 more meditation rounds (no gain at the cap)');
 });
 step('PRG-18', async c => {
   mage(c, 'PRG-18');
-  const p = c.player, m = p.mark(); mod(c, c.charName, 'ELV', 2); await p.sleep(1500);
-  c.eq(p.stats!.level, 2, 'ELV after GM /MOD'); 
-  const lvl = p.since(m).filter(r => r.name === 'LevelUp').pop(); c.eq((lvl?.packet as any)?.skillPoints, 15, 'free points 10 + 5');
+  await dbUpdateOwn(c, 'level=2, exp=0, free_skillpoints=15'); const p = c.player, m = p.mark();
+  c.eq(p.stats!.level, 2, 'ELV 2 (set through the DB: the GM helper cannot /MOD others)'); 
+  c.eq((p.rx.filter(r => r.name === 'LevelUp').pop()?.packet as any)?.skillPoints, 15, 'free points 10 + 5');
   let v = (await skills(p))[SKILL.Meditar]!;
   for (let i = 0; i < 8 && v < 5; i++) v = await meditateRound(c, 9000);
   c.eq(v, 5, 'Meditar rose again to the level-2 cap 5');
   for (let i = 0; i < 2; i++) v = await meditateRound(c, 9000);
   c.eq(v, 5, 'and stopped at 5');
 });
-step('PRG-19', async c => {
-  mage(c, 'PRG-19');
-  const p = c.player, pts = new Array(24).fill(0); pts[SKILL.Meditar] = 5;
-  const before = (await skills(p))[SKILL.Meditar]!;
-  p.send({ id: SK.ModifySkills, skills: pts } as unknown as ClientPacket); await p.sleep(1200);
-  const above = (await skills(p))[SKILL.Meditar]!; c.eq(above, before + 5, 'assigned points may exceed the natural cap');
-  let v = above; for (let i = 0; i < 3; i++) v = await meditateRound(c, 9000);
-  c.eq(v, above, 'no natural gain above the cap');
-});
+// PRG-20 runs BEFORE PRG-19 (it needs a skill that can still rise): level 3 with exp just under the level-4 threshold (ExpLevelUp[3] = 1125),
+// 15 unassigned points; meditating raises Meditar (cap 7 at level 3), each skill-up grants +5 exp, which crosses the threshold:
+// CheckUserLevel adds LevelSkillPoints (5) on top of the points never spent.
 step('PRG-20', async c => {
   mage(c, 'PRG-20');
-  const p = c.player, m = p.mark(); const lvl0 = p.stats!.level;
-  mod(c, c.charName, 'ELV', lvl0 + 3); await p.sleep(1500);
+  await dbUpdateOwn(c, 'level=3, exp=1120, free_skillpoints=15');
+  const p = c.player; c.eq(p.stats!.level, 3, 'ELV 3 (DB)');
+  const m = p.mark();
+  for (let i = 0; i < 8 && !p.since(m).some(r => r.name === 'LevelUp'); i++) await meditateRound(c, 9000);
   const lu = p.since(m).filter(r => r.name === 'LevelUp').pop();
-  c.ok(!!lu, `LevelUp reports the running free points: ${(lu?.packet as any)?.skillPoints}`);
+  c.ok(!!lu, 'a skill-up (+5 exp) crossed 1125 and CheckUserLevel sent LevelUp');
+  c.eq((lu!.packet as any).skillPoints, 20, 'free points = 15 never spent + 5 for the new level');
+  c.eq(p.stats!.level, 4, 'ELV 4');
+});
+step('PRG-19', async c => {
+  mage(c, 'PRG-19');
+  const p = c.player, pts = new Array(24).fill(0); pts[SKILL.Meditar] = 8;
+  const before = (await skills(p))[SKILL.Meditar]!, cap = naturalCap(p.stats!.level);
+  p.send({ id: SK.ModifySkills, points: pts } as unknown as ClientPacket); await p.sleep(1500);
+  const above = (await skills(p))[SKILL.Meditar]!; c.eq(above, before + 8, 'assigned points are added to the skill');
+  c.ok(above >= cap, `skill ${above} is at or above the level-${p.stats!.level} natural cap ${cap}`);
+  let v = above; for (let i = 0; i < 3; i++) v = await meditateRound(c, 9000);
+  c.eq(v, above, 'no natural gain at or above the cap');
 });

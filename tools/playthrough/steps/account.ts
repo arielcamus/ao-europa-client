@@ -47,8 +47,7 @@ step('ACC-04', async c => {
   needFresh(c, 'ACC-04');
   const first = c.player.rx.find(r => r.name === 'ChangeMap')!.packet as any;
   c.eq(first.map, 517, 'spawn map (Forgat)'); 
-  const cr = c.player.rx.find(r => r.name === 'CharacterCreate' && (r.packet as any).charIndex === c.player.charIndex)!.packet as any;
-  c.eq([cr.x, cr.y], [48, 65], 'spawn tile (Cities(Forgat))');
+  c.eq([c.player.x, c.player.y], [48, 65], 'spawn tile (Cities(Forgat))');
   c.note('client home byte was 7 (HOME_CITY); the contradiction check against a second Hogar needs a 2nd character and is skipped to save the 15-per-IP creation budget');
 });
 
@@ -119,15 +118,17 @@ step('ACC-12', async c => {
   const p = c.player;
   const m = p.mark(); p.say('/SALIR'); await p.sleep(2500);
   c.ok(salirLines(p, m).length >= 2, 'countdown running');
-  const m2 = p.mark(); await p.step(2, 600);
-  await p.sleep(800);
-  c.ok(p.localeSince(m2).some(l => l.id === 578) || p.localeSince(m2).length > 0, `walk cancelled the exit: ${p.localeSince(m2).map(l => l.id).join(',')} (578 = /salir cancelado)`);
+  // a new character spawns at sea (walks refused), so the cancel is the explicit CancelarExit packet (same CancelExit routine as walking)
+  const m2 = p.mark(); p.send({ id: SCP.CancelarExit } as ClientPacket);
+  await p.sleep(1200);
+  c.ok(p.localeSince(m2).some(l => l.id === 578), `CancelarExit answered: ${p.localeSince(m2).map(l => l.id).join(',')} (578 = /salir cancelado)`);
   await p.sleep(9000);
   c.ok(!p.closed, 'still connected 12 s after /SALIR');
 });
 step('ACC-13', async c => {
   needUnsafe(c, 'ACC-13 (combat-log countdown after a dropped socket)');
   const p = c.player, g = c.gm;
+  if (p.map === 517) c.blocked('the GM helper cannot warp to map 517 next to the character (it spawns at sea); needs the home-city fix or a second non-GM character');
   await gmGoto(c, p.map, p.x + 2, p.y);
   const seen = [...g.chars.values()].some(ch => ch.name.startsWith(c.charName));
   c.ok(seen, 'GM sees the player on the map');

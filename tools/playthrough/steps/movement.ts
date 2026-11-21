@@ -3,11 +3,12 @@ import { step } from '../harness.js';
 import { Heading, SCP, C } from '../session.js';
 import type { ClientPacket } from '@ao/protocol';
 import { KeysClientPacketId as K, ItemsClientPacketId as I, SkillsClientPacketId as SK } from '@ao/protocol';
-import { gmGoto } from './util.js';
+import { gmGoto, ensureLand } from './util.js';
 
 const DX: Record<number, [number, number]> = { [Heading.North]: [0, -1], [Heading.East]: [1, 0], [Heading.South]: [0, 1], [Heading.West]: [-1, 0] };
 
 step('MOV-01', async c => {
+  await ensureLand(c);
   const p = c.player;
   await p.sleep(2500);
   const from = p.mark(); const intervals = p.rx.find(r => r.name === 'Intervals')!.packet as any;
@@ -25,6 +26,7 @@ step('MOV-01', async c => {
 });
 
 step('MOV-02', async c => {
+  await ensureLand(c);
   const p = c.player;
   // walk west until the server refuses a step: the refusal is a PosUpdate with the OLD position
   let refused = 0, steps = 0; const from = p.mark();
@@ -44,6 +46,7 @@ step('MOV-02', async c => {
 });
 
 step('MOV-03', async c => {
+  await ensureLand(c);
   const p = c.player, g = c.gm; await gmGoto(c, p.map, p.x + 1, p.y);
   const bx = p.x, by = p.y, m = g.mark(), pm = p.mark();
   const target = p.chars.get(p.charIndex)?.heading === Heading.North ? Heading.South : Heading.North;
@@ -75,6 +78,7 @@ step('MOV-14', async c => {
 });
 
 step('MOV-15', async c => {
+  await ensureLand(c);
   const p = c.player;
   const m = p.mark();
   p.send({ id: K.Work, skill: 6 } as unknown as ClientPacket);   // Ocultarse
@@ -84,6 +88,7 @@ step('MOV-15', async c => {
 });
 
 step('MOV-16', async c => {
+  await ensureLand(c);
   const p = c.player;
   if (p.stats!.characterClass !== 1) c.blocked(`class ${p.stats!.characterClass} cannot meditate (only Mage-like classes); needs the fresh mage character`);
   c.gm.gm(`/MOD ${c.charName} MANA 0`); await p.sleep(700);
