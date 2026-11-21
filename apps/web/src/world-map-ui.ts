@@ -101,11 +101,13 @@ export class WorldMapUI {
       const el = document.createElement('div'); el.className = cls; Object.assign(el.style, { position: 'absolute', width: `${size}px`, height: `${size}px`, pointerEvents: 'none', display: 'none', boxSizing: 'border-box', ...css });
       this.picture.append(el); return el;
     };
-    this.clanCell = marker('wm-clan-cell', BIG_TILE, { border: '1px solid #00ff00' });
-    this.clanDot = marker('wm-clan-dot', 5, { background: '#00ff00', borderRadius: '50%' });
-    this.selected = marker('wm-selected', BIG_TILE, { border: '2px solid #ffff00' });
-    // Shape1: the player, a 75-twip (5 px) circle.
-    this.player = marker('wm-player', 5, { background: '#ff0000', border: '1px solid #fff', borderRadius: '50%' });
+    // The .frm shapes (colours are &H00BBGGRR): Shape2 and lblAllies are 27 px rectangles with a 1 px border and no fill (FillStyle
+    // transparent), Shape2 dark blue C00000, lblAllies dark red 0000C0; llamadadeclan and Shape1 are 5 px opaque squares with a 2 px
+    // border of the same colour (VB6 centres a solid pen on the edge, so it shows as a 7 px square), blue FF0000 and red 0000FF.
+    this.clanCell = marker('wm-clan-cell', BIG_TILE, { border: '1px solid rgb(0,0,192)' });
+    this.clanDot = marker('wm-clan-dot', 5, { background: 'rgb(0,0,255)', outline: '1px solid rgb(0,0,255)' });
+    this.selected = marker('wm-selected', BIG_TILE, { border: '1px solid rgb(192,0,0)' });
+    this.player = marker('wm-player', 5, { background: 'rgb(255,0,0)', outline: '1px solid rgb(255,0,0)' });
     this.picture.addEventListener('pointerdown', event => this.pictureDown(event));
     this.picture.addEventListener('contextmenu', event => event.preventDefault());
     this.title = win.add(document.createElement('div'), [566, 88, 181, 37]); this.title.className = 'vb-label wm-title';

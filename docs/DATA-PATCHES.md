@@ -305,3 +305,34 @@ Database backup taken before the restart: `C:\ao\server-9ccd\Database.db.bak-202
 restart had damaged it, it did not). Mac: copy `~/Projects/ao-reference/Recursos-prehoo-backup-20261121-newbie/{Dat,init,Mapas}/*` back
 over `~/Projects/ao-reference/Recursos-prehoo/`. Characters that already took a changed quest keep its progress slots; the server reads
 the requirement list from `Quests.DAT` at start-up, so an undo re-breaks 41/42/193 for them.
+
+## 9. frmMapaGrande dungeon world picture: the 2025 redraw does not match the grid (client asset, local only, NOT applied to the shared copy)
+Ariel (2026-11-21 20:57, on map 167): "The minimap looks good, but the big map shows me in the wrong place." The client was right and so is
+the pinned VB6 one (619e69d `CalcularPosicionMAPA` / `ActualizarPosicion`, same arithmetic): `init/mapsworlddata.dat` (last changed in Recursos
+`043cdf20`, 2024-04-05) puts the Newbie Dungeon on world 2 at cells 220/221/239/240 (37 168 / 264 167, columns 10-11, rows 11-12), and the
+marker lands there. **The picture moved, not the grid:** `interface/{es,en}_mapa2.bmp` were redrawn in Recursos `847f4a23` (2025-07-20,
+"Added missing images for interfaces") with every dungeon rearranged (the Newbie Dungeon is drawn at columns 11-12, rows 16-17; Catacumbas
+40-45 elsewhere), and the grid was never updated. Measured with `tools/data-patches/apply-worldmap-picture.py --check` (a cell counts as
+black when fewer than 20 of its 729 pixels are brighter than 24):
+
+| world picture | mapped cells on black |
+| --- | --- |
+| `es_mapa1.bmp` (847f4a23) | 0 of 417 |
+| `es_mapa2.bmp` (847f4a23, pinned) | **87 of 112** (37, 168, 264, 167, 40, 43-45, ...) |
+| `es_mapa2.bmp` (043cdf20, 2024) | 5 of 112 (162, 163, 173, 577, 578: small dark maps) |
+| `es_mapa3.bmp` (847f4a23) | 0 of 108 |
+
+The 2025 picture matches no committed grid (against the 2022 grid `97b2c8c8` it leaves 57 of 90 on black). The 2024 picture is the one drawn
+for the pinned grid, and it is pre-HOO (HOO work starts 2026-08-12). `es_` and `en_` are byte-identical in both versions.
+
+**The patch:** `python3 tools/data-patches/apply-worldmap-picture.py --assets <AO_ASSETS>` downloads the two `043cdf20` files from
+github.com/ao-org/Recursos, checks sha256 `80e768af...bbce12`, copies the current ones to `<file>.orig-worldmap` and replaces them (idempotent;
+`--check` writes nothing). No client code change: worlds 1 and 3 and the minimap are unaffected. Undo: `--restore` (or copy the
+`.orig-worldmap` files back; pinned sha256 `f8e5bea1...ad9e24`). The page caches the picture per load, so a reload picks the change up; no
+restart.
+
+**Status: verified on a private APFS clone of Recursos-prehoo** (own web 5820 / bridge 7820, live VB6 server, Aotest as GM,
+`tools/worldmap-newbie-real-shot.mjs`): walked from Ullathorpe 1:(74,24) north through the door into 168 (50,31), big map on the dungeon world
+with the marker on the Newbie Dungeon art (640 of 729 pixels of the cell lit), then 167 (50,50), marker in the bottom-right room of the block
+(471 lit). **Not applied to `~/Projects/ao-reference/Recursos-prehoo`**, which Ariel's play site serves: that is his call. Once applied there,
+`apps/web/test/world-map.test.ts` also runs the world-2 picture check (it is skipped while the 2025 picture is in place).
