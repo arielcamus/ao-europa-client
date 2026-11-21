@@ -35,11 +35,15 @@ export interface ProjectileDef { grh: number; rightGrh: number; speed: number; o
 
 /** engine.Effect_Type: a spell particle travelling from the caster to a character or a tile. */
 export interface Traveler {
-  /** Emitting character; the start pixel is resolved on the first frame. */
+  /** Emitting character; the start pixel is resolved on the first frame (its tile when the packet arrived if it is gone by then). */
   sender: number;
   x: number; y: number;
+  /** Effect_Begin reads the emitter's position once, when the packet arrives: the fallback start when it is erased before the first frame. */
+  start?: { x: number; y: number };
   /** Destination: a character, or (charIndex 0) a tile. */
   destChar: number; destX: number; destY: number;
+  /** The destination character's last known tile (charlist().Pos): EraseChar turns the effect into a tile effect there. */
+  lastTile?: { x: number; y: number };
   viaje: { x: number; y: number };
   speed: number;
   /** Explosion: a particle stream (End_Effect) or an FXs.ini fx (FxEnd_Effect), lasting `loops` (particle steps or fx loops). */
@@ -73,6 +77,8 @@ export interface WorldHooks {
   speedToChar?: (charIndex: number, speeding: number) => void;
   /** MapData(x, y).charindex: ParticleFXToFloor on a tile that already has a particle group attaches the effect to the character standing there. */
   charAt?: (x: number, y: number) => number | undefined;
+  /** charlist(charIndex).Pos: a character's tile (not its sliding position), undefined when it is not on the map. */
+  charTile?: (charIndex: number) => { x: number; y: number } | undefined;
 }
 export interface AreaBounds { minX: number; maxX: number; minY: number; maxY: number }
 
@@ -328,9 +334,13 @@ export class WorldFx {
   }
   /** Effect_Begin / Effect_BeginXY: the explosion is a particle stream (fx 0) or an FXs.ini effect (fx 1). */
   private makeTraveler(sender: number, receiver: number, x: number, y: number, p: { finalParticle: number; time: number; wave: number; fx: number }): Traveler {
+    // The server often sends the cast and the target's CharacterRemove in one batch (a killing spell: the NPC is both emitter and receptor),
+    // so the positions are taken now, while the characters still exist, like Effect_Begin does.
+    const from = this.hooks.charTile?.(sender), to = receiver ? this.hooks.charTile?.(receiver) : undefined;
     return {
       sender, x: NaN, y: NaN, destChar: receiver, destX: x, destY: y, viaje: { x: 0, y: 0 }, speed: 9,
       endStream: p.fx === 1 ? 0 : p.finalParticle, endFx: p.fx === 1 ? p.finalParticle : 0, endLoops: p.time, wave: p.wave,
+      ...(from ? { start: { x: from.x * 32, y: from.y * 32 } } : {}), ...(to ? { lastTile: { ...to } } : {}),
     };
   }
 
@@ -467,11 +477,17 @@ export class WorldFx {
       const t = this.travelers[i]!;
       if (Number.isNaN(t.x)) {
         // Effect_Begin: Now = the emitter's tile pixel - (16, 20) (Get_Pixelx_Of_Char is the tile centre; Get_PixelY_Of_Char the tile top).
-        const from = frame.charPixel(t.sender);
+        const from = frame.charPixel(t.sender) ?? t.start;
         if (!from) { this.travelers.splice(i, 1); continue; }
         t.x = from.x; t.y = from.y - 20;
       }
-      const to = t.destChar ? frame.charPixel(t.destChar) : { x: t.destX * 32, y: t.destY * 32 };
+      let to = t.destChar ? frame.charPixel(t.destChar) : { x: t.destX * 32, y: t.destY * 32 };
+      if (t.destChar && to) t.lastTile = this.hooks.charTile?.(t.destChar) ?? { x: Math.round(to.x / 32), y: Math.round(to.y / 32) };
+      else if (t.destChar && t.lastTile) {
+        // EraseChar: an effect flying to a character that is erased keeps going to that character's last tile (DestinoChar = 0).
+        t.destChar = 0; t.destX = t.lastTile.x; t.destY = t.lastTile.y;
+        to = { x: t.destX * 32, y: t.destY * 32 };
+      }
       if (!to) { this.travelers.splice(i, 1); continue; }
       // The target is the destination's tile centre horizontally and 32 px above its top (Get_Pixelx_Of_Char, Get_PixelY_Of_Char - 32).
       t.viaje = { x: to.x + 16, y: to.y - 32 };
@@ -493,7 +509,9 @@ export class WorldFx {
       }
       // Effect_Render_Slot: a tile explosion also plays its wave with no position (`PlayWav(.wav)`) before the positional one.
       if (t.wave > 0 && t.endStream && !t.destChar) this.hooks.playGlobalWave?.(t.wave);
-      if (t.wave > 0) this.hooks.playWave?.(t.wave, t.destChar ? Math.round(to.x / 32) : t.destX, t.destChar ? Math.round(to.y / 32) : t.destY);
+      // The positional wave is at charlist(DestinoChar).Pos, or at the tile (EstaPCarea / EstaEnArea decide whether it is heard).
+      const at = t.destChar ? t.lastTile! : { x: t.destX, y: t.destY };
+      if (t.wave > 0) this.hooks.playWave?.(t.wave, at.x, at.y);
       this.travelers.splice(i, 1);
     }
   }

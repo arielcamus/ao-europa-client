@@ -194,6 +194,7 @@ export class Session {
       addFx: fx => this.spells.addFx({ ...fx, startedAt: this.clock() }),
       speedToChar: (charIndex, speeding) => this.setSpeeding(charIndex, speeding),
       charAt: (x, y) => this.tracker.at(x, y)?.charIndex,
+      charTile: charIndex => { const c = this.tracker.chars.get(charIndex); return c && { x: c.x, y: c.y }; },
     });
     this.placementDeadline = this.connectedAt + 10_000;
   }

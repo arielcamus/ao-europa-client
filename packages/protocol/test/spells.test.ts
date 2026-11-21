@@ -14,7 +14,7 @@ const find = (id: number, dirName: Line['dir']) => recordings.flatMap(r => r.lin
 
 describe('spell packets against real VB6 recordings', () => {
   it('has recordings for every spell sub-feature', () => {
-    expect(recordings.map(r => r.name).sort()).toEqual(['cast-invalid-target.jsonl', 'cast-orb.jsonl', 'cast-self.jsonl', 'cast-summon.jsonl']);
+    expect(recordings.map(r => r.name).sort()).toEqual(['cast-invalid-target.jsonl', 'cast-orb.jsonl', 'cast-self.jsonl', 'cast-summon.jsonl', 'dardo-magico-kills-creature.jsonl', 'dardo-magico-training-dummy.jsonl']);
   });
   for (const recording of recordings) {
     it(`${recording.name}: every owned packet decodes and re-encodes to the same bytes`, () => {

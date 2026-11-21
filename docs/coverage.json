@@ -332,6 +332,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -423,6 +425,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -498,7 +502,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -927,6 +932,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -1059,7 +1066,9 @@
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
-    "tests/fixtures/vb6/quests/obj-quest-item.jsonl"
+    "tests/fixtures/vb6/quests/obj-quest-item.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -1083,7 +1092,9 @@
     "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
-    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -1113,7 +1124,9 @@
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
-    "tests/fixtures/vb6/playthrough/teleport-object.jsonl"
+    "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -1166,7 +1179,9 @@
     "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
     "tests/fixtures/vb6/crafting/mine-flag-then-walk.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
-    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl"
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -1258,6 +1273,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -1307,6 +1324,8 @@
     "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -1332,7 +1351,8 @@
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
-    "tests/fixtures/vb6/playthrough/death-by-creature.jsonl"
+    "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl"
    ]
   },
   {
@@ -1404,7 +1424,9 @@
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -1523,6 +1545,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
     "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
@@ -1705,6 +1729,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
     "tests/fixtures/vb6/trade/give-back-responder.jsonl",
     "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
@@ -1760,7 +1786,9 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -1812,6 +1840,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
     "tests/fixtures/vb6/trade/item-offer-responder.jsonl"
    ]
@@ -1923,6 +1953,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -2016,6 +2048,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -2085,7 +2119,8 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
-    "tests/fixtures/vb6/spells/cast-invalid-target.jsonl"
+    "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl"
    ]
   },
   {
@@ -2172,6 +2207,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -2288,6 +2325,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -2382,7 +2421,9 @@
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -2498,6 +2539,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -2595,7 +2638,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -2687,6 +2731,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
@@ -2722,7 +2768,9 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -2822,6 +2870,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/trade/cancel-initiator.jsonl",
     "tests/fixtures/vb6/trade/cancel-responder.jsonl",
     "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
@@ -2969,6 +3019,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -3289,6 +3341,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -3401,6 +3455,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -3621,6 +3677,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -4014,6 +4072,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -4124,6 +4184,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -4379,6 +4441,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
     "tests/fixtures/vb6/trade/give-back-responder.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
@@ -4444,7 +4508,8 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -4484,7 +4549,9 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl"
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -4594,6 +4661,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -4734,6 +4803,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
     "tests/fixtures/vb6/trade/give-back-responder.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
@@ -4805,7 +4876,8 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
-    "tests/fixtures/vb6/npcs/session-npcdesc.jsonl"
+    "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -4858,7 +4930,9 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
-    "tests/fixtures/vb6/spells/cast-orb.jsonl"
+    "tests/fixtures/vb6/spells/cast-orb.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -4879,7 +4953,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl"
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl"
    ]
   },
   {
@@ -4956,7 +5031,8 @@
     "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
-    "tests/fixtures/vb6/npcs/session-npcdesc.jsonl"
+    "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -5138,6 +5214,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -5255,6 +5333,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -5445,6 +5525,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/trade/cancel-responder.jsonl",
     "tests/fixtures/vb6/trade/give-back-initiator.jsonl",
     "tests/fixtures/vb6/trade/give-back-responder.jsonl",
@@ -5663,7 +5745,9 @@
     "tests/fixtures/vb6/followups/trainer-list.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
-    "tests/fixtures/vb6/spells/cast-orb.jsonl"
+    "tests/fixtures/vb6/spells/cast-orb.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -5901,6 +5985,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -6013,6 +6099,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -6104,6 +6192,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -6233,7 +6323,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -6499,6 +6590,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -6600,7 +6693,8 @@
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
-    "tests/fixtures/vb6/playthrough/death-by-creature.jsonl"
+    "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl"
    ]
   },
   {
@@ -6928,6 +7022,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -7038,6 +7134,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -7149,6 +7247,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -7259,6 +7359,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -7332,7 +7434,9 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -8896,6 +9000,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -9024,6 +9130,7 @@
     "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -9072,6 +9179,8 @@
     "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl",
     "tests/fixtures/vb6/world/weather-toggles.jsonl"
    ]
@@ -9412,7 +9521,9 @@
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
-    "tests/fixtures/vb6/spells/cast-summon.jsonl"
+    "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -13576,7 +13687,9 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
-    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
   },
   {
@@ -13747,6 +13860,8 @@
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
+    "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
