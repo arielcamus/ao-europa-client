@@ -14,3 +14,20 @@
 .items-confirm-button { width: 70px; height: 24px; margin: 0 8px; border: 1px solid #6b5a3a; background: #2a2018; color: #e8dcb0; font: bold 12px Tahoma, Arial, sans-serif; }
 .items-stat { position: absolute; }
 .items-gold { position: absolute; }
+/* Key ring (keyring-ui.ts): selected key shade as in clsGrapchicalInventory.DrawInventory (RGBA 100,100,100,100). */
+.keyring-slot { cursor: default; border: 0; padding: 0; background-color: transparent; background-repeat: no-repeat; }
+.keyring-slot[aria-pressed="true"]::after { content: ''; position: absolute; inset: 0; background: #64646464; pointer-events: none; }
+/* frmMensajePapiro (papiro-ui.ts): the board bitmap with black keyed out, Palatino 9 pt links. */
+.papiro-window { position: absolute; z-index: 21; background: no-repeat 0 0; outline: none; }
+.papiro-window.papiro-plain { background: #d8c8a0; }
+.papiro-link { position: absolute; font: 12px/17px 'Palatino Linotype', Palatino, 'Book Antiqua', serif; cursor: pointer; text-decoration: none; overflow: hidden; }
+.papiro-link:hover { text-decoration: underline; }
+.papiro-close { position: absolute; padding: 0; border: 0; background: transparent; cursor: pointer; }
+/* Inventory extras (inventory-extras.ts): ObjLbl, the right-drag picture and the delete button. */
+.obj-label { position: absolute; z-index: 6; text-align: center; white-space: pre-line; color: #e0e0e0; font: bold 9.33px/11px Arial, sans-serif; text-shadow: 1px 1px #000; pointer-events: none; overflow: hidden; }
+.obj-label[hidden] { display: none; }
+.inventory-drag { position: absolute; z-index: 30; width: 32px; height: 32px; opacity: .78; pointer-events: none; }
+.inventory-drag[hidden] { display: none; }
+.delete-item { position: absolute; z-index: 5; padding: 0; border: 0; background-color: transparent; background-repeat: no-repeat; cursor: pointer; }
+.delete-item[hidden] { display: none; }
+.papiro-window:focus-visible, #keyring-window:focus-visible { outline: none; }

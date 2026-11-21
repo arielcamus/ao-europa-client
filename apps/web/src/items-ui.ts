@@ -86,7 +86,9 @@ export class ItemsUI {
     void loadInterface('cantidad').then(url => { this.amountDialog.style.backgroundImage = `url("${url}")`; }).catch(() => {});
     this.amountInput = make('input', 'items-input', this.amountDialog, 'amount-input'); this.amountInput.value = '1'; this.amountInput.inputMode = 'numeric';
     this.amountInput.setAttribute('aria-label', 'Cantidad a tirar'); place(this.amountInput, 94, 108, 104, 16); digitsOnly(this.amountInput);
-    const bump = (delta: number) => { this.amountInput.value = String(Math.max(0, Number(this.amountInput.value || 0) + delta)); };
+    // cmdMas only adds below MAX_INVENTORY_OBJS (10000, gold too); cmdMenos stops at 0; Text1_Change caps typing at 10000 (items) or 100000 (gold).
+    const bump = (delta: number) => { const value = Number(this.amountInput.value || 0); if (delta > 0 ? value < 10_000 : value > 0) this.amountInput.value = String(value + delta); };
+    this.amountInput.addEventListener('input', () => { const cap = this.ui.selectedSlot === GOLD_SLOT ? 100_000 : 10_000; if (Number(this.amountInput.value) > cap) this.amountInput.value = String(cap); });
     artButton(this.amountDialog, 'amount-minus', 'Menos', 'boton-sm-menos', 64, 107, 21, 21, () => bump(-1));
     artButton(this.amountDialog, 'amount-plus', 'Más', 'boton-sm-mas', 208, 107, 21, 21, () => bump(1));
     artButton(this.amountDialog, 'amount-close', 'Cerrar', 'boton-cerrar', 260, 1, 31, 28, () => this.closeAmount());

@@ -29,6 +29,7 @@ import { partyClientCodecs, partyServerCodecs } from './packets/party.js';
 import { guildClientCodecs, guildServerCodecs } from './packets/guild.js';
 import { optionsClientCodecs, optionsServerCodecs } from './packets/options.js';
 import { petsTravelClientCodecs, petsTravelServerCodecs } from './packets/pets-travel.js';
+import { keyringClientCodecs, keyringServerCodecs } from './packets/keyring.js';
 
 export enum ServerPacketId {
   Connected = 1,
@@ -261,11 +262,11 @@ const chatClientTable = {
  * A new feature table is added here AND to the spread below (test/codec-tables.test.ts fails if the two disagree).
  */
 export const codecTables = {
-  server: { core: coreServerCodecs, doors: doorServerCodecs, npcs: npcsServerCodecs, chat: chatServerTable, combat: combatServerCodecs, spells: spellServerCodecs, items: itemsServerCodecs, keys: keysServerCodecs, audio: audioServerCodecs, bankTrade: bankTradeServerCodecs, world: worldServerCodecs, status: statusServerCodecs, crafting: craftingServerCodecs, skills: skillsServerCodecs, quests: questServerCodecs, party: partyServerCodecs, guild: guildServerCodecs, options: optionsServerCodecs, petsTravel: petsTravelServerCodecs },
-  client: { core: coreClientCodecs, doors: doorClientCodecs, chat: chatClientTable, combat: combatClientCodecs, spells: spellClientCodecs, items: itemsClientCodecs, keys: keysClientCodecs, bankTrade: bankTradeClientCodecs, world: worldClientCodecs, status: statusClientCodecs, crafting: craftingClientCodecs, skills: skillsClientCodecs, quests: questClientCodecs, party: partyClientCodecs, guild: guildClientCodecs, options: optionsClientCodecs, petsTravel: petsTravelClientCodecs },
+  server: { core: coreServerCodecs, doors: doorServerCodecs, npcs: npcsServerCodecs, chat: chatServerTable, combat: combatServerCodecs, spells: spellServerCodecs, items: itemsServerCodecs, keys: keysServerCodecs, audio: audioServerCodecs, bankTrade: bankTradeServerCodecs, world: worldServerCodecs, status: statusServerCodecs, crafting: craftingServerCodecs, skills: skillsServerCodecs, quests: questServerCodecs, party: partyServerCodecs, guild: guildServerCodecs, options: optionsServerCodecs, petsTravel: petsTravelServerCodecs, keyring: keyringServerCodecs },
+  client: { core: coreClientCodecs, doors: doorClientCodecs, chat: chatClientTable, combat: combatClientCodecs, spells: spellClientCodecs, items: itemsClientCodecs, keys: keysClientCodecs, bankTrade: bankTradeClientCodecs, world: worldClientCodecs, status: statusClientCodecs, crafting: craftingClientCodecs, skills: skillsClientCodecs, quests: questClientCodecs, party: partyClientCodecs, guild: guildClientCodecs, options: optionsClientCodecs, petsTravel: petsTravelClientCodecs, keyring: keyringClientCodecs },
 } as const;
-const serverCodecs = { ...coreServerCodecs, ...doorServerCodecs, ...npcsServerCodecs, ...chatServerTable, ...combatServerCodecs, ...spellServerCodecs, ...itemsServerCodecs, ...keysServerCodecs, ...audioServerCodecs, ...bankTradeServerCodecs, ...worldServerCodecs, ...statusServerCodecs, ...craftingServerCodecs, ...skillsServerCodecs, ...questServerCodecs, ...partyServerCodecs, ...guildServerCodecs, ...optionsServerCodecs, ...petsTravelServerCodecs };
-const clientCodecs = { ...coreClientCodecs, ...doorClientCodecs, ...chatClientTable, ...combatClientCodecs, ...spellClientCodecs, ...itemsClientCodecs, ...keysClientCodecs, ...bankTradeClientCodecs, ...worldClientCodecs, ...statusClientCodecs, ...craftingClientCodecs, ...skillsClientCodecs, ...questClientCodecs, ...partyClientCodecs, ...guildClientCodecs, ...optionsClientCodecs, ...petsTravelClientCodecs };
+const serverCodecs = { ...coreServerCodecs, ...doorServerCodecs, ...npcsServerCodecs, ...chatServerTable, ...combatServerCodecs, ...spellServerCodecs, ...itemsServerCodecs, ...keysServerCodecs, ...audioServerCodecs, ...bankTradeServerCodecs, ...worldServerCodecs, ...statusServerCodecs, ...craftingServerCodecs, ...skillsServerCodecs, ...questServerCodecs, ...partyServerCodecs, ...guildServerCodecs, ...optionsServerCodecs, ...petsTravelServerCodecs, ...keyringServerCodecs };
+const clientCodecs = { ...coreClientCodecs, ...doorClientCodecs, ...chatClientTable, ...combatClientCodecs, ...spellClientCodecs, ...itemsClientCodecs, ...keysClientCodecs, ...bankTradeClientCodecs, ...worldClientCodecs, ...statusClientCodecs, ...craftingClientCodecs, ...skillsClientCodecs, ...questClientCodecs, ...partyClientCodecs, ...guildClientCodecs, ...optionsClientCodecs, ...petsTravelClientCodecs, ...keyringClientCodecs };
 
 /** Throws when two tables register the same id or a merged table holds an id no listed table owns. */
 export function assertDisjointCodecTables(tables: Record<string, object>, merged: object, side: string): void {

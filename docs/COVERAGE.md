@@ -10,8 +10,8 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 290 of 523 = 55.4%.** Merged on main only: 290 = 55.4%.
-  - Server to client: 157 of 207. Client to server: 133 of 316. Packets with a recorded VB6 fixture: 205.
+- **Packets covered (merged + open branches): 295 of 523 = 56.4%.** Merged on main only: 295 = 56.4%.
+  - Server to client: 159 of 207. Client to server: 136 of 316. Packets with a recorded VB6 fixture: 211.
 - **Forms covered: 4 of 86 = 4.7%** (5 more partially, 10.5% started).
 
 ## (c) Feature groups, ordered by player value
@@ -22,7 +22,7 @@ Scanned refs: `main`
 | 2 | Chat | 21/28 | 75% | 21 | 0/0 | n/a | 0 |
 | 3 | Combat | 41/41 | 100% | 41 | 0/0 | n/a | 0 |
 | 4 | Spells | 8/8 | 100% | 8 | 0/0 | n/a | 0 |
-| 5 | Items / commerce (NPC shop, inventory) | 24/27 | 88.9% | 24 | 2/4 | 50% | 0 |
+| 5 | Items / commerce (NPC shop, inventory) | 27/27 | 100% | 27 | 2/4 | 50% | 0 |
 | 6 | NPCs | 7/7 | 100% | 7 | 0/2 | 0% | 0 |
 | 7 | Bank | 16/16 | 100% | 16 | 0/3 | 0% | 0 |
 | 8 | Trade (player to player) | 8/8 | 100% | 8 | 0/2 | 0% | 0 |
@@ -35,7 +35,7 @@ Scanned refs: `main`
 | 15 | Options / keybinds | 1/2 | 50% | 1 | 0/4 | 0% | 0 |
 | 16 | Minimap / world map | 0/2 | 0% | 0 | 0/1 | 0% | 0 |
 | 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 3/60 | 5% | 3 | 0/13 | 0% | 0 |
-| 18 | GM / admin (lowest) | 0/142 | 0% | 0 | 0/13 | 0% | 0 |
+| 18 | GM / admin (lowest) | 2/142 | 1.4% | 2 | 0/13 | 0% | 0 |
 
 ## DUPLICATES
 
@@ -206,7 +206,7 @@ Ids only: .
 | 61 | UpdateUserStats | client Protocol.bas:HandleUpdateUserStats | skills | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 62 | WorkRequestTarget | client Protocol.bas:HandleWorkRequestTarget | spells | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 63 | ChangeInventorySlot | client Protocol.bas:HandleChangeInventorySlot | items | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 64 | InventoryUnlockSlots | client Protocol.bas:HandleInventoryUnlockSlots | items | merged | `main:packages/protocol/src/packets.ts` | no |
+| 64 | InventoryUnlockSlots | client Protocol.bas:HandleInventoryUnlockSlots | items | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 65 | ChangeBankSlot | client Protocol.bas:HandleChangeBankSlot | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 66 | ChangeSpellSlot | client Protocol.bas:HandleChangeSpellSlot | spells | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 67 | Atributes | client Protocol.bas:HandleAtributes | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
@@ -247,7 +247,7 @@ Ids only: .
 | 102 | FYA | client Protocol.bas:HandleFYA | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 103 | CerrarleCliente | client Protocol.bas:HandleCerrarleCliente | core | not started |  | no |
 | 104 | Contadores | client Protocol.bas:HandleContadores | core | not started |  | yes |
-| 105 | ShowPapiro | client Protocol.bas:HandleShowPapiro | gm | not started |  | no |
+| 105 | ShowPapiro | client Protocol.bas:HandleShowPapiro | gm | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
 | 106 | UpdateCooldownType | client Protocol.bas:HandleUpdateCooldownType | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 107 | SpawnListt | client Protocol.bas:HandleSpawnList | gm | not started |  | no |
 | 108 | ShowSOSForm | client Protocol.bas:HandleShowSOSForm | gm | not started |  | no |
@@ -301,7 +301,7 @@ Ids only: .
 | 156 | UpdateNPCSimbolo | client Protocol.bas:HandleUpdateNPCSimbolo | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
 | 157 | ClanSeguro | client Protocol.bas:HandleClanSeguro | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 158 | Intervals | client Protocol.bas:HandleIntervals | core | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 159 | UpdateUserKey | client Protocol.bas:HandleUpdateUserKey | gm | not started |  | no |
+| 159 | UpdateUserKey | client Protocol.bas:HandleUpdateUserKey | gm | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
 | 160 | UpdateRM | client Protocol.bas:HandleUpdateRM | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 161 | UpdateDM | client Protocol.bas:HandleUpdateDM | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 162 | SeguroResu | client Protocol.bas:HandleSeguroResu | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
@@ -563,7 +563,7 @@ Ids only: .
 | 206 | SetSpeed | server Protocol.bas:HandleSetSpeed | gm | not started |  | no |
 | 207 | GlobalMessage | server Protocol.bas:HandleGlobalMessage | chat | merged | `main:packages/protocol/src/packets.ts` | no |
 | 208 | GlobalOnOff | server Protocol.bas:HandleGlobalOnOff | gm | not started |  | no |
-| 209 | UseKey | server Protocol.bas:HandleUseKey | items | not started |  | no |
+| 209 | UseKey | server Protocol.bas:HandleUseKey | items | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
 | 210 | DonateGold | server Protocol.bas:HandleDonateGold | gm | not started |  | no |
 | 211 | Promedio | server Protocol.bas:HandlePromedio | gm | not started |  | no |
 | 212 | GiveItem | server Protocol.bas:HandleGiveItem | gm | not started |  | no |
@@ -579,7 +579,7 @@ Ids only: .
 | 222 | NieveToggle | server Protocol.bas:HandleNieveToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
 | 223 | NieblaToggle | server Protocol.bas:HandleNieblaToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
 | 224 | TransFerGold | server Protocol.bas:HandleTransFerGold | extras | merged | `main:packages/protocol/src/packets/options.ts` | yes |
-| 225 | Moveitem | server Protocol.bas:HandleMoveItem | items | not started |  | no |
+| 225 | Moveitem | server Protocol.bas:HandleMoveItem | items | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
 | 226 | Genio | server Protocol.bas:HandleGenio | gm | not started |  | no |
 | 227 | Casarse | server Protocol.bas:HandleCasamiento | extras | not started |  | no |
 | 228 | CraftAlquimista | server Protocol.bas:HandleCraftAlquimia | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
@@ -639,7 +639,7 @@ Ids only: .
 | 282 | PetLeaveAll | server Protocol.bas:HandlePetLeaveAll | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | yes |
 | 283 | ResetChar | server Protocol.bas:HandleResetChar | gm | not started |  | no |
 | 284 | ResetearPersonaje | server Protocol.bas:HandleResetearPersonaje | gm | not started |  | no |
-| 285 | DeleteItem | server Protocol.bas:HandleDeleteItem | items | not started |  | no |
+| 285 | DeleteItem | server Protocol.bas:HandleDeleteItem | items | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
 | 286 | FinalizarPescaEspecial | server Protocol.bas:HandleFinalizarPescaEspecial | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 287 | RomperCania | server Protocol.bas:HandleRomperCania | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 288 | UseItemU | server Protocol.bas:HandleUseItemU | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
@@ -701,7 +701,7 @@ Attack, hit/miss messages, safe modes, stun/paralysis, spell info, hotkeys, macr
 
 Inventory moves, key ring, gamble, gold actions, amount prompts, skins.
 
-- Packets (3): C209 UseKey, C225 Moveitem, C285 DeleteItem
+- Packets (0): none left
 - Forms (2): frmMensajePapiro, FrmKeyInv
 
 ### wp05: NPCs, pets, trainers and travel
@@ -757,6 +757,6 @@ Options forms, custom keys, hotkeys, events, battlegrounds, duels, premium shop,
 
 All GM commands, GM panel, SOS, MOTD edit, debug.
 
-- Packets (142): S81 AddForumMsg, S82 ShowForumForm, S105 ShowPapiro, S107 SpawnListt, S108 ShowSOSForm, S109 ShowMOTDEditionForm, S110 ShowGMPanelForm, S111 UserNameList, S112 UserOnline, S159 UpdateUserKey, S172 GuardNotice, S177 Privilegios, S190 DebugDataResponse, C13 ForumPost, C38 Online, C55 Information, C56 Reward, C58 UpTime, C63 RoleMasterRequest, C66 Punishments, C72 Denounce, C101 GMMessage, C102 ShowName, C103 OnlineRoyalArmy, C104 OnlineChaosLegion, C105 GoNearby, C106 Comment, C107 Where, C108 CreaturesInMap, C109 WarpMeToTarget, C110 WarpChar, C111 Silence, C112 SOSShowList, C113 SOSRemove, C114 GoToChar, C115 Invisible, C116 GMPanel, C117 RequestUserList, C118 Working, C119 Hiding, C120 Jail, C121 KillNPC, C122 WarnUser, C123 EditChar, C124 RequestCharInfo, C125 RequestCharStats, C126 RequestCharGold, C127 RequestCharInventory, C128 RequestCharBank, C129 RequestCharSkills, C130 ReviveChar, C131 OnlineGM, C132 OnlineMap, C133 Forgive, C134 Kick, C135 Execute, C136 BanChar, C137 UnbanChar, C138 NPCFollow, C139 SummonChar, C140 SpawnListRequest, C141 SpawnCreature, C142 ResetNPCInventory, C143 CleanWorld, C144 ServerMessage, C145 NickToIP, C146 IPToNick, C147 GuildOnlineMembers, C148 TeleportCreate, C149 TeleportDestroy, C151 SetCharDescription, C152 ForceMIDIToMap, C153 ForceWAVEToMap, C154 RoyalArmyMessage, C155 ChaosLegionMessage, C156 TalkAsNPC, C157 DestroyAllItemsInArea, C158 AcceptRoyalCouncilMember, C159 AcceptChaosCouncilMember, C160 ItemsInTheFloor, C161 MakeDumb, C162 MakeDumbNoMore, C163 CouncilKick, C164 SetTrigger, C165 AskTrigger, C166 GuildMemberList, C167 GuildBan, C168 CreateItem, C169 DestroyItems, C170 ChaosLegionKick, C171 RoyalArmyKick, C172 ForceMIDIAll, C173 ForceWAVEAll, C174 RemovePunishment, C175 TileBlockedToggle, C176 KillNPCNoRespawn, C177 KillAllNearbyNPCs, C178 ChangeMOTD, C179 SetMOTD, C180 SystemMessage, C181 CreateNPC, C182 CreateNPCWithRespawn, C184 ServerOpenToUsersToggle, C186 RemoveCharFromGuild, C187 AlterName, C188 DoBackUp, C189 ShowGuildMessages, C190 ChangeMapInfoPK, C191 ChangeMapInfoBackup, C192 ChangeMapInfoRestricted, C193 ChangeMapInfoNoMagic, C194 ChangeMapInfoNoInvi, C195 ChangeMapInfoNoResu, C196 ChangeMapInfoLand, C197 ChangeMapInfoZone, C198 ChangeMapSetting, C199 SaveChars, C200 CleanSOS, C201 ShowServerForm, C202 KickAllChars, C203 ChatColor, C204 Ignored, C205 CheckSlot, C206 SetSpeed, C208 GlobalOnOff, C210 DonateGold, C211 Promedio, C212 GiveItem, C215 QuestionGM, C217 PossUser, C226 Genio, C231 MensajeUser, C241 BanCuenta, C242 UnbanCuenta, C243 CerrarCliente, C246 BanTemporal, C257 MarcaDeGMPack, C265 Consulta, C266 GetMapInfo, C283 ResetChar, C284 ResetearPersonaje, C296 RequestDebug
+- Packets (140): S81 AddForumMsg, S82 ShowForumForm, S107 SpawnListt, S108 ShowSOSForm, S109 ShowMOTDEditionForm, S110 ShowGMPanelForm, S111 UserNameList, S112 UserOnline, S172 GuardNotice, S177 Privilegios, S190 DebugDataResponse, C13 ForumPost, C38 Online, C55 Information, C56 Reward, C58 UpTime, C63 RoleMasterRequest, C66 Punishments, C72 Denounce, C101 GMMessage, C102 ShowName, C103 OnlineRoyalArmy, C104 OnlineChaosLegion, C105 GoNearby, C106 Comment, C107 Where, C108 CreaturesInMap, C109 WarpMeToTarget, C110 WarpChar, C111 Silence, C112 SOSShowList, C113 SOSRemove, C114 GoToChar, C115 Invisible, C116 GMPanel, C117 RequestUserList, C118 Working, C119 Hiding, C120 Jail, C121 KillNPC, C122 WarnUser, C123 EditChar, C124 RequestCharInfo, C125 RequestCharStats, C126 RequestCharGold, C127 RequestCharInventory, C128 RequestCharBank, C129 RequestCharSkills, C130 ReviveChar, C131 OnlineGM, C132 OnlineMap, C133 Forgive, C134 Kick, C135 Execute, C136 BanChar, C137 UnbanChar, C138 NPCFollow, C139 SummonChar, C140 SpawnListRequest, C141 SpawnCreature, C142 ResetNPCInventory, C143 CleanWorld, C144 ServerMessage, C145 NickToIP, C146 IPToNick, C147 GuildOnlineMembers, C148 TeleportCreate, C149 TeleportDestroy, C151 SetCharDescription, C152 ForceMIDIToMap, C153 ForceWAVEToMap, C154 RoyalArmyMessage, C155 ChaosLegionMessage, C156 TalkAsNPC, C157 DestroyAllItemsInArea, C158 AcceptRoyalCouncilMember, C159 AcceptChaosCouncilMember, C160 ItemsInTheFloor, C161 MakeDumb, C162 MakeDumbNoMore, C163 CouncilKick, C164 SetTrigger, C165 AskTrigger, C166 GuildMemberList, C167 GuildBan, C168 CreateItem, C169 DestroyItems, C170 ChaosLegionKick, C171 RoyalArmyKick, C172 ForceMIDIAll, C173 ForceWAVEAll, C174 RemovePunishment, C175 TileBlockedToggle, C176 KillNPCNoRespawn, C177 KillAllNearbyNPCs, C178 ChangeMOTD, C179 SetMOTD, C180 SystemMessage, C181 CreateNPC, C182 CreateNPCWithRespawn, C184 ServerOpenToUsersToggle, C186 RemoveCharFromGuild, C187 AlterName, C188 DoBackUp, C189 ShowGuildMessages, C190 ChangeMapInfoPK, C191 ChangeMapInfoBackup, C192 ChangeMapInfoRestricted, C193 ChangeMapInfoNoMagic, C194 ChangeMapInfoNoInvi, C195 ChangeMapInfoNoResu, C196 ChangeMapInfoLand, C197 ChangeMapInfoZone, C198 ChangeMapSetting, C199 SaveChars, C200 CleanSOS, C201 ShowServerForm, C202 KickAllChars, C203 ChatColor, C204 Ignored, C205 CheckSlot, C206 SetSpeed, C208 GlobalOnOff, C210 DonateGold, C211 Promedio, C212 GiveItem, C215 QuestionGM, C217 PossUser, C226 Genio, C231 MensajeUser, C241 BanCuenta, C242 UnbanCuenta, C243 CerrarCliente, C246 BanTemporal, C257 MarcaDeGMPack, C265 Consulta, C266 GetMapInfo, C283 ResetChar, C284 ResetearPersonaje, C296 RequestDebug
 - Forms (13): FrmTorneo, frmCambiaMotd, frmDebug, FrmGmAyuda, frmMessageTxt, frmMSG, FrmObjetos, frmPanelGm, frmProcesses, frmSpawnList, MenuGM, MenuNPC, MenuUser
 

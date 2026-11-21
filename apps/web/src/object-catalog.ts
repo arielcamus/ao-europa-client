@@ -15,7 +15,7 @@ export const ObjType = {
 
 export interface ObjectInfo {
   name: string; grh: number; type: number; minHit: number; maxHit: number; minDef: number; maxDef: number;
-  text: string; projectile: boolean; destroys: boolean; creaLuz: boolean;
+  text: string; projectile: boolean; destroys: boolean; creaLuz: boolean; elementalTags: number;
 }
 
 const num = (section: Map<string, string>, key: string) => { const value = Number(section.get(key)); return Number.isFinite(value) ? value : 0; };
@@ -30,7 +30,7 @@ export class ObjectCatalog {
       name: section.get('name') ?? `Objeto ${id}`, grh: num(section, 'grhindex'), type: num(section, 'objtype'),
       minHit: num(section, 'minhit'), maxHit: num(section, 'maxhit'), minDef: num(section, 'mindef'), maxDef: num(section, 'maxdef'),
       text: section.get('texto') ?? '', projectile: num(section, 'proyectil') === 1, destroys: num(section, 'destruye') !== 0,
-      creaLuz: !!section.get('crealuz'),
+      creaLuz: !!section.get('crealuz'), elementalTags: num(section, 'elementaltags'),
     };
     this.cache.set(id, info); return info;
   }
