@@ -363,3 +363,13 @@ describe('VB6 recording: rain and snow toggles (tests/fixtures/vb6/world/weather
     expect(seen).toEqual(['59:--', '122:--', '59:R-', '122:RS', '122:R-', '122:RS']);
   });
 });
+
+describe('VB6 recording: using the Mapa item (tests/fixtures/vb6/world/map-item-show-form.jsonl)', () => {
+  it('ShowFrmMapa (138) carries ExpMult and GoldMult and opens the form once', async () => {
+    const { decodeServerPacket } = await import('@ao/protocol');
+    const row = JSON.parse(readFileSync(new URL('../../../tests/fixtures/vb6/world/map-item-show-form.jsonl', import.meta.url), 'utf8').trim().split('\n')[0]!) as { hex: string };
+    const world = new WorldFx(() => 0);
+    world.receive(decodeServerPacket(Uint8Array.from(Buffer.from(row.hex, 'hex'))) as never);
+    expect(world.mapForm).toEqual({ opened: 1, expMult: 1, goldMult: 1 });
+  });
+});
