@@ -32,8 +32,8 @@ step('MOV-07', async c => {
   if (!c.own) c.blocked('needs the own character');
   const objs = objects(), f = loadMap(24)!;
   const exitAt = new Set(f.exits.map(e => e.y * 101 + e.x));
-  const tp = f.map.objects.find(o => objs.get(o.objIndex)?.type === 19 && exitAt.has(o.y * 101 + o.x));
-  if (!tp) c.blocked('no otTeleport object with a tile exit on map 24');
+  const tp = f.map.objects.find(o => objs.get(o.objIndex)?.type === 19 && exitAt.has(o.y * 101 + o.x) && loadMap(f.exits.find(e => e.x === o.x && e.y === o.y)!.map));
+  if (!tp) c.blocked('no otTeleport object with a tile exit to an existing map on map 24');
   const t = tp!, exitTo = f.exits.find(e => e.x === t.x && e.y === t.y)!, neighbours = Object.entries(HEAD).filter(([, [dx, dy]]) => walkable(f.map, t.x - dx, t.y - dy));
   if (!neighbours.length) c.blocked(`teleport object at 24:${t.x},${t.y} has no walkable neighbour`);
   const [h, [dx, dy]] = neighbours[0]!;

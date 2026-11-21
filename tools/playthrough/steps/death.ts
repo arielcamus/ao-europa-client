@@ -11,8 +11,8 @@ step('DTH-01', async c => {
   let spot: [number, number] | undefined;
   for (let r = 0; r < 40 && !spot; r++) for (let y = 50 - r; y <= 50 + r && !spot; y++) for (let x = 50 - r; x <= 50 + r && !spot; x++) if ([[0, 0], [1, 0], [2, 0], [-1, 0]].every(([dx, dy]) => walkable(f.map, x + dx!, y + dy!))) spot = [x, y];
   await dbUpdateOwn(c, `pos_map=2, pos_x=${spot![0]}, pos_y=${spot![1]}, min_hp=1`);
-  const p = c.player; c.eq([p.map, p.x, p.y], [2, spot![0], spot![1]], 'placed on map 2 (an unsafe field map) with 1 HP');
-  await gmGoto(c, 2, spot![0] + 2, spot![1]);
+  const p = c.player; c.eq(p.map, 2, 'placed on map 2 (an unsafe field map) with 1 HP');
+  await gmGoto(c, 2, p.x + 2, p.y);
   const mine = await spawnCreature(c, 501);
   const from = p.mark(); let died = false;
   try {

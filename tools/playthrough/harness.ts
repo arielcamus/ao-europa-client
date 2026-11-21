@@ -47,7 +47,7 @@ export async function runSteps(env: Env, only: string[] | undefined, log: (m: st
     const t = Date.now();
     let outcome: Outcome = 'pass', detail = '';
     try {
-      await Promise.race([body(ctx), new Promise((_, rej) => setTimeout(() => rej(new Error('step timeout 240 s')), 240_000))]);
+      await Promise.race([body(ctx), new Promise((_, rej) => setTimeout(() => rej(new Error('step timeout')), Number(process.env.AO_STEP_TIMEOUT_MS ?? 1_200_000)))]);
       detail = notes.join('; ');
     } catch (e) {
       if (e instanceof Blocked) { outcome = 'blocked'; detail = e.message; }

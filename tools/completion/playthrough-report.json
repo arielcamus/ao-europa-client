@@ -1,32 +1,32 @@
 {
- "generated": "2026-11-21T11:23:57.507Z",
+ "generated": "2026-11-21T11:40:12.968Z",
  "server": "127.0.0.1:7667",
  "account": "fresh",
- "character": "Pteeicnua",
+ "character": "Ptraqtuat",
  "creation": {
   "attempts": 1,
   "ok": true,
   "errors": [],
   "reused": false
  },
- "wallClockSeconds": 675,
+ "wallClockSeconds": 911,
  "totals": {
-  "pass": 21,
-  "fail": 7,
-  "blocked": 16
+  "pass": 23,
+  "fail": 6,
+  "blocked": 15
  },
  "results": [
   {
    "id": "ACC-01",
    "outcome": "pass",
-   "detail": "Connected on TCP open; AccountCharacterList after LoginAccount; character count 1 <= MAX_PERSONAJES 10; list holds Pteeicnua",
-   "ms": 6
+   "detail": "Connected on TCP open; AccountCharacterList after LoginAccount; character count 1 <= MAX_PERSONAJES 10; list holds Ptraqtuat",
+   "ms": 7
   },
   {
    "id": "ACC-02",
    "outcome": "pass",
    "detail": "human attributes STR/AGI/INT/CHA/CON (18 + MODRAZA) = [19,19,18,18,20]; only the human race is created per run: the per-IP cap is 15 new characters per server run, shared by all agents; the other 5 races need dedicated runs",
-   "ms": 2
+   "ms": 1
   },
   {
    "id": "ACC-03",
@@ -44,7 +44,7 @@
    "id": "ACC-05",
    "outcome": "pass",
    "detail": "Pocion de Vida (obj 4335) = 500; Pocion Violeta (obj 4334) = 35; Pasaje a Jourmut (obj 3791) = 4; mage blue potions (obj 4336) = 850; mage yellow potions (obj 4337) = 80",
-   "ms": 0
+   "ms": 1
   },
   {
    "id": "ACC-06",
@@ -56,13 +56,13 @@
    "id": "ACC-07",
    "outcome": "pass",
    "detail": "existing name -> ShowMessageBox id = 1769",
-   "ms": 4005
+   "ms": 4006
   },
   {
    "id": "ACC-08",
    "outcome": "pass",
    "detail": "Logged after LoginExistingChar; position restored from the database = {\"map\":751,\"x\":60,\"y\":57}; stats and inventory sent",
-   "ms": 3928
+   "ms": 3923
   },
   {
    "id": "ACC-10",
@@ -110,7 +110,7 @@
    "id": "MOV-02",
    "outcome": "fail",
    "detail": "step 37/38 refused at 59,57 heading 2 [ok so far: a blocked tile answered with PosUpdate (old position) after 40 steps; moved one tile off the wall; second character at 751:60,57; first at 751:23,57]",
-   "ms": 28387
+   "ms": 30188
   },
   {
    "id": "MOV-03",
@@ -139,14 +139,14 @@
   {
    "id": "MOV-07",
    "outcome": "fail",
-   "detail": "the teleport moved the character away (moved=true): false [ok so far: stepped onto the otTeleport tile 24:76,29 (obj 19) from 24,76,30; now 24:76,29; saw LocaleMsg,PosUpdate]",
-   "ms": 7384
+   "detail": "the teleport moved the character away (moved=true); the tile exit says 391:50,50: false [ok so far: stepped onto the otTeleport tile 24:76,29 (obj 19) from 24,76,30; now 24:76,29; saw LocaleMsg,UserOnline,PosUpdate]",
+   "ms": 7329
   },
   {
    "id": "MOV-08",
    "outcome": "fail",
-   "detail": "LeftClick on door 3580 at 71,55 answered (nothing) (Toggles open/closed: ObjectCreate + BlockPosition): false",
-   "ms": 59033
+   "detail": "LeftClick on door 3580 at 71,55 answered (nothing) (Toggles open/closed: ObjectCreate + BlockPosition): false [ok so far: LeftClick alone gave no door packets; trying DoubleClick]",
+   "ms": 60505
   },
   {
    "id": "MOV-09",
@@ -192,9 +192,9 @@
   },
   {
    "id": "MOV-17",
-   "outcome": "blocked",
-   "detail": "implemented after MOV-16 passes on a mage character",
-   "ms": 0
+   "outcome": "pass",
+   "detail": "30 UpdateMana ticks in 70 s of meditation; mana 5 -> 150; median gap between mana ticks 435 ms (the doc says ~400 ms after an initial ~840 ms); first tick gain 5 of max 150 (doc: 3.5% = 5); median ms between meditation mana ticks (IntervaloMeditar = 10 game ticks of 40 ms) = 435",
+   "ms": 75721
   },
   {
    "id": "MOV-18",
@@ -246,33 +246,33 @@
   },
   {
    "id": "PRG-17",
-   "outcome": "fail",
-   "detail": "Meditar reached the level-1 cap 3 by use: expected 3, got 1 [ok so far: ELV 1 = 1]",
-   "ms": 121651
+   "outcome": "pass",
+   "detail": "ELV 1 = 1; Meditar reached the level-1 cap 3 by use = 3; Meditar still 3 after 1 more meditation rounds (no gain at the cap) = 3",
+   "ms": 115457
   },
   {
    "id": "PRG-18",
    "outcome": "fail",
-   "detail": "Meditar rose again to the level-2 cap 5: expected 5, got 1 [ok so far: ELV 2 (set through the DB: the GM helper cannot /MOD others) = 2; free points 10 + 5 = 15]",
-   "ms": 126449
+   "detail": "step timeout 240 s [ok so far: ELV 2 (set through the DB: the GM helper cannot /MOD others) = 2; free points 10 + 5 = 15]",
+   "ms": 240008
   },
   {
    "id": "PRG-19",
    "outcome": "pass",
-   "detail": "assigned points are added to the skill = 9; skill 9 is at or above the level-3 natural cap 7; no natural gain at or above the cap = 9",
-   "ms": 47029
+   "detail": "assigned points are added to the skill = 11; skill 11 is at or above the level-3 natural cap 7; no natural gain at or above the cap = 11",
+   "ms": 117165
   },
   {
    "id": "PRG-20",
    "outcome": "fail",
-   "detail": "a skill-up (+5 exp) crossed 1125 and CheckUserLevel sent LevelUp: false [ok so far: ELV 3 (DB) = 3]",
-   "ms": 126581
+   "detail": "step timeout 240 s [ok so far: ELV 3 (DB) = 3]",
+   "ms": 240009
   },
   {
    "id": "DTH-01",
    "outcome": "fail",
-   "detail": "the creature (, char 5431) killed the 1 HP character: false [ok so far: placed on map 2 (an unsafe field map) with 1 HP = [2,50,50]]",
-   "ms": 83946
+   "detail": "placed on map 2 (an unsafe field map) with 1 HP: expected [2,50,50], got [2,49,49]",
+   "ms": 15005
   },
   {
    "id": "OTH-06",

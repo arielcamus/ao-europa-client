@@ -51,11 +51,11 @@ step('MOV-02', async c => {
     const seen = [...p.chars.values()].find(ch => ch.name === p2.characters[0]?.name);
     const t = (seen ? [seen.x, seen.y] : [p2.x, p2.y]) as [number, number]; // where the FIRST player sees it
     c.note(`second character at ${p2.map}:${t[0]},${t[1]}; first at ${p.map}:${p.x},${p.y}`);
-    if (p2.map === p.map && Math.abs(t[0] - p.x) + Math.abs(t[1] - p.y) < 40) {
-      const route = bfs(f.map, [p.x, p.y], t, new Set([t[1] * 101 + t[0]]));
-      const adj = Object.values(HEAD).map(([dx, dy]) => [t[0] - dx, t[1] - dy] as [number, number]).find(([x, y]) => walkable(f.map, x, y));
-      if (adj) { await walkTo(c, adj[0], adj[1]); const into = Object.entries(HEAD).find(([, [dx, dy]]) => p.x + dx === t[0] && p.y + dy === t[1]); if (into) { const rr = await p.step(Number(into[0]), 330); c.ok(!rr.moved, 'walking into the second (alive, visible, non-GM) player was refused'); void route; } else c.blocked('could not line up next to the second character'); }
-    } else c.blocked('second character is not on the same map (spawn differs)');
+    if (p2.map !== p.map) c.blocked('second character is not on the same map (spawn differs)');
+    // walk straight at the second character: every step up to the last must succeed, the last (into its tile) must be refused
+    const route = bfs(f.map, [p.x, p.y], t); if (!route) c.blocked('no walkable route to the second character');
+    let failedAt = 0; try { await walkTo(c, t[0], t[1]); } catch (e) { failedAt = Number(/step (\d+)\//.exec(String(e))?.[1] ?? 0); }
+    c.eq(failedAt, route!.length, `the step into the second character's tile (step ${route!.length} of ${route!.length}) was refused, all earlier steps moved`);
   }
   c.fixture('walk-into-wall-and-player', p, from);
   c.note('NPC half not driven: spawning a creature next to the player needs /ACC + a cleanup by the spawned index only (brief rule); covered by tests/fixtures/vb6/movement walk-into-creature');
