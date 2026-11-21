@@ -51,8 +51,8 @@ describe('interactive connect flow (frmConnect account screen)', () => {
   it('creates a character with LoginNewChar and shows a refusal (ShowMessageBox) without closing', () => {
     const h = harness();
     h.recv(f.Connected, { id: S.AccountCharacterList, characters: [] });
-    expect(h.session.createCharacter({ name: 'Nuevo', race: 1, gender: 1, characterClass: 3, head: 7, home: 7 })).toBe(true);
-    expect(h.packets().at(-1)).toEqual({ id: SC.LoginNewChar, name: 'Nuevo', race: 1, gender: 1, characterClass: 3, head: 7, home: 7 });
+    expect(h.session.createCharacter({ name: 'Nuevo', race: 1, gender: 1, characterClass: 3, head: 7, home: 1 })).toBe(true);
+    expect(h.packets().at(-1)).toEqual({ id: SC.LoginNewChar, name: 'Nuevo', race: 1, gender: 1, characterClass: 3, head: 7, home: 1 });
     h.recv({ id: SS.ShowMessageBox, messageId: 1769, extra: '' });
     expect(h.session.notices).toEqual([{ kind: 'box', messageId: 1769, extra: '' }]);
     h.session.backToAccount();
@@ -101,7 +101,7 @@ describe('a character request the server never answers (char-create, 21 Nov)', (
     for (const row of recording) if (row.dir === 's2c') h.session.receive(s2c(row));
     expect(h.session.phase).toBe('account');
     expect(h.session.accountCharacters.map(c => c.name)).toEqual(['Chcreate']);
-    expect(h.session.createCharacter({ name: 'Ccthyron', race: 1, gender: 1, characterClass: 1, head: 2, home: 7 })).toBe(true);
+    expect(h.session.createCharacter({ name: 'Ccthyron', race: 1, gender: 1, characterClass: 1, head: 2, home: 1 })).toBe(true);
     h.advance(10_001);
     expect(() => h.session.tick()).toThrow(/Timed out/);
     expect(h.session.silentLoginFailure).toBe('create');
@@ -111,7 +111,7 @@ describe('a character request the server never answers (char-create, 21 Nov)', (
   it('a ShowMessageBox answers the request: no extra explanation, even if the socket closes right after', () => {
     const h = harness();
     h.recv(f.Connected, { id: S.AccountCharacterList, characters: [] });
-    h.session.createCharacter({ name: 'Nuevo', race: 1, gender: 1, characterClass: 1, head: 2, home: 7 });
+    h.session.createCharacter({ name: 'Nuevo', race: 1, gender: 1, characterClass: 1, head: 2, home: 1 });
     expect(h.session.silentLoginFailure).toBe('create');
     h.recv({ id: SS.ShowMessageBox, messageId: 1781, extra: '' }); // MSG_HAS_CREADO_DEMASIADOS_PERSONAJES, then CloseSocket
     expect(h.session.silentLoginFailure).toBeUndefined();

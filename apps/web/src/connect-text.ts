@@ -88,8 +88,18 @@ export function raceModifiers(ini: Map<string, Map<string, string>>, race: numbe
   const value = (suffix: string) => Number(section?.get(`${key}${suffix}`) ?? 0) || 0;
   return ['fuerza', 'agilidad', 'inteligencia', 'constitucion', 'carisma'].map(value);
 }
-/** The home city id sent by WriteLoginNewChar (CHARACTER_CREATION_HOME_FORGAT) and its name. */
-export const HOME_CITY = 7, HOME_CITY_NAME = 'Forgat';
+/**
+ * The home cities a new character may pick, in list order, index 0 (Ullathorpe) selected first.
+ * ListaCiudades (General.bas at the pinned client 619e69d) minus Forgat: Ariel hid Forgat for now (2026-11-21), and the server only accepts
+ * Ullathorpe, Nix, Banderbill, Lindos and Arghal (Hogar.IsValidCharacterCreationCity, our post-pin backport of upstream 07009f8a; anything else
+ * starts in Ullathorpe). Each id is the server's e_City value (Declares.bas), the byte WriteLoginNewChar sends. The pinned client sent
+ * lstHogar.ListIndex + 1, which put its Forgat entry on 6 = Arkhein; ids are explicit here so the list order can never shift them.
+ */
+export const HOME_CITIES = [
+  { name: 'Ullathorpe', id: 1 }, { name: 'Nix', id: 2 }, { name: 'Banderbill', id: 3 }, { name: 'Lindos', id: 4 }, { name: 'Arghal', id: 5 },
+] as const;
+/** The e_City id sent for the city at this list index. */
+export function homeCityId(index: number): number { return HOME_CITIES[index]!.id; }
 
 /** What to tell the player when a character request ends with a closed socket and no word from the server (never a silent login screen). */
 export function silentLoginText(kind: 'create' | 'enter', timedOut: boolean): string {

@@ -209,6 +209,28 @@ index c104bec8..b5c494f6 100644
  ' Argentum 20 Game Server
  '
  '    Copyright (C) 2023-2026 Noland Studios LTD
+diff --git a/Codigo/Hogar.bas b/Codigo/Hogar.bas
+index 994e61e9..4527d3de 100644
+--- a/Codigo/Hogar.bas
++++ b/Codigo/Hogar.bas
+@@ -45,6 +45,17 @@ Public Function IsValidCity(ByVal CityId As e_City) As Boolean
+     End With
+ End Function
+ 
++' Post-pin backport of upstream 07009f8a (#1748, 2026-08-13, not HOO): the cities a new character may pick.
++' Our list is the pinned client's lstHogar minus Forgat (Ariel, 2026-11-21: Forgat hidden for now).
++Public Function IsValidCharacterCreationCity(ByVal CityId As e_City) As Boolean
++    If Not IsValidCity(CityId) Then Exit Function
++
++    Select Case CityId
++        Case cUllathorpe, cNix, cBanderbill, cLindos, cArghal
++            IsValidCharacterCreationCity = True
++    End Select
++End Function
++
+ Public Sub goHome(ByVal UserIndex As Integer)
+     On Error GoTo goHome_Err
+     With UserList(UserIndex)
 diff --git a/Codigo/LocaleDef.bas b/Codigo/LocaleDef.bas
 index de71a67b..8548d851 100644
 --- a/Codigo/LocaleDef.bas
@@ -506,10 +528,24 @@ index 4977a69e..50382342 100644
      Call Writer.WriteInt8(PorcentajeTiempo)
      Call modSendData.SendData(ToIndex, UserIndex)
 diff --git a/Codigo/TCP.bas b/Codigo/TCP.bas
-index 984849c1..5e751219 100644
+index 984849c1..b93c72b3 100644
 --- a/Codigo/TCP.bas
 +++ b/Codigo/TCP.bas
-@@ -553,9 +553,9 @@ ConnectNewUser_Err:
+@@ -491,7 +491,12 @@ Function ConnectNewUser(ByVal UserIndex As Integer, _
+         .raza = UserRaza
+         .Char.head = head
+         .genero = UserSexo
+-        .Hogar = cForgat
++        ' Post-pin backport of 07009f8a (#1748): honour the picked city; anything else (Forgat included) starts in Ullathorpe.
++        If IsValidCharacterCreationCity(Hogar) Then
++            .Hogar = Hogar
++        Else
++            .Hogar = cUllathorpe
++        End If
+         '%%%%%%%%%%%%% PREVENIR HACKEO DE LOS SKILLS %%%%%%%%%%%%%
+         .Stats.SkillPts = 10
+         .Char.Heading = e_Heading.SOUTH
+@@ -553,9 +558,9 @@ ConnectNewUser_Err:
      Call TraceError(Err.Number, Err.Description, "TCP.ConnectNewUser", Erl)
  End Function
  
@@ -521,7 +557,7 @@ index 984849c1..5e751219 100644
      If UserIndex = LastUser Then
          Do Until UserList(LastUser).flags.UserLogged
              LastUser = LastUser - 1
-@@ -563,7 +563,7 @@ Sub CloseSocket(ByVal UserIndex As Integer, Optional ByVal Reason As String = vb
+@@ -563,7 +568,7 @@ Sub CloseSocket(ByVal UserIndex As Integer, Optional ByVal Reason As String = vb
          Loop
      End If
      With UserList(UserIndex)
@@ -530,7 +566,7 @@ index 984849c1..5e751219 100644
          'mato los comercios seguros
          If IsValidUserRef(.ComUsu.DestUsu) Then
              If UserList(.ComUsu.DestUsu.ArrayIndex).flags.UserLogged Then
-@@ -588,11 +588,11 @@ ErrHandler:
+@@ -588,11 +593,11 @@ ErrHandler:
      Call TraceError(Err.Number, Err.Description, "TCP.CloseSocket", Erl)
  End Sub
  

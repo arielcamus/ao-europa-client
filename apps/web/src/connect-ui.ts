@@ -12,7 +12,7 @@ import { keyedSheet } from './grh-canvas.js';
 import { fetchText, parseIni } from './assets.js';
 import { fxTables } from './fx-world.js';
 import { averageTint, groupTint } from './fx-particles.js';
-import { CREATE_BODY, CREATE_BODY_SMALL, HOME_CITY, HOME_CITY_NAME, TEXT, headsFor, isSmallRace, raceModifiers, rotateClass, validateCharacterName } from './connect-text.js';
+import { CREATE_BODY, CREATE_BODY_SMALL, HOME_CITIES, TEXT, homeCityId, headsFor, isSmallRace, raceModifiers, rotateClass, validateCharacterName } from './connect-text.js';
 
 export type ConnectScreen = 'login' | 'account' | 'create' | 'none';
 export interface ConnectHooks {
@@ -68,7 +68,7 @@ export class ConnectUI {
   private assistantIndex = -1;
   private maximumReached = false;
   // Character creation state (frmCrearPersonaje lists).
-  private race = 0; private gender = 0; private cls = 0; private head = 0; private heading = 3;
+  private race = 0; private gender = 0; private cls = 0; private home = 0; private head = 0; private heading = 3;
   private heads: number[] = []; private modifiers = [0, 0, 0, 0, 0];
   private ini: Map<string, Map<string, string>> | undefined;
   private createCanvas = document.createElement('canvas');
@@ -249,7 +249,7 @@ export class ConnectUI {
     selector('class', TEXT.class, 585, 255, 557, 275, [540, 276, 14, 16], [658, 276, 14, 16], f => { this.cls = rotateClass(this.cls, f); this.refresh(); });
     selector('race', TEXT.race, 587, 305, 557, 320, [539, 321, 14, 16], [657, 321, 15, 17], f => { this.race = wrap(this.race, f, TEXT.races.length); this.applyRace(true); });
     selector('gender', TEXT.gender, 345, 255, 322, 275, [298, 276, 16, 16], [415, 277, 16, 18], f => { this.gender = wrap(this.gender, f, 2); this.applyRace(true); });
-    selector('home', TEXT.home, 345, 305, 322, 320, [298, 321, 16, 16], [415, 321, 16, 16], () => undefined, false);
+    selector('home', TEXT.home, 345, 305, 322, 320, [298, 321, 16, 16], [415, 321, 16, 16], f => { this.home = wrap(this.home, f, HOME_CITIES.length); this.refresh(); });
     text('attributes', TEXT.attributes, 575, 347, 'cs-bold');
     TEXT.attribute.forEach((name, i) => { text(`attr${i}`, name, 525, 372 + 30 * i); text(`val${i}`, '', 645, 375 + 30 * i, 'cs-attr'); });
     const aspect = document.createElement('div'); aspect.className = 'cs-aspect'; aspect.style.cssText = 'left:275px;top:367px;width:185px;height:148px'; this.create.append(aspect);
@@ -271,7 +271,7 @@ export class ConnectUI {
   }
   /** IniciarCrearPj: Humano, Hombre, Mago, the second head of the list. */
   private startCreate() {
-    this.race = 0; this.gender = 0; this.cls = 0; this.heading = 3; this.nameInput.value = '';
+    this.race = 0; this.gender = 0; this.cls = 0; this.home = 0; this.heading = 3; this.nameInput.value = '';
     this.heads = headsFor(this.race, this.gender, this.drawableHead); this.head = Math.min(1, this.heads.length - 1);
     this.applyRace();
   }
@@ -284,7 +284,7 @@ export class ConnectUI {
   }
   private refresh() {
     const set = (id: string, text: string) => { const el = this.labels.get(id); if (el) el.textContent = text; };
-    set('class', TEXT.classes[this.cls]!); set('race', TEXT.races[this.race]!); set('gender', TEXT.genders[this.gender]!); set('home', HOME_CITY_NAME);
+    set('class', TEXT.classes[this.cls]!); set('race', TEXT.races[this.race]!); set('gender', TEXT.genders[this.gender]!); set('home', HOME_CITIES[this.home]!.name);
     this.modifiers.forEach((mod, i) => {
       const value = 18 + mod, el = this.labels.get(`val${i}`); if (!el) return;
       el.textContent = String(value); el.style.color = value > 18 ? '#0f0' : value < 18 ? '#f00' : '#fff';
@@ -307,7 +307,7 @@ export class ConnectUI {
     if (problem) { this.hooks.message(problem); return; }
     const head = this.heads[this.head];
     if (head === undefined) { this.hooks.message(TEXT.pickHead); return; }
-    this.hooks.create({ name, race: this.race + 1, gender: this.gender + 1, characterClass: this.cls + 1, head, home: HOME_CITY });
+    this.hooks.create({ name, race: this.race + 1, gender: this.gender + 1, characterClass: this.cls + 1, head, home: homeCityId(this.home) });
   }
 
   // ---- drawing helpers ----------------------------------------------------------------------------------------------

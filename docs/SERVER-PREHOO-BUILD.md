@@ -78,6 +78,76 @@ reproduces the live Codigo byte for byte. Each was then carried to 9ccd7fad (`gi
 | 8 | ScriptsDB `20260724-01-change first castle coordinate val.sql`: leading `--` comment removed (`RunScriptInFile` strips CR/LF, so the comment swallowed the UPDATE) | same file at 9ccd; only matters for a fresh DB |
 | 9 | **Upstream bug fix**, `castle-whitelist-only-when-founded`: `ModCastle.CheckCastleEntryWhiteList` returns True when no founded castle owns the trigger. Triggers 21..40 are also on ordinary building interiors, so without a founded castle nobody could enter those buildings (DATA-PATCHES.md section 3). | clean |
 | 10 | **Upstream bug fix**, new: `Protocol.HandleLoginNewChar` (the `#ElseIf PYMMO = 0` version) | see below |
+| 11 | **Post-pin backport**, upstream `07009f8a` (#1748, 2026-08-13, not HOO): new characters start in the city they pick | see [Home city choice](#home-city-choice-post-pin-backport-of-07009f8a) |
+
+### Home city choice (post-pin backport of 07009f8a)
+
+**Why.** Ariel, 2026-11-21 15:34: *"Let's hide Forgat for now. Let's let people choose to start in the city."* At 9ccd7fad
+`TCP.ConnectNewUser` ignores the client's `Hogar` and forces `.Hogar = cForgat` (TCP.bas:494, from upstream #959, Sep 2025). Upstream
+restored the choice three days after our pin in `07009f8a` "Allow character creation city selection" (#1748, 2026-08-13). That commit
+touches only `Hogar.bas` and `TCP.bas`, no data and nothing made for HOO, so it comes back as a documented post-pin patch.
+
+**What differs from upstream.** Upstream's list is Ullathorpe, Nix, Arghal, Forgat, Eldoria, Penthar, Morgrim, and it refuses
+any other id (`Exit Function`, no answer to the client). Ours is the pinned client's `lstHogar` minus Forgat, and it never refuses:
+
+```vb
+' Hogar.bas
+Public Function IsValidCharacterCreationCity(ByVal CityId As e_City) As Boolean
+    If Not IsValidCity(CityId) Then Exit Function
+    Select Case CityId
+        Case cUllathorpe, cNix, cBanderbill, cLindos, cArghal
+            IsValidCharacterCreationCity = True
+    End Select
+End Function
+' TCP.ConnectNewUser, replacing .Hogar = cForgat (the 1..CITY_COUNT range check above it is unchanged)
+        If IsValidCharacterCreationCity(Hogar) Then
+            .Hogar = Hogar
+        Else
+            .Hogar = cUllathorpe
+        End If
+```
+
+So Forgat (7) and every other in-range id start in Ullathorpe, which also covers the pinned VB6 client: its list ends in "Forgat"
+but sends `ListIndex + 1` = 6 = Arkhein. Out-of-range ids are still refused as at 9ccd. Patch alone:
+[docs/patches/2026-11-21-server-9ccd-home-city.patch](patches/2026-11-21-server-9ccd-home-city.patch) (applies on top of the build
+patch); [the build patch](patches/2026-11-21-server-9ccd7fad-build.patch) now includes it (also `PATCHES-9ccd-build.patch` in both VM
+dirs; the previous version is `PATCHES-9ccd-build.patch.bak-homecity`).
+
+**Data.** Every starting city's spawn and resurrection tile was checked against the pinned maps (DATA-PATCHES.md section 7): Ullathorpe,
+Nix, Banderbill and Arghal are on land; **Lindos pointed at the sea** (map 408 "Mar del Norte") like Forgat did, and is patched to
+64:50,59 (resurrection 64:51,44).
+
+**Build (2026-11-21 15:30-15:33 VM time).** `C:\ao\server-9ccd-b` is a copy of `C:\ao\server-9ccd` (robocopy without `Logs`,
+`Database.db*`, the exes and the `.twinproj`) with the patched `Codigo\TCP.bas`, `Codigo\Hogar.bas` and `Dat\Ciudades.Dat`, a `.backup`
+of the live DB, and `Server.ini` `StartPort=7697`. twinBASIC (the IDE that was already open, driven through the QEMU QMP socket:
+`input-send-event` / `send-key` / `screendump`, since Screen Sharing shows a frozen picture): Open Project `C:\ao\server-9ccd-b\Server.VBP`,
+Option Explicit unticked, saved as `Argentum20Server-9ccd-b.twinproj`, win32, Conditional Compilation Args as imported from Server.VBP
+(`DEBUGGING = 1 : UNLOCK_CPU = 1 : UNIT_TEST = 0 : PYMMO = 0 : BATTLESERVER = 0 : DIRECT_PLAY = 0`), Build Output Path
+`C:\ao\server-9ccd-b\server-9ccd-b.exe`, Build Stack Reserve Size 67108864, File > Build. 0 errors, 224 warnings (as before).
+Output 14,379,008 bytes, sha256 `8d949c7db9fc700ee0e4691ced9ac86e455c5af5a29f05496a683c37e5dd6848`, PE stack reserve 67108864, LAA on.
+The live directory and its exe were not touched.
+
+**Side-by-side test on 7697** (task `AOServer9ccdB`, then stopped and unregistered; 7667 kept running throughout). Listener after ~5 min
+of load; event log errors are the three known ones (`ES.LoadBalance`, `UnderworldMapPool.Dat`, `Mapa843.csm`). One fresh account and
+character per home byte, then six walk attempts (`RequestPositionUpdate` after each):
+
+| Home byte sent | Spawn | Steps accepted |
+| --- | --- | --- |
+| 1 Ullathorpe | 1:57,44 | 6/6 |
+| 2 Nix | 34:40,87 | 6/6 |
+| 3 Banderbill | 59:47,41 | 5/6 (the north step hits a wall) |
+| 4 Lindos (patched) | 64:50,59 | 6/6 |
+| 5 Arghal | 151:61,43 | 6/6 |
+| 7 Forgat (hidden) | 1:57,44 (Ullathorpe fallback) | 6/6 |
+
+Also through the browser client and our own bridge: Arghal and Lindos picked on the creation screen, spawned there and walked.
+The 8 test characters (accounts `hc*@local.test`) exist only in `C:\ao\server-9ccd-b\Database.db`.
+
+**Swap (prepared, not run).** `C:\ao\tmp\ao-homecity-swap.ps1`: `.backup` of the live DB, stop `AOClassicServer`, back up
+`Dat\Ciudades.Dat`, `start-server.ps1` and the two `.bas` files as `*.bak-homecity-<TS>`, copy `server-9ccd-b.exe`, `Ciudades.Dat` and
+the two `.bas` files into `C:\ao\server-9ccd`, point `start-server.ps1` at `C:\ao\server-9ccd\server-9ccd-b.exe` (the live DB,
+`Server.ini` and logs stay where they are), start, poll 7667 (~3-5 min). Rollback: `C:\ao\tmp\ao-homecity-rollback.ps1 <TS>`.
+No DB change: the schema is untouched and existing characters keep their saved position and home (Forgat included).
 
 ### Upstream bug fix: HandleLoginNewChar used the connection id as a user index
 
