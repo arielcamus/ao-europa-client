@@ -11,7 +11,7 @@ Scanned refs: `main`
 ## Headline
 
 - **Packets covered (merged + open branches): 512 of 513 = 99.8%.** Merged on main only: 512 = 99.8%.
-  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 279.
+  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 283.
 - **Forms covered: 58 of 86 = 67.4%** (0 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
@@ -263,7 +263,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 51 | Fxpiso | client Protocol.bas:HandleFxPiso | core | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 52 | ObjectDelete | client Protocol.bas:HandleObjectDelete | items | merged | `main:packages/protocol/src/packets/doors.ts` | no |
 | 53 | BlockPosition | client Protocol.bas:HandleBlockPosition | core | merged | `main:packages/protocol/src/packets/doors.ts` | yes |
-| 54 | PlayMIDI | client Protocol.bas:HandlePlayMIDI | core | merged | `main:packages/protocol/src/packets/audio.ts` | no |
+| 54 | PlayMIDI | client Protocol.bas:HandlePlayMIDI | core | merged | `main:packages/protocol/src/packets/audio.ts` | yes |
 | 55 | PlayWave | client Protocol.bas:HandlePlayWave | core | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 56 | GuildList | client Protocol.bas:HandleGuildList | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 57 | AreaChanged | client Protocol.bas:HandleAreaChanged | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
@@ -396,8 +396,8 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 184 | GetInventarioHechizos | client Protocol.bas:HandleGetInventarioHechizos | extras | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 185 | NotificarClienteCasteo | client Protocol.bas:HandleNotificarClienteCasteo | extras | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 186 | PosUpdateUserChar | client Protocol.bas:HandlePosUpdateUserChar | core | merged | `main:packages/protocol/src/packets.ts` | no |
-| 187 | PosUpdateChar | client Protocol.bas:HandlePosUpdateChar | core | merged | `main:packages/protocol/src/packets.ts` | no |
-| 188 | PlayWaveStep | client Protocol.bas:HandlePlayWaveStep | core | merged | `main:packages/protocol/src/packets/audio.ts` | no |
+| 187 | PosUpdateChar | client Protocol.bas:HandlePosUpdateChar | core | merged | `main:packages/protocol/src/packets.ts` | yes |
+| 188 | PlayWaveStep | client Protocol.bas:HandlePlayWaveStep | core | merged | `main:packages/protocol/src/packets/audio.ts` | yes |
 | 189 | ShopPjsInit | client Protocol.bas:HandleShopPjsInit | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 190 | DebugDataResponse | client Protocol.bas:HandleDebugDataResponse | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 191 | CreateProjectile | client Protocol.bas:HandleCreateProjectile | combat | merged | `main:packages/protocol/src/packets/spells.ts` | no |
@@ -568,7 +568,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 149 | TeleportDestroy | server Protocol.bas:HandleTeleportDestroy | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 150 | RainToggle | server Protocol.bas:HandleRainToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 151 | SetCharDescription | server Protocol.bas:HandleSetCharDescription | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 152 | ForceMIDIToMap | server Protocol.bas:HandleForceWAVEToMap | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 152 | ForceMIDIToMap | server Protocol.bas:HandleForceWAVEToMap | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
 | 153 | ForceWAVEToMap | server Protocol.bas:HandleForceWAVEToMap | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 154 | RoyalArmyMessage | server Protocol.bas:HandleRoyalArmyMessage | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 155 | ChaosLegionMessage | server Protocol.bas:HandleChaosLegionMessage | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |

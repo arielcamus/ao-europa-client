@@ -18,7 +18,7 @@
   "forms": 86,
   "formsCovered": 58,
   "formsPartial": 0,
-  "fixturePackets": 279,
+  "fixturePackets": 283,
   "packetsPct": 99.8,
   "packetsMergedPct": 99.8,
   "formsPct": 67.4,
@@ -261,6 +261,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -348,6 +350,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -547,6 +551,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/core-session/quit-in-safe-city-disconnects.jsonl",
     "tests/fixtures/vb6/core-session/quit-then-cancel-exit.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl"
@@ -852,6 +858,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -935,6 +942,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
@@ -1167,6 +1175,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -1421,6 +1431,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -1596,6 +1608,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
@@ -1740,6 +1754,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/bank/deposit-move-extract.jsonl",
     "tests/fixtures/vb6/bank/far-from-banker.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
@@ -1807,6 +1823,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -1893,6 +1911,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -2048,6 +2068,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -2168,6 +2190,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -2239,8 +2263,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/audio.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl"
+   ]
   },
   {
    "key": "s2c:55",
@@ -2260,6 +2286,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
     "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
@@ -2351,6 +2378,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -2481,6 +2510,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
@@ -2533,6 +2564,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -2654,6 +2687,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/bank/deposit-move-extract.jsonl",
     "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
@@ -2803,6 +2838,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -3115,6 +3152,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -3223,6 +3262,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -3347,6 +3388,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
     "tests/fixtures/vb6/extras/live-events-commands.jsonl",
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
@@ -3431,6 +3474,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -3818,6 +3863,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -3923,6 +3970,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -4154,6 +4203,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/bank/deposit-move-extract.jsonl",
     "tests/fixtures/vb6/bank/far-from-banker.jsonl",
@@ -4267,6 +4318,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
@@ -4378,6 +4431,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -4507,6 +4562,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
@@ -4903,6 +4960,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -5017,6 +5076,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -5183,6 +5244,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/bank/deposit-move-extract.jsonl",
     "tests/fixtures/vb6/bank/far-from-banker.jsonl",
@@ -5475,6 +5538,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
@@ -5647,6 +5711,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -5754,6 +5820,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -5840,6 +5908,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -5947,6 +6017,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
@@ -6224,6 +6295,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -6485,8 +6558,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl"
+   ]
   },
   {
    "key": "s2c:188",
@@ -6504,8 +6579,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/audio.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl"
+   ]
   },
   {
    "key": "s2c:189",
@@ -6644,6 +6721,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -6749,6 +6828,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -6854,6 +6935,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -6960,6 +7043,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -7876,6 +7961,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/core-session/quit-in-safe-city-disconnects.jsonl",
     "tests/fixtures/vb6/core-session/quit-then-cancel-exit.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl"
@@ -8587,6 +8674,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
@@ -10355,8 +10444,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/gm.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl"
+   ]
   },
   {
    "key": "c2s:153",
@@ -13412,6 +13503,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/audio/force-midi-map.jsonl",
+    "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/bank-doors-closed.jsonl",
