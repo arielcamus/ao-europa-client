@@ -23,7 +23,7 @@ export const loadNpcList = (): Promise<NpcEntry[]> => npcTable ??= fetchText('Da
   const ini = parseIni(text), list: NpcEntry[] = [];
   for (const [section, values] of ini) {
     const match = /^npc(\d+)$/.exec(section);
-    if (match) list.push({ index: Number(match[1]), name: values.get('name') ?? '', summonable: values.get('puedeinvocar') === '1' });
+    if (match) list.push({ index: Number(match[1]), name: values.get('name') ?? '', summonable: parseInt(values.get('puedeinvocar') ?? '0', 10) === 1 /* VB6 Val: the value may carry a trailing comment */ });
   }
   return list.sort((a, b) => a.index - b.index);
 }).catch(error => { npcTable = undefined; throw error; });
