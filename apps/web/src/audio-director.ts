@@ -5,7 +5,7 @@
  * Adapted 2026-11-20 from client Protocol.bas, TileEngine.bas, TileEngine_Map.bas and ao20audio.bas.
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty. See ../../../LICENSE.
  */
-import { AudioServerPacketId as A, CombatServerPacketId as C, ServerPacketId as S, SpellServerPacketId as SP } from '@ao/protocol';
+import { AudioServerPacketId as A, CombatServerPacketId as C, ServerPacketId as S, SkillsServerPacketId as SK, SpellServerPacketId as SP } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import {
   SND, Terrain, ambientWave, inHearingArea, mapMusicId, musicFile, panAt, panByDistance, stepWave, terrainOf, volumeByDistance, waveFile,
@@ -21,7 +21,9 @@ export interface AudioWorld {
   readonly dead: boolean;
   readonly motion: { started: number; to: { x: number; y: number } } | undefined;
   /** A character of the map, or undefined. */
-  char(index: number): { x: number; y: number; body: number; privileges: number; sailing: boolean; speeding: number } | undefined;
+  char(index: number): { x: number; y: number; body: number; privileges: number; sailing: boolean; speeding: number; npc?: number } | undefined;
+  /** ModMetereologia.EsNoche (TimeIndex 0..2): the map ambient takes its first field instead of the second. */
+  readonly night: boolean;
   /** The renderer's map is the one the session is on. */
   readonly mapReady: boolean;
   mapAudio(): { music: number; ambient: string; rain: boolean; snow: boolean; fog: boolean } | undefined;
@@ -66,6 +68,7 @@ export class AudioDirector {
       case A.RainToggle: this.weather('rain', packet.raining); break;
       case A.NieveToggle: this.weather('snow', packet.snowing); break;
       case A.PlayMIDI: break; // HandlePlayMIDI reads File and Loop and does nothing.
+      case SK.MeditateToggle: this.meditation(packet.charIndex, packet.fx); break;
       case S.CharacterMove: {
         if (packet.charIndex !== this.world.charIndex) this.step(packet.charIndex, packet.x, packet.y);
         break;
@@ -116,7 +119,9 @@ export class AudioDirector {
     this.ambient(audio.ambient);
   }
   private ambient(ambient: string) {
-    const wave = ambientWave(ambient, false); // day; Hora (117) is not decoded yet
+    // PlayAmbientAudio: EsNoche picks field 1, otherwise field 2. It runs at SwitchMap and when the rain ends only, so a day/night flip while
+    // standing on the map does not restart the ambient (the VB6 client does not either).
+    const wave = ambientWave(ambient, this.world.night);
     if (wave) void this.engine.playAmbient(wave); else this.engine.stopAmbient();
   }
   /** HandleRainToggle / HandleNieveToggle. */
@@ -152,13 +157,27 @@ export class AudioDirector {
     this.at(file, packet.x, packet.y);
   }
 
+  /** ao20audio.PlayWav(id, False, 0, 0): a wave with no position (RevisarHoraMundo's wolf and rooster, a tile spell's arrival). */
+  global(wave: number) { void this.engine.playWave(wave); }
+
+  /** Protocol.HandleMeditateToggle: the meditation loop under the label "meditate<char>" while the character is in the player's area; fx 0 stops it. */
+  private meditation(charIndex: number, fx: number) {
+    const label = `meditate${charIndex}`;
+    if (fx === 0) { this.engine.stopWave(SND.meditate, label); return; }
+    const char = this.world.char(charIndex), here = this.self;
+    if (!char || !here || !inHearingArea(char.x, char.y, here.x, here.y)) return;
+    const d = Math.abs(char.x - here.x) + Math.abs(char.y - here.y);
+    void this.engine.playWave(SND.meditate, { loop: true, label, volume: volumeByDistance(this.engine.settings.volFx, d), pan: panAt(char.x, char.y, here.x, here.y, this.invert) });
+  }
+
   /** TileEngine.DoPasosFx for a character that just moved to (x, y). */
   step(charIndex: number, x: number, y: number) {
     const world = this.world, here = this.self;
     if (!here) return;
     const char = world.char(charIndex);
     const me = world.charIndex === undefined ? undefined : world.char(world.charIndex);
-    if (!char || isDeadBody(char.body) || world.dead) return;
+    // DoPasosFx: "Mascots don't make noise" (HandleCharacterCreate: EsMascota = FlagNpc = 2).
+    if (!char || char.npc === 2 || isDeadBody(char.body) || world.dead) return;
     if (privilegeOf(char.privileges) > privilegeOf(me?.privileges ?? 0)) return;
     if (!inHearingArea(x, y, here.x, here.y)) return;
     const foot = !(this.feet.get(charIndex) ?? false);

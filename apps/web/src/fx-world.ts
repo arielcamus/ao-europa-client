@@ -479,6 +479,8 @@ export class WorldFx {
       } else if (t.endFx > 0) {
         this.hooks.addFx?.({ fx: t.endFx, charIndex: t.destChar || undefined, x: t.destX, y: t.destY, loops: t.destChar ? t.endLoops : 0 });
       }
+      // Effect_Render_Slot: a tile explosion also plays its wave with no position (`PlayWav(.wav)`) before the positional one.
+      if (t.wave > 0 && t.endStream && !t.destChar) this.hooks.playGlobalWave?.(t.wave);
       if (t.wave > 0) this.hooks.playWave?.(t.wave, t.destChar ? Math.round(to.x / 32) : t.destX, t.destChar ? Math.round(to.y / 32) : t.destY);
       this.travelers.splice(i, 1);
     }
