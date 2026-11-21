@@ -1,21 +1,13 @@
 import { test, expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
-import { readFileSync } from 'node:fs';
-import { FrameDecoder, OptionsClientPacketId as OC, OptionsServerPacketId as OS, KeysClientPacketId as KC, HOTKEY_TOGGLE, decodeClientPacket, encodeServerFrame } from '../../../packages/protocol/src/index.js';
+import { FrameDecoder, ServerPacketId as SP, OptionsClientPacketId as OC, OptionsServerPacketId as OS, KeysClientPacketId as KC, HOTKEY_TOGGLE, decodeClientPacket, encodeServerFrame } from '../../../packages/protocol/src/index.js';
 import type { ClientPacket, ServerPacket } from '../../../packages/protocol/src/index.js';
 
 // Issue #40: the wp11 UI (options window, key editor, hotkey bar) against the stand-in server. The stand-in knows nothing about hotkeys, so
 // the page's WebSocket is intercepted: SendClientToggles ("hotokey-enabled") is injected after login and SetHotkeySlot / UseHKeySlot are
 // recorded and swallowed here instead of reaching the stand-in.
-// IsBindable is post-pin: in the pre-HOO Recursos (client-classic 619e69d) HECHIZO1 has no IsBindable=1, so right-dragging spell 1 binds nothing there.
-function spellOneBindable(): boolean {
-  const root = process.env.AO_ASSETS;
-  if (!root) return true;
-  try {
-    const section = readFileSync(`${root}/Dat/Hechizos.dat`, 'latin1').split(/^\[HECHIZO1\]\r?$/m)[1]?.split(/^\[/m)[0] ?? '';
-    return /^IsBindable=1/im.test(section);
-  } catch { return true; }
-}
+// IsBindable is not read from Hechizos.dat: the pinned client takes it from the server's ChangeSpellSlot / ChangeInventorySlot (bindable flag),
+// so these tests inject those packets and run on any data set (pre-HOO Recursos included).
 
 async function login(page: Page) {
   const seen: ClientPacket[] = [];
@@ -130,18 +122,27 @@ test.describe('options window, key editor and hotkey bar', () => {
   });
 
   test('hotkey bar: appears with hotokey-enabled, right-drag of a bindable spell binds a slot, the bound key uses it', async ({ page }) => {
-    test.skip(!spellOneBindable(), 'HECHIZO1 is not IsBindable in this Hechizos.dat (pre-HOO data)');
     const { seen, inject } = await login(page);
     const bar = page.locator('#hotkeys');
     await expect(bar).toBeHidden();
     inject({ id: OS.SendClientToggles, toggles: [HOTKEY_TOGGLE] });
     await expect(bar).toBeVisible();
     await expect(bar.locator('.hk-slot')).toHaveCount(10);
-    // Hechizo 1 of the stand-in's list is bindable in Hechizos.dat (IsBindable = 1).
+    // Spell slot 1 is declared bindable by the server (ChangeSpellSlot.bindable), slot 2 is not.
+    inject({ id: SP.ChangeSpellSlot, slot: 1, spell: 1, index: 1, bindable: true }, { id: SP.ChangeSpellSlot, slot: 2, spell: 2, index: 2, bindable: false });
     await page.getByRole('tab', { name: 'Hechizos', exact: true }).click();
     const spell = page.locator('#spell-1');
     await expect(spell).toBeVisible();
     const from = (await spell.boundingBox())!, slot = (await bar.locator('.hk-slot').nth(2).boundingBox())!;
+    // A non-bindable spell binds nothing (picHechiz_MouseDown) and a real mouse drag selects no text.
+    await expect(page.locator('#spell-2')).toBeVisible();
+    const plain = (await page.locator('#spell-2').boundingBox())!;
+    await page.mouse.move(plain.x + 10, plain.y + 5); await page.mouse.down({ button: 'right' });
+    await page.mouse.move(slot.x + slot.width / 2, slot.y + slot.height / 2, { steps: 8 }); await page.mouse.up({ button: 'right' });
+    await page.mouse.move(plain.x + 10, plain.y + 5); await page.mouse.down();
+    await page.mouse.move(slot.x + slot.width / 2, slot.y + slot.height / 2, { steps: 8 }); await page.mouse.up();
+    expect(await page.evaluate(() => window.getSelection()?.toString() ?? '')).toBe('');
+    expect(seen.find(p => p.id === OC.SetHotkeySlot && (p as { index: number }).index === 2)).toBeUndefined();
     await page.mouse.move(from.x + 10, from.y + 5);
     await page.mouse.down({ button: 'right' });
     await page.mouse.move(slot.x + slot.width / 2, slot.y + slot.height / 2, { steps: 8 });
@@ -158,5 +159,33 @@ test.describe('options window, key editor and hotkey bar', () => {
     await page.keyboard.press(/^\d$/.test(label) ? `Digit${label}` : `Key${label.toUpperCase()}`);
     await expect.poll(() => seen.filter(p => p.id === KC.UseHKeySlot).length).toBe(1);
     expect(seen.find(p => p.id === KC.UseHKeySlot)).toMatchObject({ slot: 2 });
+  });
+
+  test('hotkey bar: a bindable item right-dragged from the inventory binds as type Item and is not thrown', async ({ page }) => {
+    const { seen, inject } = await login(page);
+    inject({ id: OS.SendClientToggles, toggles: [HOTKEY_TOGGLE] });
+    const bar = page.locator('#hotkeys');
+    await expect(bar).toBeVisible();
+    inject({ id: SP.ChangeInventorySlot, slot: 20, object: 38, amount: 5, equipped: false, value: 10, canUse: 1, elementalTags: 0, bindable: true });
+    const item = page.locator('#inventory .inventory-slot:nth-child(20)');
+    await expect(item).toHaveAttribute('aria-label', /.+/);
+    const from = (await item.boundingBox())!, slot = (await bar.locator('.hk-slot').nth(4).boundingBox())!;
+    await page.mouse.move(from.x + 16, from.y + 16); await page.mouse.down({ button: 'right' });
+    await page.mouse.move(slot.x + slot.width / 2, slot.y + slot.height / 2, { steps: 8 }); await page.mouse.up({ button: 'right' });
+    await expect.poll(() => seen.find(p => p.id === OC.SetHotkeySlot && (p as { index: number }).index === 38)).toBeDefined();
+    expect(seen.find(p => p.id === OC.SetHotkeySlot && (p as { index: number }).index === 38)).toMatchObject({ slot: 4, index: 38, type: 1 });
+    expect(await page.evaluate(() => window.getSelection()?.toString() ?? '')).toBe('');
+  });
+
+  test('clicking the Hechizos tab while holding a movement key does not stop the walk', async ({ page }) => {
+    await login(page);
+    const confirmed = async () => Number(await page.locator('#confirmed').textContent());
+    await page.keyboard.down('ArrowRight');
+    await expect.poll(confirmed).toBeGreaterThanOrEqual(2);
+    await page.getByRole('tab', { name: 'Hechizos', exact: true }).click();
+    await expect(page.locator('#spells')).toBeVisible();
+    const before = await confirmed();
+    await expect.poll(confirmed).toBeGreaterThan(before + 1);
+    await page.keyboard.up('ArrowRight');
   });
 });
