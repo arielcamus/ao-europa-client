@@ -9,20 +9,20 @@
  ],
  "headline": {
   "packets": 523,
-  "packetsCovered": 510,
-  "packetsMerged": 510,
+  "packetsCovered": 466,
+  "packetsMerged": 466,
   "s2c": 207,
   "c2s": 316,
-  "s2cCovered": 200,
-  "c2sCovered": 310,
+  "s2cCovered": 192,
+  "c2sCovered": 274,
   "forms": 86,
-  "formsCovered": 53,
-  "formsPartial": 4,
-  "fixturePackets": 259,
-  "packetsPct": 97.5,
-  "packetsMergedPct": 97.5,
-  "formsPct": 61.6,
-  "formsStartedPct": 66.3
+  "formsCovered": 4,
+  "formsPartial": 6,
+  "fixturePackets": 241,
+  "packetsPct": 89.1,
+  "packetsMergedPct": 89.1,
+  "formsPct": 4.7,
+  "formsStartedPct": 11.6
  },
  "groups": [
   {
@@ -33,9 +33,9 @@
    "packetsMerged": 68,
    "packetsPct": 100,
    "forms": 21,
-   "formsCovered": 10,
-   "formsPartial": 1,
-   "formsPct": 47.6
+   "formsCovered": 0,
+   "formsPartial": 2,
+   "formsPct": 0
   },
   {
    "id": "chat",
@@ -81,9 +81,9 @@
    "packetsMerged": 27,
    "packetsPct": 100,
    "forms": 4,
-   "formsCovered": 4,
+   "formsCovered": 2,
    "formsPartial": 0,
-   "formsPct": 100
+   "formsPct": 50
   },
   {
    "id": "npcs",
@@ -93,9 +93,9 @@
    "packetsMerged": 7,
    "packetsPct": 100,
    "forms": 2,
-   "formsCovered": 2,
+   "formsCovered": 0,
    "formsPartial": 0,
-   "formsPct": 100
+   "formsPct": 0
   },
   {
    "id": "bank",
@@ -105,9 +105,9 @@
    "packetsMerged": 16,
    "packetsPct": 100,
    "forms": 3,
-   "formsCovered": 2,
+   "formsCovered": 0,
    "formsPartial": 0,
-   "formsPct": 66.7
+   "formsPct": 0
   },
   {
    "id": "trade",
@@ -117,9 +117,9 @@
    "packetsMerged": 8,
    "packetsPct": 100,
    "forms": 2,
-   "formsCovered": 2,
+   "formsCovered": 0,
    "formsPartial": 0,
-   "formsPct": 100
+   "formsPct": 0
   },
   {
    "id": "party",
@@ -129,9 +129,9 @@
    "packetsMerged": 9,
    "packetsPct": 100,
    "forms": 2,
-   "formsCovered": 2,
+   "formsCovered": 0,
    "formsPartial": 0,
-   "formsPct": 100
+   "formsPct": 0
   },
   {
    "id": "guild",
@@ -141,9 +141,9 @@
    "packetsMerged": 41,
    "packetsPct": 100,
    "forms": 11,
-   "formsCovered": 11,
+   "formsCovered": 0,
    "formsPartial": 0,
-   "formsPct": 100
+   "formsPct": 0
   },
   {
    "id": "quests",
@@ -153,9 +153,9 @@
    "packetsMerged": 10,
    "packetsPct": 100,
    "forms": 2,
-   "formsCovered": 2,
+   "formsCovered": 0,
    "formsPartial": 0,
-   "formsPct": 100
+   "formsPct": 0
   },
   {
    "id": "skills",
@@ -165,9 +165,9 @@
    "packetsMerged": 19,
    "packetsPct": 100,
    "forms": 3,
-   "formsCovered": 2,
+   "formsCovered": 0,
    "formsPartial": 0,
-   "formsPct": 66.7
+   "formsPct": 0
   },
   {
    "id": "crafting",
@@ -197,37 +197,37 @@
    "id": "options",
    "title": "Options / keybinds",
    "packets": 2,
-   "packetsCovered": 2,
-   "packetsMerged": 2,
-   "packetsPct": 100,
+   "packetsCovered": 1,
+   "packetsMerged": 1,
+   "packetsPct": 50,
    "forms": 4,
-   "formsCovered": 3,
+   "formsCovered": 0,
    "formsPartial": 0,
-   "formsPct": 75
+   "formsPct": 0
   },
   {
    "id": "minimap",
    "title": "Minimap / world map",
    "packets": 2,
-   "packetsCovered": 0,
-   "packetsMerged": 0,
-   "packetsPct": 0,
+   "packetsCovered": 2,
+   "packetsMerged": 2,
+   "packetsPct": 100,
    "forms": 1,
    "formsCovered": 0,
-   "formsPartial": 0,
+   "formsPartial": 1,
    "formsPct": 0
   },
   {
    "id": "extras",
    "title": "Events, battlegrounds, premium shop, remort, anti-cheat",
    "packets": 60,
-   "packetsCovered": 49,
-   "packetsMerged": 49,
-   "packetsPct": 81.7,
+   "packetsCovered": 4,
+   "packetsMerged": 4,
+   "packetsPct": 6.7,
    "forms": 13,
-   "formsCovered": 2,
+   "formsCovered": 0,
    "formsPartial": 0,
-   "formsPct": 15.4
+   "formsPct": 0
   },
   {
    "id": "gm",
@@ -237,9 +237,9 @@
    "packetsMerged": 142,
    "packetsPct": 100,
    "forms": 13,
-   "formsCovered": 9,
+   "formsCovered": 0,
    "formsPartial": 0,
-   "formsPct": 69.2
+   "formsPct": 0
   }
  ],
  "packets": [
@@ -268,9 +268,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -292,8 +289,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -345,9 +340,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -369,8 +361,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -417,7 +407,6 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl"
    ]
   },
@@ -451,7 +440,6 @@
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/station-not-open.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
@@ -831,9 +819,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -855,7 +840,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -900,8 +884,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl"
+    "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl"
    ]
   },
   {
@@ -1019,7 +1002,6 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
@@ -1043,7 +1025,6 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -1129,9 +1110,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -1153,8 +1131,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -1214,7 +1190,6 @@
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
     "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -1364,9 +1339,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -1389,8 +1361,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -1527,9 +1497,6 @@
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -1551,8 +1518,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -1613,7 +1578,6 @@
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/station-not-open.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
@@ -1654,15 +1618,12 @@
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
@@ -1719,9 +1680,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -1743,8 +1701,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -1796,9 +1752,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -1820,8 +1773,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -1864,10 +1815,8 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/session.ts"
    ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "s2c:49",
@@ -1888,7 +1837,6 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/chat/channels.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -1900,8 +1848,6 @@
     "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
@@ -1934,9 +1880,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -1957,8 +1900,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -2046,9 +1987,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
@@ -2063,8 +2001,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -2132,7 +2068,6 @@
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -2213,9 +2148,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -2237,8 +2169,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -2302,7 +2232,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/world/weather-toggles.jsonl"
    ]
   },
   {
@@ -2334,7 +2265,6 @@
     "tests/fixtures/vb6/core-session/quit-then-cancel-exit.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/station-not-open.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
@@ -2376,9 +2306,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -2400,8 +2327,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -2490,9 +2415,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -2514,8 +2436,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/delete-item.jsonl",
@@ -2627,9 +2547,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -2651,8 +2568,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -2930,9 +2845,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -2954,8 +2866,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -3029,9 +2939,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -3053,8 +2960,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -3138,8 +3043,6 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl"
    ]
   },
@@ -3225,9 +3128,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -3249,8 +3149,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -3464,10 +3362,8 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/status.ts"
    ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl"
-   ]
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "s2c:98",
@@ -3581,9 +3477,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -3605,8 +3498,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -3678,9 +3569,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -3702,8 +3590,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -3907,9 +3793,6 @@
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
     "tests/fixtures/vb6/chat/yell.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -3932,8 +3815,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -3996,7 +3877,6 @@
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
@@ -4109,9 +3989,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -4133,8 +4010,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -4231,9 +4106,6 @@
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -4255,8 +4127,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -4324,7 +4194,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/world/weather-toggles.jsonl"
    ]
   },
   {
@@ -4603,9 +4474,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -4627,8 +4495,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -4706,9 +4572,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -4730,8 +4593,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -4786,13 +4647,17 @@
    "writer": "server Protocol_Writes.bas:WriteShowFrmMapa",
    "group": "minimap",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/world/map-item-show-form.jsonl"
+   ]
   },
   {
    "key": "s2c:139",
@@ -4810,10 +4675,8 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/status.ts"
    ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "s2c:140",
@@ -4865,9 +4728,6 @@
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/chat/whisper.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -4893,8 +4753,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/delete-item.jsonl",
@@ -4996,11 +4854,13 @@
    "writer": "server Protocol_Writes.bas:WriteUbicacion",
    "group": "minimap",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
@@ -5306,9 +5166,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -5330,8 +5187,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -5404,9 +5259,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -5428,8 +5280,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -5481,9 +5331,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -5505,8 +5352,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -5570,10 +5415,8 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/status.ts"
    ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-lobby.jsonl"
-   ]
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "s2c:164",
@@ -5603,13 +5446,11 @@
    "writer": "server Protocol_Writes.bas:WriteInvasionInfo",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5854,9 +5695,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -5878,8 +5716,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -5915,13 +5751,11 @@
    "writer": "server Protocol_Writes.bas:WriteShopInit",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5934,13 +5768,11 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6015,13 +5847,11 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6034,13 +5864,11 @@
    "writer": "server Protocol_Writes.bas:WriteGetInventarioHechizos",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/spells.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6129,13 +5957,11 @@
    "writer": "server Protocol_Writes.bas:WriteShopPjsInit",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6264,9 +6090,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -6288,8 +6111,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -6325,13 +6146,11 @@
    "writer": "server Protocol_Writes.bas:WriteAntiCheatMessage",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6344,13 +6163,11 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -6360,9 +6177,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -6384,8 +6198,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -6421,13 +6233,11 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6456,9 +6266,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -6480,8 +6287,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -6517,13 +6322,11 @@
    "writer": "server Protocol_Writes.bas:WriteChangeSkinSlot",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6552,9 +6355,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -6576,8 +6376,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -7724,7 +7522,6 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl"
    ]
   },
@@ -8028,13 +7825,11 @@
    "writer": "client Protocol_Writes.bas:WriteChangeDescription",
    "group": "options",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8085,13 +7880,11 @@
    "writer": "client Protocol_Writes.bas:WriteGamble",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8104,17 +7897,13 @@
    "writer": "client Protocol_Writes.bas:WriteMapPriceEntrance",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:69",
@@ -8125,13 +7914,11 @@
    "writer": "client Protocol_Writes.bas:WriteLeaveFaction",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8225,9 +8012,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -8249,8 +8033,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -8432,7 +8214,8 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
-    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl",
+    "tests/fixtures/vb6/world/weather-toggles.jsonl"
    ]
   },
   {
@@ -8791,7 +8574,6 @@
     "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/crafting/anvil-no-hammer.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
@@ -8893,7 +8675,6 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
@@ -9910,8 +9691,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/world.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/world/weather-toggles.jsonl"
+   ]
   },
   {
    "key": "c2s:151",
@@ -10577,18 +10360,13 @@
    "writer": "client Protocol_Writes.bas:WriteParticipar",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:186",
@@ -11115,17 +10893,13 @@
    "writer": "client Protocol_Writes.bas:WriteOfertaInicial",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:214",
@@ -11136,13 +10910,11 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11174,17 +10946,13 @@
    "writer": "client Protocol_Writes.bas:WriteCuentaRegresiva",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:217",
@@ -11214,17 +10982,13 @@
    "writer": "client Protocol_Writes.bas:WriteDuel",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:219",
@@ -11235,17 +10999,13 @@
    "writer": "client Protocol_Writes.bas:WriteAcceptDuel",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:220",
@@ -11256,17 +11016,13 @@
    "writer": "client Protocol_Writes.bas:WriteCancelDuel",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:221",
@@ -11277,17 +11033,13 @@
    "writer": "client Protocol_Writes.bas:WriteQuitDuel",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:222",
@@ -11305,8 +11057,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/world.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/world/weather-toggles.jsonl"
+   ]
   },
   {
    "key": "c2s:223",
@@ -11398,17 +11152,13 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:228",
@@ -11666,13 +11416,11 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11685,17 +11433,13 @@
    "writer": "client Protocol_Writes.bas:WriteSubastaInfo",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:241",
@@ -11763,17 +11507,13 @@
    "writer": "client Protocol_Writes.bas:WriteEventoInfo",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:245",
@@ -11784,13 +11524,11 @@
    "writer": "client Protocol_Writes.bas:WriteCrearEvento",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11843,13 +11581,11 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11862,13 +11598,11 @@
    "writer": "client Protocol_Writes.bas:WriteComenzarTorneo",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11881,13 +11615,11 @@
    "writer": "client Protocol_Writes.bas:WriteCancelarTorneo",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11900,13 +11632,11 @@
    "writer": "client Protocol_Writes.bas:WriteBusquedaTesoro",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12225,17 +11955,13 @@
    "writer": "client Protocol_Writes.bas:WriteFinEvento",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:268",
@@ -12324,13 +12050,11 @@
    "writer": "client Protocol_Writes.bas:WriteCreateEvent",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12364,13 +12088,11 @@
    "writer": "client Protocol_Writes.bas:WriteLogMacroClickHechizo",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12690,13 +12412,11 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12709,17 +12429,13 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-lobby.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:292",
@@ -12730,17 +12446,13 @@
    "writer": "client Protocol_Writes.bas:WriteCancelarEvento",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-lobby.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:293",
@@ -12751,13 +12463,11 @@
    "writer": "client Protocol_Writes.bas:WriteNotifyInventarioHechizos",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/spells.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12770,13 +12480,11 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12789,17 +12497,13 @@
    "writer": "client Protocol_Writes.bas:WriteEventoFaccionario",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:296",
@@ -12829,18 +12533,13 @@
    "writer": "client Protocol_Writes.bas:WriteLobbyCommand",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:298",
@@ -12851,13 +12550,11 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12933,13 +12630,11 @@
    "writer": "client Protocol_Writes.bas:WriteAntiCheatMessage",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12952,13 +12647,11 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -13006,9 +12699,6 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
-    "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
-    "tests/fixtures/vb6/combat-items/priest-revive-click.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
@@ -13030,8 +12720,6 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
-    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -13149,17 +12837,13 @@
    "writer": "client Protocol_Writes.bas:WriteAntiMacroMessage",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
-   "fixture": true,
-   "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
-   ]
+   "codecFiles": [],
+   "fixture": false,
+   "fixtureFiles": []
   },
   {
    "key": "c2s:311",
@@ -13170,13 +12854,11 @@
    "writer": "client Protocol_Writes.bas:WriteModifyCastleWhiteList",
    "group": "extras",
    "package": "wp11",
-   "status": "merged",
-   "covered": true,
-   "merged": true,
+   "status": "not started",
+   "covered": false,
+   "merged": false,
    "branches": [],
-   "codecFiles": [
-    "main:packages/protocol/src/packets/extras.ts"
-   ],
+   "codecFiles": [],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -13281,68 +12963,45 @@
      "ref": "main",
      "path": "apps/web/src/classic-layout.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
+     "note": "Layout shell on main; chat console on feat/chat, inventory on feat/items, spell list on feat/spells",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/chat-box.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
+     "note": "chat console and input",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/items-ui.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
+     "note": "inventory panel, equipment labels",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/spells.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
+     "note": "spell list and casting",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/look-at.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
+     "note": "click to look at tile",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/map-objects.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
-     "ok": true
-    },
-    {
-     "ref": "main",
-     "path": "apps/web/src/hotkeys-ui.ts",
-     "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
-     "ok": true
-    },
-    {
-     "ref": "main",
-     "path": "apps/web/src/inventory-extras.ts",
-     "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
-     "ok": true
-    },
-    {
-     "ref": "main",
-     "path": "apps/web/src/minimap.ts",
-     "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
+     "note": "doors and roofs in viewport",
      "ok": true
     }
-   ],
-   "missing": null,
-   "partialNote": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+   ]
   },
   {
    "name": "frmConnect",
@@ -13350,18 +13009,18 @@
    "group": "core",
    "package": "wp01",
    "lines": 1078,
-   "status": "merged",
-   "covered": true,
-   "partial": false,
+   "status": "merged (partial)",
+   "covered": false,
+   "partial": true,
    "evidence": [
     {
      "ref": "main",
-     "path": "apps/web/src/connect-ui.ts",
+     "path": "apps/web/index.html",
+     "partial": true,
+     "note": "Single login form; no account creation or character list screen",
      "ok": true
     }
-   ],
-   "missing": null,
-   "partialNote": null
+   ]
   },
   {
    "name": "FrmCuenta",
@@ -13369,18 +13028,10 @@
    "group": "core",
    "package": "wp01",
    "lines": 71,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/connect-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmOldPersonaje",
@@ -13391,12 +13042,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "b",
-    "note": "Character picking with a password keypad; the PYMMO=0 server uses the account screen (FrmCuenta) instead"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmCrearCuenta",
@@ -13404,18 +13050,10 @@
    "group": "core",
    "package": "wp01",
    "lines": 498,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/session-windows.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmNewAccount",
@@ -13423,18 +13061,10 @@
    "group": "core",
    "package": "wp01",
    "lines": 343,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/session-windows.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmCrearPersonaje",
@@ -13442,18 +13072,10 @@
    "group": "core",
    "package": "wp01",
    "lines": 917,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/connect-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmDeleteChar",
@@ -13464,12 +13086,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "b",
-    "note": "DeleteCharacter needs the account server; PYMMO=0 does nothing, the client says so (connect-text.ts deleteUnsupported)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmPasswd",
@@ -13480,12 +13097,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "b",
-    "note": "Change password: account server"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmNewPassword",
@@ -13496,12 +13108,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "b",
-    "note": "Set new password: account server"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "FrmRecuperar",
@@ -13512,12 +13119,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "b",
-    "note": "Recover account: account server"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmPasswordReset",
@@ -13528,12 +13130,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "b",
-    "note": "Password reset code: account server"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "Frmcarga",
@@ -13541,18 +13138,10 @@
    "group": "core",
    "package": "wp01",
    "lines": 46,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/session-windows.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmCargando",
@@ -13563,12 +13152,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "d",
-    "note": "Never opened by the classic client code (dead form)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmConnecting",
@@ -13576,18 +13160,10 @@
    "group": "core",
    "package": "wp01",
    "lines": 77,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/session-windows.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmPres",
@@ -13598,12 +13174,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "d",
-    "note": "Never opened by the classic client code (splash, dead form)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmCerrar",
@@ -13611,18 +13182,10 @@
    "group": "core",
    "package": "wp01",
    "lines": 107,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/session-windows.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmMensaje",
@@ -13630,18 +13193,10 @@
    "group": "core",
    "package": "wp01",
    "lines": 379,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/session-windows.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "FrmPregunta",
@@ -13649,18 +13204,10 @@
    "group": "party",
    "package": "wp07",
    "lines": 67,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/trade-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmtip",
@@ -13671,12 +13218,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "d",
-    "note": "Never opened by the classic client code (dead form)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "FrmLogear",
@@ -13684,18 +13226,10 @@
    "group": "core",
    "package": "wp01",
    "lines": 372,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/main.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmKeypad",
@@ -13706,12 +13240,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "b",
-    "note": "On-screen password keypad, only opened from frmOldPersonaje"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmMensajePapiro",
@@ -13719,18 +13248,10 @@
    "group": "items",
    "package": "wp04",
    "lines": 298,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/papiro-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmCantidad",
@@ -13745,11 +13266,11 @@
     {
      "ref": "main",
      "path": "apps/web/src/items-ui.ts",
+     "partial": false,
+     "note": "",
      "ok": true
     }
-   ],
-   "missing": null,
-   "partialNote": null
+   ]
   },
   {
    "name": "frmComerciar",
@@ -13764,11 +13285,11 @@
     {
      "ref": "main",
      "path": "apps/web/src/items-ui.ts",
+     "partial": false,
+     "note": "",
      "ok": true
     }
-   ],
-   "missing": null,
-   "partialNote": null
+   ]
   },
   {
    "name": "FrmKeyInv",
@@ -13776,18 +13297,10 @@
    "group": "items",
    "package": "wp04",
    "lines": 226,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/keyring-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmSkins",
@@ -13798,12 +13311,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "c",
-    "note": "AO20 item skins window (ChangeSkinSlot)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmBancoObj",
@@ -13811,18 +13319,10 @@
    "group": "bank",
    "package": "wp06",
    "lines": 483,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/bank-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmGoliath",
@@ -13830,18 +13330,10 @@
    "group": "bank",
    "package": "wp06",
    "lines": 472,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/bank-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmBancoCuenta",
@@ -13852,12 +13344,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "b",
-    "note": "Account-wide vault; its only opener is a hidden label on frmMain and needs the account server"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmComerciarUsu",
@@ -13865,18 +13352,10 @@
    "group": "trade",
    "package": "wp06",
    "lines": 656,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/trade-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmUserRequest",
@@ -13884,18 +13363,10 @@
    "group": "trade",
    "package": "wp06",
    "lines": 132,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/trade-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "FrmGrupo",
@@ -13903,18 +13374,10 @@
    "group": "party",
    "package": "wp07",
    "lines": 198,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/party-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmGuildAdm",
@@ -13922,18 +13385,10 @@
    "group": "guild",
    "package": "wp07",
    "lines": 229,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/guild-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmGuildBrief",
@@ -13941,18 +13396,10 @@
    "group": "guild",
    "package": "wp07",
    "lines": 275,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/guild-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmGuildDetails",
@@ -13960,18 +13407,10 @@
    "group": "guild",
    "package": "wp07",
    "lines": 270,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/guild-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmGuildFoundation",
@@ -13979,18 +13418,10 @@
    "group": "guild",
    "package": "wp07",
    "lines": 191,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/guild-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmGuildLeader",
@@ -13998,18 +13429,10 @@
    "group": "guild",
    "package": "wp07",
    "lines": 454,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/guild-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmGuildNews",
@@ -14017,18 +13440,10 @@
    "group": "guild",
    "package": "wp07",
    "lines": 329,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/guild-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmGuildURL",
@@ -14036,18 +13451,10 @@
    "group": "guild",
    "package": "wp07",
    "lines": 101,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/guild-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmCommet",
@@ -14055,18 +13462,10 @@
    "group": "guild",
    "package": "wp07",
    "lines": 167,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/guild-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmPeaceProp",
@@ -14074,18 +13473,10 @@
    "group": "guild",
    "package": "wp07",
    "lines": 252,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/guild-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmSolicitud",
@@ -14093,18 +13484,10 @@
    "group": "guild",
    "package": "wp07",
    "lines": 175,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/guild-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmCharInfo",
@@ -14112,18 +13495,10 @@
    "group": "guild",
    "package": "wp07",
    "lines": 361,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/guild-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmEligeAlineacion",
@@ -14134,12 +13509,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "d",
-    "note": "Never opened by the classic client code (dead form)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "FrmQuest",
@@ -14147,18 +13517,10 @@
    "group": "quests",
    "package": "wp08",
    "lines": 537,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/quest-window.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmQuestInfo",
@@ -14166,18 +13528,10 @@
    "group": "quests",
    "package": "wp08",
    "lines": 703,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/quest-window.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmSkills3",
@@ -14188,12 +13542,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "d",
-    "note": "Never opened by the classic client code; the skill help texts it held live in the skill window (game-text.ts)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "FrmEstadisticas",
@@ -14201,18 +13550,10 @@
    "group": "skills",
    "package": "wp09",
    "lines": 1309,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/skills-window.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmStatistics",
@@ -14220,18 +13561,10 @@
    "group": "skills",
    "package": "wp09",
    "lines": 572,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/skills-window.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmEntrenador",
@@ -14239,18 +13572,10 @@
    "group": "npcs",
    "package": "wp05",
    "lines": 170,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/skills-window.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "FrmViajes",
@@ -14258,18 +13583,10 @@
    "group": "npcs",
    "package": "wp05",
    "lines": 150,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/travel-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmHerrero",
@@ -14286,9 +13603,7 @@
      "path": "apps/web/src/crafting-ui.ts",
      "ok": true
     }
-   ],
-   "missing": null,
-   "partialNote": null
+   ]
   },
   {
    "name": "frmCarp",
@@ -14305,9 +13620,7 @@
      "path": "apps/web/src/crafting-ui.ts",
      "ok": true
     }
-   ],
-   "missing": null,
-   "partialNote": null
+   ]
   },
   {
    "name": "frmAlqui",
@@ -14323,12 +13636,10 @@
      "ref": "main",
      "path": "apps/web/src/crafting.ts",
      "partial": true,
-     "note": "crafting state and packets only; no alchemy window yet",
+     "note": "state and sends only, no window yet",
      "ok": true
     }
-   ],
-   "missing": null,
-   "partialNote": "crafting state and packets only; no alchemy window yet"
+   ]
   },
   {
    "name": "FrmSastre",
@@ -14344,12 +13655,10 @@
      "ref": "main",
      "path": "apps/web/src/crafting.ts",
      "partial": true,
-     "note": "crafting state and packets only; no tailor window yet",
+     "note": "state and sends only, no window yet",
      "ok": true
     }
-   ],
-   "missing": null,
-   "partialNote": "crafting state and packets only; no tailor window yet"
+   ]
   },
   {
    "name": "frmCrafteo",
@@ -14365,12 +13674,10 @@
      "ref": "main",
      "path": "apps/web/src/crafting.ts",
      "partial": true,
-     "note": "crafting state and packets only; no catalyst crafting window yet",
+     "note": "state and sends only, no window yet",
      "ok": true
     }
-   ],
-   "missing": null,
-   "partialNote": "crafting state and packets only; no catalyst crafting window yet"
+   ]
   },
   {
    "name": "frmOpciones",
@@ -14378,18 +13685,10 @@
    "group": "options",
    "package": "wp11",
    "lines": 1730,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/options-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmMasOpciones",
@@ -14400,12 +13699,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "b",
-    "note": "Only opened from the account recovery and account creation forms"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmCustomKeys",
@@ -14413,18 +13707,10 @@
    "group": "options",
    "package": "wp11",
    "lines": 1597,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/keys-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmBindKey",
@@ -14432,18 +13718,10 @@
    "group": "options",
    "package": "wp11",
    "lines": 185,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/keys-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmMapaGrande",
@@ -14451,15 +13729,17 @@
    "group": "minimap",
    "package": "wp02",
    "lines": 1209,
-   "status": "not started",
+   "status": "merged (partial)",
    "covered": false,
-   "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "a",
-    "note": "Large world map (ShowFrmMapa): world agent"
-   },
-   "partialNote": null
+   "partial": true,
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/world-map-ui.ts",
+     "partial": true,
+     "ok": true
+    }
+   ]
   },
   {
    "name": "frmCollectibleCard",
@@ -14470,12 +13750,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "c",
-    "note": "AO20 collectible card viewer, local to the AO20 client"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmCreateBattleground",
@@ -14486,12 +13761,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "c",
-    "note": "AO20 battleground creation (LobbyCommand)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmLobbyBattleground",
@@ -14499,18 +13769,10 @@
    "group": "extras",
    "package": "wp11",
    "lines": 243,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/extras-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmRetos",
@@ -14518,18 +13780,10 @@
    "group": "extras",
    "package": "wp11",
    "lines": 722,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/extras-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmShop",
@@ -14540,12 +13794,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "d",
-    "note": "Dead form: the premium shop the server opens is frmShopAO20, which is not in the classic source"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmShopPjsAO20",
@@ -14556,12 +13805,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "c",
-    "note": "AO20 character marketplace (ShopPjsInit, PublicarPersonajeMAO)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmTransferChar",
@@ -14572,12 +13816,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "b",
-    "note": "Character transfer between accounts: account server"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmTransferChar2FA",
@@ -14588,12 +13827,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "b",
-    "note": "Character transfer two-factor step: account server"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmPatchNotes",
@@ -14604,12 +13838,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "b",
-    "note": "Patch notes sent by the login server at login"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmNoticia",
@@ -14620,12 +13849,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "d",
-    "note": "Never opened by the classic client code (dead form)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmForo",
@@ -14636,12 +13860,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "d",
-    "note": "Never opened by the classic client code (dead form)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "FrmTorneo",
@@ -14649,18 +13868,10 @@
    "group": "gm",
    "package": "wp12",
    "lines": 1507,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/extras-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmCambiaMotd",
@@ -14668,18 +13879,10 @@
    "group": "gm",
    "package": "wp12",
    "lines": 277,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/gm-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmDebug",
@@ -14690,12 +13893,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "d",
-    "note": "Developer debug window, opened only from a hidden frmConnect control"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "FrmGmAyuda",
@@ -14703,18 +13901,10 @@
    "group": "gm",
    "package": "wp12",
    "lines": 379,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/gm-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmMessageTxt",
@@ -14725,12 +13915,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "d",
-    "note": "Never opened by the classic client code (dead form)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmMSG",
@@ -14741,12 +13926,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "d",
-    "note": "Never opened by the classic client code (dead form)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "FrmObjetos",
@@ -14754,18 +13934,10 @@
    "group": "gm",
    "package": "wp12",
    "lines": 357,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/gm-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmPanelGm",
@@ -14773,18 +13945,10 @@
    "group": "gm",
    "package": "wp12",
    "lines": 3552,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/gm-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmProcesses",
@@ -14795,12 +13959,7 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "d",
-    "note": "Never opened by the classic client code (anti-cheat leftover)"
-   },
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "frmSpawnList",
@@ -14808,18 +13967,10 @@
    "group": "gm",
    "package": "wp12",
    "lines": 196,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/gm-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "MenuGM",
@@ -14827,18 +13978,10 @@
    "group": "gm",
    "package": "wp12",
    "lines": 619,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/extras-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "MenuNPC",
@@ -14846,18 +13989,10 @@
    "group": "gm",
    "package": "wp12",
    "lines": 239,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/extras-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   },
   {
    "name": "MenuUser",
@@ -14865,18 +14000,10 @@
    "group": "gm",
    "package": "wp12",
    "lines": 243,
-   "status": "merged",
-   "covered": true,
+   "status": "not started",
+   "covered": false,
    "partial": false,
-   "evidence": [
-    {
-     "ref": "main",
-     "path": "apps/web/src/extras-ui.ts",
-     "ok": true
-    }
-   ],
-   "missing": null,
-   "partialNote": null
+   "evidence": []
   }
  ],
  "duplicates": [],
@@ -14890,15 +14017,25 @@
    "packetNames": [],
    "forms": [
     "frmMain",
+    "frmConnect",
+    "FrmCuenta",
     "frmOldPersonaje",
+    "frmCrearCuenta",
+    "frmNewAccount",
+    "frmCrearPersonaje",
     "frmDeleteChar",
     "frmPasswd",
     "frmNewPassword",
     "FrmRecuperar",
     "frmPasswordReset",
+    "Frmcarga",
     "frmCargando",
+    "frmConnecting",
     "frmPres",
+    "frmCerrar",
+    "frmMensaje",
     "frmtip",
+    "FrmLogear",
     "frmKeypad"
    ]
   },
@@ -14906,14 +14043,8 @@
    "id": "wp02",
    "title": "World FX, environment and minimap",
    "scope": "Light, weather, particles, sound, projectiles, auras, area changes, world map form",
-   "packetIds": [
-    "s2c:138",
-    "s2c:144"
-   ],
-   "packetNames": [
-    "S138 ShowFrmMapa",
-    "S144 Ubicacion"
-   ],
+   "packetIds": [],
+   "packetNames": [],
    "forms": [
     "frmMapaGrande"
    ]
@@ -14932,7 +14063,10 @@
    "scope": "Inventory moves, key ring, gamble, gold actions, amount prompts, skins",
    "packetIds": [],
    "packetNames": [],
-   "forms": []
+   "forms": [
+    "frmMensajePapiro",
+    "FrmKeyInv"
+   ]
   },
   {
    "id": "wp05",
@@ -14940,7 +14074,10 @@
    "scope": "Pet commands, trainer list, NPC symbols, travel form, NPC context menus",
    "packetIds": [],
    "packetNames": [],
-   "forms": []
+   "forms": [
+    "frmEntrenador",
+    "FrmViajes"
+   ]
   },
   {
    "id": "wp06",
@@ -14949,7 +14086,11 @@
    "packetIds": [],
    "packetNames": [],
    "forms": [
-    "frmBancoCuenta"
+    "frmBancoObj",
+    "frmGoliath",
+    "frmBancoCuenta",
+    "frmComerciarUsu",
+    "frmUserRequest"
    ]
   },
   {
@@ -14958,7 +14099,21 @@
    "scope": "Group frame/invites, every guild form, proposals, news, elections",
    "packetIds": [],
    "packetNames": [],
-   "forms": []
+   "forms": [
+    "FrmPregunta",
+    "FrmGrupo",
+    "frmGuildAdm",
+    "frmGuildBrief",
+    "frmGuildDetails",
+    "frmGuildFoundation",
+    "frmGuildLeader",
+    "frmGuildNews",
+    "frmGuildURL",
+    "frmCommet",
+    "frmPeaceProp",
+    "frmSolicitud",
+    "frmCharInfo"
+   ]
   },
   {
    "id": "wp08",
@@ -14966,7 +14121,10 @@
    "scope": "Quest list/details/abandon, NPC quest markers",
    "packetIds": [],
    "packetNames": [],
-   "forms": []
+   "forms": [
+    "FrmQuest",
+    "frmQuestInfo"
+   ]
   },
   {
    "id": "wp09",
@@ -14975,7 +14133,9 @@
    "packetIds": [],
    "packetNames": [],
    "forms": [
-    "frmSkills3"
+    "frmSkills3",
+    "FrmEstadisticas",
+    "frmStatistics"
    ]
   },
   {
@@ -14995,12 +14155,58 @@
    "title": "Options, keybinds and extras",
    "scope": "Options forms, custom keys, hotkeys, events, battlegrounds, duels, premium shop, remort",
    "packetIds": [
+    "s2c:165",
+    "s2c:178",
+    "s2c:179",
+    "s2c:183",
+    "s2c:184",
+    "s2c:189",
+    "s2c:196",
+    "s2c:197",
+    "s2c:198",
+    "s2c:200",
     "s2c:203",
     "s2c:204",
     "s2c:205",
     "s2c:206",
     "s2c:207",
+    "c2s:64",
+    "c2s:67",
+    "c2s:68",
+    "c2s:69",
+    "c2s:185",
+    "c2s:213",
+    "c2s:214",
+    "c2s:216",
+    "c2s:218",
+    "c2s:219",
+    "c2s:220",
+    "c2s:221",
+    "c2s:227",
+    "c2s:239",
+    "c2s:240",
+    "c2s:244",
+    "c2s:245",
+    "c2s:248",
+    "c2s:249",
+    "c2s:250",
+    "c2s:251",
+    "c2s:267",
+    "c2s:272",
+    "c2s:274",
+    "c2s:290",
+    "c2s:291",
+    "c2s:292",
+    "c2s:293",
+    "c2s:294",
+    "c2s:295",
+    "c2s:297",
+    "c2s:298",
+    "c2s:302",
+    "c2s:303",
     "c2s:307",
+    "c2s:310",
+    "c2s:311",
     "c2s:312",
     "c2s:313",
     "c2s:314",
@@ -15008,12 +14214,58 @@
     "c2s:316"
    ],
    "packetNames": [
+    "S165 InvasionInfo",
+    "S178 ShopInit",
+    "S179 UpdateShopClienteCredits",
+    "S183 NotificarClienteSeguido",
+    "S184 GetInventarioHechizos",
+    "S189 ShopPjsInit",
+    "S196 AntiCheatMessage",
+    "S197 AntiCheatStartSession",
+    "S198 ReportLobbyList",
+    "S200 ChangeSkinSlot",
     "S203 RemortState",
     "S204 RemortResult",
     "S205 HooTargetedSpellCastResult",
     "S206 HooHouseDoorActionResult",
     "S207 AutoCombatState",
+    "C64 ChangeDescription",
+    "C67 Gamble",
+    "C68 MapPriceEntrance",
+    "C69 LeaveFaction",
+    "C185 Participar",
+    "C213 OfertaInicial",
+    "C214 OfertaDeSubasta",
+    "C216 CuentaRegresiva",
+    "C218 Duel",
+    "C219 AcceptDuel",
+    "C220 CancelDuel",
+    "C221 QuitDuel",
+    "C227 Casarse",
+    "C239 MacroPossent",
+    "C240 SubastaInfo",
+    "C244 EventoInfo",
+    "C245 CrearEvento",
+    "C248 CrearTorneo",
+    "C249 ComenzarTorneo",
+    "C250 CancelarTorneo",
+    "C251 BusquedaTesoro",
+    "C267 FinEvento",
+    "C272 CreateEvent",
+    "C274 LogMacroClickHechizo",
+    "C290 BuyShopItem",
+    "C291 StartEvent",
+    "C292 CancelarEvento",
+    "C293 NotifyInventarioHechizos",
+    "C294 PublicarPersonajeMAO",
+    "C295 EventoFaccionario",
+    "C297 LobbyCommand",
+    "C298 FeatureToggle",
+    "C302 AntiCheatMessage",
+    "C303 RequestLobbyList",
     "C307 ChangeSkinSlot",
+    "C310 AntiMacroMessage",
+    "C311 ModifyCastleWhiteList",
     "C312 HooClientCapabilities",
     "C313 RequestRemort",
     "C314 HooTargetedSpellCast",
@@ -15023,9 +14275,14 @@
    "forms": [
     "frmSkins",
     "frmEligeAlineacion",
+    "frmOpciones",
     "frmMasOpciones",
+    "frmCustomKeys",
+    "frmBindKey",
     "frmCollectibleCard",
     "frmCreateBattleground",
+    "frmLobbyBattleground",
+    "frmRetos",
     "frmShop",
     "frmShopPjsAO20",
     "frmTransferChar",
@@ -15042,10 +14299,19 @@
    "packetIds": [],
    "packetNames": [],
    "forms": [
+    "FrmTorneo",
+    "frmCambiaMotd",
     "frmDebug",
+    "FrmGmAyuda",
     "frmMessageTxt",
     "frmMSG",
-    "frmProcesses"
+    "FrmObjetos",
+    "frmPanelGm",
+    "frmProcesses",
+    "frmSpawnList",
+    "MenuGM",
+    "MenuNPC",
+    "MenuUser"
    ]
   }
  ],
