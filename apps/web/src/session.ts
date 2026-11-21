@@ -18,7 +18,8 @@ import type { PacketFamily } from './packet-counters.js';
 import { CharacterTracker, characterChange, splitTag } from './characters.js';
 import { NpcsServerPacketId as NS } from '@ao/protocol';
 import { CombatState } from './combat.js';
-import { SpellState } from './spells.js';
+import { SpellState, spellTables } from './spells.js';
+import { meditationArt } from './meditation-fx.js';
 import { CraftingController, CraftingState } from './crafting.js';
 import { SkillsState } from './skills.js';
 import { SkillsClientPacketId as SC } from '@ao/protocol';
@@ -257,7 +258,7 @@ export class Session {
         // HandleMeditateToggle: StartFx(..., Fx, -1) loops until the toggle comes back with Fx = 0.
         meditationFx: (charIndex, fx) => {
           this.spells.effects = this.spells.effects.filter(effect => !(effect.charIndex === charIndex && effect.loops < 0));
-          if (fx !== 0) this.spells.addFx({ fx, charIndex, x: 0, y: 0, loops: -1, startedAt: this.clock() });
+          if (fx !== 0) this.spells.addFx({ fx: meditationArt(fx, id => spellTables.fx.has(`fx${id}`)), charIndex, x: 0, y: 0, loops: -1, startedAt: this.clock(), meditation: true });
         },
       });
       this.options.receive(packet);

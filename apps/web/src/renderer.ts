@@ -443,6 +443,8 @@ export class WorldRenderer {
         else if (character) { const view = session.tracker.visualPosition(character, now); x = view.x; y = view.y; }
         else if (!x || !y) continue;
       }
+      // Meditation: engine.bas Draw_Animation, (+BodyOffset, +4), alpha 180, not additive (Initialize: alpha False).
+      if (fx.meditation) { this.draw(this.pools[8]!, data.animation, x * 32 + data.offsetX, y * 32 + data.offsetY + 4 + body, now - fx.startedAt, true, 180 / 220); continue; }
       this.draw(this.pools[data.png ? 8 : 7]!, data.animation, x * 32 + data.offsetX, y * 32 + data.offsetY + 20 + body, now - fx.startedAt);
     }
   }

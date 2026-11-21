@@ -21,6 +21,9 @@ const server = [
   }],
   ['LevelUp', '5000 0a00', { id: SS.LevelUp, skillPoints: 10 }],
   ['MeditateToggle', '5400 0500 2000 0a 14', { id: SS.MeditateToggle, charIndex: 5, fx: 32, x: 10, y: 20 }],
+  // Recorded from the VB6 server 9ccd7fad (21 Nov), mage level 1 starting to meditate on map 1: Medfxmage, char 5430, FX 153 at (57,48); stop = fx 0, x = y = 0.
+  ['MeditateToggle (live, start)', '5400 3615 9900 39 30', { id: SS.MeditateToggle, charIndex: 5430, fx: 153, x: 57, y: 48 }],
+  ['MeditateToggle (live, stop)', '5400 3615 0000 00 00', { id: SS.MeditateToggle, charIndex: 5430, fx: 0, x: 0, y: 0 }],
   ['SendSkills', `5700 ${zeros(23)}64`, { id: SS.SendSkills, skills: twentyFour(24, 100) }],
   ['TrainerCreatureList', '5800 08 4c6f626f 00 4f736f', { id: SS.TrainerCreatureList, creatures: ['Lobo', 'Oso'] }],
   ['TrainerCreatureList (none)', '5800 00', { id: SS.TrainerCreatureList, creatures: [] }],

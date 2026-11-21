@@ -24,6 +24,8 @@ export interface ActiveFx {
   startedAt: number;
   /** Floor FX carry the Grh directly (FxPiso) instead of an FXs.ini id. */
   grh?: number;
+  /** The looping meditation aura (HandleMeditateToggle): drawn at +4 with alpha 180 and normal blend, like engine.bas Draw_Animation. */
+  meditation?: boolean;
 }
 export interface Targeting { skill: number; area: boolean; radius: number }
 
