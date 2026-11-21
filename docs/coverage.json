@@ -9,20 +9,20 @@
  ],
  "headline": {
   "packets": 523,
-  "packetsCovered": 176,
-  "packetsMerged": 176,
+  "packetsCovered": 283,
+  "packetsMerged": 283,
   "s2c": 207,
   "c2s": 316,
-  "s2cCovered": 112,
-  "c2sCovered": 64,
+  "s2cCovered": 156,
+  "c2sCovered": 127,
   "forms": 86,
-  "formsCovered": 2,
-  "formsPartial": 2,
-  "fixturePackets": 133,
-  "packetsPct": 33.7,
-  "packetsMergedPct": 33.7,
-  "formsPct": 2.3,
-  "formsStartedPct": 4.7
+  "formsCovered": 4,
+  "formsPartial": 5,
+  "fixturePackets": 199,
+  "packetsPct": 54.1,
+  "packetsMergedPct": 54.1,
+  "formsPct": 4.7,
+  "formsStartedPct": 10.5
  },
  "groups": [
   {
@@ -125,9 +125,9 @@
    "id": "party",
    "title": "Party",
    "packets": 9,
-   "packetsCovered": 2,
-   "packetsMerged": 2,
-   "packetsPct": 22.2,
+   "packetsCovered": 9,
+   "packetsMerged": 9,
+   "packetsPct": 100,
    "forms": 2,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -137,9 +137,9 @@
    "id": "guild",
    "title": "Guild / clan",
    "packets": 41,
-   "packetsCovered": 2,
-   "packetsMerged": 2,
-   "packetsPct": 4.9,
+   "packetsCovered": 41,
+   "packetsMerged": 41,
+   "packetsPct": 100,
    "forms": 11,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -149,9 +149,9 @@
    "id": "quests",
    "title": "Quests",
    "packets": 10,
-   "packetsCovered": 0,
-   "packetsMerged": 0,
-   "packetsPct": 0,
+   "packetsCovered": 10,
+   "packetsMerged": 10,
+   "packetsPct": 100,
    "forms": 2,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -161,9 +161,9 @@
    "id": "skills",
    "title": "Skills / training / stats",
    "packets": 19,
-   "packetsCovered": 3,
-   "packetsMerged": 3,
-   "packetsPct": 15.8,
+   "packetsCovered": 19,
+   "packetsMerged": 19,
+   "packetsPct": 100,
    "forms": 3,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -173,21 +173,21 @@
    "id": "crafting",
    "title": "Crafting (smith / carpenter / alchemy / tailor)",
    "packets": 25,
-   "packetsCovered": 0,
-   "packetsMerged": 0,
-   "packetsPct": 0,
+   "packetsCovered": 25,
+   "packetsMerged": 25,
+   "packetsPct": 100,
    "forms": 5,
-   "formsCovered": 0,
-   "formsPartial": 0,
-   "formsPct": 0
+   "formsCovered": 2,
+   "formsPartial": 3,
+   "formsPct": 40
   },
   {
    "id": "work",
    "title": "Fishing / mining / lumber (work skills)",
    "packets": 10,
-   "packetsCovered": 2,
-   "packetsMerged": 2,
-   "packetsPct": 20,
+   "packetsCovered": 10,
+   "packetsMerged": 10,
+   "packetsPct": 100,
    "forms": 0,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -197,9 +197,9 @@
    "id": "options",
    "title": "Options / keybinds",
    "packets": 2,
-   "packetsCovered": 0,
-   "packetsMerged": 0,
-   "packetsPct": 0,
+   "packetsCovered": 1,
+   "packetsMerged": 1,
+   "packetsPct": 50,
    "forms": 4,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -221,9 +221,9 @@
    "id": "extras",
    "title": "Events, battlegrounds, premium shop, remort, anti-cheat",
    "packets": 60,
-   "packetsCovered": 2,
-   "packetsMerged": 2,
-   "packetsPct": 3.3,
+   "packetsCovered": 3,
+   "packetsMerged": 3,
+   "packetsPct": 5,
    "forms": 13,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -271,18 +271,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -318,18 +336,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -387,11 +423,17 @@
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -610,13 +652,18 @@
    "writer": "server Protocol_Writes.bas:WriteShowBlacksmithForm",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl"
+   ]
   },
   {
    "key": "s2c:15",
@@ -627,13 +674,19 @@
    "writer": "server Protocol_Writes.bas:WriteShowCarpenterForm",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl"
+   ]
   },
   {
    "key": "s2c:16",
@@ -746,18 +799,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -825,7 +896,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl"
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
    ]
   },
   {
@@ -837,11 +909,13 @@
    "writer": "server Protocol_Writes.bas:WriteCantUseWhileMeditating",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -868,7 +942,15 @@
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
-    "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl"
+    "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
   {
@@ -889,7 +971,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl"
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
   {
@@ -914,7 +997,8 @@
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
-    "tests/fixtures/vb6/combat/melee-dummy.jsonl"
+    "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
   {
@@ -958,7 +1042,13 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat/melee-dummy.jsonl"
+    "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl"
    ]
   },
   {
@@ -989,18 +1079,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1037,10 +1145,14 @@
     "tests/fixtures/vb6/chat/whisper.jsonl",
     "tests/fixtures/vb6/chat/yell.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -1130,6 +1242,9 @@
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl"
    ]
@@ -1154,7 +1269,8 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/far-from-banker.jsonl",
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
-    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
   {
@@ -1185,18 +1301,37 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/anvil-no-hammer.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1259,8 +1394,10 @@
    "merged": false,
    "branches": [],
    "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
+   ]
   },
   {
    "key": "s2c:41",
@@ -1309,13 +1446,21 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/drop-pickup.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
@@ -1323,6 +1468,16 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1360,11 +1515,17 @@
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1401,6 +1562,7 @@
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl",
@@ -1451,18 +1613,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1498,18 +1678,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1557,6 +1755,13 @@
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl"
@@ -1590,18 +1795,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1672,17 +1895,33 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1740,12 +1979,26 @@
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-summon.jsonl"
@@ -1760,13 +2013,17 @@
    "writer": "server Protocol_Writes.bas:WriteGuildList",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "s2c:57",
@@ -1796,18 +2053,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1878,11 +2153,17 @@
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1917,19 +2198,37 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1959,7 +2258,10 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1996,13 +2298,21 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
@@ -2010,6 +2320,16 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -2099,18 +2419,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -2127,13 +2465,17 @@
    "writer": null,
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "s2c:68",
@@ -2144,13 +2486,18 @@
    "writer": "server Protocol_Writes.bas:WriteBlacksmithWeapons",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl"
+   ]
   },
   {
    "key": "s2c:69",
@@ -2161,13 +2508,18 @@
    "writer": "server Protocol_Writes.bas:WriteBlacksmithArmors",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl"
+   ]
   },
   {
    "key": "s2c:70",
@@ -2178,13 +2530,18 @@
    "writer": null,
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl"
+   ]
   },
   {
    "key": "s2c:71",
@@ -2195,13 +2552,19 @@
    "writer": "server Protocol_Writes.bas:WriteCarpenterObjects",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl"
+   ]
   },
   {
    "key": "s2c:72",
@@ -2212,11 +2575,13 @@
    "writer": "server Protocol_Writes.bas:WriteRestOK",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2343,19 +2708,37 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -2372,13 +2755,17 @@
    "writer": "server Protocol_Writes.bas:WriteMiniStats",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "s2c:80",
@@ -2389,11 +2776,13 @@
    "writer": "server Protocol_Writes.bas:WriteLevelUp",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -2406,18 +2795,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -2489,11 +2896,13 @@
    "writer": "server Protocol_Writes.bas:WriteMeditateToggle",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2544,11 +2953,13 @@
    "writer": "server Protocol_Writes.bas:WriteSendSkills",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -2561,18 +2972,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -2589,11 +3018,13 @@
    "writer": "server Protocol_Writes.bas:WriteTrainerCreatureList",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2606,11 +3037,13 @@
    "writer": "server Protocol_Writes.bas:WriteGuildNews",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2623,11 +3056,13 @@
    "writer": "server Protocol_Writes.bas:WriteOfferDetails",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2640,11 +3075,13 @@
    "writer": "server Protocol_Writes.bas:WriteAlianceProposalsList",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2657,11 +3094,13 @@
    "writer": "server Protocol_Writes.bas:WritePeaceProposalsList",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2674,11 +3113,13 @@
    "writer": "server Protocol_Writes.bas:WriteCharacterInfo",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2691,11 +3132,13 @@
    "writer": "server Protocol_Writes.bas:WriteGuildLeaderInfo",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2708,11 +3151,13 @@
    "writer": "server Protocol_Writes.bas:WriteGuildDetails",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2725,11 +3170,13 @@
    "writer": "server Protocol_Writes.bas:WriteShowGuildFundationForm",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2832,7 +3279,9 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl"
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
    ]
   },
   {
@@ -2863,19 +3312,37 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -2926,18 +3393,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3099,13 +3584,22 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/build-refused.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
@@ -3113,6 +3607,16 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3155,11 +3659,23 @@
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3253,18 +3769,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3345,13 +3879,21 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/drop-pickup.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
@@ -3359,6 +3901,16 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3474,6 +4026,8 @@
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl"
    ]
   },
@@ -3510,8 +4064,16 @@
    "merged": false,
    "branches": [],
    "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl"
+   ]
   },
   {
    "key": "s2c:128",
@@ -3564,13 +4126,17 @@
    "writer": null,
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl"
+   ]
   },
   {
    "key": "s2c:131",
@@ -3581,13 +4147,17 @@
    "writer": "server Protocol_Writes.bas:WriteShowAlquimiaForm",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl"
+   ]
   },
   {
    "key": "s2c:132",
@@ -3598,13 +4168,17 @@
    "writer": null,
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl"
+   ]
   },
   {
    "key": "s2c:133",
@@ -3615,13 +4189,17 @@
    "writer": "server Protocol_Writes.bas:WriteShowSastreForm",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl"
+   ]
   },
   {
    "key": "s2c:134",
@@ -3649,19 +4227,37 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3678,13 +4274,21 @@
    "writer": "server Protocol_Writes.bas:WriteMacroTrabajoToggle",
    "group": "work",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/build-refused.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl"
+   ]
   },
   {
    "key": "s2c:136",
@@ -3695,11 +4299,13 @@
    "writer": "server Protocol_Writes.bas:WriteBindKeys",
    "group": "options",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/options.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -3712,18 +4318,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3837,13 +4461,25 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/anvil-no-hammer.jsonl",
+    "tests/fixtures/vb6/crafting/automated-action-refused.jsonl",
+    "tests/fixtures/vb6/crafting/build-refused.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/complete-action-none.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/drop-pickup.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
@@ -3851,6 +4487,16 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3888,6 +4534,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/trade/cancel-responder.jsonl",
     "tests/fixtures/vb6/trade/give-back-responder.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
@@ -3906,13 +4553,18 @@
    "writer": "server Protocol_Writes.bas:WriteDatosGrupo",
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+   ]
   },
   {
    "key": "s2c:144",
@@ -3928,8 +4580,11 @@
    "merged": false,
    "branches": [],
    "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+   ]
   },
   {
    "key": "s2c:145",
@@ -3953,6 +4608,7 @@
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl"
    ]
   },
@@ -4018,11 +4674,13 @@
    "writer": "server Protocol_Writes.bas:WriteShowFundarClanForm",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4046,6 +4704,7 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl"
    ]
   },
@@ -4077,11 +4736,13 @@
    "writer": null,
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4094,13 +4755,17 @@
    "writer": "server Protocol_Writes.bas:WriteQuestDetails",
    "group": "quests",
    "package": "wp08",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/quests.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
+   ]
   },
   {
    "key": "s2c:154",
@@ -4111,13 +4776,18 @@
    "writer": "server Protocol_Writes.bas:WriteQuestListSend",
    "group": "quests",
    "package": "wp08",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/quests.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
+   ]
   },
   {
    "key": "s2c:155",
@@ -4128,13 +4798,18 @@
    "writer": "server Protocol_Writes.bas:WriteNpcQuestListSend",
    "group": "quests",
    "package": "wp08",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/quests.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl"
+   ]
   },
   {
    "key": "s2c:156",
@@ -4145,13 +4820,17 @@
    "writer": "server Protocol_Writes.bas:WriteUpdateNPCSimbolo",
    "group": "quests",
    "package": "wp08",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/quests.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
+   ]
   },
   {
    "key": "s2c:157",
@@ -4202,18 +4881,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -4266,18 +4963,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -4313,18 +5028,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -4446,8 +5179,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/status.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "s2c:168",
@@ -4458,11 +5193,13 @@
    "writer": "server Protocol_Writes.bas:WriteOpenCrafting",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4475,11 +5212,13 @@
    "writer": "server Protocol_Writes.bas:WriteCraftingItem",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4492,11 +5231,13 @@
    "writer": "server Protocol_Writes.bas:WriteCraftingCatalyst",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4509,11 +5250,13 @@
    "writer": "server Protocol_Writes.bas:WriteCraftingResult",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4560,11 +5303,13 @@
    "writer": null,
    "group": "quests",
    "package": "wp08",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/quests.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4598,11 +5343,13 @@
    "writer": "server Protocol_Writes.bas:WritePelearConPezEspecial",
    "group": "work",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4632,18 +5379,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -4936,13 +5701,18 @@
    "writer": null,
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+   ]
   },
   {
    "key": "s2c:194",
@@ -4975,7 +5745,7 @@
    "merged": true,
    "branches": [],
    "codecFiles": [
-    "main:packages/protocol/src/packets/status.ts"
+    "main:packages/protocol/src/packets/options.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
@@ -4989,18 +5759,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -5051,18 +5839,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -5115,18 +5921,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -5160,11 +5984,13 @@
    "writer": "server Protocol_Writes.bas:WriteGuildConfig",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -5177,18 +6003,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -5309,13 +6153,20 @@
    "writer": "client Protocol_Writes.bas:WriteCraftCarpenter",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/build-refused.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl"
+   ]
   },
   {
    "key": "c2s:2",
@@ -5337,7 +6188,8 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -5353,11 +6205,13 @@
    "writer": "client Protocol_Writes.bas:WriteCreateNewGuild",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5401,6 +6255,14 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl"
    ]
   },
@@ -5430,13 +6292,17 @@
    "writer": "client Protocol_Writes.bas:WriteModifySkills",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl"
+   ]
   },
   {
    "key": "c2s:8",
@@ -5447,11 +6313,13 @@
    "writer": "client Protocol_Writes.bas:WriteTrain",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5588,11 +6456,13 @@
    "writer": "client Protocol_Writes.bas:WriteClanCodexUpdate",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5631,11 +6501,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildAcceptPeace",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5648,11 +6520,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildRejectAlliance",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5665,11 +6539,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildRejectPeace",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5682,11 +6558,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildAcceptAlliance",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5699,11 +6577,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildOfferPeace",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5716,11 +6596,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildOfferAlliance",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5733,11 +6615,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildAllianceDetails",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5750,11 +6634,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildPeaceDetails",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5767,11 +6653,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildRequestJoinerInfo",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5784,13 +6672,17 @@
    "writer": "client Protocol_Writes.bas:WriteGuildAlliancePropList",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:27",
@@ -5801,13 +6693,17 @@
    "writer": "client Protocol_Writes.bas:WriteGuildPeacePropList",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:28",
@@ -5818,11 +6714,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildDeclareWar",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5835,11 +6733,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildNewWebsite",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5852,11 +6752,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildAcceptNewMember",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5869,11 +6771,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildRejectNewMember",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5886,11 +6790,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildKickMember",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5903,11 +6809,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildUpdateNews",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5920,13 +6828,17 @@
    "writer": "client Protocol_Writes.bas:WriteGuildMemberInfo",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:35",
@@ -5937,11 +6849,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildOpenElections",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5954,13 +6868,17 @@
    "writer": "client Protocol_Writes.bas:WriteGuildRequestMembership",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:37",
@@ -5971,13 +6889,17 @@
    "writer": "client Protocol_Writes.bas:WriteGuildRequestDetails",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:38",
@@ -6024,13 +6946,17 @@
    "writer": "client Protocol_Writes.bas:WriteGuildLeave",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:41",
@@ -6136,13 +7062,17 @@
    "writer": "client Protocol_Writes.bas:WriteTrainList",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:47",
@@ -6153,13 +7083,17 @@
    "writer": "client Protocol_Writes.bas:WriteRest",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:48",
@@ -6177,8 +7111,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/keys.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:49",
@@ -6246,13 +7182,17 @@
    "writer": "client Protocol_Writes.bas:WriteRequestStats",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:53",
@@ -6499,11 +7439,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildVote",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6666,18 +7608,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -6790,10 +7750,14 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -6826,10 +7790,14 @@
     "tests/fixtures/vb6/chat/whisper.jsonl",
     "tests/fixtures/vb6/chat/yell.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
   },
@@ -6916,7 +7884,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl"
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
    ]
   },
   {
@@ -6928,13 +7897,17 @@
    "writer": "client Protocol_Writes.bas:WriteRequestGuildLeaderInfo",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:85",
@@ -6945,13 +7918,17 @@
    "writer": "client Protocol_Writes.bas:WriteRequestAtributes",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:86",
@@ -6962,13 +7939,18 @@
    "writer": "client Protocol_Writes.bas:WriteRequestSkills",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:87",
@@ -6979,13 +7961,17 @@
    "writer": "client Protocol_Writes.bas:WriteRequestMiniStats",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:88",
@@ -7171,11 +8157,17 @@
     "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
+    "tests/fixtures/vb6/crafting/anvil-no-hammer.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
     "tests/fixtures/vb6/trade/item-offer-initiator.jsonl",
@@ -7263,6 +8255,14 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl"
    ]
   },
@@ -7275,13 +8275,19 @@
    "writer": "client Protocol_Writes.bas:WriteCraftBlacksmith",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/build-refused.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl"
+   ]
   },
   {
    "key": "c2s:101",
@@ -9391,13 +10397,18 @@
    "writer": "client Protocol_Writes.bas:WriteTransFerGold",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/options.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
+   ]
   },
   {
    "key": "c2s:225",
@@ -9459,13 +10470,18 @@
    "writer": "client Protocol_Writes.bas:WriteCraftAlquimista",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/build-refused.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl"
+   ]
   },
   {
    "key": "c2s:229",
@@ -9476,13 +10492,27 @@
    "writer": "client Protocol_Writes.bas:WriteFlagTrabajar",
    "group": "work",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/automated-action-refused.jsonl",
+    "tests/fixtures/vb6/crafting/build-refused.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl"
+   ]
   },
   {
    "key": "c2s:230",
@@ -9493,13 +10523,18 @@
    "writer": "client Protocol_Writes.bas:WriteCraftSastre",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/build-refused.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl"
+   ]
   },
   {
    "key": "c2s:231",
@@ -9546,13 +10581,17 @@
    "writer": "client Protocol_Writes.bas:WriteCompletarAccion",
    "group": "work",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/complete-action-none.jsonl"
+   ]
   },
   {
    "key": "c2s:234",
@@ -9563,13 +10602,17 @@
    "writer": "client Protocol_Writes.bas:WriteInvitarGrupo",
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:235",
@@ -9589,6 +10632,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/trade/cancel-responder.jsonl",
     "tests/fixtures/vb6/trade/give-back-responder.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
@@ -9607,13 +10651,18 @@
    "writer": "client Protocol_Writes.bas:WriteRequestGrupo",
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+   ]
   },
   {
    "key": "c2s:237",
@@ -9624,13 +10673,17 @@
    "writer": "client Protocol_Writes.bas:WriteAbandonarGrupo",
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+   ]
   },
   {
    "key": "c2s:238",
@@ -9641,13 +10694,17 @@
    "writer": null,
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:239",
@@ -9918,13 +10975,17 @@
    "writer": "client Protocol_Writes.bas:WriteQuieroFundarClan",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:255",
@@ -9942,8 +11003,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/keys.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:256",
@@ -9961,8 +11024,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/keys.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:257",
@@ -9990,11 +11055,13 @@
    "writer": "client Protocol_Writes.bas:WriteQuest",
    "group": "quests",
    "package": "wp08",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/quests.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10007,13 +11074,17 @@
    "writer": "client Protocol_Writes.bas:WriteQuestAccept",
    "group": "quests",
    "package": "wp08",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/quests.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
+   ]
   },
   {
    "key": "c2s:260",
@@ -10024,13 +11095,18 @@
    "writer": "client Protocol_Writes.bas:WriteQuestListRequest",
    "group": "quests",
    "package": "wp08",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/quests.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
+   ]
   },
   {
    "key": "c2s:261",
@@ -10041,13 +11117,18 @@
    "writer": "client Protocol_Writes.bas:WriteQuestDetailsRequest",
    "group": "quests",
    "package": "wp08",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/quests.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
+   ]
   },
   {
    "key": "c2s:262",
@@ -10058,13 +11139,17 @@
    "writer": "client Protocol_Writes.bas:WriteQuestAbandon",
    "group": "quests",
    "package": "wp08",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/quests.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
+   ]
   },
   {
    "key": "c2s:263",
@@ -10297,13 +11382,17 @@
    "writer": "client Protocol_Writes.bas:WriteAddItemCrafting",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl"
+   ]
   },
   {
    "key": "c2s:276",
@@ -10314,13 +11403,17 @@
    "writer": "client Protocol_Writes.bas:WriteRemoveItemCrafting",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl"
+   ]
   },
   {
    "key": "c2s:277",
@@ -10331,13 +11424,17 @@
    "writer": "client Protocol_Writes.bas:WriteAddCatalyst",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl"
+   ]
   },
   {
    "key": "c2s:278",
@@ -10348,13 +11445,17 @@
    "writer": "client Protocol_Writes.bas:WriteRemoveCatalyst",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl"
+   ]
   },
   {
    "key": "c2s:279",
@@ -10365,13 +11466,17 @@
    "writer": "client Protocol_Writes.bas:WriteCraftItem",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl"
+   ]
   },
   {
    "key": "c2s:280",
@@ -10382,13 +11487,17 @@
    "writer": "client Protocol_Writes.bas:WriteCloseCrafting",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl"
+   ]
   },
   {
    "key": "c2s:281",
@@ -10399,13 +11508,17 @@
    "writer": "client Protocol_Writes.bas:WriteMoveCraftItem",
    "group": "crafting",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl"
+   ]
   },
   {
    "key": "c2s:282",
@@ -10484,11 +11597,13 @@
    "writer": "client Protocol_Writes.bas:WriteFinalizarPescaEspecial",
    "group": "work",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10501,11 +11616,13 @@
    "writer": "client Protocol_Writes.bas:WriteRomperCania",
    "group": "work",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10539,13 +11656,17 @@
    "writer": "client Protocol_Writes.bas:WriteRepeatMacro",
    "group": "work",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/station-not-open.jsonl"
+   ]
   },
   {
    "key": "c2s:290",
@@ -10709,11 +11830,13 @@
    "writer": "client Protocol_Writes.bas:WriteActionOnGroupFrame",
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10731,11 +11854,12 @@
    "merged": true,
    "branches": [],
    "codecFiles": [
-    "main:packages/protocol/src/packets/status.ts"
+    "main:packages/protocol/src/packets/options.ts"
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl"
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
   {
@@ -10756,7 +11880,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl"
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
   {
@@ -10838,18 +11963,36 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
-    "tests/fixtures/vb6/combat-spells-2/hotkey-cast.jsonl",
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
+    "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/login.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
+    "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/options/hotkeys-and-transfer.jsonl",
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
+    "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
+    "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -10900,13 +12043,21 @@
    "writer": "client Protocol_Writes.bas:WriteStartAutomatedAction",
    "group": "work",
    "package": "wp10",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/crafting.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/crafting/automated-action-refused.jsonl",
+    "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
+    "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
+    "tests/fixtures/vb6/crafting/smelt-extraction.jsonl"
+   ]
   },
   {
    "key": "c2s:309",
@@ -11691,10 +12842,16 @@
    "group": "crafting",
    "package": "wp10",
    "lines": 721,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/crafting-ui.ts",
+     "ok": true
+    }
+   ]
   },
   {
    "name": "frmCarp",
@@ -11702,10 +12859,16 @@
    "group": "crafting",
    "package": "wp10",
    "lines": 334,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/crafting-ui.ts",
+     "ok": true
+    }
+   ]
   },
   {
    "name": "frmAlqui",
@@ -11713,10 +12876,18 @@
    "group": "crafting",
    "package": "wp10",
    "lines": 460,
-   "status": "not started",
+   "status": "merged (partial)",
    "covered": false,
-   "partial": false,
-   "evidence": []
+   "partial": true,
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/crafting.ts",
+     "partial": true,
+     "note": "state and sends only, no window yet",
+     "ok": true
+    }
+   ]
   },
   {
    "name": "FrmSastre",
@@ -11724,10 +12895,18 @@
    "group": "crafting",
    "package": "wp10",
    "lines": 438,
-   "status": "not started",
+   "status": "merged (partial)",
    "covered": false,
-   "partial": false,
-   "evidence": []
+   "partial": true,
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/crafting.ts",
+     "partial": true,
+     "note": "state and sends only, no window yet",
+     "ok": true
+    }
+   ]
   },
   {
    "name": "frmCrafteo",
@@ -11735,10 +12914,18 @@
    "group": "crafting",
    "package": "wp10",
    "lines": 234,
-   "status": "not started",
+   "status": "merged (partial)",
    "covered": false,
-   "partial": false,
-   "evidence": []
+   "partial": true,
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/crafting.ts",
+     "partial": true,
+     "note": "state and sends only, no window yet",
+     "ok": true
+    }
+   ]
   },
   {
    "name": "frmOpciones",
@@ -12239,102 +13426,8 @@
    "id": "wp07",
    "title": "Party and guild/clan",
    "scope": "Group frame/invites, every guild form, proposals, news, elections",
-   "packetIds": [
-    "s2c:56",
-    "s2c:89",
-    "s2c:90",
-    "s2c:91",
-    "s2c:92",
-    "s2c:93",
-    "s2c:94",
-    "s2c:95",
-    "s2c:96",
-    "s2c:143",
-    "s2c:149",
-    "s2c:152",
-    "s2c:193",
-    "s2c:201",
-    "c2s:3",
-    "c2s:15",
-    "c2s:17",
-    "c2s:18",
-    "c2s:19",
-    "c2s:20",
-    "c2s:21",
-    "c2s:22",
-    "c2s:23",
-    "c2s:24",
-    "c2s:25",
-    "c2s:26",
-    "c2s:27",
-    "c2s:28",
-    "c2s:29",
-    "c2s:30",
-    "c2s:31",
-    "c2s:32",
-    "c2s:33",
-    "c2s:34",
-    "c2s:35",
-    "c2s:36",
-    "c2s:37",
-    "c2s:40",
-    "c2s:65",
-    "c2s:84",
-    "c2s:234",
-    "c2s:236",
-    "c2s:237",
-    "c2s:238",
-    "c2s:254",
-    "c2s:299"
-   ],
-   "packetNames": [
-    "S56 GuildList",
-    "S89 GuildNews",
-    "S90 OfferDetails",
-    "S91 AlianceProposalsList",
-    "S92 PeaceProposalsList",
-    "S93 CharacterInfo",
-    "S94 GuildLeaderInfo",
-    "S95 GuildDetails",
-    "S96 ShowGuildFundationForm",
-    "S143 DatosGrupo",
-    "S149 ShowFundarClanForm",
-    "S152 PosLLamadaDeClan",
-    "S193 UpdateGroupInfo",
-    "S201 GuildConfig",
-    "C3 CreateNewGuild",
-    "C15 ClanCodexUpdate",
-    "C17 GuildAcceptPeace",
-    "C18 GuildRejectAlliance",
-    "C19 GuildRejectPeace",
-    "C20 GuildAcceptAlliance",
-    "C21 GuildOfferPeace",
-    "C22 GuildOfferAlliance",
-    "C23 GuildAllianceDetails",
-    "C24 GuildPeaceDetails",
-    "C25 GuildRequestJoinerInfo",
-    "C26 GuildAlliancePropList",
-    "C27 GuildPeacePropList",
-    "C28 GuildDeclareWar",
-    "C29 GuildNewWebsite",
-    "C30 GuildAcceptNewMember",
-    "C31 GuildRejectNewMember",
-    "C32 GuildKickMember",
-    "C33 GuildUpdateNews",
-    "C34 GuildMemberInfo",
-    "C35 GuildOpenElections",
-    "C36 GuildRequestMembership",
-    "C37 GuildRequestDetails",
-    "C40 GuildLeave",
-    "C65 GuildVote",
-    "C84 RequestGuildLeaderInfo",
-    "C234 InvitarGrupo",
-    "C236 RequestGrupo",
-    "C237 AbandonarGrupo",
-    "C238 HecharDeGrupo",
-    "C254 QuieroFundarClan",
-    "C299 ActionOnGroupFrame"
-   ],
+   "packetIds": [],
+   "packetNames": [],
    "forms": [
     "FrmPregunta",
     "FrmGrupo",
@@ -12355,30 +13448,8 @@
    "id": "wp08",
    "title": "Quests",
    "scope": "Quest list/details/abandon, NPC quest markers",
-   "packetIds": [
-    "s2c:153",
-    "s2c:154",
-    "s2c:155",
-    "s2c:156",
-    "s2c:174",
-    "c2s:258",
-    "c2s:259",
-    "c2s:260",
-    "c2s:261",
-    "c2s:262"
-   ],
-   "packetNames": [
-    "S153 QuestDetails",
-    "S154 QuestListSend",
-    "S155 NpcQuestListSend",
-    "S156 UpdateNPCSimbolo",
-    "S174 ObjQuestListSend",
-    "C258 Quest",
-    "C259 QuestAccept",
-    "C260 QuestListRequest",
-    "C261 QuestDetailsRequest",
-    "C262 QuestAbandon"
-   ],
+   "packetIds": [],
+   "packetNames": [],
    "forms": [
     "FrmQuest",
     "frmQuestInfo"
@@ -12388,42 +13459,8 @@
    "id": "wp09",
    "title": "Skills, training and stats",
    "scope": "Skill allocation, level up, attributes, statistics forms, rest/meditate",
-   "packetIds": [
-    "s2c:24",
-    "s2c:67",
-    "s2c:72",
-    "s2c:79",
-    "s2c:80",
-    "s2c:84",
-    "s2c:87",
-    "s2c:88",
-    "c2s:7",
-    "c2s:8",
-    "c2s:46",
-    "c2s:47",
-    "c2s:52",
-    "c2s:85",
-    "c2s:86",
-    "c2s:87"
-   ],
-   "packetNames": [
-    "S24 CantUseWhileMeditating",
-    "S67 Atributes",
-    "S72 RestOK",
-    "S79 MiniStats",
-    "S80 LevelUp",
-    "S84 MeditateToggle",
-    "S87 SendSkills",
-    "S88 TrainerCreatureList",
-    "C7 ModifySkills",
-    "C8 Train",
-    "C46 TrainList",
-    "C47 Rest",
-    "C52 RequestStats",
-    "C85 RequestAtributes",
-    "C86 RequestSkills",
-    "C87 RequestMiniStats"
-   ],
+   "packetIds": [],
+   "packetNames": [],
    "forms": [
     "frmSkills3",
     "FrmEstadisticas",
@@ -12434,79 +13471,9 @@
    "id": "wp10",
    "title": "Crafting and work skills",
    "scope": "Smith, carpenter, alchemy, tailor, crafting window, fishing, mining, lumber",
-   "packetIds": [
-    "s2c:14",
-    "s2c:15",
-    "s2c:68",
-    "s2c:69",
-    "s2c:70",
-    "s2c:71",
-    "s2c:130",
-    "s2c:131",
-    "s2c:132",
-    "s2c:133",
-    "s2c:135",
-    "s2c:168",
-    "s2c:169",
-    "s2c:170",
-    "s2c:171",
-    "s2c:176",
-    "c2s:1",
-    "c2s:100",
-    "c2s:228",
-    "c2s:229",
-    "c2s:230",
-    "c2s:233",
-    "c2s:275",
-    "c2s:276",
-    "c2s:277",
-    "c2s:278",
-    "c2s:279",
-    "c2s:280",
-    "c2s:281",
-    "c2s:286",
-    "c2s:287",
-    "c2s:289",
-    "c2s:308"
-   ],
-   "packetNames": [
-    "S14 ShowBlacksmithForm",
-    "S15 ShowCarpenterForm",
-    "S68 BlacksmithWeapons",
-    "S69 BlacksmithArmors",
-    "S70 BlacksmithExtraObjects",
-    "S71 CarpenterObjects",
-    "S130 AlquimistaObj",
-    "S131 ShowAlquimiaForm",
-    "S132 SastreObj",
-    "S133 ShowSastreForm",
-    "S135 MacroTrabajoToggle",
-    "S168 OpenCrafting",
-    "S169 CraftingItem",
-    "S170 CraftingCatalyst",
-    "S171 CraftingResult",
-    "S176 PelearConPezEspecial",
-    "C1 CraftCarpenter",
-    "C100 CraftBlacksmith",
-    "C228 CraftAlquimista",
-    "C229 FlagTrabajar",
-    "C230 CraftSastre",
-    "C233 CompletarAccion",
-    "C275 AddItemCrafting",
-    "C276 RemoveItemCrafting",
-    "C277 AddCatalyst",
-    "C278 RemoveCatalyst",
-    "C279 CraftItem",
-    "C280 CloseCrafting",
-    "C281 MoveCraftItem",
-    "C286 FinalizarPescaEspecial",
-    "C287 RomperCania",
-    "C289 RepeatMacro",
-    "C308 StartAutomatedAction"
-   ],
+   "packetIds": [],
+   "packetNames": [],
    "forms": [
-    "frmHerrero",
-    "frmCarp",
     "frmAlqui",
     "FrmSastre",
     "frmCrafteo"
@@ -12517,7 +13484,6 @@
    "title": "Options, keybinds and extras",
    "scope": "Options forms, custom keys, hotkeys, events, battlegrounds, duels, premium shop, remort",
    "packetIds": [
-    "s2c:136",
     "s2c:165",
     "s2c:178",
     "s2c:179",
@@ -12545,7 +13511,6 @@
     "c2s:219",
     "c2s:220",
     "c2s:221",
-    "c2s:224",
     "c2s:227",
     "c2s:239",
     "c2s:240",
@@ -12579,7 +13544,6 @@
     "c2s:316"
    ],
    "packetNames": [
-    "S136 BindKeys",
     "S165 InvasionInfo",
     "S178 ShopInit",
     "S179 UpdateShopClienteCredits",
@@ -12607,7 +13571,6 @@
     "C219 AcceptDuel",
     "C220 CancelDuel",
     "C221 QuitDuel",
-    "C224 TransFerGold",
     "C227 Casarse",
     "C239 MacroPossent",
     "C240 SubastaInfo",
