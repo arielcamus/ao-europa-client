@@ -46,6 +46,8 @@ const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
 const KS_QUIT = KeysClientPacketId.Quit;
 /** `translate`: a CharacterTranslate glide, drawn without the walking animation or footsteps. */
 export interface Motion { from: Position; to: Position; started: number; duration: number; translate?: boolean }
+/** A position probe unanswered this long gets one console line (the character waits for it). */
+export const SERVER_SILENT_MS = 5000;
 export type Phase = 'connecting' | 'account' | 'login' | 'playing' | 'closed';
 /**
  * Something the server wants the player to read outside the console: ShowMessageBox (a locale id the UI resolves, shown by
@@ -168,6 +170,8 @@ export class Session {
   error = '';
   private decoder = new FrameDecoder();
   private pending: { expected?: Position; since: number } | undefined;
+  /** When the unanswered position probe was sent, once it has waited SERVER_SILENT_MS; cleared by the reply. Never a disconnect. */
+  serverSilentSince: number | undefined;
   private lastWalk = -Infinity;
   private lastQuery = 0;
   private lastTalk = -Infinity;
@@ -400,6 +404,7 @@ export class Session {
     }
     if (this.position && (x !== this.position.x || y !== this.position.y)) this.motion = undefined;
     this.pending = undefined;
+    if (this.serverSilentSince !== undefined) { this.serverSilentSince = undefined; this.ui.message('El servidor volvió a responder.'); }
     this.position = { x, y };
     if (this.self) this.tracker.place(this.self.charIndex, x, y);
   }
@@ -465,9 +470,15 @@ export class Session {
     const now = this.clock();
     if (this.phase === 'closed') return;
     // The account and character screens wait for the player; the placement clock starts when a character is entered.
-    if (!this.ready && this.phase !== 'connecting' && this.phase !== 'account' && now > this.placementDeadline) throw new Error('Timed out waiting for login, placement and intervals');
+    // Only the login itself has a deadline. In game (a warp's new placement, a late position reply) the client waits like VB6, whose
+    // pinned client (619e69d) has no application-level watchdog: only a socket error ends the session. The VB6 server stalls for
+    // seconds when its loop is starved of CPU (14 s measured 21 Nov) and TCP delivers every reply once it resumes.
+    if (!this.ready && this.phase === 'login' && now > this.placementDeadline) throw new Error('Timed out waiting for login, placement and intervals');
     if (!this.ready && this.phase === 'connecting' && now > this.placementDeadline) throw new Error('Timed out waiting for the server');
-    if (this.pending && now - this.pending.since > 5000) throw new Error('Server stopped responding to position requests');
+    if (this.pending && now - this.pending.since > SERVER_SILENT_MS && this.serverSilentSince === undefined) {
+      this.serverSilentSince = this.pending.since;
+      this.ui.message('El servidor no responde. Esperando...');
+    }
     if (this.ready && !this.pending && now - this.lastQuery > 5000) {
       this.pending = { since: now }; this.lastQuery = now;
       this.send({ id: C.RequestPositionUpdate });
