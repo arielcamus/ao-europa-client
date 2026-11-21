@@ -144,3 +144,35 @@ Characters created before the patch keep their saved position on map 517. Move o
 
 Undo: stop the server, `Copy-Item C:\ao\server-9ccd\Dat\Ciudades.Dat.bak-forgat-20261121-1144 C:\ao\server-9ccd\Dat\Ciudades.Dat`,
 start `C:/ao/start-server.ps1` (the server reads `Ciudades.Dat` only at start-up; load ~5 min).
+
+## 7. Lindos home city pointed at open sea too (prepared 2026-11-21 for the home-city build, not live yet)
+Ariel (2026-11-21 15:34): hide Forgat, let new characters choose their starting city. The server backport that honours the choice
+(see [SERVER-PREHOO-BUILD.md](SERVER-PREHOO-BUILD.md), "Home city choice") accepts Ullathorpe, Nix, Banderbill, Lindos and Arghal, so
+each of their `Ciudades.Dat` spawn and resurrection tiles was checked the same way as section 6 (pinned `MapaN.csm`, the server's water
+rule from `FileIO.CargarMapaFormatoCSM`: `General.HayAgua` on layer 1, cleared by a layer-2 graphic, set again by triggers 8, 11, 16, 18;
+then `GameLogic.LegalPos` for a walker: walk box x 12..89 / y 10..91, no map NPC, no water, not blocked on all four sides):
+
+| City | Spawn (`MAPA:X,Y`) | Resurrection (`MapaResu:ResuX,ResuY`) | Result |
+| --- | --- | --- | --- |
+| Ullathorpe | 1:57,44, 3x3 all legal, 5150-tile region | 1:77,66 (trigger 20) | land |
+| Nix | 34:40,87, 3x3 all legal, 5125 tiles | 34:25,55 (trigger 29) | land |
+| Banderbill | 59:47,41, 7/9 legal, 4250 tiles | 319:49,24 (Iglesia de Banderbill) | land |
+| Arghal | 151:61,43, 8/9 legal, 4928 tiles | 151:52,58 (trigger 22) | land |
+| **Lindos** | **408:63,39, map "Mar del Norte", water, 0/9 legal** | **409:52,47, "Mar del Norte", water** | **at sea** |
+
+Lindos is a stale entry like Forgat: the city is maps 62 and 64 ("Ciudad de Lindos", zone CIUDAD) and 63 ("Bahia de Lindos"); map 64
+has the Sacerdote (51,41), the bank and the Gobernadora. Patch (six keys of `[Lindos]`; the file shrinks by 2 bytes, 2357 to 2355):
+
+| Key | Pinned | Patched |
+| --- | --- | --- |
+| `MAPA`, `X`, `Y` | 408, 63, 39 | 64, 50, 59 (the open square in front of the Templo; the tile and its 3x3 are legal, `Blocked` 0, trigger 0, no exit) |
+| `MapaResu`, `ResuX`, `ResuY` | 409, 52, 47 | 64, 51, 44 (inside the Templo, three tiles south of the Sacerdote, trigger 22; same 2160-tile region as the spawn) |
+
+`MAPAVIAJE/ViajeX/ViajeY`, `NecesitaNave=1` and `Mapas=408,409,297` stay as pinned. The section 6 Forgat patch is kept (characters
+already in Forgat keep their home; Forgat is only hidden from creation). sha256: base (section 6 file)
+`3da1206955c040bff1613f70ea8657a46759b9e04bffd3aaf2a506d858d27e56`, patched `8ced6ca346a8a46fe52314296b188e989936c50c597114a8e1982835f6ee7ca2`.
+
+Where it is: only `C:\ao\server-9ccd-b\Dat\Ciudades.Dat` (the side-by-side build directory). The live `C:\ao\server-9ccd\Dat` is
+untouched until the swap; the swap copies this file over the live one (backup first). Checked live on 7697 on 2026-11-21: a new
+character with home 4 appeared at 64:50,59 and walked (6/6 steps), also through the browser client. Undo after the swap: copy the
+backup `Ciudades.Dat.bak-homecity-<TS>` back and restart (the server reads `Ciudades.Dat` only at start-up).

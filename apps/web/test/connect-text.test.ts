@@ -70,11 +70,11 @@ describe('chat text filter is by windows-1252 byte, not code point (issue #16 it
   });
 });
 
-describe('home city list (ListaCiudades at the pinned client 619e69d)', () => {
-  it('lists the six pinned cities in order, index 0 first', () => {
-    expect([...HOME_CITIES]).toEqual(['Ullathorpe', 'Nix', 'Banderbill', 'Lindos', 'Arghal', 'Forgat']);
+describe('home city list (ListaCiudades at the pinned client 619e69d, Forgat hidden)', () => {
+  it('lists the five starting cities in order, Ullathorpe first, no Forgat', () => {
+    expect(HOME_CITIES.map(c => c.name)).toEqual(['Ullathorpe', 'Nix', 'Banderbill', 'Lindos', 'Arghal']);
   });
-  it('sends ListIndex + 1, never 0 (frmCrearPersonaje refuses Hogar = 0)', () => {
-    expect(HOME_CITIES.map((_, i) => homeCityId(i))).toEqual([1, 2, 3, 4, 5, 6]);
+  it('sends the server e_City id of each city (Declares.bas: Ullathorpe 1 .. Arghal 5), never 0 and never Forgat (7) or Arkhein (6)', () => {
+    expect(HOME_CITIES.map((_, i) => homeCityId(i))).toEqual([1, 2, 3, 4, 5]);
   });
 });

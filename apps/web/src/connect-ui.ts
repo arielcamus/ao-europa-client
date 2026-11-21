@@ -284,7 +284,7 @@ export class ConnectUI {
   }
   private refresh() {
     const set = (id: string, text: string) => { const el = this.labels.get(id); if (el) el.textContent = text; };
-    set('class', TEXT.classes[this.cls]!); set('race', TEXT.races[this.race]!); set('gender', TEXT.genders[this.gender]!); set('home', HOME_CITIES[this.home]!);
+    set('class', TEXT.classes[this.cls]!); set('race', TEXT.races[this.race]!); set('gender', TEXT.genders[this.gender]!); set('home', HOME_CITIES[this.home]!.name);
     this.modifiers.forEach((mod, i) => {
       const value = 18 + mod, el = this.labels.get(`val${i}`); if (!el) return;
       el.textContent = String(value); el.style.color = value > 18 ? '#0f0' : value < 18 ? '#f00' : '#fff';
