@@ -17,6 +17,8 @@ export interface WindowOptions {
   title: string;
   /** Called when the window is closed by Escape, the X button or `close()`. */
   onClose?: () => void;
+  /** A top-level panel (opened from the info menu): opening it closes the other panels. Windows opened from inside a panel stay on top of it. */
+  panel?: boolean;
 }
 
 const place = (el: HTMLElement, [x, y, w, h]: Box) => { el.style.left = `${x}px`; el.style.top = `${y}px`; el.style.width = `${w}px`; el.style.height = `${h}px`; };
@@ -67,7 +69,7 @@ export class VbWindow {
     if (options.art) void loadInterface(options.art).then(url => { this.root.style.backgroundImage = `url("${url}")`; }).catch(() => { this.root.classList.add('vb-plain'); });
     this.root.addEventListener('keydown', event => { if (event.key === 'Escape') { event.stopPropagation(); this.close(); } });
     parent.append(this.root);
-    windows.watch(options.id, () => !this.closed, () => this.close(), true);
+    windows.watch(options.id, () => !this.closed, () => this.close(), options.panel === true);
   }
   get isOpen() { return !this.closed; }
   add<T extends HTMLElement>(el: T, box: Box): T { place(el, box); this.root.append(el); return el; }

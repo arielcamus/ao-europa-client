@@ -65,7 +65,7 @@ export class GuildUI {
   // ---- frmGuildAdm: registered guilds ----
   private buildList(session: Session): Shown {
     const guild = session.guild;
-    const win = this.open('list', { id: 'frm-guild-list', art: 'ventanaclanes', size: [415, 389], title: 'Lista de clanes registrados' }, session, g => g.closeList());
+    const win = this.open('list', { id: 'frm-guild-list', panel: true, art: 'ventanaclanes', size: [415, 389], title: 'Lista de clanes registrados' }, session, g => g.closeList());
     const filter = win.input([36.3, 107.7, 105, 17], { maxLength: 30 }) as HTMLInputElement;
     const alignment = win.add(combo(ALIGNMENT_FILTER, 5), [152, 106.7, 110.3, 19]);
     const clans = win.list([33, 144, 272, 171]);
@@ -146,7 +146,7 @@ export class GuildUI {
   // ---- frmGuildLeader: the leader's panel ----
   private buildLeader(session: Session): Shown {
     const guild = session.guild;
-    const win = this.open('leader', { id: 'frm-guild-leader', art: 'ventanaadminclan', size: [552, 559], title: 'Administración del Clan' }, session, g => g.closeLeader());
+    const win = this.open('leader', { id: 'frm-guild-leader', panel: true, art: 'ventanaadminclan', size: [552, 559], title: 'Administración del Clan' }, session, g => g.closeLeader());
     const requests = win.list([279, 106, 249, 67]), allies = win.list([280, 248, 249, 80]), members = win.list([21, 248, 249, 80]);
     const news = win.input([22, 416, 504, 78], { multiline: true }) as HTMLTextAreaElement;
     const level = win.label('', [58, 106, 14, 16], 'vb-small vb-bold'), count = win.label('', [140, 154, 14, 16], 'vb-small vb-bold'), max = win.label('', [235, 154, 14, 16], 'vb-small vb-bold');

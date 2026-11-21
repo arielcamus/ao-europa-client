@@ -87,7 +87,7 @@ export class PartyUI {
     const party = session.party;
     if (!party.window) { if (this.window) { const w = this.window; this.window = undefined; w.close(); } return; }
     if (!this.window) {
-      const win = new VbWindow(this.classic, { id: 'frm-grupo', art: 'ventanagrupo', size: [433, 434], title: 'Grupo', onClose: () => { if (this.window === win) this.window = undefined; party.closeWindow(); } });
+      const win = new VbWindow(this.classic, { id: 'frm-grupo', panel: true, art: 'ventanagrupo', size: [433, 434], title: 'Grupo', onClose: () => { if (this.window === win) this.window = undefined; party.closeWindow(); } });
       this.window = win;
       this.members = win.list([240, 136, 153, 142]);
       win.button('boton-aceptar', [235, 382, 132, 28], 'Aceptar', () => win.close());
