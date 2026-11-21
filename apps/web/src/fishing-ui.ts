@@ -30,7 +30,11 @@ export class FishingUI {
   }
   private place(node: HTMLElement, x: number, y: number, grh: number) {
     Object.assign(node.style, { position: 'absolute', left: `${x}px`, top: `${y}px` });
-    void this.canvas(grh).then(canvas => { const copy = canvas.cloneNode() as HTMLCanvasElement; copy.getContext('2d')!.drawImage(canvas, 0, 0); node.replaceChildren(copy); }).catch(() => { /* no art, no bar */ });
+    void this.picture(grh).then(image => { node.replaceChildren(image); }).catch(() => { /* no art, no bar */ });
+  }
+  /** An <img> of the graphic: `#viewport canvas` must stay the world canvas only (a style rule and the screen-scale spec select it). */
+  private async picture(grh: number): Promise<HTMLImageElement> {
+    const image = document.createElement('img'); image.src = (await this.canvas(grh)).toDataURL(); image.alt = ''; image.draggable = false; return image;
   }
   private canvas(grh: number) {
     let pending = this.art.get(grh);
@@ -52,7 +56,7 @@ export class FishingUI {
       circle.hidden = result === 0;
       if (result && circle.dataset.result !== String(result)) {
         circle.dataset.result = String(result);
-        void this.canvas(result === 1 ? FISH_GRH.hit : FISH_GRH.miss).then(canvas => { const copy = canvas.cloneNode() as HTMLCanvasElement; copy.getContext('2d')!.drawImage(canvas, 0, 0); circle.replaceChildren(copy); }).catch(() => {});
+        void this.picture(result === 1 ? FISH_GRH.hit : FISH_GRH.miss).then(image => { circle.replaceChildren(image); }).catch(() => {});
       }
     });
   }

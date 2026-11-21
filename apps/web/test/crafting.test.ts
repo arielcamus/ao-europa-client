@@ -258,7 +258,7 @@ describe('alchemy and tailor recipes (Obj.dat)', () => {
 });
 
 describe('work prompts print with the explicit RGB the VB6 client uses', () => {
-  const rgbLines = (h: ReturnType<typeof harness>) => h.session.ui.messages.filter(m => m.line?.kind === 'rgb').map(m => m.line as { message: string; color: number[]; bold: boolean; italic: boolean });
+  const rgbLines = (h: ReturnType<typeof harness>) => h.session.ui.messages.filter(m => m.line?.kind === 'rgb').map(m => m.line);
   it('server work on (green bold), off (red bold) and a build macro (blue bold italic)', () => {
     const h = harness();
     h.recv({ id: CS.MacroTrabajoToggle, active: true }, { id: CS.MacroTrabajoToggle, active: false });
