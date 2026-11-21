@@ -60,3 +60,14 @@ The server holds the file open and saves a character on logout, so every UPDATE 
 - **Slot 16 = 20 apples** (object 1) for the delete scenario: `update inventory_item set item_id=1, amount=20, is_equipped=0 where user_id=6 and number=16;`. Undo: `item_id=0, amount=0`.
 - The recorder's "same slot" scenario (Moveitem 4 -> 4) empties slot 4 on the real server (it merges the stack into itself); restore with
   `update inventory_item set item_id=3684, amount=95 where user_id=6 and number=4;`. Slots 1, 17, 30, 42 were restored to 4335 x500 / empty / empty / empty.
+
+# combat-items (wave 3) test data on the shared VB6 server DB, applied 2026-11-21
+
+Backup first: `.backup C:\ao\Database-before-combat-items.db` (VM). Reach the CLI over SSH (`ssh -i ~/Projects/ao-reference/runtime/ao-vm/id_ed25519 -p 2222 aobuilder@127.0.0.1 C:\ao\sqlite-cli\sqlite3.exe C:\ao\server\Database.db "<sql>"`). Every UPDATE waits for `user.is_logged = 0`.
+
+- **Paralysed login** (`Aotesta`, user 2): `update user set is_paralyzed = 1 where id = 2;` then login. The server clears it itself (saved 0 on logout). Undo: `update user set is_paralyzed = 0 where id = 2;`.
+- **Dead at the priest** (`Aotesta`): `update user set is_dead = 1, min_hp = 0, pos_map = 1, pos_x = 78, pos_y = 63 where id = 2;`. Undo (done): `update user set pos_map = 1, pos_x = 57, pos_y = 43 where id = 2;` (the revival restored `is_dead = 0, min_hp = 20`).
+- **Spell scroll** (`TSpells`, user 4): `update inventory_item set amount = 1 where user_id = 4 and number = 13;` (object 2764, `UseItem` exits at amount 0). The use teaches spell 11 into spell slot 4 and empties slot 13. Undo (done): `update spell set spell_id = 0 where user_id = 4 and number = 4; update inventory_item set item_id = 2764, amount = 0 where user_id = 4 and number = 13;`.
+- **GM spawns**: `/ACC` (CreateNPC, no respawn) near `Aotest`. 🔴 `/RMATA` without respawn (`KillNPCNoRespawn`) kills the *selected* NPC, native ones included: a cleanup loop removed 3 native snakes on map 2 and the priest Juan XXI (map 1, 78,66) until the next server start. They were replaced with `/RACC` (spawn with respawn) at nearly the same tiles (snakes at 48,40, 48,64 and 39,70 / 37,70 on map 2; the priest at 77,66). The recorder now only kills NPCs its own run spawned.
+- Admin NPC safety: NPCs ignore GMs (`AI_NPC.EsObjetivoValido`, `MODULO_NPCs.CanAttackUser`) unless `/IGNORADO` (packet 204) toggled `AdminPerseguible`; even then a spawned snake did not attack `Aotest`. Real NPC attacks on a player come from the earlier `combat-spells-2` recordings (`NPCHitUser`, `NPCKillUser`).
+- **Blind, dumb, stun cannot be reproduced with the current data**: no spell has `Ceguera=`/`Estupidez=`, no object has `Estupidiza` or a ranged-stun `Subtipo`/`Porcentaje` weapon (`SistemaCombate.UserDañoEspecial` is the only `WriteStunStart`/`WriteDumb` path for players besides spells). They stay injected in tests.

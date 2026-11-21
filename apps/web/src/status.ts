@@ -113,6 +113,15 @@ export class StatusState {
       default: break;
     }
   }
+  /**
+   * ModLogin.LoadCharacterSelectionScreen (frmMain visible): UserParalizado / UserInmovilizado / UserStopped = False. The issue also asks for the stun
+   * timer, which VB6 leaves to expire. Done when the session goes back to the account screen, NOT on Logged: the server sends ParalizeOK
+   * while logging in a paralysed character and a reset on Logged would wipe it (the toggle packets are not idempotent).
+   */
+  resetOnLeave() {
+    this.paralyzed = this.immobilized = this.stopped = false; this.stunEnd = -Infinity; this.stunTotal = 0; this.blind = false; this.dumb = false;
+    this.bump();
+  }
   /** Characters leaving the map drop their effects. */
   forget(charIndex: number) {
     this.invisible.delete(charIndex); this.bars.delete(charIndex); this.mana.delete(charIndex);

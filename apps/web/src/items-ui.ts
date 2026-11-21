@@ -57,6 +57,7 @@ export class ItemsUI {
   private readonly amountDialog: HTMLElement; private readonly amountInput: HTMLInputElement;
   private readonly confirm: HTMLElement; private readonly confirmText: HTMLElement;
   private pendingDestroy: { slot: number; amount: number } | undefined;
+  private readonly card: HTMLElement; private readonly cardTitle: HTMLElement; private readonly cardImage: HTMLImageElement;
 
   constructor(private readonly ui: ClassicUI, private readonly root: HTMLElement, private readonly report: (message: string) => void) {
     const panel = root.querySelector<HTMLElement>('#stats-panel')!;
@@ -106,6 +107,18 @@ export class ItemsUI {
       button.onclick = () => this.answerDestroy(accept);
     }
 
+    // frmCollectibleCard.frm "Card Viewer" (6555x8970 twips = 437x598): the card picture and "Add to collection" (cmdAccept = UseItem of the slot).
+    // The card art (Obj.dat CollectibleCardImgPathing under interface/) is not part of the local mount: the window then shows the object's name.
+    this.card = make('section', 'items-window items-card', root, 'card-viewer'); this.card.hidden = true;
+    this.card.setAttribute('role', 'dialog'); this.card.setAttribute('aria-label', 'Visualizador de cartas');
+    place(this.card, 293, 0, 437, 598);
+    this.cardTitle = make('p', 'items-card-title', this.card);
+    this.cardImage = make('img', 'items-card-image', this.card); this.cardImage.alt = ''; this.cardImage.onerror = () => { this.cardImage.hidden = true; };
+    const accept = make('button', 'items-confirm-button items-card-accept', this.card, 'card-accept'); accept.type = 'button'; accept.textContent = 'Añadir a la colección';
+    accept.onclick = () => { this.session?.itemActions.acceptCard(); };
+    const cancel = make('button', 'items-confirm-button items-card-cancel', this.card, 'card-cancel'); cancel.type = 'button'; cancel.textContent = 'Cerrar';
+    cancel.onclick = () => { this.session?.itemActions.cancelCard(); };
+
     // frmComerciar.frm, 544x476 centred over frmMain; comerciar.bmp is 542x481.
     this.shop = make('section', 'items-window', root, 'shop'); this.shop.hidden = true;
     this.shop.setAttribute('role', 'dialog'); this.shop.setAttribute('aria-label', 'Comerciando con el NPC');
@@ -135,6 +148,7 @@ export class ItemsUI {
     artButton(this.shop, 'shop-sell', 'Vender', 'boton-vender', 367, 431, 122, 28, () => this.sell());
     artButton(this.shop, 'shop-close', 'Cerrar', 'boton-cerrar', 512, 0, 31, 28, () => this.closeShop());
     windows.watchElement('shop', this.shop, () => this.closeShop());
+    windows.watchElement('card-viewer', this.card, () => { this.session?.itemActions.cancelCard(); this.card.hidden = true; });
     this.shop.addEventListener('keydown', event => { if (event.key === 'Escape') { event.stopPropagation(); this.closeShop(); } });
   }
 
@@ -175,6 +189,7 @@ export class ItemsUI {
     this.closeAmount(); if (amount > 0) this.drop(slot, amount);
   }
   closeDialogs() {
+    this.session?.itemActions.cancelCard(); this.card.hidden = true;
     this.closeAmount(); this.confirm.hidden = true; this.pendingDestroy = undefined;
     if (this.shopVisible) this.closeShop();
   }
@@ -201,6 +216,15 @@ export class ItemsUI {
     // UpdateGoldState: gold over the per-level cap shows red.
     const gold = element('gold');
     gold.style.color = (stats.gold ?? 0) > level * (stats.goldPerLevel ?? 0) ? '#ff0000' : '#ffff80';
+    // frmCollectibleCard: open while a card slot is being viewed.
+    const card = session.items.card;
+    if (card && this.card.hidden) {
+      const item = session.ui.inventory.get(card.slot), info = item ? session.catalog?.get(item.object) : undefined;
+      this.cardTitle.textContent = info?.name ?? '';
+      this.cardImage.hidden = !info?.cardImage;
+      if (info?.cardImage) this.cardImage.src = `/ao-assets/interface/${info.cardImage.replace(/\\/g, '/')}`;
+      this.card.hidden = false;
+    } else if (!card && !this.card.hidden) this.card.hidden = true;
     const open = session.items.shopOpen;
     if (open && this.shop.hidden) { this.shop.hidden = false; this.shopSelected = undefined; this.shopAmount.value = '1'; this.dirty = true; }
     if (!open && !this.shop.hidden) { this.shop.hidden = true; this.shopSelected = undefined; }

@@ -24,10 +24,12 @@ export class ItemsState {
   /** Last pickup announcement (ShowPickUpObj); the classic client floats it over the map. */
   pickedUp: { object: number; amount: number; at: number } | undefined;
   pickups = 0;
+  /** frmCollectibleCard: the inventory slot whose card is being viewed (G_LastSelectedSlot), until accepted or cancelled. */
+  card: { slot: number } | undefined;
 
   receive(packet: ServerPacket) {
     switch (packet.id) {
-      case S.ChangeMap: this.closeShop(); break;
+      case S.ChangeMap: this.closeShop(); this.card = undefined; break;
       case S.Intervals:
         this.intervals = { dropItem: packet.dropItem, useItemKey: packet.useItemKey, useItemClick: packet.useItemClick };
         return;

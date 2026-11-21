@@ -31,3 +31,10 @@
 .delete-item { position: absolute; z-index: 5; padding: 0; border: 0; background-color: transparent; background-repeat: no-repeat; cursor: pointer; }
 .delete-item[hidden] { display: none; }
 .papiro-window:focus-visible, #keyring-window:focus-visible { outline: none; }
+
+/* frmCollectibleCard (items-ui.ts): the card on black, the accept button on the bottom edge like the form. */
+.items-card { background: #000; border: 1px solid #6b5a3a; }
+.items-card-title { position: absolute; left: 0; right: 0; top: 8px; margin: 0; text-align: center; font: bold 14px Tahoma, Arial, sans-serif; color: #e8dcb0; }
+.items-card-image { position: absolute; left: 0; top: 0; width: 437px; height: 598px; object-fit: contain; }
+.items-card-accept { position: absolute; left: 144px; bottom: 6px; width: 145px; }
+.items-card-cancel { position: absolute; right: 6px; top: 6px; width: 70px; }

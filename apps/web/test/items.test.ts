@@ -19,6 +19,7 @@ const ini = parseIni([
   '[OBJ5]', 'Name=Poción Roja', 'GrhIndex=14', 'ObjType=11',
   '[OBJ6]', 'Name=Llama', 'GrhIndex=15', 'ObjType=1', 'Destruye=1',
   '[OBJ7]', 'Name=Árbol', 'GrhIndex=16', 'ObjType=4',
+  '[OBJ8]', 'Name=Carta del Dragón', 'GrhIndex=17', 'ObjType=57', 'CollectibleCardImgPathing=Cartas\\450.png',
 ].join('\n'));
 const catalog = new ObjectCatalog(ini);
 const slot = (n: number, object: number, amount: number, equipped = false, value = 10) =>
@@ -107,6 +108,17 @@ describe('item actions', () => {
       { id: IC.EquipItem, slot: 4, skin: false, counter: 2 },
     ]);
   });
+  it('a collectible card only opens the viewer; "add to collection" (not the double click) sends UseItem, cancel sends nothing (frmCollectibleCard)', () => {
+    const { session, feed, out, advance } = playing();
+    feed(slot(1, 8, 1));
+    expect(catalog.get(8)?.cardImage).toBe('Cartas\\450.png');
+    expect(session.itemActions.activate(1)).toBe(true);
+    expect(session.items.card).toEqual({ slot: 1 }); expect(out()).toEqual([]);
+    session.itemActions.cancelCard(); expect(session.items.card).toBeUndefined(); expect(out()).toEqual([]);
+    session.itemActions.activate(1); advance(150);
+    expect(session.itemActions.acceptCard()).toBe(true); expect(session.items.card).toBeUndefined();
+    expect(out()).toEqual([{ id: IC.UseItem, slot: 1, fromInventory: true, counter: 1 }]);
+  });
   it('drops at the user tile, gold through pseudo slot 200, and asks before sending in a shop or when dead', () => {
     const { session, feed, out, advance } = playing();
     feed(slot(1, 1, 5), { id: S.UpdateGold, gold: 500, goldPerLevel: 100 });
@@ -181,5 +193,14 @@ describe('catalog and display helpers', () => {
   it('formats gold with dots and colours buffed attributes like GetBuffColor', () => {
     expect(withDots(1234567)).toBe('1.234.567'); expect(withDots(12)).toBe('12');
     expect(buffColor(18, 18)).toBe('#fff'); expect(buffColor(36, 18)).toBe('rgb(204,0,0)');
+  });
+});
+
+import { elementalTagIcons } from '../src/classic-ui.js';
+describe('elemental tag icons (clsGrapchicalInventory.DrawInventory)', () => {
+  it('draws the set tags in the fixed order Fire, Water, Earth, Wind with their icon graphics', () => {
+    expect(elementalTagIcons(0)).toEqual([]);
+    expect(elementalTagIcons(1 | 8).map(i => i.grh)).toEqual([10484, 10485]);
+    expect(elementalTagIcons(15).map(i => i.grh)).toEqual([10484, 10486, 10483, 10485]);
   });
 });

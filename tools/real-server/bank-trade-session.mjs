@@ -17,8 +17,8 @@ export const sleep = ms => new Promise(r => setTimeout(r, ms));
 const hex = bytes => Buffer.from(bytes).toString('hex');
 
 export class Vb6Session {
-  constructor({ email, password, host = '127.0.0.1', port = 7667 }) {
-    Object.assign(this, { email, password, host, port });
+  constructor({ email, password, host = '127.0.0.1', port = 7667, character }) {
+    Object.assign(this, { email, password, host, port, character_name: character });
     this.records = []; this.packets = []; this.start = Date.now(); this.decoder = new FrameDecoder();
     this.waiters = []; this.chars = new Map(); this.counters = {}; this.state = 'connecting'; this.inventory = new Map();
   }
@@ -50,7 +50,7 @@ export class Vb6Session {
   onPacket(p) {
     if (p.id === S.Connected && this.state === 'connecting') { this.state = 'account'; this.send({ id: C.LoginAccount, email: this.email, password: this.password }); }
     else if (p.id === S.AccountCharacterList && this.state === 'account') {
-      const first = p.characters[0]; if (!first) throw new Error('no character'); this.character = first; this.state = 'login';
+      const first = (this.character_name && p.characters.find(c => c.name === this.character_name)) || p.characters[0]; if (!first) throw new Error('no character'); this.character = first; this.state = 'login';
       this.send({ id: C.LoginExistingChar, charId: first.id, name: first.name });
     } else if (p.id === S.Logged) { this.state = 'playing'; this.resolveLogin(); }
     else if (p.id === S.UserCharIndexInServer) { this.charIndex = p.charIndex; const own = this.chars.get(p.charIndex); if (own) this.pos = { x: own.x, y: own.y }; }

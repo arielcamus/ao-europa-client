@@ -10,12 +10,14 @@ import type { Ini } from './assets.js';
 export const ObjType = {
   UseOnce: 1, Weapon: 2, Armour: 3, Trees: 4, Doors: 6, Signs: 8, Potions: 11, Shield: 16, Helmet: 17, Tools: 18,
   Teleport: 19, Decoration: 20, Magical: 21, Deposits: 22, Minerals: 23, Anvil: 27, Forge: 28, Rings: 30, Arrows: 32,
-  Stains: 35, Donor: 36, Mail: 47, CastleSpawner: 10,
+  Stains: 35, Donor: 36, Mail: 47, CastleSpawner: 10, CollectibleCard: 57,
 } as const;
 
 export interface ObjectInfo {
   name: string; grh: number; type: number; minHit: number; maxHit: number; minDef: number; maxDef: number;
   text: string; projectile: boolean; destroys: boolean; creaLuz: boolean; elementalTags: number;
+  /** CollectibleCardImgPathing (relative to the interface folder, VB6 backslashes). */
+  cardImage: string;
 }
 
 const num = (section: Map<string, string>, key: string) => { const value = Number(section.get(key)); return Number.isFinite(value) ? value : 0; };
@@ -30,7 +32,7 @@ export class ObjectCatalog {
       name: section.get('name') ?? `Objeto ${id}`, grh: num(section, 'grhindex'), type: num(section, 'objtype'),
       minHit: num(section, 'minhit'), maxHit: num(section, 'maxhit'), minDef: num(section, 'mindef'), maxDef: num(section, 'maxdef'),
       text: section.get('texto') ?? '', projectile: num(section, 'proyectil') === 1, destroys: num(section, 'destruye') !== 0,
-      creaLuz: !!section.get('crealuz'), elementalTags: num(section, 'elementaltags'),
+      creaLuz: !!section.get('crealuz'), elementalTags: num(section, 'elementaltags'), cardImage: section.get('collectiblecardimgpathing') ?? '',
     };
     this.cache.set(id, info); return info;
   }

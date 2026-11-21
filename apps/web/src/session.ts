@@ -341,7 +341,7 @@ export class Session {
           break;
         case SS.ShowMessageBox: this.notify({ kind: 'box', messageId: packet.messageId, extra: packet.extra }); break;
         case SS.CerrarleCliente: this.onCloseClient?.(); break;
-        case SS.MostrarCuenta: this.phase = 'account'; this.accountRevision++; this.onShowAccount?.(); break;
+        case SS.MostrarCuenta: this.phase = 'account'; this.status.resetOnLeave(); this.world.blind = false; this.accountRevision++; this.onShowAccount?.(); break;
         case SS.NavigateToggle: this.movement.sailing = packet.sailing; break;
         case SS.EquiteToggle: this.movement.riding = !this.movement.riding; break; // HandleEquiteToggle flips it
         case SS.NadarToggle: this.movement.swimming = packet.swimming; this.movement.rubberSuit = packet.rubberSuit; break;

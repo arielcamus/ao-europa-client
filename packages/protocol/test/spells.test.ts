@@ -53,4 +53,25 @@ describe('spell packets against real VB6 recordings', () => {
     ] as const;
     for (const packet of cases) expect(decodeServerPacket(encodeServerPacket(packet as never))).toEqual(packet);
   });
+  // #19 item 1: hex written by hand from the VB6 field order (server Protocol_Writes.bas Prepare*/Write*), little endian, NOT produced by the codec.
+  it('NotifyInventarioHechizos (client 293) is Int8 x3: value, selected row, scroll', () => {
+    expect(hex(encodeClientPacket({ id: SC.NotifyInventarioHechizos, value: 2, hechiSel: 3, scrollSel: 1 }))).toBe('25010203' + '01');
+  });
+  it('matches hand-derived hex for 51, 60, 114, 115, 116, 180, 185 and 191', () => {
+    const golden: [object, string][] = [
+      [{ id: SS.FxFloor, x: 51, y: 60, grh: 20 }, '3300333c1400'],
+      [{ id: SS.CreateFX, charIndex: 5, fx: 15, loops: 2, x: 7, y: 8 }, '3c0005000f0002000708'],
+      [{ id: SS.ParticleFXToFloor, x: 1, y: 2, particle: 3, time: 4 }, '72000102030004000000'],
+      [{ id: SS.ParticleFXWithDestino, sender: 1, receiver: 2, travelParticle: 186, finalParticle: 7, time: 9, wave: 16, fx: 15, x: 3, y: 4 }, '7300' + '0100' + '0200' + 'ba00' + '0700' + '09000000' + '1000' + '0f00' + '0304'],
+      [{ id: SS.ParticleFXWithDestinoXY, sender: 1, travelParticle: 186, finalParticle: 7, time: 9, wave: 16, fx: 15, x: 3, y: 4 }, '7400' + '0100' + 'ba00' + '0700' + '09000000' + '1000' + '0f00' + '0304'],
+      [{ id: SS.SendSkillCdUpdate, typeId: 4, skillId: -1, timeLeft: 1000, totalTime: 2000, effectType: 2, stacks: 1 }, 'b4000400ffffffffe8030000d0070000020100'],
+      [{ id: SS.NotifyCasting, value: 1 }, 'b90001'],
+      [{ id: SS.GetInventarioHechizos, value: 2, hechiSel: 3, scrollSel: 1 }, 'b8000203' + '01'],
+      [{ id: SS.CreateProjectile, startX: 1, startY: 2, targetX: 3, targetY: 4, projectileType: 1 }, 'bf00' + '0102030401'],
+    ];
+    for (const [packet, expected] of golden) {
+      expect(hex(encodeServerPacket(packet as never))).toBe(expected);
+      expect(decodeServerPacket(bytes(expected))).toEqual(packet);
+    }
+  });
 });

@@ -75,9 +75,18 @@ export class ItemsController {
         return equipped ? false : this.equip(slot);
       case ObjType.Tools: return equipped ? this.use(slot) : this.equip(slot);
       case ObjType.Donor: return equipped ? false : this.equip(slot);
+      // UserOrEquipItem: otCollectibleCard only shows frmCollectibleCard; its "add to collection" button is the WriteUseItem.
+      case ObjType.CollectibleCard: this.deps.state.card = { slot }; this.deps.state.revision++; return true;
       default: return this.use(slot);
     }
   }
+  /** frmCollectibleCard cmdAccept: hides the viewer and uses the last selected slot. */
+  acceptCard(): boolean {
+    const card = this.deps.state.card; if (!card) return false;
+    this.cancelCard();
+    return this.use(card.slot);
+  }
+  cancelCard() { if (this.deps.state.card) { this.deps.state.card = undefined; this.deps.state.revision++; } }
   /** TirarItem asks before destroying; frmCantidad asks for the amount of a stack. */
   dropNeedsAmount(slot: number): boolean {
     if (slot === GOLD_SLOT) return (this.deps.ui.stats.gold ?? 0) > 0;

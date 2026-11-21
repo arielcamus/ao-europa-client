@@ -21,6 +21,10 @@ export const element = <T extends HTMLElement = HTMLElement>(id: string) => {
 const text = (id: string, value: string | number) => { element(id).textContent = String(value); };
 const ratio = (value: number | undefined, max: number | undefined) => max && value !== undefined ? Math.min(1, Math.max(0, value / max)) : 0;
 
+/** e_ElementalTags (Fire 1, Water 2, Earth 4, Wind 8) and e_ElementalTagIconsGrhIndex; CORNER_X/CORNER_Y of clsGrapchicalInventory.DrawInventory. */
+export const ELEMENTAL_ICONS = [{ tag: 1, grh: 10484 }, { tag: 2, grh: 10486 }, { tag: 4, grh: 10483 }, { tag: 8, grh: 10485 }] as const;
+export const ELEMENTAL_CORNERS = [[23, 0], [0, 0], [23, 21], [0, 21]] as const;
+export const elementalTagIcons = (tags: number) => ELEMENTAL_ICONS.filter(icon => (tags & icon.tag) !== 0);
 export class ClassicUI {
   private objects: Ini = new Map();
   private spells: Ini = new Map();
@@ -30,6 +34,7 @@ export class ClassicUI {
   private generation = 0;
   private selectedItem = 0;
   private selectedSpell = 0;
+  private panelSeq = 0;
   private slotButtons: HTMLButtonElement[] = [];
   private menuButtons = new Map<string, HTMLButtonElement>();
   private menuActions = new Map<string, () => void>();
@@ -52,8 +57,9 @@ export class ClassicUI {
       button.addEventListener('dblclick', () => { if (this.session?.ui.inventory.has(i + 1)) { this.selectedItem = i + 1; this.markItem(); this.onActivate?.(i + 1); } });
       element('inventory').append(button); this.slotButtons.push(button);
     }
-    element('inventory-tab').onclick = () => this.showSpells(false);
-    element('spells-tab').onclick = () => this.showSpells(true);
+    // frmMain.inventoryClick / hechizosClick: a followed client reports the panel it shows (WriteNotifyInventarioHechizos).
+    element('inventory-tab').onclick = () => { this.showSpells(false); this.session?.spells.notifyPanel(1, Math.max(0, this.selectedSpell - 1), 0); };
+    element('spells-tab').onclick = () => { this.showSpells(true); this.session?.spells.notifyPanel(2, Math.max(0, this.selectedSpell - 1), 0); };
     element('spell-up').onclick = () => this.moveSpell(true);
     element('spell-down').onclick = () => this.moveSpell(false);
     element('spells').addEventListener('keydown', event => {
@@ -146,6 +152,13 @@ export class ClassicUI {
     ctx.putImageData(pixels, 0, 0);
     return canvas;
   }
+  /** An elemental tag icon at its own size (clsGrapchicalInventory draws it at a slot corner, e_ElementalTagIconsGrhIndex). */
+  async tagIcon(grh: number): Promise<HTMLCanvasElement> {
+    const frame = await this.renderer.graphic(grh), sheet = await this.sheet(frame.file);
+    const canvas = document.createElement('canvas'); canvas.width = frame.width; canvas.height = frame.height; canvas.className = 'tag-icon';
+    canvas.getContext('2d')!.drawImage(sheet, frame.x, frame.y, frame.width, frame.height, 0, 0, frame.width, frame.height);
+    return canvas;
+  }
   async slotBackground(grh: number): Promise<{ image: string; position: string }> {
     const frame = await this.renderer.graphic(grh);
     return { image: `url("/ao-assets/Graficos/${frame.file}.png")`, position: `-${frame.x}px -${frame.y}px` };
@@ -214,6 +227,10 @@ export class ClassicUI {
       if (item) {
         const amount = document.createElement('span'); amount.className = 'quantity'; amount.textContent = String(item.amount); button.append(amount);
         if (item.equipped) { const equipped = document.createElement('span'); equipped.className = 'equipped'; equipped.textContent = '+'; button.append(equipped); }
+        // The tags of the slot (crafted) or of the object itself, in the fixed order Fire, Water, Earth, Wind, one corner each.
+        const tags = elementalTagIcons(item.elementalTags | Number(object?.get('elementaltags') ?? 0));
+        const icons = await Promise.all(tags.map((icon, n) => this.tagIcon(icon.grh).then(canvas => { Object.assign(canvas.style, { left: `${ELEMENTAL_CORNERS[n]![0]}px`, top: `${ELEMENTAL_CORNERS[n]![1]}px` }); return canvas; }).catch(() => undefined)));
+        if (generation === this.generation) for (const icon of icons) if (icon) button.append(icon);
       }
     }));
     this.markItem();
@@ -223,6 +240,12 @@ export class ClassicUI {
       this.session = session; this.revision = -1; this.selectedItem = 0; this.selectedSpell = 0; this.showSpells(false); this.showMenu(false);
     }
     if (!session) return;
+    // HandleGetInventarioHechizos: a GM following this player flips the panel (and the selected spell row) remotely.
+    const request = session.spells.panelRequest;
+    if (request && request.seq !== this.panelSeq) {
+      this.panelSeq = request.seq;
+      if (request.value === 1) this.showSpells(false); else if (request.value === 2) { this.showSpells(true); this.selectSpell(request.selected + 1); }
+    }
     if (this.catalog) session.catalog ??= this.catalog;
     const ui = session.ui, stats = ui.stats;
     // frmMain: the on/off picture of each safe follows the flags the server last set (all on after login).

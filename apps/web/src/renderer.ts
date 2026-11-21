@@ -8,7 +8,8 @@ import { Application, Container, Rectangle, Sprite, Text, Texture } from 'pixi.j
 import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
 import type { Session } from './session.js';
-import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, roofTriggers, TreeFade, fixedObjects, nearRoof, objectDraws, parseObjectGraphics, treeCoversPlayer } from './map-objects.js';
+import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, roofTriggers, TreeFade, fixedObjects, nearRoof, objectDraws, objectGraphicsFromIni, treeCoversPlayer } from './map-objects.js';
+import { loadObjectIni } from './object-catalog.js';
 import type { GroundObject, ObjectGraphic } from './map-objects.js';
 import { CharacterSprites } from './character-render.js';
 import { FLAG_GRH, NPC_NAME_COLOR, OWN_CLAN_COLOR, TEAM_COLORS, clanTagColor, colorPj, parseColors, playerNameColor, privilegeTitle } from './character-data.js';
@@ -105,14 +106,14 @@ export class WorldRenderer {
     const optional = <T>(load: Promise<T>, name: string) => load.catch(error => { this.report(`${name}: ${String(error)}`); return undefined; });
     return this.metadata ??= Promise.all([
       fetchText('init/graficos.ini'), fetchText('init/cuerpos.dat'), fetchText('init/moldes.ini'), fetchBytes('init/cabezas.ind'),
-      fetchText('Dat/Obj.dat').catch(() => ''),
+      loadObjectIni().catch(() => new Map() as Ini),
       optional(fetchText('init/armas.dat'), 'armas.dat'), optional(fetchText('init/escudos.dat'), 'escudos.dat'),
       optional(fetchBytes('init/cascos.ind'), 'cascos.ind'), optional(fetchText('init/colores.dat'), 'colores.dat'),
       optional(fetchBytes('init/particles.ind'), 'particles.ind'), optional(fetchText('init/ProjectileDef.dat'), 'ProjectileDef.dat'),
     ]).then(([graphics, bodies, molds, heads, objects, weapons, shields, helmets, colors, particles, projectiles]) => {
       if (particles) fxTables.streams = parseParticles(particles);
       if (projectiles) fxTables.projectiles = parseProjectiles(parseIni(projectiles));
-      this.objectGraphics = parseObjectGraphics(objects);
+      this.objectGraphics = objectGraphicsFromIni(objects);
       this.graphics = parseGraphics(graphics); this.bodies = parseIni(bodies);
       this.molds = parseIni(molds); this.heads = parseHeads(heads);
       this.colors = colors ? parseColors(colors) : new Map();
@@ -350,7 +351,14 @@ export class WorldRenderer {
       const alpha = session.status.alphaOf(char.charIndex, session.charIndex, char.charIndex === session.charIndex);
       if (alpha === undefined) continue;
       for (const layer of sprites.layers(char, heading)) {
-        this.draw(pool, layer.animation, px + layer.x, py + layer.y, layer.walks && moving ? elapsed : 0, true, alpha);
+        // ArmaMov / EscudoMov (HandleArmaMov: only while the character is not moving): the weapon or shield animation runs once from the packet.
+        let time = layer.walks && moving ? elapsed : 0;
+        const swingStart = moving ? undefined : layer.part === 'weapon' ? session.combat.swings.get(char.charIndex) : layer.part === 'shield' ? session.status.shieldSwings.get(char.charIndex) : undefined;
+        if (swingStart !== undefined) {
+          const sinceSwing = now - swingStart, length = layer.animation.frames.length * layer.animation.frameMs;
+          if (sinceSwing >= 0 && sinceSwing < length) time = sinceSwing;
+        }
+        this.draw(pool, layer.animation, px + layer.x, py + layer.y, time, true, alpha);
       }
       // Quest marker (engine.bas Char_Render, .simbolo): grh 5257 + symbol, 48 px above the head, bobbing 8 px; drawn even with names hidden.
       const marker = char.npc && char.symbol ? sprites.body(char.body) : undefined;

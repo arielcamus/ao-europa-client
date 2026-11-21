@@ -20,6 +20,7 @@ export enum SpellServerPacketId {
   ParticleFXToFloor = 114,
   ParticleFXWithDestino = 115,
   ParticleFXWithDestinoXY = 116,
+  GetInventarioHechizos = 184, // eGetInventarioHechizos: WriteGetInventarioHechizos / HandleGetInventarioHechizos (a GM follows this player's panel)
   SendSkillCdUpdate = 180, // eSendSkillCdUpdate: WriteSendSkillCdUpdate / HandleSendSkillCdUpdate
   NotifyCasting = 185,     // eNotificarClienteCasteo: WriteNofiticarClienteCasteo
   CreateProjectile = 191,  // eCreateProjectile: PrepareCreateProjectile / HandleCreateProjectile
@@ -31,6 +32,7 @@ export enum SpellClientPacketId {
   SpellInfo = 4,      // WriteSpellInfo / HandleSpellInfo
   MoveSpell = 14,     // WriteMoveSpell / HandleMoveSpell
   CastSpell = 94,     // WriteCastSpell / HandleCastSpell
+  NotifyInventarioHechizos = 293, // WriteNotifyInventarioHechizos: the followed player reports its panel (anti-cheat follow)
 }
 
 /** VB6 e_Skill values the spell flow uses (server Declares.bas e_Skill). */
@@ -70,6 +72,8 @@ export const spellServerCodecs = {
   [SpellServerPacketId.ParticleFXWithDestinoXY]: struct({
     sender: int16, travelParticle: int16, finalParticle: int16, time: int32, wave: int16, fx: int16, x: byte, y: byte,
   }),
+  // value 1 = inventory panel, 2 = spell list with the selected row and the scroll offset.
+  [SpellServerPacketId.GetInventarioHechizos]: struct({ value: byte, hechiSel: byte, scrollSel: byte }),
   [SpellServerPacketId.SendSkillCdUpdate]: struct({ typeId: int16, skillId: int32, timeLeft: int32, totalTime: int32, effectType: byte, stacks: int16 }),
   [SpellServerPacketId.NotifyCasting]: struct({ value: byte }),
   [SpellServerPacketId.CreateProjectile]: struct({ startX: byte, startY: byte, targetX: byte, targetY: byte, projectileType: byte }),
@@ -81,4 +85,5 @@ export const spellClientCodecs = {
   [SpellClientPacketId.SpellInfo]: struct({ slot: byte }),
   [SpellClientPacketId.MoveSpell]: struct({ up: bool, slot: byte }),
   [SpellClientPacketId.CastSpell]: struct({ slot: byte, counter: int32 }),
+  [SpellClientPacketId.NotifyInventarioHechizos]: struct({ value: byte, hechiSel: byte, scrollSel: byte }),
 };

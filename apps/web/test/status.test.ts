@@ -1,16 +1,17 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { ClientPacketId as C, ServerPacketId as S, Heading, StatusClientPacketId as SC, StatusServerPacketId as SS, encodeServerFrame, decodeClientPacket, FrameDecoder } from '@ao/protocol';
+import { SessionServerPacketId, ClientPacketId as C, ServerPacketId as S, Heading, StatusClientPacketId as SC, StatusServerPacketId as SS, encodeServerFrame, decodeClientPacket, FrameDecoder } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
 import { Session } from '../src/session.js';
 import { INVISIBLE_ALPHA, STATUS_TEXT } from '../src/status.js';
 
-function harness() {
+function harness(beforeLogged: ServerPacket[] = []) {
   let now = 0;
   const sent: Uint8Array[] = [];
   const session = new Session({ email: 'test', password: 'secret' }, bytes => sent.push(bytes), () => now);
   const recv = (...packets: ServerPacket[]) => { for (const packet of packets) session.receive(encodeServerFrame(packet)); };
-  recv(f.Connected, f.AccountCharacterList, f.Intervals, f.ChangeMap, { ...f.CharacterCreate, speeding: 1 }, f.UserCharIndexInServer, f.Logged);
+  recv(f.Connected, f.AccountCharacterList, f.Intervals, f.ChangeMap, { ...f.CharacterCreate, speeding: 1 }, f.UserCharIndexInServer, ...beforeLogged, f.Logged);
   const out = () => { const d = new FrameDecoder(); return sent.flatMap(b => d.push(b).map(decodeClientPacket)); };
   return { session, recv, sent, out, advance: (ms: number) => { now += ms; }, last: () => session.ui.messages.at(-1) };
 }
@@ -40,13 +41,22 @@ describe('combat status (VB6 Protocol.bas handlers)', () => {
   });
   it('Dumb sends another heading when the roll is below 50, and keeps it otherwise', () => {
     const h = harness(); h.recv({ id: SS.Dumb });
-    console.log('DBG', h.session.ready, h.session.position, h.session.status.canMove(), h.session.walkInterval);
     h.session.random = () => 0.1; // roll 11 < 50: a different heading, never the pressed one
     expect(h.session.walk(Heading.East)).toBe(true);
     expect(h.out().find(p => p.id === C.Walk)).not.toMatchObject({ heading: Heading.East });
     const k = harness(); k.recv({ id: SS.Dumb }); k.session.random = () => 0.9;
     expect(k.session.walk(Heading.East)).toBe(true); expect(k.out().find(p => p.id === C.Walk)).toMatchObject({ heading: Heading.East });
     k.recv({ id: SS.DumbNoMore }); expect(k.session.status.dumb).toBe(false);
+  });
+  it('going back to the account screen resets paralysed/immobilised/stopped/stun (ModLogin.LoadCharacterSelectionScreen); Logged does not', () => {
+    const h = harness(); const s = h.session.status;
+    h.recv({ id: SS.ParalizeOK }, { id: SS.InmovilizadoOK }, { id: SS.Stopped, stopped: true }, { id: SS.StunStart, duration: 30_000 });
+    expect(s.canMove()).toBe(false);
+    h.recv({ id: SessionServerPacketId.MostrarCuenta });
+    expect([s.paralyzed, s.immobilized, s.stopped, s.stunned]).toEqual([false, false, false, false]);
+    // A paralysed login: ParalizeOK arrives before Logged and must survive it (the packet is a toggle).
+    const k = harness([{ id: SS.ParalizeOK }]);
+    expect(k.session.status.paralyzed).toBe(true);
   });
   it('SetInvisible: drawn at alpha 100/255 for the viewer itself, hidden for others', () => {
     const h = harness(); const s = h.session.status;
@@ -86,5 +96,53 @@ describe('combat status (VB6 Protocol.bas handlers)', () => {
     h.recv({ id: SS.EscudoMov, charIndex: SELF }); expect(s.shieldSwings.has(SELF)).toBe(true);
     h.recv({ id: SS.DoAnimation, charIndex: SELF, animation: 829 }); expect(s.animating.get(SELF)).toBe(829);
     h.recv({ id: S.ChangeMap, map: 2, resourceMap: 2 }); expect(s.bars.size).toBe(0);
+  });
+});
+
+describe('replay of a real VB6 paralysed login (tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl)', () => {
+  it('is paralysed from the login (ParalizeOK arrives BEFORE Logged and survives it) and free again at the second ParalizeOK', () => {
+    const lines = readFileSync(new URL('../../../tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl', import.meta.url), 'utf8').trim().split('\n')
+      .map(line => JSON.parse(line) as { t_ms: number; dir: string; id: number; hex: string });
+    const session = new Session({ email: 'x', password: 'y' }, () => undefined, () => 5000);
+    const feed = (hex: string) => { const body = Buffer.from(hex, 'hex'); session.receive(new Uint8Array([body.length & 255, body.length >> 8, ...body])); };
+    const server = lines.filter(l => l.dir === 's2c');
+    const paralyze = server.filter(l => l.id === SS.ParalizeOK), logged = server.findIndex(l => l.id === S.Logged);
+    expect(paralyze).toHaveLength(2); expect(server.indexOf(paralyze[0]!)).toBeLessThan(logged);
+    for (const line of server) {
+      feed(line.hex);
+      if (line === paralyze[0]) expect(session.status.paralyzed).toBe(true);
+    }
+    // The second packet is the expiry: the toggle leaves the character free (and the stand-in walk check passes again).
+    expect(session.status.paralyzed).toBe(false); expect(session.status.canMove()).toBe(true);
+    expect(server.indexOf(paralyze[1]!)).toBeGreaterThan(logged);
+  });
+});
+
+describe('replay of a real VB6 spell scroll (tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl)', () => {
+  it('UseItem on the scroll answers ChangeSpellSlot (the spell is learned) and an emptied inventory slot', () => {
+    const lines = readFileSync(new URL('../../../tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl', import.meta.url), 'utf8').trim().split('\n')
+      .map(line => JSON.parse(line) as { dir: string; id: number; hex: string });
+    const session = new Session({ email: 'x', password: 'y' }, () => undefined, () => 5000);
+    for (const line of lines.filter(l => l.dir === 's2c')) { const body = Buffer.from(line.hex, 'hex'); session.receive(new Uint8Array([body.length & 255, body.length >> 8, ...body])); }
+    expect(session.ui.spells.get(4)).toMatchObject({ slot: 4, spell: 11 });
+    expect(session.ui.inventory.has(13)).toBe(false); // the scroll was consumed
+    expect(lines.find(l => l.dir === 'c2s' && l.id === 99)?.hex).toBe('63000d0101000000'); // UseItem(slot 13, fromInventory, counter 1)
+  });
+});
+
+describe('replay of a real VB6 priest revival (tests/fixtures/vb6/combat-items/priest-revive-click.jsonl)', () => {
+  it('a dead character that left-clicks the priest is revived: UpdateHP, LocaleMsg 585, alive again', () => {
+    const lines = readFileSync(new URL('../../../tests/fixtures/vb6/combat-items/priest-revive-click.jsonl', import.meta.url), 'utf8').trim().split('\n')
+      .map(line => JSON.parse(line) as { dir: string; id: number; hex: string });
+    const session = new Session({ email: 'x', password: 'y' }, () => undefined, () => 5000);
+    let hpAtLogin: number | undefined;
+    for (const line of lines.filter(l => l.dir === 's2c')) {
+      const body = Buffer.from(line.hex, 'hex'); session.receive(new Uint8Array([body.length & 255, body.length >> 8, ...body]));
+      if (line.id === S.Logged) hpAtLogin = session.ui.stats.hp;
+    }
+    expect(hpAtLogin).toBe(0); // the character logs in dead
+    expect(session.ui.stats.hp).toBe(20); expect(session.dead).toBe(false);
+    expect(lines.some(l => l.dir === 's2c' && l.id === 141 && l.hex.startsWith('8d004902'))).toBe(true); // LocaleMsg 585
+    expect(lines.find(l => l.dir === 'c2s' && l.id === 95)?.hex).toBe('5f004d4201000000'); // LeftClick (77, 66) on the priest; the server revives on the click, a later /RESUCITAR is ignored
   });
 });

@@ -5,7 +5,7 @@
  * HandleCreateFX and HandleFxPiso. Spell console tokens (HECINF, HecMSG...) are expanded by chat-console.ts.
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty. See NOTICE.
  */
-import { ServerPacketId as S, SpellClientPacketId as SC, SpellServerPacketId as SS, MAGIC_SKILL, CraftingClientPacketId as CC, ExtractionSkill } from '@ao/protocol';
+import { NpcsServerPacketId as NS, ServerPacketId as S, SpellClientPacketId as SC, SpellServerPacketId as SS, MAGIC_SKILL, CraftingClientPacketId as CC, ExtractionSkill } from '@ao/protocol';
 import type { ClientPacket, ServerPacket } from '@ao/protocol';
 import { fetchText, parseIni } from './assets.js';
 import type { Ini } from './assets.js';
@@ -57,6 +57,10 @@ export class SpellState {
   /** Set by WorkRequestTarget; cleared by a click, by a cancel (skill 0) or by leaving the map. */
   targeting: Targeting | undefined;
   effects: ActiveFx[] = [];
+  /** HandleGetInventarioHechizos: the panel a GM-follow asked this client to show (1 inventory, 2 spells + selection + scroll). */
+  panelRequest: { value: number; selected: number; scroll: number; seq: number } | undefined;
+  /** `Seguido` (NotificarClienteSeguido, not in the client yet): only a followed client reports its panel. */
+  followed = false;
   cooldowns = new Map<number, { timeLeft: number; totalTime: number; at: number }>();
   revision = 0;
   private magicInterval = 0;
@@ -101,6 +105,10 @@ export class SpellState {
     this.targeting = undefined; this.revision++; // UsaLanzar = False: UsingSkill = 0
     return true;
   }
+  /** WriteNotifyInventarioHechizos on a tab click or a spell list click while followed. */
+  notifyPanel(value: 1 | 2, selected: number, scroll: number) {
+    if (this.followed) this.send({ id: SC.NotifyInventarioHechizos, value, hechiSel: selected, scrollSel: scroll });
+  }
   info(slot: number) { if (slot >= 1) this.send({ id: SC.SpellInfo, slot }); }
   move(up: boolean, slot: number) { this.send({ id: SC.MoveSpell, up, slot }); }
   cancel() { if (this.targeting) { this.targeting = undefined; this.revision++; } }
@@ -110,6 +118,8 @@ export class SpellState {
     switch (packet.id) {
       case S.Intervals: this.magicInterval = packet.magic; this.bowInterval = packet.bow; break;
       case S.ChangeMap: this.reset(); break;
+      // A removed character takes its FX along (they are drawn on that character).
+      case NS.CharacterRemove: this.effects = this.effects.filter(fx => fx.charIndex !== packet.charIndex); break;
       case SS.WorkRequestTarget: {
         if (packet.skill === 0) this.targeting = undefined;
         else if (!this.targeting || this.targeting.skill !== packet.skill) {
@@ -121,7 +131,10 @@ export class SpellState {
         }
         this.revision++; break;
       }
+      case SS.GetInventarioHechizos: this.panelRequest = { value: packet.value, selected: packet.hechiSel, scroll: packet.scrollSel, seq: (this.panelRequest?.seq ?? 0) + 1 }; this.revision++; break;
       case SS.CreateFX: {
+        // SetCharacterFx(charindex, 0, ..) is "no FX": it clears the character's FX instead of starting one.
+        if (packet.fx === 0) { this.effects = this.effects.filter(fx => fx.charIndex !== packet.charIndex); this.revision++; break; }
         this.addFx({ fx: packet.fx, charIndex: packet.charIndex, x: packet.x, y: packet.y, loops: packet.loops, startedAt: this.clock() });
         break;
       }
