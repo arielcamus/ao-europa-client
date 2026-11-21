@@ -3,7 +3,8 @@ import { step } from '../harness.js';
 import { Heading, SCP, C } from '../session.js';
 import type { ClientPacket } from '@ao/protocol';
 import { KeysClientPacketId as K, ItemsClientPacketId as I, SkillsClientPacketId as SK } from '@ao/protocol';
-import { gmGoto, ensureLand } from './util.js';
+import { gmGoto, ensureLand, second, loadMap, walkTo, HEAD } from './util.js';
+import { path as bfs, walkable } from '../maps.js';
 
 const DX: Record<number, [number, number]> = { [Heading.North]: [0, -1], [Heading.East]: [1, 0], [Heading.South]: [0, 1], [Heading.West]: [-1, 0] };
 
@@ -39,8 +40,21 @@ step('MOV-02', async c => {
   const [dx, dy] = DX[heading]!, bx = p.x, by = p.y;
   await gmGoto(c, p.map, bx + dx, by + dy);
   const r = await p.step(heading, 330);
-  if (r.moved) { c.fixture('walk-into-wall-and-player', p, from); c.blocked(`wall half PASSED (a blocked tile answers PosUpdate with the old position). Player-collision half not verifiable: the GM helper does not block (admin-invisible GMs never do, LegalWalk), and a second NON-GM character is needed; the per-IP creation budget and the creation bug prevent one`); }
-  c.ok(!r.moved, `walk into the GM helper standing at ${bx + dx},${by + dy} was blocked`);
+  if (r.moved) { // the GM helper is admin-invisible and does not block: use a second NON-GM character of our own
+    const p2 = await second(c), f = loadMap(p.map)!;
+    await p2.sleep(500);
+    const me = [...p.chars.values()].find(ch => ch.name.startsWith('Pq'));
+    const near = [...p2.chars.values()].find(ch => ch.name === c.charName);
+    void me; void near;
+    // both characters spawn together on 751: the second one is wherever it stands; walk the first one next to it and into it
+    const t = [p2.x, p2.y] as [number, number];
+    c.note(`second character at ${p2.map}:${t[0]},${t[1]}; first at ${p.map}:${p.x},${p.y}`);
+    if (p2.map === p.map && Math.abs(t[0] - p.x) + Math.abs(t[1] - p.y) < 40) {
+      const route = bfs(f.map, [p.x, p.y], t, new Set([t[1] * 101 + t[0]]));
+      const adj = Object.values(HEAD).map(([dx, dy]) => [t[0] - dx, t[1] - dy] as [number, number]).find(([x, y]) => walkable(f.map, x, y));
+      if (adj) { await walkTo(c, adj[0], adj[1]); const into = Object.entries(HEAD).find(([, [dx, dy]]) => p.x + dx === t[0] && p.y + dy === t[1]); if (into) { const rr = await p.step(Number(into[0]), 330); c.ok(!rr.moved, 'walking into the second (alive, visible, non-GM) player was refused'); void route; } else c.blocked('could not line up next to the second character'); }
+    } else c.blocked('second character is not on the same map (spawn differs)');
+  }
   c.fixture('walk-into-wall-and-player', p, from);
   c.note('NPC half not driven: spawning a creature next to the player needs /ACC + a cleanup by the spawned index only (brief rule); covered by tests/fixtures/vb6/movement walk-into-creature');
 });
@@ -57,14 +71,10 @@ step('MOV-03', async c => {
   c.eq((ch!.packet as any).heading, target, 'broadcast heading');
 });
 
-step('MOV-04', async c => c.blocked('needs the coordinates of a map exit tile; read from the .csm map files (tile exit flags) by a map parser the harness does not have yet. Protocol-level recordings exist: tests/fixtures/vb6/buildings/*castle-trigger-bounce.jsonl'));
 step('MOV-05', async c => c.blocked('needs the ids of a Newbie / MaxLevel map from the server map files (MapInfo) and a level-13 character; the harness has no map-info reader yet. Route: GM /MOD level 13 on the own character, /TELEP to that map, expect the refusal locale message and no warp'));
 step('MOV-06', async c => c.blocked('same missing map-info data as MOV-05 (a map with MaxLevel and Salida)'));
-step('MOV-07', async c => c.blocked('needs a teleport object tile (otTeleport) located through the map files; not parsed yet'));
-step('MOV-08', async c => c.blocked('door tiles come from the map files; recorded against the real server in tests/fixtures/vb6/doors and items-2 (PR #37/#47), not yet an end-to-end scenario'));
 step('MOV-09', async c => c.blocked('needs a locked door + its key object from the map files; recorded in tests/fixtures/vb6/items-2/use-key-locked-door.jsonl'));
 step('MOV-10', async c => c.blocked('needs a dock tile and a boat object id plus Navegacion skill and level 25 via GM /MOD; map data not parsed yet'));
-step('MOV-11', async c => c.blocked('needs a water tile coordinate from the map files'));
 step('MOV-13', async c => c.blocked('needs a Transportista/Pirata NPC; checked in the next milestone against the pinned npcs.dat (see report note)'));
 
 step('MOV-14', async c => {
@@ -81,7 +91,7 @@ step('MOV-15', async c => {
   await ensureLand(c);
   const p = c.player;
   const m = p.mark();
-  p.send({ id: K.Work, skill: 6 } as unknown as ClientPacket);   // Ocultarse
+  p.send({ id: K.Work, skill: 7 } as unknown as ClientPacket);   // Ocultarse
   await p.sleep(2000);
   c.note(`Work(Ocultarse) answered with ${p.since(m).map(r => r.name).join(',') || 'nothing'}`);
   c.ok(p.since(m).length > 0, 'hide answered (success sets invisible, failure prints a locale message)');

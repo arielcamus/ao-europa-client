@@ -46,8 +46,9 @@ step('ACC-03', async c => {
 step('ACC-04', async c => {
   needFresh(c, 'ACC-04');
   const first = c.player.rx.find(r => r.name === 'ChangeMap')!.packet as any;
-  c.eq(first.map, 517, 'spawn map (Forgat)'); 
-  c.eq([c.player.x, c.player.y], [48, 65], 'spawn tile (Cities(Forgat))');
+  const spawn = (process.env.AO_SPAWN ?? '751,60,57').split(',').map(Number) as [number, number, number]; // Forgat after the server's data patch (docs/DATA-PATCHES.md); the unpatched Ciudades.Dat says 517,48,65
+  c.eq(first.map, spawn[0], 'spawn map (Forgat)');
+  c.eq([c.player.x, c.player.y], [spawn[1], spawn[2]], 'spawn tile (Cities(Forgat))');
   c.note('client home byte was 7 (HOME_CITY); the contradiction check against a second Hogar needs a 2nd character and is skipped to save the 15-per-IP creation budget');
 });
 

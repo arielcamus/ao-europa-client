@@ -33,7 +33,7 @@ step('PRG-17', async c => {
   mage(c, 'PRG-17');
   c.eq(c.player.stats!.level, 1, 'ELV 1');
   let v = (await skills(c.player))[SKILL.Meditar]!;
-  if (v > 3) c.blocked(`FINDING: a fresh human mage starts with Meditar = ${v} at level 1, ABOVE the level-1 natural cap 3, so natural rise of Meditar is not observable on a mage (SubirSkill exits at skill >= maxPermitido). The 'rises 0 to 3 then stops' premise needs another skill/class; the cap rule itself is covered by PRG-16 (formula) and PRG-19 (no gain above cap)`);
+  if (v > 3) c.blocked(`the reused character already has Meditar ${v} (> cap 3) from an earlier run (PRG-19 assigns points): needs a FRESH character, which starts every skill at 0 (TCP.ResetUserSkills)`);
   for (let i = 0; i < 8 && v < 3; i++) v = await meditateRound(c, 9000);
   c.eq(v, 3, 'Meditar reached the level-1 cap 3 by use');
   for (let i = 0; i < 2; i++) v = await meditateRound(c, 9000);

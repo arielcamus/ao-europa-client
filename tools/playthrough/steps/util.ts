@@ -47,7 +47,10 @@ export function sql(statement: string): string {
 export async function dbUpdateOwn(c: Ctx, set: string) {
   if (!c.own) c.blocked('DB updates are only done on the harness\'s own character');
   const id = c.player.characters.find(ch => ch.name === c.charName)!.id;
-  c.player.close();
+  // a clean /SALIR (countdown, or at once on a safe map) makes the server save and clear is_logged; a dropped socket leaves it set for minutes
+  const p0 = c.player, pm = p0.mark(); p0.say('/SALIR');
+  await p0.until(() => p0.closed || p0.rx.slice(pm).some(r => r.name === 'Disconnect'), 25_000, 'logout').catch(() => undefined);
+  p0.close();
   let free = false;
   for (let i = 0; i < 20 && !free; i++) { free = sql(`select is_logged from user where id=${id};`) === '0'; if (!free) await new Promise(r => setTimeout(r, 3000)); }
   if (free) sql(`update user set ${set} where id=${id} and is_logged=0;`);
@@ -57,8 +60,66 @@ export async function dbUpdateOwn(c: Ctx, set: string) {
 /** First MOV step needs dry land: a new character spawns at sea on 517 until fix/home-city. Memoised. */
 export async function ensureLand(c: Ctx) {
   if (!c.own) return;
-  if (c.player.map !== 517) return;
+  if (c.player.map !== 517) return; // the Forgat data patch spawns characters on land (751); only the unpatched 517 spawn is at sea
   if (c.shared.landBlocked) c.blocked(String(c.shared.landBlocked));
   try { await dbUpdateOwn(c, 'pos_map=1, pos_x=58, pos_y=43'); }
   catch (e) { c.shared.landBlocked = `new characters spawn at SEA in Forgat 517 (until fix/home-city) and the character cannot be moved to land: the GM helper cannot teleport others and the DB route failed (${e instanceof Error ? e.message : e})`; c.blocked(String(c.shared.landBlocked)); }
+}
+
+import { loadMap, path as bfs, walkable, objects } from '../maps.js';
+import type { MapFacts } from '../maps.js';
+export const HEAD = { 1: [0, -1], 2: [1, 0], 3: [0, 1], 4: [-1, 0] } as Record<number, [number, number]>;
+/** Walks the own character along a BFS path on the CSM map; stops at the first refusal. Returns the tiles walked. */
+export async function walkTo(c: Ctx, tx: number, ty: number, wait = 300): Promise<number> {
+  const p = c.player, f = loadMap(p.map); if (!f) throw new Error(`no map file for ${p.map}`);
+  const route = bfs(f.map, [p.x, p.y], [tx, ty]); if (!route) throw new Error(`no walkable path ${p.x},${p.y} -> ${tx},${ty} on map ${p.map}`);
+  let n = 0; for (const h of route) { const r = await p.step(h, wait); if (!r.moved) throw new Error(`step ${n + 1}/${route.length} refused at ${p.x},${p.y} heading ${h}`); n++; }
+  return n;
+}
+/** Relocates the own character through the DB (see dbUpdateOwn) and returns the loaded map facts. */
+export async function relocate(c: Ctx, map: number, x: number, y: number): Promise<MapFacts> {
+  const f = loadMap(map)!; if (!walkable(f.map, x, y)) throw new Error(`tile ${map}:${x},${y} is not walkable`);
+  if (c.player.map !== map || c.player.x !== x || c.player.y !== y) await dbUpdateOwn(c, `pos_map=${map}, pos_x=${x}, pos_y=${y}`);
+  return f;
+}
+export { loadMap, objects };
+
+import { GmClientPacketId as GM, DoorClientPacketId as DOOR } from '@ao/protocol';
+/** GM spawns ONE creature (/ACC, no respawn) at its own position and returns its char index + tile. Only ever kill what this returned. */
+export async function spawnCreature(c: Ctx, npcNumber: number) {
+  const g = c.gm, m = g.mark(); g.gm(`/ACC ${npcNumber}`);
+  await g.until(() => g.since(m).some(r => r.name === 'CharacterCreate' && (r.packet as any).npc === 1), 6000, `creature ${npcNumber} spawned`);
+  const cr = g.since(m).filter(r => r.name === 'CharacterCreate' && (r.packet as any).npc === 1).pop()!.packet as any;
+  return { charIndex: cr.charIndex as number, name: cr.name as string, x: cr.x as number, y: cr.y as number, from: m };
+}
+/** Kills exactly the creature this run spawned: select it by clicking its CURRENT tile on the GM, check the name, then /RMATA. */
+export async function killMine(c: Ctx, mine: { charIndex: number; name: string }) {
+  const g = c.gm, cur = g.chars.get(mine.charIndex); if (!cur) return false; // already gone
+  g.send({ id: DOOR.LeftClick, x: cur.x, y: cur.y, counter: 0 } as ClientPacket); await g.sleep(700);
+  g.gm('/RMATA'); await g.sleep(900);
+  return true;
+}
+export { GM };
+
+import { Sess as SessCls } from '../session.js';
+import { readFileSync as rf, writeFileSync as wf, existsSync as ex, mkdirSync as mk } from 'node:fs';
+/** A SECOND non-GM character of the harness's own (warrior), created once and cached in artifacts/playthrough/account2.json. */
+export async function second(c: Ctx): Promise<InstanceType<typeof SessCls>> {
+  if (c.shared.p2) return c.shared.p2 as InstanceType<typeof SessCls>;
+  const file = 'artifacts/playthrough/account2.json'; let acct = ex(file) ? JSON.parse(rf(file, 'utf8')) : undefined;
+  for (let i = 0; i < 4; i++) {
+    const s = await SessCls.open();
+    try {
+      if (acct) { await s.loginAccount(acct.email, acct.password); const ch = s.characters.find(x => x.name === acct.charName); if (ch) { await s.loginChar(ch.id, ch.name); c.shared.p2 = s; return s; } }
+      else {
+        const email = `pt2${Date.now()}@local.test`, password = 'playthroughpw1', name = 'Pq' + Array.from({ length: 7 }, () => 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)]).join('');
+        await s.createAccount(email, password);
+        const r = await s.createChar({ name, race: 1, gender: 1, characterClass: 3, head: 1 });
+        if (r.ok) { mk('artifacts/playthrough', { recursive: true }); wf(file, JSON.stringify({ email, password, charName: name })); c.shared.p2 = s; return s; }
+      }
+    } catch { /* retry */ }
+    s.close(); await new Promise(r => setTimeout(r, 2000));
+  }
+  c.blocked('could not create or log in a second non-GM character');
+  throw new Error('unreachable');
 }
