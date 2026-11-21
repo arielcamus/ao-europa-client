@@ -7,6 +7,7 @@ import { ExtrasClientPacketId as X, SpellClientPacketId as SC } from '@ao/protoc
 import type { ClientPacket } from '@ao/protocol';
 import { make, place } from './bank-trade-dom.js';
 import { VbWindow, combo } from './vb-window.js';
+import { loadInterface } from './interface-assets.js';
 import type { VbList } from './vb-window.js';
 import { showConfirm } from './session-windows.js';
 import { windows } from './window-stack.js';
@@ -77,51 +78,99 @@ export class ExtrasUI {
   get windowOpen() { return !!(this.duel?.isOpen || this.tournament?.isOpen || this.lobby?.isOpen); }
 
   // ---- frmRetos -------------------------------------------------------------------------------------------------------------------
+  /**
+   * frmRetos (pinned client 619e69d): Form_Load sets Me.Picture = ventanaretos.bmp (the captions "RETOS", "Jugadores por equipo",
+   * "Equipo 1/2", the checkbox texts and the RETAR button are baked into that bitmap), Aplicar_Transparencia 240. Campo(0..9) carry the
+   * frx picture that is byte-identical to interface/campo-retar.bmp, CAMPO_CORTO is campo-corto.bmp. The Image controls have no default
+   * picture: MouseMove shows `-over`, MouseDown `-off`, and Form_MouseMove clears them again. Retar asks for boton-retar-*.bmp, which no
+   * pinned Recursos has, so LoadInterface returns Nothing and the button shows only the baked art.
+   */
   openDuel(names: readonly string[] = [], own = splitName(this.session?.self?.tag ?? '').name) {
     this.duel?.close();
-    const win = new VbWindow(this.parent, { id: 'duel-window', size: [291, 487], title: 'Retos', onClose: () => { this.duel = undefined; } });
+    const win = new VbWindow(this.parent, { id: 'duel-window', art: 'ventanaretos', size: [291, 487], title: 'Retos', onClose: () => { this.duel = undefined; } });
+    win.root.classList.add('duel-form');
     this.duel = win;
-    win.label('Retos', [100, 8, 91, 20], 'vb-center vb-bold');
-    win.label('Jugadores por equipo', [32, 94, 130, 15]);
-    const perTeam = win.input([193, 91, 25, 17], { maxLength: 1, light: true, readOnly: true }) as HTMLInputElement; perTeam.value = '1'; perTeam.id = 'duel-per-team';
-    const players: HTMLInputElement[] = [];
-    // Jugador(0..9): even indexes left (x 32), odd right (x 154), one row of 32 px per pair from y 152.
-    for (let i = 0; i < MAX_DUEL_PLAYERS_PER_TEAM * 2; i++) {
-      const input = win.input([i % 2 === 0 ? 32 : 154, 152 + 32 * Math.floor(i / 2), 105, 16], { maxLength: 18, light: true }) as HTMLInputElement;
-      input.id = `duel-player-${i}`; input.placeholder = i % 2 === 0 ? 'Equipo 1' : 'Equipo 2'; players.push(input);
-    }
-    players[0]!.value = own; players[0]!.readOnly = true;
-    names.forEach((name, i) => { if (players[i + 1]) players[i + 1]!.value = name; });
+    const states: { el: HTMLElement; tag: boolean }[] = [];
+    /** An Image control whose picture is Nothing until the mouse is over it (Tag "0"/"1" in the .frm code). */
+    const image = (box: [number, number, number, number], label: string, over?: string, off?: string) => {
+      const el = make('button', 'duel-image'); el.type = 'button'; el.setAttribute('aria-label', label); win.add(el, box);
+      const state = { el, tag: false }; states.push(state);
+      const show = (name: string | undefined) => { el.style.backgroundImage = ''; if (name) void loadInterface(name).then(url => { if (state.tag) el.style.backgroundImage = `url("${url}")`; }).catch(() => undefined); };
+      if (over) el.addEventListener('mousemove', () => { if (!state.tag) { state.tag = true; show(over); } });
+      if (off) el.addEventListener('mousedown', () => { state.tag = true; show(off); });
+      return { el, show: (name: string) => { state.tag = true; show(name); } };
+    };
+    // Form_MouseMove: every Image with Tag "1" loses its picture.
+    win.root.addEventListener('mousemove', event => { if (event.target !== win.root) return; for (const s of states) if (s.tag) { s.tag = false; s.el.style.backgroundImage = ''; } });
+    const text = (box: [number, number, number, number], id: string, className: string, value: string) => {
+      const input = win.input(box) as HTMLInputElement; input.className = `duel-text ${className}`; input.id = id; input.value = value; return input;
+    };
+    const picture = (box: [number, number, number, number], art: string, id: string) => {
+      const el = make('div', 'duel-picture', undefined, id); win.add(el, box);
+      void loadInterface(art).then(url => { el.style.backgroundImage = `url("${url}")`; }).catch(() => undefined);
+      return el;
+    };
+    // Campo(0..9) first (they sit under the text boxes): Left 435 / 2265, Top 2190 + 480 per row, 1680x405 twips.
+    const fields = Array.from({ length: MAX_DUEL_PLAYERS_PER_TEAM * 2 }, (_, i) => picture([i % 2 === 0 ? 29 : 151, 146 + 32 * Math.floor(i / 2), 112, 27], 'campo-retar', `duel-field-${i}`));
+    const shortField = picture([184, 307, 69, 27], 'campo-corto', 'duel-short-field'); shortField.hidden = true;
+    // Jugador(0..9): Left 480 / 2310, Top 2280 + 480 per row, 1575x240 twips, Arial 8.25 bold, white on &H0A0A0A, centred.
+    const players = Array.from({ length: MAX_DUEL_PLAYERS_PER_TEAM * 2 }, (_, i) =>
+      text([i % 2 === 0 ? 32 : 154, 152 + 32 * Math.floor(i / 2), 105, 16], `duel-player-${i}`, 'duel-player', ''));
+    // Jugador(0): Enabled = False, ForeColor &H808080, its text is UserName (Form_Load).
+    players[0]!.value = own; players[0]!.disabled = true;
+    const perTeam = text([193, 91, 25, 17], 'duel-per-team', 'duel-ppt', '1');
+    const bet = text([120, 366, 97, 15], 'duel-bet', 'duel-number', '20000');
+    const potions = text([197, 313, 41, 15], 'duel-potions', 'duel-number', '10000'); potions.hidden = true;
     const error = win.label('', [32, 384, 225, 15], 'duel-error'); error.id = 'duel-error';
-    const refresh = () => { const n = Number(perTeam.value); players.forEach((input, i) => { input.hidden = Math.floor(i / 2) >= n; }); };
-    const step = (delta: number) => { perTeam.value = String(Math.min(MAX_DUEL_PLAYERS_PER_TEAM, Math.max(1, Number(perTeam.value) + delta))); refresh(); };
-    win.command('-', [159, 90, 21, 21], () => step(-1)).id = 'duel-minus';
-    win.command('+', [231, 89, 21, 21], () => step(1)).id = 'duel-plus';
-    win.label('Apuesta', [32, 366, 80, 15]);
-    const bet = win.input([120, 366, 97, 15], { light: true }) as HTMLInputElement; bet.value = '0'; bet.id = 'duel-bet';
+    // ActualizarCampos: Jugador(i) and Campo(i) are visible while i \ 2 < txtPPT.
+    const refresh = () => { const n = Number(perTeam.value); players.forEach((input, i) => { input.hidden = fields[i]!.hidden = Math.floor(i / 2) >= n; }); };
+    // txtPPT_Change: below 1 is 1, above MAX_JUGADORES is MAX_JUGADORES.
+    perTeam.addEventListener('input', () => {
+      const n = Math.trunc(Number.parseFloat(perTeam.value) || 0);
+      if (n < 1) perTeam.value = '1'; else if (n > MAX_DUEL_PLAYERS_PER_TEAM) perTeam.value = String(MAX_DUEL_PLAYERS_PER_TEAM);
+      refresh();
+    });
     // Apuesta_Change: |val| as a Long, above 100.000.000 it becomes 10.000.000.
     bet.addEventListener('input', () => { let n = Math.round(Math.abs(Number(bet.value.replace(/[^0-9.-]/g, '')) || 0)); if (n > 100_000_000) n = 10_000_000; bet.value = String(n); });
-    const redBox = make('input', '', undefined, 'duel-red-potions'); redBox.type = 'checkbox'; win.add(redBox, [31, 311, 17, 17]);
-    win.label('Pociones rojas', [56, 313, 120, 15]);
-    const potions = win.input([197, 313, 41, 15], { light: true }) as HTMLInputElement; potions.value = '0'; potions.id = 'duel-potions'; potions.hidden = true;
-    redBox.addEventListener('change', () => { potions.hidden = !redBox.checked; });
-    const dropBox = make('input', '', undefined, 'duel-drop-items'); dropBox.type = 'checkbox'; win.add(dropBox, [56, 397, 17, 17]);
-    win.label('Caen los ítems', [80, 399, 120, 15]);
-    win.command('Retar', [90, 448, 110, 27], () => {
+    const minus = image([159, 90, 21, 21], 'Restar jugadores', 'boton-sm-menos-over', 'boton-sm-menos-off'); minus.el.id = 'duel-minus';
+    const plus = image([231, 89, 21, 21], 'Sumar jugadores', 'boton-sm-mas-over', 'boton-sm-mas-off'); plus.el.id = 'duel-plus';
+    // RestarJugadores_MouseUp / SumarJugadores_MouseUp: both leave RestarJugadores showing its -over picture (the VB6 code does that for both).
+    minus.el.addEventListener('mouseup', () => { const n = Number(perTeam.value); if (n > 1) perTeam.value = String(n - 1); minus.show('boton-sm-menos-over'); refresh(); });
+    plus.el.addEventListener('mouseup', () => { const n = Number(perTeam.value); if (n < MAX_DUEL_PLAYERS_PER_TEAM) perTeam.value = String(n + 1); minus.show('boton-sm-menos-over'); refresh(); });
+    // Image1 (Pociones rojas) and Image2 (Caen items): MouseUp toggles, the picture is check-amarillo.bmp or Nothing.
+    const check = (box: [number, number, number, number], id: string, label: string, onToggle: (on: boolean) => void) => {
+      const el = make('button', 'duel-image duel-check', undefined, id); el.type = 'button'; el.setAttribute('role', 'checkbox'); el.setAttribute('aria-checked', 'false'); el.setAttribute('aria-label', label);
+      win.add(el, box);
+      el.addEventListener('mouseup', () => {
+        const on = el.getAttribute('aria-checked') !== 'true'; el.setAttribute('aria-checked', String(on)); onToggle(on);
+        el.style.backgroundImage = ''; if (on) void loadInterface('check-amarillo').then(url => { if (el.getAttribute('aria-checked') === 'true') el.style.backgroundImage = `url("${url}")`; }).catch(() => undefined);
+      });
+      el.addEventListener('keydown', event => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); el.dispatchEvent(new MouseEvent('mouseup')); } });
+      return el;
+    };
+    const redBox = check([31, 311, 17, 17], 'duel-red-potions', 'Límite de pociones rojas', on => { shortField.hidden = potions.hidden = !on; });
+    const dropBox = check([56, 397, 17, 17], 'duel-drop-items', 'Apostar los items del inventario', () => undefined);
+    const retar = image([90, 448, 110, 27], 'Retar'); retar.el.id = 'duel-send';
+    retar.el.addEventListener('click', () => {
       const n = Number(perTeam.value), names = players.map(input => input.value.trim());
-      const problem = validateDuel(names, n, redBox.checked, potions.value);
+      const red = redBox.getAttribute('aria-checked') === 'true';
+      const problem = validateDuel(names, n, red, potions.value);
       error.textContent = problem;
       if (problem) return;
       // Retar_Click: every player but the creator, joined by ';'.
-      this.deps.send({ id: X.Duel, players: names.slice(1, n * 2).join(';'), bet: Number(bet.value) || 0, redPotions: redBox.checked ? int16(potions.value) : -1, dropItems: dropBox.checked } as unknown as ClientPacket);
+      this.deps.send({ id: X.Duel, players: names.slice(1, n * 2).join(';'), bet: Number(bet.value) || 0, redPotions: red ? int16(potions.value) : -1, dropItems: dropBox.getAttribute('aria-checked') === 'true' } as unknown as ClientPacket);
       win.close();
-    }).id = 'duel-send';
-    win.closeButton([260, 1, 31, 28]);
-    win.root.addEventListener('input', () => { error.textContent = ''; });
-    // Form_Load: three of the names the command gave make a second team column visible.
-    const perTeamFromNames = Math.min(MAX_DUEL_PLAYERS_PER_TEAM, Math.max(1, Math.ceil((names.length + 1) / 2)));
-    perTeam.value = String(perTeamFromNames); refresh();
-    win.focus();
+    });
+    const cerrar = image([260, 1, 31, 28], 'Cerrar', 'boton-cerrar-over', 'boton-cerrar-off'); cerrar.el.id = 'duel-close';
+    cerrar.el.addEventListener('click', () => win.close());
+    // Jugador_Change clears the error caption.
+    players.forEach(input => input.addEventListener('input', () => { error.textContent = ''; }));
+    refresh();
+    // ProtocolCmdParse /RETAR: Jugador(i + 1) gets the i-th name and becomes visible (Campo and txtPPT stay as they are); an odd count of
+    // names also shows the box after the last one. MenuUser RETAR is the one-name case.
+    names.forEach((name, i) => { const input = players[i + 1]; if (input) { input.value = name; input.hidden = false; } });
+    if (names.length > 0 && names.length % 2 === 0 && players[names.length + 1]) players[names.length + 1]!.hidden = false;
+    perTeam.focus();
     return win;
   }
 
@@ -227,7 +276,8 @@ export class ExtrasUI {
       ['RETAR', () => this.openDuel([target])],
       ['DENUNCIAR', () => run(`/DENUNCIAR ${target}`)],
     ];
-    this.showMenu(items, at);
+    // MenuNPC is 1845 twips tall, MenuUser 1800 and MenuGM 5805 (ClientHeight / 15).
+    this.showMenu(items, at, found.npc === 2 ? 123 : items.length > 5 ? 387 : 120);
     return true;
   }
   private petItems(session: Session, run: (line: string) => void): [string, () => void][] {
@@ -253,11 +303,15 @@ export class ExtrasUI {
       ['BAN', () => { const reason = ask('Escriba el motivo del BAN.', `Baneo de ${target}`); if (reason) run(`/BAN ${target}@${reason}`); }],
     ];
   }
-  private showMenu(items: [string, () => void][], at: { x: number; y: number }) {
+  /**
+   * MenuUser / MenuNPC / MenuGM: a borderless black form 130 px wide (ClientWidth 1950), Aplicar_Transparencia 180, one OpcionImg row of
+   * 24 px (360 twips) per option with its OpcionLbl (Tahoma 8.25 bold, white, centred) 5 px below the row top; the hovered one is vbYellow.
+   */
+  private showMenu(items: [string, () => void][], at: { x: number; y: number }, height: number) {
     this.closeMenu();
     const menu = make('div', 'extras-menu', this.parent, 'interaction-menu'); menu.setAttribute('role', 'menu'); this.menu = menu;
-    const height = items.length * 20 + 8;
-    menu.style.left = `${Math.min(1024 - 150, at.x + 1)}px`; menu.style.top = `${at.y + height > 768 ? at.y - height : at.y}px`;
+    menu.style.height = `${height}px`;
+    menu.style.left = `${Math.min(1024 - 130, at.x + 1)}px`; menu.style.top = `${at.y + height > 768 ? at.y - height : at.y}px`;
     for (const [label, action] of items) {
       const row = make('button', 'extras-menu-item', menu); row.type = 'button'; row.textContent = label; row.setAttribute('role', 'menuitem');
       row.addEventListener('click', event => { event.stopPropagation(); this.closeMenu(); action(); });

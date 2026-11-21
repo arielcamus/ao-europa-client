@@ -76,8 +76,10 @@ export class VbWindow {
   /** A clickable image control (VB6 `Image` with a clsGraphicalButton): `art` is the `boton-<name>` stem. */
   button(art: string, box: Box, label: string, onClick: () => void): HTMLButtonElement {
     const button = document.createElement('button'); button.type = 'button'; button.className = 'vb-art'; button.setAttribute('aria-label', label); button.title = label;
+    // clsGraphicalButton: default, -over on MouseMove, -off on MouseDown (SND_CLICK / SND_CLICK_OVER: audio-system.ts).
     void Promise.all([loadInterface(`${art}-default`), loadInterface(`${art}-over`)]).then(([normal, over]) => {
       button.style.setProperty('--normal', `url("${normal}")`); button.style.setProperty('--over', `url("${over}")`); button.classList.add('vb-art-ready');
+      void loadInterface(`${art}-off`).then(off => { button.style.setProperty('--off', `url("${off}")`); }).catch(() => { button.style.setProperty('--off', 'none'); });
     }).catch(() => { button.classList.remove('vb-art-ready'); });
     button.addEventListener('click', onClick);
     return this.add(button, box);

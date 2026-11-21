@@ -111,7 +111,8 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1
 .vb-art, .vb-hotspot { padding: 0; border: 0; background: transparent; color: transparent; }
 .vb-art.vb-art-ready { background: var(--normal) no-repeat center / 100% 100%; }
 .vb-art.vb-art-ready:hover { background-image: var(--over); }
-.vb-art:active { filter: brightness(.8); }
+.vb-art.vb-art-ready:active { background-image: var(--off, var(--over)); }
+.vb-art:not(.vb-art-ready):active { filter: brightness(.8); }
 .vb-hotspot:hover { background: #ffffff18; }
 .vb-command { padding: 0; border: 1px solid #707070; border-radius: 2px; background: #e1e1e1; color: #000; font: 11px Tahoma, Arial, sans-serif; }
 .vb-command:hover { background: #e5f1fb; }
@@ -127,5 +128,8 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1
 .vb-expbar { background: rgb(128, 0, 0); }
 .vb-expbar.vb-picture { background-repeat: no-repeat; background-color: transparent; }
 .vb-frame { margin: 0; padding: 0; border: 1px solid #a0a0a0; pointer-events: none; }
+.vb-window.gm-help-form { opacity: 0.941; }  /* FrmGmAyuda: Aplicar_Transparencia 240 */
+.gm-help-radio { padding: 0; border: 0; background: transparent no-repeat 0 0; cursor: pointer; }
+.gm-help-text { border: 0; padding: 0; background: #000; color: #fff; font: 11px Tahoma, Arial, sans-serif; resize: none; outline: none; }
 .vb-frame legend { margin-left: 8px; padding: 0 3px; color: #000; font: 11px Tahoma, Arial, sans-serif; }
 .tag-icon { position: absolute; pointer-events: none; image-rendering: pixelated; }

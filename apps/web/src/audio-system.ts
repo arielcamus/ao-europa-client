@@ -54,11 +54,11 @@ export class AudioSystem {
     window.addEventListener('keydown', unlock, { capture: true });
     document.addEventListener('visibilitychange', () => this.engine.setSuspended(document.hidden));
     // clsGraphicalButton: SND_CLICK on press, SND_CLICK_OVER when the pointer enters an art button.
-    const target = (event: Event) => (event.target as HTMLElement | null)?.closest?.('button.art-button, button.hotspot') as HTMLButtonElement | null;
+    const target = (event: Event) => (event.target as HTMLElement | null)?.closest?.('button.art-button, button.hotspot, button.vb-art') as HTMLButtonElement | null;
     root.addEventListener('pointerdown', event => { const button = target(event); if (button && !button.hidden) this.director.click(); });
     root.addEventListener('pointerover', event => {
       const button = target(event);
-      if (button?.classList.contains('art-button') && !(event.relatedTarget instanceof Node && button.contains(event.relatedTarget))) this.director.hover();
+      if ((button?.classList.contains('art-button') || button?.classList.contains('vb-art')) && !(event.relatedTarget instanceof Node && button.contains(event.relatedTarget))) this.director.hover();
     });
     if (new URLSearchParams(location.search).has('audiodebug')) (globalThis as { __aoAudio?: unknown }).__aoAudio = this;
   }
