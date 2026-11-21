@@ -1,5 +1,5 @@
 /* frmOpciones: 536x501 over configuracion-vacio; panels 504x323 at (16,120). Original VB6 geometry (twips / 15); AGPL-3.0-or-later. */
-#options { position: absolute; left: 244px; top: 133px; width: 536px; height: 501px; background: #000 no-repeat 0 0; z-index: 9; color: #fff; outline: none; font: 12px/16px Tahoma, Arial, sans-serif; --opt-check: none; }
+#options { position: absolute; left: 244px; top: 133px; width: 536px; height: 501px; background: #000 no-repeat 0 0; z-index: 18; /* above the connect stage (15) and login form (16): Ajustes opens from the connect screens */ color: #fff; outline: none; font: 12px/16px Tahoma, Arial, sans-serif; --opt-check: none; }
 #options[hidden] { display: none; }
 #options .opt-tab, #options .opt-button { position: absolute; padding: 0; border: 0; background-color: transparent; background-repeat: no-repeat; cursor: pointer; }
 #options .opt-panel { position: absolute; left: 16px; top: 120px; width: 504px; height: 323px; background: no-repeat 0 0; }
@@ -14,7 +14,7 @@
 .opt-note { position: absolute; left: 16px; right: 16px; bottom: 6px; color: #9a9a8a; font: 10px/12px Tahoma, Arial, sans-serif; pointer-events: none; }
 
 /* frmCustomKeys */
-#keys { position: absolute; left: 311px; top: 88px; width: 405px; height: 592px; background: #0b1a2ff7; border: 2px solid #164b8a; box-sizing: border-box; z-index: 10; color: #fff; font: 12px/16px Tahoma, Arial, sans-serif; display: flex; flex-direction: column; }
+#keys { position: absolute; left: 311px; top: 88px; width: 405px; height: 592px; background: #0b1a2ff7; border: 2px solid #164b8a; box-sizing: border-box; z-index: 19; color: #fff; font: 12px/16px Tahoma, Arial, sans-serif; display: flex; flex-direction: column; }
 #keys[hidden] { display: none; }
 #keys h2 { margin: 0; padding: 6px 10px; font: bold 13px Tahoma, Arial, sans-serif; color: #ffd75e; }
 #keys .keys-presets { padding: 0 10px 6px; display: flex; gap: 14px; align-items: center; }

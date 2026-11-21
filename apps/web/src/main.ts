@@ -220,6 +220,9 @@ const transacting = () => bankUi.dialogOpen || tradeUi.dialogOpen;
 // frmConnect: the login, account and character-creation screens, and the small forms of the connect flow (frmMensaje, frmConnecting, Frmcarga).
 /** False until the splash has done its job: the connect screen, the login box and the HUD stay hidden. */
 let booted = false;
+/** A picture whose download never completes must not hold the boot forever: after this long the screen shows anyway and the art paints when it lands. */
+const STALL_MS = 12_000;
+const stallGuard = (pending: Promise<unknown>) => Promise.race([pending, new Promise<void>(resolve => setTimeout(resolve, STALL_MS))]);
 const floating = new FloatingTexts(element('chat-bubbles'));
 let connectingWindow: VbWindow | undefined;
 const connectUi = new ConnectUI(element('classic'), renderer, {
@@ -282,7 +285,7 @@ async function boot() {
   if (config.mode === 'standin') { account.value = 'standin@local'; password.value = 'testpass'; }
   if (new URLSearchParams(location.search).has('debug')) element('classic').classList.add('debug');
   // Frmcarga over black while the resources load; the connect screen appears only once its art is complete.
-  await Promise.all([renderer.init(), ui.init(), bubbles.init(), audio.init(), connectUi.ready, loading.ready, questWindows.init().catch(error => report(`Misiones no disponibles: ${String(error)}`))]);
+  await Promise.all([renderer.init(), ui.init(), bubbles.init(), audio.init(), stallGuard(connectUi.ready), stallGuard(loading.ready), questWindows.init().catch(error => report(`Misiones no disponibles: ${String(error)}`))]);
   booted = true; element('classic').dataset.boot = 'ready'; performance.mark('ao-boot-ready');
   // Chat text that the server sends as locale ids; the console is redrawn once it arrives.
   void Promise.all([fetchText('init/sp_localindex.dat'), fetchText('init/SP_LocalMsg.dat')])
@@ -609,4 +612,8 @@ viewport.addEventListener('pointerdown', event => {
 viewport.addEventListener('pointermove', event => { if (viewport.hasPointerCapture(event.pointerId)) aim(event); });
 for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) viewport.addEventListener(name, clearInput);
 window.addEventListener('pagehide', () => { close('Disconnected', true); renderer.destroy(); });
-void boot().then(() => { connect.disabled = false; }).catch(error => { element('classic').classList.add('boot-failed'); loading.visible = false; report(String(error)); });
+void boot().then(() => { connect.disabled = false; }).catch(error => {
+  // A failed boot (e.g. a missing sheet) still ends on the login screen with the error line, never on the empty HUD.
+  booted = true; element('classic').dataset.boot = 'ready'; loading.visible = false;
+  form.hidden = false; connectUi.setScreen('login'); report(String(error));
+});

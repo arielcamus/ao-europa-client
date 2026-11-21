@@ -54,16 +54,24 @@ const BOATS = new Set([84, 85, 86, 87, 1263, 1264, 1265, 1266, 1267, 1268, 1269,
  * the download is still running (a 1024x1024 sheet over a slow link shows up band by band), and the screen counts as ready only when
  * every picture is whole. A failed download falls back to the plain URL, so a missing file must not hold the boot forever.
  */
+const PRELOAD_STALL_MS = 10_000;
 const preloaded = new Map<string, Promise<string>>();
 function preload(url: string): Promise<string> {
   let pending = preloaded.get(url);
   if (!pending) {
-    pending = fetch(url).then(async response => {
-      if (!response.ok) throw new Error(String(response.status));
-      const blob = await response.blob(); const local = URL.createObjectURL(blob);
-      const image = new Image(); image.src = local; await image.decode();
-      return local;
-    }).catch(() => url);
+    pending = (async () => {
+      // Aborts when no byte arrives for STALL ms; the plain URL is the fallback, so the art still paints if it ever lands.
+      const stop = new AbortController(); let timer = setTimeout(() => stop.abort(), PRELOAD_STALL_MS);
+      try {
+        const response = await fetch(url, { signal: stop.signal });
+        if (!response.ok || !response.body) throw new Error(String(response.status));
+        const reader = response.body.getReader(); const chunks: Uint8Array[] = [];
+        for (;;) { const { done, value } = await reader.read(); if (done) break; chunks.push(value); clearTimeout(timer); timer = setTimeout(() => stop.abort(), PRELOAD_STALL_MS); }
+        const local = URL.createObjectURL(new Blob(chunks as BlobPart[], { type: response.headers.get('content-type') ?? 'image/png' }));
+        const image = new Image(); image.src = local; await image.decode();
+        return local;
+      } catch { return url; } finally { clearTimeout(timer); }
+    })();
     preloaded.set(url, pending);
   }
   return pending;

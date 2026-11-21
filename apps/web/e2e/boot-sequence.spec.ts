@@ -72,3 +72,37 @@ test('boot: splash, then login with its background, no HUD before the world (slo
   expect(timeline.firstSplash, 'the loading splash shows while resources load').not.toBeNull();
   expect(timeline.firstSplash!).toBeLessThan(timeline.firstLoginBox ?? Infinity);
 });
+
+// A picture that is missing, or whose download never completes, must not hold the boot: the login appears anyway (late art paints later).
+const cases: [string, string, 'abort404' | 'hang'][] = [
+  ['backdrop 239 404', '**/ao-assets/Graficos/239.png', 'abort404'],
+  ['backdrop 239 never completes', '**/ao-assets/Graficos/239.png', 'hang'],
+  ['splash art 404', '**/ao-assets/interface/*VentanaCargando.bmp', 'abort404'],
+  ['splash art never completes', '**/ao-assets/interface/*VentanaCargando.bmp', 'hang'],
+];
+for (const [name, pattern, mode] of cases) {
+  test(`boot: ${name}, login still appears and never shows the HUD`, async ({ page }, info) => {
+    test.skip(info.project.name !== 'desktop-chrome', 'single browser is enough');
+    await page.route('**/ao-config.json', route => route.fulfill({ json: { mode: 'classic', serverProfile: 'classic', wsPath: '/bridge' } }));
+    await page.route(pattern, route => mode === 'abort404' ? route.fulfill({ status: 404, body: '' }) : new Promise(() => { /* never answered */ }));
+    await page.addInitScript(observer);
+    const start = Date.now();
+    await page.goto('/', { waitUntil: 'commit' }); // a hung preload would hold the load event
+    await expect(page.locator('#login')).toBeVisible({ timeout: 25_000 });
+    expect(Date.now() - start).toBeLessThan(25_000);
+    const samples = await page.evaluate(() => (window as unknown as { __boot: Sample[] }).__boot);
+    expect(samples.filter(s => s.hud)).toEqual([]);
+  });
+}
+
+test('boot: a failed resource load (renderer init) ends on the login with the error line, never the HUD', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop-chrome', 'single browser is enough');
+  await page.route('**/ao-config.json', route => route.fulfill({ json: { mode: 'classic', serverProfile: 'classic', wsPath: '/bridge' } }));
+  await page.route('**/ao-assets/Dat/Obj.dat', route => route.fulfill({ status: 500, body: '' }));
+  await page.addInitScript(observer);
+  await page.goto('/');
+  await expect(page.locator('#login')).toBeVisible({ timeout: 25_000 });
+  await expect(page.getByRole('alert')).not.toBeEmpty();
+  const samples = await page.evaluate(() => (window as unknown as { __boot: Sample[] }).__boot);
+  expect(samples.filter(s => s.hud)).toEqual([]);
+});
