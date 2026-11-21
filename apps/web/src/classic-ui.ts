@@ -77,10 +77,7 @@ export class ClassicUI {
       const spell = this.session?.ui.spells.get(this.selectedSpell);
       if (this.session?.ready && spell && spell.index > 0) this.session.spells.cast(this.selectedSpell, this.spellName(spell.index));
     };
-    for (const id of ['settings', 'manual']) element(id).onclick = () => {
-      this.session?.ui.message('Flechas / WASD: caminar. En el teléfono, mantén pulsado el mapa en la dirección deseada. Enter: chat. Escape: cerrar la ventana de arriba o el chat.');
-      this.session?.ui.message('Gráficos originales © AO / Noland Studios · CC BY-NC-ND · cargados localmente.');
-    };
+    // OpcionesBoton opens frmOpciones and imgManual / imgMAO the web pages (main.ts, frm-main-buttons.ts).
     element('menu-tab').onclick = () => this.showMenu(true);
     element('stats-tab').onclick = () => this.showMenu(false);
     // Image controls inside panelInf, frmMain.frm. Their artwork is already
@@ -293,6 +290,7 @@ export class ClassicUI {
   }
   private bar(name: string, value: number | undefined, max: number | undefined, width: number, labelMax = max) {
     element(`${name}-fill`).style.width = `${ratio(value, max) * width}px`;
+    if (name === 'experience') return; // the four read-out labels are written by frm-main-buttons.ts (UpdateExpBar)
     const label = value === undefined || labelMax === undefined ? '—' : ['water', 'food'].includes(name) ? String(value) : `${value} / ${labelMax}`;
     text(`${name}-text`, label);
   }

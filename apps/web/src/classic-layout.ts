@@ -2,7 +2,7 @@
  * frmMain.frm / FrmLogear.frm geometry, classic client b648c1a9.
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; see NOTICE.
  * Positions are original VB6 twips / 15, relative to each control's parent.
- * Native bitmap sizes override AutoSize images; bars use frmMain runtime widths.
+ * Native bitmap sizes override AutoSize images (CombateIcon / globalIcon are 37x12 bitmaps at 8832,1812 / 8832,2004 twips, placed in index.html); bars use frmMain runtime widths.
  */
 export const CLASSIC_WIDTH = 1024;
 export const CLASSIC_HEIGHT = 768;
@@ -23,6 +23,7 @@ export const controls: Record<string, readonly [number, number, number, number]>
   lblWeapon: [40, 180, 32, 16], lblShielder: [124, 180, 32, 16], lblHelm: [208, 180, 32, 16],
   lblArmor: [40, 210, 32, 16], lblResis: [129, 210, 22, 16], lbldm: [205, 210, 38, 16],
   Image3: [284 / 15, 1894 / 15, 17, 14], 'Image4-1': [14977 / 15, 65 / 15, 21, 21],
+  btnTotalExp: [855, 83, 17, 15], btnExp2: [890, 83, 17, 15], btnExp: [873, 83, 17, 15], btnExpRemaining: [907, 83, 17, 15],
   OpcionesBoton: [760, 3, 65, 21], imgManual: [830, 3, 65, 21], imgMAO: [900, 3, 65, 21],
   NameTxt: [710 / 15, 1580 / 15, 1840 / 15, 19], PasswordTxt: [188, 104, 1840 / 15, 19],
   cmdIngresar: [2750 / 15, 137, 132, 28],

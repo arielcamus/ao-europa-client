@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ServerPacketId as S, NpcsServerPacketId as NS, ClientPacketId as C, FrameDecoder, decodeClientPacket, encodeServerFrame, toVbColor } from '@ao/protocol';
+import { ServerPacketId as S, NpcsServerPacketId as NS, ClientPacketId as C, GuildClientPacketId, FrameDecoder, decodeClientPacket, encodeServerFrame, toVbColor } from '@ao/protocol';
 import type { CharacterCreate, ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
 import { characterName, dialogLife, DIALOG_FADE_MS } from '../src/chat-state.js';
@@ -173,6 +173,9 @@ describe('chat input rules (HandleChatMsg and ParseUserCommand)', () => {
     expect(run('/BMSG hola').out.packet).toEqual({ id: C.CouncilMessage, message: 'hola' });
     expect(run('/FMSG hola').out.packet).toEqual({ id: C.FactionMessage, message: 'hola' });
     expect(run('/ONLINECLAN').out.packet).toEqual({ id: C.GuildOnline });
+    // ProtocolCmdParse /VOTO: the vote goes out with the raw argument; no argument prints "Faltan parámetros".
+    expect(run('/VOTO Pepe Grillo').out.packet).toEqual({ id: GuildClientPacketId.GuildVote, userName: 'Pepe Grillo' });
+    expect(run('/VOTE').out.notes[0]!.text).toBe('Faltan parámetros');
     expect(run('/GLOBAL hola~x', { level: 5 }).out.packet).toEqual({ id: C.GlobalMessage, message: 'holax' });
   });
   it('explains local failures with the original messages', () => {

@@ -14,6 +14,10 @@ import { sharedLocale } from './chat-locale.js';
 import { CombatOverlay } from './combat-overlay.js';
 import { characterTapTile } from './combat.js';
 import { fetchText, parseIni, parseMap, fetchBytes } from './assets.js';
+import type { Ini } from './assets.js';
+import { loadObjectCatalog } from './object-catalog.js';
+import type { ObjectCatalog } from './object-catalog.js';
+import { npcInfo, npcRows, parseNpcSections } from './world-map-npcs.js';
 import { WorldMapUI } from './world-map-ui.js';
 import { parseWorlds } from './world-map.js';
 import type { World } from './world-map.js';
@@ -35,6 +39,7 @@ import { ExtrasUI } from './extras-ui.js';
 import { parseExtrasCommand } from './extras-commands.js';
 import { GmUI } from './gm-ui.js';
 import { GuildUI } from './guild-ui.js';
+import { FrmMainButtons } from './frm-main-buttons.js';
 import { QuestWindows } from './quest-window.js';
 import { OptionsSettings } from './options-settings.js';
 import { OptionsUI } from './options-ui.js';
@@ -67,6 +72,19 @@ let mapNames = parseIni('');
 void fetchText('init/mapsworlddata.dat').then(text => { worlds = parseWorlds(parseIni(text)); minimap.worlds = worlds; }).catch(error => report(`mapsworlddata.dat: ${String(error)}`));
 void fetchText('init/namemapa.dat').then(text => { mapNames = parseIni(text); }).catch(() => undefined);
 const mapHeaderNames = new Map<number, Promise<string>>();
+// NpcData / ObjData as frmMapaGrande reads them (Dat/npcs.dat, Dat/Obj.dat), loaded the first time the large map opens.
+let npcTableCache: Ini | undefined, npcServerCache: Ini | undefined, catalogCache: ObjectCatalog | undefined;
+/** The client's localindex is UTF-8 (names like "Vigía"); the server files are Windows-1252. */
+const decodeText = (bytes: Uint8Array) => { try { return new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { return new TextDecoder('windows-1252').decode(bytes); } };
+const npcTable = async () => {
+  if (!npcTableCache) {
+    const [local, server, catalog] = await Promise.all([
+      fetchBytes('init/sp_localindex.dat').then(bytes => parseNpcSections(decodeText(bytes))), fetchText('Dat/npcs.dat').then(parseNpcSections).catch(() => undefined), loadObjectCatalog().catch(() => undefined),
+    ]);
+    npcTableCache = local; npcServerCache = server; catalogCache = catalog;
+  }
+  return npcTableCache;
+};
 const keys = new Map<string, Heading>();
 let touchHeading: Heading | undefined;
 let session: Session | undefined;
@@ -109,6 +127,17 @@ const worldMapUi = new WorldMapUI(element('classic'), {
   description: map => mapNames.get('namemapa')?.get(`mapa${map}desc`) ?? '',
   teleport: map => runCommand(`/TELEP YO ${map} 50 50`),
   say: text => session?.ui.message(text),
+  creatures: {
+    // CargarDatosMapa: the NPC section of the map file; the stats come from the NPC table (world-map-npcs.ts).
+    rows: async map => {
+      const [bytes, table] = await Promise.all([fetchBytes(`Mapas/mapa${map}.csm`), npcTable()]);
+      return npcRows(parseMap(bytes).npcs, table);
+    },
+    info: npc => npcTableCache ? npcInfo(npcTableCache, npcServerCache, npc) : undefined,
+    object: index => { const o = catalogCache?.get(index); return o ? { name: o.name, grh: o.grh } : undefined; },
+    preview: (body, head) => renderer.npcPreview(body, head),
+    graphic: grh => renderer.graphic(grh),
+  },
 });
 minimap.hooks = { openBigMap: () => { if (session) worldMapUi.open(session); }, teleport: (map, x, y) => runCommand(`/TELEP YO ${map} ${x} ${y}`) };
 // frmMain.btnZoomIn / btnZoomOut: ApplyMinimapZoom -20 / +20, clamped to -50..50.
@@ -131,6 +160,11 @@ const partyUi = new PartyUI(viewport, element('classic'), renderer, packet => se
 // Group.HandleMouseInput: a group frame clicked while a spell is aimed casts it on that member (WriteActionOnGroupFrame).
 partyUi.onFrameClick = groupId => { if (session?.spells.targeting?.skill === 1) { sendPackets(session.party.actOnFrame(groupId)); session.spells.cancel(); } };
 const guildUi = new GuildUI(element('classic'), sendPackets);
+const mainButtons = new FrmMainButtons({
+  element, confirm: (text, yes) => { showConfirm(element('classic'), text, yes); }, send: packet => sendPackets(packet),
+  openUrl: url => { window.open(url, '_blank', 'noopener,noreferrer'); }, openBugReport: () => gmUi.openHelp(),
+});
+mainButtons.init();
 const gmUi = new GmUI(element('classic'), error => report(String(error))); // GM forms (wp12)
 chatBox.onOpenWindow = window => (window === 'objects' ? gmUi.openObjects() : gmUi.openHelp());
 const travelUi = new TravelUI(element('classic'), packet => sendPackets(packet)); // FrmViajes (wp05)
@@ -148,6 +182,9 @@ chatBox.onCommand = line => {
   return true;
 };
 ui.bindMenu('Grupo', () => sendPackets(session?.party.requestWindow()));
+// ImgHogar_Click and Retar_Click: ParseUserCommand("/HOGAR") and ("/RETAR").
+ui.bindMenu('Hogar', () => runCommand('/HOGAR'));
+ui.bindMenu('Retos', () => runCommand('/RETAR'));
 ui.bindMenu('Clanes', () => { if (session?.ready) sendPackets(session.guild.openGuildPanel()); });
 // frmOpciones (graphics, gameplay and, through audio.options, sound), frmCustomKeys and the hotkey bar (feat/options-extras).
 const gameOptions = new OptionsSettings();
@@ -296,7 +333,7 @@ function syncConnect() {
 function updateUi(now: number) {
   syncConnect();
   if (session) floating.update(session, renderer, now);
-  ui.update(session); bankUi.update(session); tradeUi.update(session); partyUi.update(session); guildUi.update(session); travelUi.update(session); gmUi.update(session); extrasUi.update(session);
+  ui.update(session); bankUi.update(session); tradeUi.update(session); partyUi.update(session); guildUi.update(session); travelUi.update(session); gmUi.update(session); extrasUi.update(session); mainButtons.update(session);
   itemsUi.update(session); keyringUi.update(session); papiroUi.update(session); inventoryExtras.update(session);
   guard(() => craftingUi.update(session));
   guard(() => craftingExtraUi.update(session));
