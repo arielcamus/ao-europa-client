@@ -17,7 +17,8 @@ describe('meditation aura by level', () => {
   it('FX 153-172 are missing from the pre-HOO FXs.ini: drawn with the classic step of their level, growing with level', () => {
     const art = (fx: number) => meditationArt(fx, none);
     expect([153, 155, 161, 171].map(art)).toEqual([115, 116, 117, 119]);
-    expect(MEDITATION_TIERS.map(t => art(t.citizen))).toEqual([115, 116, 116, 117, 117, 118, 118, 118, 118, 119]);
+    // 13-17 mixes the classic 115 (13-14) and 116; 33-36 mixes 117 (33-35) and 118: the majority wins.
+    expect(MEDITATION_TIERS.map(t => art(t.citizen))).toEqual([115, 116, 116, 117, 117, 117, 118, 118, 118, 119]);
     expect(MEDITATION_TIERS.map(t => art(t.criminal))).toEqual(MEDITATION_TIERS.map(t => art(t.citizen)));
   });
   it('an id that is no meditation tier is kept as it is', () => { expect(meditationArt(7, none)).toBe(7); expect(meditationArt(120, none)).toBe(120); });

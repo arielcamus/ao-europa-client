@@ -258,6 +258,7 @@ export class Session {
         // HandleMeditateToggle: StartFx(..., Fx, -1) loops until the toggle comes back with Fx = 0.
         meditationFx: (charIndex, fx) => {
           this.spells.effects = this.spells.effects.filter(effect => !(effect.charIndex === charIndex && effect.loops < 0));
+          // The meditation animation (Recursos.LoadComposedFx maps FX 115-120 to it): an id FXs.ini lacks (the server's 153-172) is drawn as its classic step.
           if (fx !== 0) this.spells.addFx({ fx: meditationArt(fx, id => spellTables.fx.has(`fx${id}`)), charIndex, x: 0, y: 0, loops: -1, startedAt: this.clock(), meditation: true });
         },
       });
