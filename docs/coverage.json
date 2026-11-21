@@ -477,6 +477,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -1028,7 +1029,8 @@
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
-    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl"
    ]
   },
   {
@@ -1633,8 +1635,6 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
-    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
-    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1689,6 +1689,7 @@
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -5186,6 +5187,7 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
