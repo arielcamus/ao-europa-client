@@ -45,3 +45,18 @@ The server sends the meditation effect as `MeditateToggle` fx = 153 for levels 1
 `Dat/Meditaciones.dat`). `init/FXs.ini` and `init/fxs.ind` have `NumFxs=150` in every copy on this Mac (the Recursos tree, `argentum-server*/resources/raw`, `argentum-elixir`), so FX 151 and above
 have no animation definition anywhere and the aura is not drawn (the client renders nothing for an unknown FX, like the VB6 client). `generar_localindex.py` does not produce FXs.ini, and inventing
 an `Animacion=` for 153 would be made-up data, so it is left alone. A complete `FXs.ini` from a full client install would fix it.
+
+# wp04 (items-2) test data on the shared VB6 server DB (`C:\ao\server\Database.db`), applied 2026-11-21
+
+One logged-out test character, TItems (user id 6, account 6, `items@local.test`). Backup taken first with the CLI (`.backup C:\ao\Database-before-items2.db`).
+The server holds the file open and saves a character on logout, so every UPDATE below waits for `user.is_logged = 0`.
+
+- **Key ring needs a patron account.** `LoadCharacterFromDB` only loads `house_key` for `IsPatreon` users and `EnviarLlaves` sends `UpdateUserKey` at login (before `Logged`).
+  `update account set is_active_patron = 6057393 where id = 6;` (`patron_tier_aventurero`), `insert into house_key(key_obj, account_id) values (54, 6), (65, 6);`
+  (objects 54 and 65 are "Llave casa Ullathorpe Nro: 01/02", clave 2 and 4; door "Puerta 1" 53, clave 2, is at map 1 (60,23), locked).
+  Side effect: the tier unlocks more inventory rows for that account (slot 30 accepted a move; 42 is still refused).
+  Undo: `update account set is_active_patron = 0 where id = 6; delete from house_key where account_id = 6 and key_obj in (54, 65);`
+- **Position.** `update user set pos_map=1, pos_x=42, pos_y=53 where id=6 and is_logged=0;` (Cartelera "papiro" at map 1 (43,52); (59,24) for the door scene). Original: map 1, (77,49).
+- **Slot 16 = 20 apples** (object 1) for the delete scenario: `update inventory_item set item_id=1, amount=20, is_equipped=0 where user_id=6 and number=16;`. Undo: `item_id=0, amount=0`.
+- The recorder's "same slot" scenario (Moveitem 4 -> 4) empties slot 4 on the real server (it merges the stack into itself); restore with
+  `update inventory_item set item_id=3684, amount=95 where user_id=6 and number=4;`. Slots 1, 17, 30, 42 were restored to 4335 x500 / empty / empty / empty.

@@ -1,0 +1,17 @@
+{"t_ms":3333,"dir":"c2s","id":225,"name":"Unknown225","hex":"e1000311"}
+{"t_ms":3334,"dir":"s2c","id":63,"name":"ChangeInventorySlot","hex":"3f0003000000000000000000000000000000"}
+{"t_ms":3334,"dir":"s2c","id":63,"name":"ChangeInventorySlot","hex":"3f0011cf0e040000abaaa643000000000000"}
+{"t_ms":4534,"dir":"c2s","id":225,"name":"Unknown225","hex":"e1001103"}
+{"t_ms":4535,"dir":"s2c","id":63,"name":"ChangeInventorySlot","hex":"3f0011000000000000000000000000000000"}
+{"t_ms":4535,"dir":"s2c","id":63,"name":"ChangeInventorySlot","hex":"3f0003cf0e040000abaaa643000000000000"}
+{"t_ms":5735,"dir":"c2s","id":225,"name":"Unknown225","hex":"e1000203"}
+{"t_ms":5736,"dir":"s2c","id":63,"name":"ChangeInventorySlot","hex":"3f0002cf0e040000abaaa643000000000000"}
+{"t_ms":5736,"dir":"s2c","id":63,"name":"ChangeInventorySlot","hex":"3f0003ee1023000000000000000000000000"}
+{"t_ms":6750,"dir":"s2c","id":112,"name":"Unknown112","hex":"70000100"}
+{"t_ms":6937,"dir":"c2s","id":225,"name":"Unknown225","hex":"e1000302"}
+{"t_ms":6938,"dir":"s2c","id":63,"name":"ChangeInventorySlot","hex":"3f0003cf0e040000abaaa643000000000000"}
+{"t_ms":6938,"dir":"s2c","id":63,"name":"ChangeInventorySlot","hex":"3f0002ee1023000000000000000000000000"}
+{"t_ms":8139,"dir":"c2s","id":225,"name":"Unknown225","hex":"e100012a"}
+{"t_ms":9341,"dir":"c2s","id":225,"name":"Unknown225","hex":"e1000404"}
+{"t_ms":9342,"dir":"s2c","id":63,"name":"ChangeInventorySlot","hex":"3f0004000000000000000000000000000000"}
+{"t_ms":9342,"dir":"s2c","id":63,"name":"ChangeInventorySlot","hex":"3f0004000000000000000000000000000000"}

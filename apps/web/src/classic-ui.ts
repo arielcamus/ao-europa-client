@@ -47,8 +47,7 @@ export class ClassicUI {
       button.setAttribute('aria-label', `Casilla ${i + 1}`);
       button.addEventListener('click', () => {
         const item = this.session?.ui.inventory.get(i + 1);
-        this.selectedItem = item ? i + 1 : 0; this.markItem();
-        if (item) this.session?.ui.message(this.objects.get(`obj${item.object}`)?.get('texto') ?? button.title);
+        this.selectedItem = item ? i + 1 : 0; this.markItem(); // the object's text is the ObjLbl hover label (inventory-extras.ts), not a console line
       });
       button.addEventListener('dblclick', () => { if (this.session?.ui.inventory.has(i + 1)) { this.selectedItem = i + 1; this.markItem(); this.onActivate?.(i + 1); } });
       element('inventory').append(button); this.slotButtons.push(button);
@@ -134,6 +133,8 @@ export class ClassicUI {
   /** Slot selected in the main inventory; 200 is the gold pseudo-slot (FLAGORO). */
   get selectedSlot() { return this.selectedItem; }
   selectGold() { this.selectedItem = 200; this.markItem(); }
+  /** clsGrapchicalInventory.InvSelectedItem = slot (0 clears); the right-drag end and the delete button use it. */
+  selectSlot(slot: number) { this.selectedItem = slot; this.markItem(); }
   /** The 32x32 item picture the inventory draws, shared with the shop window. */
   async itemArt(grh: number): Promise<HTMLCanvasElement> {
     const frame = await this.renderer.graphic(grh), sheet = await this.sheet(frame.file);

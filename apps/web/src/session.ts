@@ -21,6 +21,7 @@ import { SkillsClientPacketId as SC } from '@ao/protocol';
 import { StatusState, STATUS_TEXT, STATUS_FONT } from './status.js';
 import { ItemsState } from './items-state.js';
 import { ItemsController } from './items.js';
+import { InventoryActions, KeyringState } from './keyring.js';
 import type { ObjectCatalog } from './object-catalog.js';
 import { BankTradeState } from './bank-trade-state.js';
 import { BankTradeController } from './bank-trade.js';
@@ -74,6 +75,9 @@ export class Session {
     send: packet => this.send(packet), now: () => this.clock(), ready: () => this.ready, position: () => this.position,
     ui: this.ui, state: this.items, catalog: () => this.catalog, next: family => this.next(family),
   });
+  /** Key ring contents and the papyrus form (wp04), and the inventory move/delete packets. */
+  readonly keyring = new KeyringState();
+  readonly inventoryActions = new InventoryActions({ send: packet => this.send(packet), ready: () => this.ready, now: () => this.clock(), ui: this.ui, items: this.items });
   /** Observer called with every decoded server packet once the session state has applied it (audio). */
   onPacket: ((packet: ServerPacket) => void) | undefined;
   /** Bank vault, Goliath and player-to-player trade (feat/bank-trade). */
@@ -178,6 +182,7 @@ export class Session {
       this.guild.receive(packet);
       this.status.receive(packet, blind => { this.world.blind = blind; });
       this.items.receive(packet);
+      this.keyring.receive(packet);
       this.bankTrade.receive(packet);
       this.world.receive(packet);
       this.crafting.receive(packet);

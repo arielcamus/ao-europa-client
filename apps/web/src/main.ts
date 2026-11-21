@@ -33,6 +33,9 @@ import { KeysUI } from './keys-ui.js';
 import { HotkeysUI } from './hotkeys-ui.js';
 import { windows } from './window-stack.js';
 import { displayName } from './character-data.js';
+import { KeyringUI } from './keyring-ui.js';
+import { PapiroUI } from './papiro-ui.js';
+import { InventoryExtras } from './inventory-extras.js';
 
 applyClassicLayout();
 windows.install();
@@ -91,6 +94,16 @@ const keyBindings = new KeyBindings();
 const keysUi = new KeysUI(element('classic'), keyBindings, () => { /* the hotkey labels re-read the bindings on their next update */ });
 const optionsUi = new OptionsUI(element('classic'), audio.options, gameOptions, keysUi, () => audio.director.click());
 const hotkeysUi = new HotkeysUI(element('classic'), viewport, { itemArt: grh => ui.itemArt(grh), slotBackground: grh => ui.slotBackground(grh), graphic: grh => renderer.graphic(grh) });
+// wp04: key ring (cmdLlavero), the papyrus form (ShowPapiro) and the inventory's item label, right-drag move and delete button.
+const keyringUi = new KeyringUI(element('classic'), { itemArt: grh => ui.itemArt(grh), slotBackground: grh => ui.slotBackground(grh) },
+  object => session?.catalog?.get(object)?.name ?? `Objeto ${object}`, object => session?.catalog?.get(object)?.grh ?? 0);
+ui.bindMenu('Llavero', () => keyringUi.toggle());
+const papiroUi = new PapiroUI(element('classic'));
+// IsDialogOpen / IsDragDropBlockedByPanel: no drop onto the world while a shop, vault, trade, amount form or the key ring is up.
+const inventoryExtras = new InventoryExtras(element('classic'), ui, {
+  dropSelected: () => guard(() => itemsUi.dropSelected()),
+  dropBlocked: () => transacting() || itemsUi.dialogOpen || keyringUi.isOpen || travelUi.isOpen || craftingUi.windowOpen || (session?.items.shopOpen ?? false),
+});
 const fpsLabel = document.createElement('span'); fpsLabel.id = 'fps'; fpsLabel.hidden = true; element('classic').append(fpsLabel);
 let lastFps = 0;
 /** MostrarOnline: the VB6 key only flips this flag; the original client never draws anything from it. */
@@ -175,7 +188,7 @@ async function boot() {
 }
 function updateUi(now: number) {
   ui.update(session); bankUi.update(session); tradeUi.update(session); partyUi.update(session); guildUi.update(session); travelUi.update(session);
-  itemsUi.update(session);
+  itemsUi.update(session); keyringUi.update(session); papiroUi.update(session); inventoryExtras.update(session);
   guard(() => craftingUi.update(session));
   if (!session) { hotkeysUi.update(undefined, false); return; }
   const playing = session.ready && renderer.readyMap === session.resourceMap;

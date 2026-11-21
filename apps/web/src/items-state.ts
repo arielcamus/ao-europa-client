@@ -32,7 +32,7 @@ export class ItemsState {
         this.intervals = { dropItem: packet.dropItem, useItemKey: packet.useItemKey, useItemClick: packet.useItemClick };
         return;
       case IS.ChangeNPCInventorySlot:
-        if (packet.slot < 1 || packet.slot > 42) throw new Error('Invalid shop slot');
+        if (packet.slot < 1 || packet.slot > 42) return; // HandleChangeNPCInventorySlot: the VB6 client logs the bad slot and carries on
         if (packet.object > 0 && packet.amount > 0) this.shopSlots.set(packet.slot, { ...packet });
         else this.shopSlots.delete(packet.slot);
         break;
