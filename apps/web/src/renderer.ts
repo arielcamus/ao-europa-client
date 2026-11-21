@@ -8,7 +8,7 @@ import { Application, Container, Rectangle, Sprite, Text, Texture } from 'pixi.j
 import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody, tileIndex, assetUrl } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
 import type { Session } from './session.js';
-import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, roofTriggers, TreeFade, fixedObjects, nearRoof, objectDraws, objectGraphicsFromIni, treeCoversPlayer } from './map-objects.js';
+import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, roofTriggers, TreeFade, fixedObjects, nearRoof, objectDraws, objectGraphicsFromIni, treeCoversPlayer, TREE_GRH_INDICES, layer4TreeCoversPlayer } from './map-objects.js';
 import { loadObjectIni } from './object-catalog.js';
 import type { GroundObject, ObjectGraphic } from './map-objects.js';
 import { CharacterSprites } from './character-render.js';
@@ -66,6 +66,7 @@ export class WorldRenderer {
   /** Light map, particles, projectiles, auras and weather (feat/world-fx); created in init(). */
   private fx: FxRenderer | undefined;
   private readonly trees = new TreeFade();
+  private readonly trees4 = new TreeFade(); // row-layer trees: a separate timer per tile (the object and row-layer passes both step once a frame)
   /** The client's fixed objects (TileEngine_Map.EsObjetoFijo: trees, signs, deposits, decorations) from the map file; a sign the server also sends wins (map-objects.ts). */
   private fixed = new Map<number, GroundObject>();
   /** The map-file object on a tile, if any (the server sees these too). */
@@ -132,7 +133,7 @@ export class WorldRenderer {
   }
   async loadMap(id: number) {
     const epoch = ++this.epoch;
-    this.readyMap = undefined; this.map = undefined; this.fixed = new Map(); this.trees.clear();
+    this.readyMap = undefined; this.map = undefined; this.fixed = new Map(); this.trees.clear(); this.trees4.clear();
     this.pools.forEach(pool => { pool.reset(); pool.finish(); });
     this.fx?.clear(); this.roofPool?.clear();
     // Keep texture memory bounded to the current map. Late loads are discarded.
@@ -324,7 +325,8 @@ export class WorldRenderer {
         this.draw(pool, this.animation(draw.grh), x * 32, y * 32, now, true, alpha);
       }
       const id = this.map!.layers[3]![tile]!;
-      if (id) this.draw(pool, this.animation(id), x * 32, y * 32, now, true);
+      // Row-pass layer with FLAG_ARBOL (pinned Graphic(3) holding a tree Grh, TREE_GRH_INDICES) fades like the object trees, over a wider area (RenderScreen: |dx| <= 3, |dy| < 12).
+      if (id) this.draw(pool, this.animation(id), x * 32, y * 32, now, true, TREE_GRH_INDICES.has(id) ? this.trees4.step(tile, layer4TreeCoversPlayer(session.position!, x, y), dt) : 1);
     });
     each((x, y, tile) => {
       const id = this.map!.layers[4]![tile]!;
@@ -426,8 +428,8 @@ export class WorldRenderer {
         this.draw(pool, layer.animation, px + layer.x, py + layer.y, time, true, alpha);
       }
       // Quest marker (engine.bas Char_Render, .simbolo): grh 5257 + symbol, 48 px above the head, bobbing 8 px; drawn even with names hidden.
-      const marker = char.npc && char.symbol ? sprites.body(char.body) : undefined;
-      if (char.symbol && marker) this.draw(pool, this.animation(5257 + char.symbol), px + 6 + marker.headX, py + marker.headY - 48 - 8 * Math.sin((now % 31415) * 0.002) ** 2, now, false);
+      const marker = char.npc && char.symbol && sprites.body(char.body) ? sprites.headOffset(char.body) : undefined;
+      if (char.symbol && marker) this.draw(pool, this.animation(5257 + char.symbol), px + 6 + marker.x, py + marker.y - 48 - 8 * Math.sin((now % 31415) * 0.002) ** 2, now, false);
       // A blind player sees no names (engine.bas Char_Render: UserCiego -> MostrarNombre = False).
       if (!this.showNames || session.status.blind) { /* HideNames */ } else if (char.npc) {
         // NPC names appear only under the cursor, in (0,129,195).

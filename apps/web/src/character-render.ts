@@ -1,6 +1,7 @@
 /*
- * Character sprite layering, adapted 2026-11-20 from client Graficos_Renderizado.bas Char_Render
- * (draw order per heading, weapon offset for dwarves, body x+1 below body 488).
+ * Character sprite layering, from the LIVE client engine.bas Char_Render (draw order per heading,
+ * OffArma / OffHead, composed texture presented at PixelOffset + BodyOffset). Never Graficos_Renderizado.bas:
+ * it is not in Argentum20.vbp.
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty. See NOTICE.
  */
 import { graphicAnimation, readBody } from './assets.js';
@@ -17,9 +18,26 @@ export interface CharacterResources {
 /** `part` marks the weapon and shield layers, which also play one pass when the server sends ArmaMov / EscudoMov (a swing). */
 export interface Layer { animation: Animation; x: number; y: number; walks: boolean; part?: 'weapon' | 'shield' | undefined }
 
+/**
+ * Net pixel offsets from the tile origin of each part of a headed character, engine.bas Char_Render:
+ * the composed texture is presented at (PixelOffsetX + BodyOffset.x, PixelOffsetY + BodyOffset.y) and its
+ * parts drawn at TextureX/TextureY + (0, 0) for the body, (0, OffArma) for weapon and shield and
+ * (HeadOffset.x, OffHead) for head and helmet, with OffArma = (7 if dwarf) - BodyOffset.y and
+ * OffHead = HeadOffset.y - 1 - BodyOffset.y (the breathing `ease` terms are 0 at rest). No +1 on body x.
+ */
+export function characterAnchors(body: { bodyX: number; bodyY: number; headOffsetX: number; headOffsetY: number }, dwarf: boolean) {
+  const offArma = (dwarf ? 7 : 0) - body.bodyY;
+  const offHead = body.headOffsetY - 1 - body.bodyY;
+  return {
+    body: { x: body.bodyX, y: body.bodyY },
+    equipment: { x: body.bodyX, y: body.bodyY + offArma },
+    head: { x: body.bodyX + body.headOffsetX, y: body.bodyY + offHead },
+  };
+}
+
 export class CharacterSprites {
   private bodyCache = new Map<number, Body | null>();
-  private rawHeadY = new Map<number, number>();
+  private rawHead = new Map<number, { x: number; y: number }>();
   private weaponCache = new Map<number, EquipmentSet>();
   private shieldCache = new Map<number, EquipmentSet>();
   constructor(private readonly resources: CharacterResources) {}
@@ -29,14 +47,17 @@ export class CharacterSprites {
     if (body === undefined) {
       try {
         body = readBody(this.resources.bodies, this.resources.molds, this.resources.graphics, id);
-        this.rawHeadY.set(id, Number(this.resources.bodies.get(`body${id}`)?.get('headoffsety') ?? 0) + body.bodyY);
+        const section = this.resources.bodies.get(`body${id}`);
+        this.rawHead.set(id, { x: Number(section?.get('headoffsetx') ?? 0), y: Number(section?.get('headoffsety') ?? 0) });
       } catch { body = null; }
       this.bodyCache.set(id, body);
     }
     return body ?? undefined;
   }
   /** BodyData(Body).HeadOffset.y = -26 marks dwarves: their weapon/shield sit 7 px lower. */
-  private isDwarf(id: number) { return this.rawHeadY.get(id) === -26; }
+  private isDwarf(id: number) { return this.rawHead.get(id)?.y === -26; }
+  /** BodyData(id).HeadOffset as in Body.ini (without BodyOffset): quest marker and speech anchors use it raw. */
+  headOffset(id: number): { x: number; y: number } { this.body(id); return this.rawHead.get(id) ?? { x: 0, y: 0 }; }
   headOffsetY(char: Character): number { return this.body(char.body)?.headY ?? 0; }
 
   /** Sprites bottom to top, in the VB6 order for the character's heading. */
@@ -46,24 +67,25 @@ export class CharacterSprites {
     const h = heading - 1;
     const weapon = this.equipment(this.weaponCache, this.resources.weapons, 'arma', char.weapon)[h];
     const shield = this.equipment(this.shieldCache, this.resources.shields, 'esc', char.shield)[h];
-    const offArma = this.isDwarf(char.body) ? 7 : 0;
+    const head = this.headOffset(char.body);
+    const anchors = characterAnchors({ bodyX: body.bodyX, bodyY: body.bodyY, headOffsetX: head.x, headOffsetY: head.y }, this.isDwarf(char.body));
     const walk = body.walk[h];
     const headGrh = this.resources.heads[char.head]?.[h];
     const helmetGrh = this.resources.helmets[char.helmet]?.[h];
     const out: Layer[] = [];
     const add = (animation: Animation | undefined, x: number, y: number, walks: boolean, part?: Layer['part']) => { if (animation) out.push({ animation, x, y, walks, part }); };
-    const bodyLayer = () => add(walk, body.bodyX + (char.body < 488 ? 1 : 0), body.bodyY, true);
+    const bodyLayer = () => add(walk, anchors.body.x, anchors.body.y, true);
     const headLayers = () => {
-      if (headGrh) add(this.resources.animation(headGrh), body.headX, body.headY, false);
-      if (helmetGrh) add(this.resources.animation(helmetGrh), body.headX, body.headY, false);
+      if (headGrh) add(this.resources.animation(headGrh), anchors.head.x, anchors.head.y, false);
+      if (helmetGrh) add(this.resources.animation(helmetGrh), anchors.head.x, anchors.head.y, false);
     };
-    const w = (dy: number) => add(weapon, 0, dy, true, 'weapon');
-    const s = (dy: number) => add(shield, 0, dy, true, 'shield');
+    const w = () => add(weapon, anchors.equipment.x, anchors.equipment.y, true, 'weapon');
+    const s = () => add(shield, anchors.equipment.x, anchors.equipment.y, true, 'shield');
     // Heading 1 North, 2 East, 3 South, 4 West.
-    if (heading === 2) { s(0); bodyLayer(); headLayers(); w(offArma); }
-    else if (heading === 1) { w(offArma); s(0); bodyLayer(); headLayers(); }
-    else if (heading === 4) { w(0); bodyLayer(); headLayers(); s(offArma); }
-    else { bodyLayer(); headLayers(); s(offArma); w(offArma); }
+    if (heading === 2) { s(); bodyLayer(); headLayers(); w(); }
+    else if (heading === 1) { w(); s(); bodyLayer(); headLayers(); }
+    else if (heading === 4) { w(); bodyLayer(); headLayers(); s(); }
+    else { bodyLayer(); headLayers(); s(); w(); }
     return out;
   }
   private equipment(cache: Map<number, EquipmentSet>, source: Ini, prefix: 'arma' | 'esc', id: number): EquipmentSet {
