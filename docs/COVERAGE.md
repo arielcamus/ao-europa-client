@@ -11,7 +11,7 @@ Scanned refs: `main`
 ## Headline
 
 - **Packets covered (merged + open branches): 512 of 513 = 99.8%.** Merged on main only: 512 = 99.8%.
-  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 275.
+  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 276.
 - **Forms covered: 56 of 86 = 65.1%** (2 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
@@ -492,7 +492,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 71 | BankDepositGold | server Protocol.bas:HandleBankDepositGold | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 72 | Denounce | server Protocol.bas:HandleDenounce | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 73 | LoginExistingChar | server Protocol.bas:HandleLoginExistingChar | core | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 74 | LoginNewChar | server Protocol.bas:HandleLoginNewChar | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
+| 74 | LoginNewChar | server Protocol.bas:HandleLoginNewChar | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 75 | Talk | server Protocol.bas:HandleTalk | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 76 | Yell | server Protocol.bas:HandleYell | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 77 | Whisper | server Protocol.bas:HandleWhisper | chat | merged | `main:packages/protocol/src/packets.ts` | yes |

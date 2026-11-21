@@ -18,7 +18,7 @@
   "forms": 86,
   "formsCovered": 56,
   "formsPartial": 2,
-  "fixturePackets": 275,
+  "fixturePackets": 276,
   "packetsPct": 99.8,
   "packetsMergedPct": 99.8,
   "formsPct": 65.1,
@@ -267,6 +267,7 @@
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
+    "tests/fixtures/vb6/char-create/login-new-char-no-answer.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
     "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
@@ -6699,6 +6700,7 @@
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
+    "tests/fixtures/vb6/char-create/login-new-char-no-answer.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
     "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
@@ -8492,8 +8494,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/session.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/char-create/login-new-char-no-answer.jsonl"
+   ]
   },
   {
    "key": "c2s:75",
@@ -13224,6 +13228,7 @@
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
+    "tests/fixtures/vb6/char-create/login-new-char-no-answer.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/combat-items/learn-spell-scroll.jsonl",
     "tests/fixtures/vb6/combat-items/paralysed-login-expiry.jsonl",
