@@ -7,7 +7,7 @@ import { ServerPacketId as S, ItemsServerPacketId as IS } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 
 export interface ShopSlot { slot: number; object: number; amount: number; value: number; elementalTags: number; canUse: number }
-export interface Attributes { strength: number; agility: number; strengthBase: number; agilityBase: number; drugCounter: number }
+export interface Attributes { strength: number; agility: number; /** Absent on the pinned server (FYA stops after the drug timer): the stats are then coloured by buffColor's fixed thresholds. */ strengthBase?: number; agilityBase?: number; drugCounter: number }
 export interface ActionIntervals { dropItem: number; useItemKey: number; useItemClick: number }
 
 export class ItemsState {
@@ -41,7 +41,7 @@ export class ItemsState {
       case IS.CommerceInit: this.shopOpen = true; this.shopName = packet.npcName; break;
       case IS.CommerceEnd: this.closeShop(); break;
       case IS.FYA:
-        this.attributes = { strength: packet.strength, agility: packet.agility, strengthBase: packet.strengthBase, agilityBase: packet.agilityBase, drugCounter: packet.drugCounter };
+        this.attributes = { strength: packet.strength, agility: packet.agility, drugCounter: packet.drugCounter, ...(packet.strengthBase !== undefined ? { strengthBase: packet.strengthBase } : {}), ...(packet.agilityBase !== undefined ? { agilityBase: packet.agilityBase } : {}) };
         break;
       case IS.UpdateDM: this.damageBonus = packet.value; break;
       case IS.UpdateRM: this.resistanceBonus = packet.value; break;

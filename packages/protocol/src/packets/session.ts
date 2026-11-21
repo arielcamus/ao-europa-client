@@ -6,6 +6,7 @@
  * Own file so parallel feature branches do not conflict; packets.ts only spreads the two tables.
  */
 import type { Reader, Writer } from '../binary.js';
+import { isPreHoo } from '../profile.js';
 
 export const SessionServerPacketId = {
   NavigateToggle: 5, EquiteToggle: 6, ShowMessageBox: 40, MostrarCuenta: 41, CharacterTranslate: 45, UserIndexInServer: 46,
@@ -44,10 +45,19 @@ export const sessionServerCodecs = {
   [SessionServerPacketId.ForceCharMove]: codec(r => ({ heading: r.readInt8() }), (w, v) => { w.writeInt8(v.heading); }),
   /** WriteShowSignal: object index Int16 (its Texto) and the secondary Grh Int16 (HandleShowSignal -> InitCartel). */
   [SessionServerPacketId.ShowSignal]: codec(r => ({ objIndex: r.readInt16(), grh: r.readInt16() }), (w, v) => { w.writeInt16(v.objIndex); w.writeInt16(v.grh); }),
-  /** PrepareMessageUpdateTagAndStatus: char Int16, status Int8, "Name <clan>" String8, group Int16, guild Int16, alignment Int8. */
-  [SessionServerPacketId.UpdateTagAndStatus]: codec(
-    r => ({ charIndex: r.readInt16(), status: r.readInt8(), tag: r.readString(), groupIndex: r.readInt16(), clanIndex: r.readInt16(), clanAlignment: r.readInt8() }),
-    (w, v) => { w.writeInt16(v.charIndex); w.writeInt8(v.status); w.writeString(v.tag); w.writeInt16(v.groupIndex); w.writeInt16(v.clanIndex); w.writeInt8(v.clanAlignment); }),
+  /**
+   * PrepareMessageUpdateTagAndStatus: char Int16, status Int8, "Name <clan>" String8, group Int16, then (HOO-era server only) guild Int16 and
+   * alignment Int8. The pinned server stops after the group, so the two clan fields are absent and the client leaves the char's clan data alone.
+   */
+  [SessionServerPacketId.UpdateTagAndStatus]: codec<{ charIndex: number; status: number; tag: string; groupIndex: number; clanIndex?: number; clanAlignment?: number }>(
+    r => {
+      const head = { charIndex: r.readInt16(), status: r.readInt8(), tag: r.readString(), groupIndex: r.readInt16() };
+      return r.remaining >= 3 ? { ...head, clanIndex: r.readInt16(), clanAlignment: r.readInt8() } : head;
+    },
+    (w, v) => {
+      w.writeInt16(v.charIndex); w.writeInt8(v.status); w.writeString(v.tag); w.writeInt16(v.groupIndex);
+      if (!isPreHoo()) { w.writeInt16(v.clanIndex ?? 0); w.writeInt8(v.clanAlignment ?? 0); }
+    }),
   /** WriteCerrarleCliente: no payload; HandleCerrarleCliente runs CloseClient. */
   [SessionServerPacketId.CerrarleCliente]: empty,
   /** WriteContadores: invisibility seconds and potion-effect seconds, both Int16 (InviCounter, DrogaCounter). */

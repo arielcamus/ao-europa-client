@@ -123,10 +123,12 @@ export class CharacterTracker {
    * HandleUpdateTagAndStatus: "Name <Clan>" (or "Name [tag]") splits at the first `<`, else `[`; status, group, guild and its alignment
    * change. VB6 assigns clan index and alignment first, so a tag that begins with its bracket (Left$ of a negative length) still keeps those two.
    */
-  private updateTag(packet: { charIndex: number; status: number; tag: string; groupIndex: number; clanIndex: number; clanAlignment: number }) {
+  private updateTag(packet: { charIndex: number; status: number; tag: string; groupIndex: number; clanIndex?: number; clanAlignment?: number }) {
     const char = this.chars.get(packet.charIndex);
     if (!char) return;
-    char.clanIndex = packet.clanIndex; char.clanAlignment = packet.clanAlignment;
+    // The pinned server (9ccd7fad) does not send the clan fields; only the HOO-era one does.
+    if (packet.clanIndex !== undefined) char.clanIndex = packet.clanIndex;
+    if (packet.clanAlignment !== undefined) char.clanAlignment = packet.clanAlignment;
     const parts = splitTag(packet.tag);
     if (parts) { char.name = parts.name; char.clan = parts.clan; char.status = packet.status; char.groupIndex = packet.groupIndex; }
     this.revision++;

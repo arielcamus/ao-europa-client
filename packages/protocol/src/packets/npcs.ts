@@ -6,6 +6,7 @@
  * packets.ts only spreads `npcsServerCodecs` / `npcsClientCodecs` into its tables.
  */
 import { Reader, Writer } from '../binary.js';
+import { isPreHoo } from '../profile.js';
 
 export enum NpcsServerPacketId {
   RemoveDialogs = 3,
@@ -50,7 +51,7 @@ const characterChange = struct({
   charIndex: int16, flags: byte, body: int16, head: int16, heading: byte,
   weapon: int16, shield: int16, helmet: int16, cart: int16, backpack: int16, fx: int16, fxLoops: int16,
 });
-/** server PrepareMessageLocaleMsg / client HandleLocaleMsg (channel is always sent by this server). `messageId` is the locale id; `id` stays the packet id. */
+/** server PrepareMessageLocaleMsg / client HandleLocaleMsg (the channel byte exists only on the HOO-era server: read when present, written on the 'live' profile). `messageId` is the locale id; `id` stays the packet id. */
 const localeMsg: NpcsCodec<{ messageId: number; text: string; font: number; channel?: number }> = {
   read(reader) {
     const messageId = reader.readInt16(), text = reader.readString(), font = reader.readInt8();
@@ -58,7 +59,7 @@ const localeMsg: NpcsCodec<{ messageId: number; text: string; font: number; chan
   },
   write(writer, value) {
     writer.writeInt16(value.messageId); writer.writeString(value.text); writer.writeInt8(value.font);
-    if (value.channel !== undefined) writer.writeInt8(value.channel);
+    if (value.channel !== undefined && !isPreHoo()) writer.writeInt8(value.channel);
   },
 };
 

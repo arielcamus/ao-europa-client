@@ -9,6 +9,7 @@
  * Ids follow the PacketId.bas enum order (verified against the live VB6 server).
  */
 import type { Reader, Writer } from '../binary.js';
+import { isPreHoo } from '../profile.js';
 
 export interface QuestCodec<T> { read(reader: Reader): T; write(writer: Writer, value: T): void }
 
@@ -78,7 +79,8 @@ const questDetails: QuestCodec<QuestDetails> = {
     return {
       questIndex, requiredLevel, limitLevel, requiredClasses, requiredQuest, npcs, objs, spells: spellList,
       skillType, skillValue, rewardGold, rewardExp, rewardObjs: rewardObjs.read(r), rewardSpells: spells.read(r),
-      talkTo: r.readInt16(), deliverMap: r.readInt16(),
+      // talkTo / deliverMap exist only on the HOO-era server (turn-in NPC and map); absent on the pinned one.
+      talkTo: r.remaining >= 4 ? r.readInt16() : 0, deliverMap: r.remaining >= 2 ? r.readInt16() : 0,
     };
   },
   write(w, v) {
@@ -89,7 +91,7 @@ const questDetails: QuestCodec<QuestDetails> = {
     list(pair('spell', 'has')).write(w, v.spells);
     w.writeInt8(v.skillType); w.writeInt8(v.skillValue); w.writeInt32(v.rewardGold); w.writeInt32(v.rewardExp);
     rewardObjs.write(w, v.rewardObjs); spells.write(w, v.rewardSpells);
-    w.writeInt16(v.talkTo); w.writeInt16(v.deliverMap);
+    if (!isPreHoo()) { w.writeInt16(v.talkTo); w.writeInt16(v.deliverMap); }
   },
 };
 

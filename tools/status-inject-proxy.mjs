@@ -10,8 +10,9 @@
 // Point the bridge at --listen (AO_TCP_PORT=7791). Bound to 127.0.0.1 only.
 import { createServer as createTcp, createConnection } from 'node:net';
 import { createServer as createHttp } from 'node:http';
-import { FrameDecoder, encodeServerFrame } from '../packages/protocol/dist/index.js';
+import { applyWireProfileFromEnv, FrameDecoder, encodeServerFrame } from '../packages/protocol/dist/index.js';
 
+applyWireProfileFromEnv(process.env); // AO_WIRE_PROFILE=prehoo|live
 const arg = (name, fallback) => { const i = process.argv.indexOf(`--${name}`); return i >= 0 ? process.argv[i + 1] : fallback; };
 const listen = Number(arg('listen', 7791)), control = Number(arg('control', 7792));
 const [targetHost, targetPort] = arg('target', '127.0.0.1:7667').split(':');

@@ -10,6 +10,7 @@
  * codec tables below.
  */
 import { Reader, Writer } from '../binary.js';
+import { isPreHoo } from '../profile.js';
 
 export interface ItemsCodec<T> {
   read(reader: Reader): T;
@@ -79,6 +80,18 @@ const equipItem: ItemsCodec<EquipItemPacket> = {
   },
 };
 
+export interface Fya { strength: number; agility: number; drugCounter: number; strengthBase?: number; agilityBase?: number }
+const fya: ItemsCodec<Fya> = {
+  read(reader) {
+    const strength = reader.readInt8(), agility = reader.readInt8(), drugCounter = reader.readInt16();
+    return reader.remaining >= 2 ? { strength, agility, drugCounter, strengthBase: reader.readInt8(), agilityBase: reader.readInt8() } : { strength, agility, drugCounter };
+  },
+  write(writer, value) {
+    writer.writeInt8(value.strength); writer.writeInt8(value.agility); writer.writeInt16(value.drugCounter);
+    if (!isPreHoo()) { writer.writeInt8(value.strengthBase ?? value.strength); writer.writeInt8(value.agilityBase ?? value.agility); }
+  },
+};
+
 export const itemsServerCodecs = {
   [ItemsServerPacketId.CommerceEnd]: struct({}),
   [ItemsServerPacketId.CommerceInit]: struct({ npcName: string }),
@@ -88,7 +101,8 @@ export const itemsServerCodecs = {
     slot: byte, object: int16, amount: int16, value: real32, elementalTags: int32, canUse: byte,
   }),
   // WriteFYA: strength and agility, drug timer, then the un-buffed base values.
-  [ItemsServerPacketId.FYA]: struct({ strength: byte, agility: byte, drugCounter: int16, strengthBase: byte, agilityBase: byte }),
+  // The two base bytes exist only on the HOO-era server: absent on the pinned one (the client then colours the stats by the fixed 25/35 thresholds).
+  [ItemsServerPacketId.FYA]: fya,
   [ItemsServerPacketId.UpdateRM]: struct({ value: int16 }),
   [ItemsServerPacketId.UpdateDM]: struct({ value: int16 }),
   [ItemsServerPacketId.ShowPickUpObj]: struct({ object: int16, amount: int16 }),

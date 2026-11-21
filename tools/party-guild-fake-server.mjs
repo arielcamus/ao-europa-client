@@ -2,8 +2,9 @@
 // tests/fixtures/vb6/party). It replaces the page's WebSocket (Playwright routeWebSocket), logs one character in and answers the party and
 // guild requests the way the VB6 server's writers shape them, so the forms can be exercised and photographed without a guild on the server.
 // Usage: const fake = await installFakeServer(page, { role: 'none' | 'member' | 'leader' }); fake.received (decoded client packets), fake.send(packet).
-import { FrameDecoder, decodeClientPacket, encodeServerFrame, joinList, ServerPacketId as S, GuildServerPacketId as G, PartyServerPacketId as P, SpellServerPacketId as SP } from '../packages/protocol/dist/index.js';
+import { applyWireProfileFromEnv, FrameDecoder, decodeClientPacket, encodeServerFrame, joinList, ServerPacketId as S, GuildServerPacketId as G, PartyServerPacketId as P, SpellServerPacketId as SP } from '../packages/protocol/dist/index.js';
 
+applyWireProfileFromEnv(process.env); // AO_WIRE_PROFILE=prehoo|live
 const base = { cart: 0, backpack: 0, fx: 0, fxLoops: 0, particleFx: 0, headAura: '', weaponAura: '', bodyAura: '', damageAura: '', resistanceAura: '', otherAura: '', shieldAura: '',
   speeding: 1, appear: 0, groupIndex: 0, clanIndex: 0, clanLevel: 0, minHp: 20, maxHp: 20, minMana: 0, maxMana: 0, symbol: 0, flags: 1, userType: 0, team: 0, flag: 0, clanAlignment: 0, privileges: 0 };
 const character = (charIndex, name, x, y, head = 1) => ({ id: S.CharacterCreate, charIndex, name, x, y, heading: 3, body: 107, head, weapon: 0, shield: 0, helmet: 0, status: 1, npc: 0, npcNumber: 0, ...base });

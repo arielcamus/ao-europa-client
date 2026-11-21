@@ -1,7 +1,9 @@
 // TEST STAND-IN, not a game server. Real target: ao-org VB6 server. AGPL-3.0-or-later.
+import { applyWireProfileFromEnv } from '@ao/protocol';
 import { startStandin } from './index.js';
 
 async function main(): Promise<void> {
+  applyWireProfileFromEnv(process.env); // AO_WIRE_PROFILE=prehoo|live (default live until the pre-HOO server swap)
   const port = Number(process.env.AO_PORT ?? 7666);
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('Invalid AO_PORT');
   const standin = await startStandin({

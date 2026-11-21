@@ -190,3 +190,27 @@ reads the VB6 sources and does not use the codecs. Fixtures: `tests/fixtures/vb6
   are HOO (next-gen client) only and are **not implemented** (Ariel, 21 Nov: pre-HOO only). `ChangeSkinSlot` (c2s 307) has an id and no
   handler anywhere, so it has no payload to implement.
 - `AntiCheatMessage` / `AntiCheatStartSession` drive the native EasyAntiCheat library; the browser client decodes and drops them.
+
+## Pre-HOO pinned layouts and the wire profile (2026-11-21, `packages/protocol/src/profile.ts`)
+
+Ariel approved rebuilding the VB6 server at the last pre-HOO commit (server-classic `9ccd7fad`, client-classic `619e69d`). The live server
+today is HOO-era (`caac3133`). [`docs/PINNED-LAYOUTS.md`](PINNED-LAYOUTS.md) compares every implemented packet (512 rows) against the pinned
+handlers and writers; packet ids did not move. **Eight server-to-client packets changed after the pin**: ConsoleMsg and LocaleMsg (trailing
+channel byte), CharacterCreate (trailing clanAlignment), UpdateTagAndStatus (trailing clanIndex + clanAlignment), FYA (trailing base strength and
+agility), GuildNews and GuildLeaderInfo (exp and exp-needed Int16 to Int32), QuestDetails (trailing talkTo + deliverMap).
+
+- **Decoding is version-tolerant** and needs no setting: trailing fields are read only when bytes remain (a frame holds exactly one packet), and
+  the guild exp pair is Int16 when 4 bytes remain, Int32 when 8 do. The client therefore works on the live server and on the pinned one.
+  Fields the pinned server never sends stay absent (`channel`, `strengthBase`, `agilityBase`, `clanIndex`, `clanAlignment` on UpdateTagAndStatus)
+  rather than defaulting to 0, so they do not overwrite known state; FYA colours the stats by the pinned client's fixed 25 / 35 thresholds then.
+- **Encoding follows `setWireProfile('prehoo' | 'live')`** (default `live` until the server swap; env `AO_WIRE_PROFILE` for the stand-in and mock
+  servers). It only matters to code that writes server packets: the stand-in server, the mock servers and the tests. Not to be confused with
+  `AO_SERVER_PROFILE` (`classic` / `elixir-classic`, which server family `dev-web` fronts).
+- Client-to-server packets are identical at the pin. `AbandonarGrupo` is a pinned-server quirk, not a layout change: its handler reads one extra
+  Int16 that no client sends (removed by server #1791); the Aurora reader returns 0 on underflow, so it still works and we send the bare id.
+- Maps: the pinned `Recursos-prehoo` maps are legacy four-layer `.csm` files (no `W5L2` signature); `parseMap` already reads both formats
+  (an empty third layer is inserted for legacy files), and `apps/web/test/maps-pinned.test.ts` parses every map of whichever `AO_ASSETS` tree is set.
+- Goldens: `packages/protocol/test/pinned-profile.test.ts` holds hand-written hex from the VB6 writers for both profiles of all eight packets.
+  Regenerate the table with `pnpm --filter @ao/protocol build && node tools/protocol/pinned-layouts.mjs` (needs the `~/Projects/ao-reference` clones).
+- Not covered, as before: the five post-pin HOO packet pairs (RemortState/Result, Hoo*). Locale message ids sent by the HOO-era server
+  (`modMessageIDs.bas`) may not exist in the pinned `Recursos-prehoo` locale files; that is data, not layout.

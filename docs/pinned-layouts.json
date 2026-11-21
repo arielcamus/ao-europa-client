@@ -1,0 +1,3074 @@
+[
+ {
+  "dir": "C->S",
+  "id": 1,
+  "name": "CraftCarpenter",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 2,
+  "name": "WorkLeftClick",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 3,
+  "name": "CreateNewGuild",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 4,
+  "name": "SpellInfo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 5,
+  "name": "EquipItem",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "C->S",
+  "id": 6,
+  "name": "ChangeHeading",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 7,
+  "name": "ModifySkills",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "C->S",
+  "id": 8,
+  "name": "Train",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 9,
+  "name": "CommerceBuy",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 10,
+  "name": "BankExtractItem",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 11,
+  "name": "CommerceSell",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 12,
+  "name": "BankDeposit",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 13,
+  "name": "ForumPost",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 14,
+  "name": "MoveSpell",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 15,
+  "name": "ClanCodexUpdate",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 16,
+  "name": "UserCommerceOffer",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 17,
+  "name": "GuildAcceptPeace",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 18,
+  "name": "GuildRejectAlliance",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 19,
+  "name": "GuildRejectPeace",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 20,
+  "name": "GuildAcceptAlliance",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 21,
+  "name": "GuildOfferPeace",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 22,
+  "name": "GuildOfferAlliance",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 23,
+  "name": "GuildAllianceDetails",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 24,
+  "name": "GuildPeaceDetails",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 25,
+  "name": "GuildRequestJoinerInfo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 26,
+  "name": "GuildAlliancePropList",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 27,
+  "name": "GuildPeacePropList",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 28,
+  "name": "GuildDeclareWar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 29,
+  "name": "GuildNewWebsite",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 30,
+  "name": "GuildAcceptNewMember",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 31,
+  "name": "GuildRejectNewMember",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 32,
+  "name": "GuildKickMember",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 33,
+  "name": "GuildUpdateNews",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 34,
+  "name": "GuildMemberInfo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 35,
+  "name": "GuildOpenElections",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 36,
+  "name": "GuildRequestMembership",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 37,
+  "name": "GuildRequestDetails",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 38,
+  "name": "Online",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 39,
+  "name": "Quit",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 40,
+  "name": "GuildLeave",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 41,
+  "name": "RequestAccountState",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 42,
+  "name": "PetStand",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 43,
+  "name": "PetFollow",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 44,
+  "name": "PetLeave",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 45,
+  "name": "GrupoMsg",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 46,
+  "name": "TrainList",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 47,
+  "name": "Rest",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 48,
+  "name": "Meditate",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 49,
+  "name": "Resucitate",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 50,
+  "name": "Heal",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 51,
+  "name": "Help",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 52,
+  "name": "RequestStats",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 53,
+  "name": "CommerceStart",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 54,
+  "name": "BankStart",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 55,
+  "name": "Information",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 56,
+  "name": "Reward",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 57,
+  "name": "RequestMOTD",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 58,
+  "name": "UpTime",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 59,
+  "name": "GuildMessage",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 60,
+  "name": "GuildOnline",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 61,
+  "name": "CouncilMessage",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 62,
+  "name": "FactionMessage",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 63,
+  "name": "RoleMasterRequest",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 64,
+  "name": "ChangeDescription",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 65,
+  "name": "GuildVote",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 66,
+  "name": "punishments",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 67,
+  "name": "Gamble",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 68,
+  "name": "MapPriceEntrance",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 69,
+  "name": "LeaveFaction",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 70,
+  "name": "BankExtractGold",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 71,
+  "name": "BankDepositGold",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 72,
+  "name": "Denounce",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 73,
+  "name": "LoginExistingChar",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "C->S",
+  "id": 74,
+  "name": "LoginNewChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 75,
+  "name": "Talk",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 76,
+  "name": "Yell",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 77,
+  "name": "Whisper",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 78,
+  "name": "Walk",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "C->S",
+  "id": 79,
+  "name": "RequestPositionUpdate",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 80,
+  "name": "Attack",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 81,
+  "name": "PickUp",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 82,
+  "name": "SafeToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 83,
+  "name": "PartySafeToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 84,
+  "name": "RequestGuildLeaderInfo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 85,
+  "name": "RequestAtributes",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 86,
+  "name": "RequestSkills",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 87,
+  "name": "RequestMiniStats",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 88,
+  "name": "CommerceEnd",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 89,
+  "name": "UserCommerceEnd",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 90,
+  "name": "BankEnd",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 91,
+  "name": "UserCommerceOk",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 92,
+  "name": "UserCommerceReject",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 93,
+  "name": "Drop",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 94,
+  "name": "CastSpell",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 95,
+  "name": "LeftClick",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 96,
+  "name": "DoubleClick",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 97,
+  "name": "Work",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 98,
+  "name": "UseSpellMacro",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 99,
+  "name": "UseItem",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "C->S",
+  "id": 100,
+  "name": "CraftBlacksmith",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 101,
+  "name": "GMMessage",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 102,
+  "name": "showName",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 103,
+  "name": "OnlineRoyalArmy",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 104,
+  "name": "OnlineChaosLegion",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 105,
+  "name": "GoNearby",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 106,
+  "name": "comment",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 107,
+  "name": "Where",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 108,
+  "name": "CreaturesInMap",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 109,
+  "name": "WarpMeToTarget",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 110,
+  "name": "WarpChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 111,
+  "name": "Silence",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 112,
+  "name": "SOSShowList",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 113,
+  "name": "SOSRemove",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 114,
+  "name": "GoToChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 115,
+  "name": "invisible",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 116,
+  "name": "GMPanel",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 117,
+  "name": "RequestUserList",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 118,
+  "name": "Working",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 119,
+  "name": "Hiding",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 120,
+  "name": "Jail",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 121,
+  "name": "KillNPC",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 122,
+  "name": "WarnUser",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 123,
+  "name": "EditChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 124,
+  "name": "RequestCharInfo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 125,
+  "name": "RequestCharStats",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 126,
+  "name": "RequestCharGold",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 127,
+  "name": "RequestCharInventory",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 128,
+  "name": "RequestCharBank",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 129,
+  "name": "RequestCharSkills",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 130,
+  "name": "ReviveChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 131,
+  "name": "OnlineGM",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 132,
+  "name": "OnlineMap",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 133,
+  "name": "Forgive",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 134,
+  "name": "Kick",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 135,
+  "name": "Execute",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 136,
+  "name": "BanChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 137,
+  "name": "UnbanChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 138,
+  "name": "NPCFollow",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 139,
+  "name": "SummonChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 140,
+  "name": "SpawnListRequest",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 141,
+  "name": "SpawnCreature",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 142,
+  "name": "ResetNPCInventory",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 143,
+  "name": "CleanWorld",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 144,
+  "name": "ServerMessage",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 145,
+  "name": "NickToIP",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 146,
+  "name": "IPToNick",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 147,
+  "name": "GuildOnlineMembers",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 148,
+  "name": "TeleportCreate",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 149,
+  "name": "TeleportDestroy",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 150,
+  "name": "RainToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 151,
+  "name": "SetCharDescription",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 152,
+  "name": "ForceMIDIToMap",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 153,
+  "name": "ForceWAVEToMap",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 154,
+  "name": "RoyalArmyMessage",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 155,
+  "name": "ChaosLegionMessage",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 156,
+  "name": "TalkAsNPC",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 157,
+  "name": "DestroyAllItemsInArea",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 158,
+  "name": "AcceptRoyalCouncilMember",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 159,
+  "name": "AcceptChaosCouncilMember",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 160,
+  "name": "ItemsInTheFloor",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 161,
+  "name": "MakeDumb",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 162,
+  "name": "MakeDumbNoMore",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 163,
+  "name": "CouncilKick",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 164,
+  "name": "SetTrigger",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 165,
+  "name": "AskTrigger",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 166,
+  "name": "GuildMemberList",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 167,
+  "name": "GuildBan",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 168,
+  "name": "CreateItem",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 169,
+  "name": "DestroyItems",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 170,
+  "name": "ChaosLegionKick",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 171,
+  "name": "RoyalArmyKick",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 172,
+  "name": "ForceMIDIAll",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 173,
+  "name": "ForceWAVEAll",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 174,
+  "name": "RemovePunishment",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 175,
+  "name": "TileBlockedToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 176,
+  "name": "KillNPCNoRespawn",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 177,
+  "name": "KillAllNearbyNPCs",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 178,
+  "name": "ChangeMOTD",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 179,
+  "name": "SetMOTD",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 180,
+  "name": "SystemMessage",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 181,
+  "name": "CreateNPC",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 182,
+  "name": "CreateNPCWithRespawn",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 183,
+  "name": "NavigateToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 184,
+  "name": "ServerOpenToUsersToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 185,
+  "name": "Participar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 186,
+  "name": "RemoveCharFromGuild",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 187,
+  "name": "AlterName",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 188,
+  "name": "DoBackUp",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 189,
+  "name": "ShowGuildMessages",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 190,
+  "name": "ChangeMapInfoPK",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 191,
+  "name": "ChangeMapInfoBackup",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 192,
+  "name": "ChangeMapInfoRestricted",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 193,
+  "name": "ChangeMapInfoNoMagic",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 194,
+  "name": "ChangeMapInfoNoInvi",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 195,
+  "name": "ChangeMapInfoNoResu",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 196,
+  "name": "ChangeMapInfoLand",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 197,
+  "name": "ChangeMapInfoZone",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 198,
+  "name": "ChangeMapSetting",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "C->S",
+  "id": 199,
+  "name": "SaveChars",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 200,
+  "name": "CleanSOS",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 201,
+  "name": "ShowServerForm",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 202,
+  "name": "KickAllChars",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 203,
+  "name": "ChatColor",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 204,
+  "name": "Ignored",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 205,
+  "name": "CheckSlot",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 206,
+  "name": "SetSpeed",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 207,
+  "name": "GlobalMessage",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 208,
+  "name": "GlobalOnOff",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 209,
+  "name": "UseKey",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 210,
+  "name": "DonateGold",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 211,
+  "name": "Promedio",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 212,
+  "name": "GiveItem",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 213,
+  "name": "OfertaInicial",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 214,
+  "name": "OfertaDeSubasta",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 215,
+  "name": "QuestionGM",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 216,
+  "name": "CuentaRegresiva",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 217,
+  "name": "PossUser",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 218,
+  "name": "Duel",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 219,
+  "name": "AcceptDuel",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 220,
+  "name": "CancelDuel",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "C->S",
+  "id": 221,
+  "name": "QuitDuel",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 222,
+  "name": "NieveToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 223,
+  "name": "NieblaToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 224,
+  "name": "TransFerGold",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 225,
+  "name": "Moveitem",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 226,
+  "name": "Genio",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 227,
+  "name": "Casarse",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 228,
+  "name": "CraftAlquimista",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 229,
+  "name": "FlagTrabajar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 230,
+  "name": "CraftSastre",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 231,
+  "name": "MensajeUser",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 232,
+  "name": "TraerBoveda",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 233,
+  "name": "CompletarAccion",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 234,
+  "name": "InvitarGrupo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 235,
+  "name": "ResponderPregunta",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 236,
+  "name": "RequestGrupo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 237,
+  "name": "AbandonarGrupo",
+  "status": "same on the wire; pinned server over-reads"
+ },
+ {
+  "dir": "C->S",
+  "id": 238,
+  "name": "HecharDeGrupo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 239,
+  "name": "MacroPossent",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 240,
+  "name": "SubastaInfo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 241,
+  "name": "BanCuenta",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 242,
+  "name": "UnbanCuenta",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 243,
+  "name": "CerrarCliente",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 244,
+  "name": "EventoInfo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 245,
+  "name": "CrearEvento",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 246,
+  "name": "BanTemporal",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 247,
+  "name": "CancelarExit",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 248,
+  "name": "CrearTorneo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 249,
+  "name": "ComenzarTorneo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 250,
+  "name": "CancelarTorneo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 251,
+  "name": "BusquedaTesoro",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 252,
+  "name": "CompletarViaje",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 253,
+  "name": "BovedaMoveItem",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 254,
+  "name": "QuieroFundarClan",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 255,
+  "name": "llamadadeclan",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 256,
+  "name": "MarcaDeClanPack",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 257,
+  "name": "MarcaDeGMPack",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 258,
+  "name": "Quest",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 259,
+  "name": "QuestAccept",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 260,
+  "name": "QuestListRequest",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 261,
+  "name": "QuestDetailsRequest",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 262,
+  "name": "QuestAbandon",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 263,
+  "name": "SeguroClan",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 264,
+  "name": "home",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 265,
+  "name": "Consulta",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 266,
+  "name": "GetMapInfo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 267,
+  "name": "FinEvento",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 268,
+  "name": "SeguroResu",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 269,
+  "name": "LegionarySecure",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 270,
+  "name": "CuentaExtractItem",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 271,
+  "name": "CuentaDeposit",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 272,
+  "name": "CreateEvent",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 273,
+  "name": "CommerceSendChatMessage",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 274,
+  "name": "LogMacroClickHechizo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 275,
+  "name": "AddItemCrafting",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 276,
+  "name": "RemoveItemCrafting",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 277,
+  "name": "AddCatalyst",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 278,
+  "name": "RemoveCatalyst",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 279,
+  "name": "CraftItem",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 280,
+  "name": "CloseCrafting",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 281,
+  "name": "MoveCraftItem",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 282,
+  "name": "PetLeaveAll",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 283,
+  "name": "ResetChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 284,
+  "name": "ResetearPersonaje",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 285,
+  "name": "DeleteItem",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 286,
+  "name": "FinalizarPescaEspecial",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 287,
+  "name": "RomperCania",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 288,
+  "name": "UseItemU",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 289,
+  "name": "RepeatMacro",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 290,
+  "name": "BuyShopItem",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 291,
+  "name": "StartEvent",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 292,
+  "name": "CancelarEvento",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 293,
+  "name": "NotifyInventarioHechizos",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 294,
+  "name": "PublicarPersonajeMAO",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 295,
+  "name": "EventoFaccionario",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 296,
+  "name": "RequestDebug",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "C->S",
+  "id": 297,
+  "name": "LobbyCommand",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 298,
+  "name": "FeatureToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 299,
+  "name": "ActionOnGroupFrame",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 300,
+  "name": "SetHotkeySlot",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 301,
+  "name": "UseHKeySlot",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 302,
+  "name": "AntiCheatMessage",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "C->S",
+  "id": 303,
+  "name": "RequestLobbyList",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "C->S",
+  "id": 304,
+  "name": "CreateAccount",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 305,
+  "name": "LoginAccount",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 306,
+  "name": "DeleteCharacter",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 308,
+  "name": "StartAutomatedAction",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 309,
+  "name": "PetFollowAll",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 310,
+  "name": "AntiMacroMessage",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "C->S",
+  "id": 311,
+  "name": "ModifyCastleWhiteList",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 1,
+  "name": "Connected",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 2,
+  "name": "logged",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 3,
+  "name": "RemoveDialogs",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 4,
+  "name": "RemoveCharDialog",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 5,
+  "name": "NavigateToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 6,
+  "name": "EquiteToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 7,
+  "name": "Disconnect",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 8,
+  "name": "CommerceEnd",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 9,
+  "name": "BankEnd",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 10,
+  "name": "CommerceInit",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 11,
+  "name": "BankInit",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 12,
+  "name": "UserCommerceInit",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 13,
+  "name": "UserCommerceEnd",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 14,
+  "name": "ShowBlacksmithForm",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 15,
+  "name": "ShowCarpenterForm",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 16,
+  "name": "NPCKillUser",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 17,
+  "name": "BlockedWithShieldUser",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 18,
+  "name": "BlockedWithShieldOther",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 19,
+  "name": "CharSwing",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 20,
+  "name": "SafeModeOn",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 21,
+  "name": "SafeModeOff",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 22,
+  "name": "PartySafeOn",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 23,
+  "name": "PartySafeOff",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 24,
+  "name": "CantUseWhileMeditating",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 25,
+  "name": "UpdateSta",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 26,
+  "name": "UpdateMana",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 27,
+  "name": "UpdateHP",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 28,
+  "name": "UpdateGold",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 29,
+  "name": "UpdateExp",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 30,
+  "name": "ChangeMap",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 31,
+  "name": "PosUpdate",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 32,
+  "name": "NPCHitUser",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 33,
+  "name": "UserHittedByUser",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 34,
+  "name": "UserHittedUser",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 35,
+  "name": "ChatOverHead",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 36,
+  "name": "LocaleChatOverHead",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 37,
+  "name": "ConsoleMsg",
+  "status": "DIFFERENT after pin"
+ },
+ {
+  "dir": "S->C",
+  "id": 38,
+  "name": "ConsoleFactionMessage",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 39,
+  "name": "GuildChat",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 40,
+  "name": "ShowMessageBox",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 41,
+  "name": "MostrarCuenta",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 42,
+  "name": "CharacterCreate",
+  "status": "DIFFERENT after pin"
+ },
+ {
+  "dir": "S->C",
+  "id": 43,
+  "name": "CharacterRemove",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 44,
+  "name": "CharacterMove",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 45,
+  "name": "CharacterTranslate",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 46,
+  "name": "UserIndexInServer",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 47,
+  "name": "UserCharIndexInServer",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 48,
+  "name": "ForceCharMove",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 49,
+  "name": "CharacterChange",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 50,
+  "name": "ObjectCreate",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 51,
+  "name": "fxpiso",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 52,
+  "name": "ObjectDelete",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 53,
+  "name": "BlockPosition",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 54,
+  "name": "PlayMIDI",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 55,
+  "name": "PlayWave",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 56,
+  "name": "guildList",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 57,
+  "name": "AreaChanged",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 58,
+  "name": "PauseToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 59,
+  "name": "RainToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 60,
+  "name": "CreateFX",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 61,
+  "name": "UpdateUserStats",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 62,
+  "name": "WorkRequestTarget",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 63,
+  "name": "ChangeInventorySlot",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 64,
+  "name": "InventoryUnlockSlots",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 65,
+  "name": "ChangeBankSlot",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 66,
+  "name": "ChangeSpellSlot",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 67,
+  "name": "Atributes",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 68,
+  "name": "BlacksmithWeapons",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 69,
+  "name": "BlacksmithArmors",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 70,
+  "name": "BlacksmithExtraObjects",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 71,
+  "name": "CarpenterObjects",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 72,
+  "name": "RestOK",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 73,
+  "name": "ErrorMsg",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 74,
+  "name": "Blind",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 75,
+  "name": "Dumb",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 76,
+  "name": "ShowSignal",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 77,
+  "name": "ChangeNPCInventorySlot",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 78,
+  "name": "UpdateHungerAndThirst",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 79,
+  "name": "MiniStats",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 80,
+  "name": "LevelUp",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 81,
+  "name": "AddForumMsg",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 82,
+  "name": "ShowForumForm",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 83,
+  "name": "SetInvisible",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 84,
+  "name": "MeditateToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 85,
+  "name": "BlindNoMore",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 86,
+  "name": "DumbNoMore",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 87,
+  "name": "SendSkills",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 88,
+  "name": "TrainerCreatureList",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 89,
+  "name": "guildNews",
+  "status": "DIFFERENT after pin"
+ },
+ {
+  "dir": "S->C",
+  "id": 90,
+  "name": "OfferDetails",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 91,
+  "name": "AlianceProposalsList",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 92,
+  "name": "PeaceProposalsList",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 93,
+  "name": "CharacterInfo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 94,
+  "name": "GuildLeaderInfo",
+  "status": "DIFFERENT after pin"
+ },
+ {
+  "dir": "S->C",
+  "id": 95,
+  "name": "GuildDetails",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 96,
+  "name": "ShowGuildFundationForm",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 97,
+  "name": "ParalizeOK",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 98,
+  "name": "StunStart",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 99,
+  "name": "ShowUserRequest",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 100,
+  "name": "ChangeUserTradeSlot",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 101,
+  "name": "UpdateTagAndStatus",
+  "status": "DIFFERENT after pin"
+ },
+ {
+  "dir": "S->C",
+  "id": 102,
+  "name": "FYA",
+  "status": "DIFFERENT after pin"
+ },
+ {
+  "dir": "S->C",
+  "id": 103,
+  "name": "CerrarleCliente",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 104,
+  "name": "Contadores",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 105,
+  "name": "ShowPapiro",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 106,
+  "name": "UpdateCooldownType",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 107,
+  "name": "SpawnListt",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 108,
+  "name": "ShowSOSForm",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 109,
+  "name": "ShowMOTDEditionForm",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 110,
+  "name": "ShowGMPanelForm",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 111,
+  "name": "UserNameList",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 112,
+  "name": "UserOnline",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 113,
+  "name": "ParticleFX",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 114,
+  "name": "ParticleFXToFloor",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 115,
+  "name": "ParticleFXWithDestino",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 116,
+  "name": "ParticleFXWithDestinoXY",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 117,
+  "name": "hora",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 118,
+  "name": "Light",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 119,
+  "name": "AuraToChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 120,
+  "name": "SpeedToChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 121,
+  "name": "LightToFloor",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 122,
+  "name": "NieveToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 123,
+  "name": "NieblaToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 124,
+  "name": "Goliath",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 125,
+  "name": "TextOverChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 126,
+  "name": "TextOverTile",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 127,
+  "name": "TextCharDrop",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 128,
+  "name": "ConsoleCharText",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 129,
+  "name": "FlashScreen",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 130,
+  "name": "AlquimistaObj",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 131,
+  "name": "ShowAlquimiaForm",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 132,
+  "name": "SastreObj",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 133,
+  "name": "ShowSastreForm",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 134,
+  "name": "VelocidadToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 135,
+  "name": "MacroTrabajoToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 136,
+  "name": "BindKeys",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 137,
+  "name": "ShowFrmLogear",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 138,
+  "name": "ShowFrmMapa",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 139,
+  "name": "InmovilizadoOK",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 140,
+  "name": "BarFx",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 141,
+  "name": "LocaleMsg",
+  "status": "DIFFERENT after pin"
+ },
+ {
+  "dir": "S->C",
+  "id": 142,
+  "name": "ShowPregunta",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 143,
+  "name": "DatosGrupo",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 144,
+  "name": "ubicacion",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 145,
+  "name": "ArmaMov",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 146,
+  "name": "EscudoMov",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 147,
+  "name": "ViajarForm",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 148,
+  "name": "NadarToggle",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 149,
+  "name": "ShowFundarClanForm",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 150,
+  "name": "CharUpdateHP",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 151,
+  "name": "CharUpdateMAN",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 152,
+  "name": "PosLLamadaDeClan",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 153,
+  "name": "QuestDetails",
+  "status": "DIFFERENT after pin"
+ },
+ {
+  "dir": "S->C",
+  "id": 154,
+  "name": "QuestListSend",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 155,
+  "name": "NpcQuestListSend",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 156,
+  "name": "UpdateNPCSimbolo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 157,
+  "name": "ClanSeguro",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 158,
+  "name": "Intervals",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 159,
+  "name": "UpdateUserKey",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 160,
+  "name": "UpdateRM",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 161,
+  "name": "UpdateDM",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 162,
+  "name": "SeguroResu",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 163,
+  "name": "LegionarySecure",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 164,
+  "name": "Stopped",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 165,
+  "name": "InvasionInfo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 166,
+  "name": "CommerceRecieveChatMessage",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 167,
+  "name": "DoAnimation",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 168,
+  "name": "OpenCrafting",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 169,
+  "name": "CraftingItem",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 170,
+  "name": "CraftingCatalyst",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 171,
+  "name": "CraftingResult",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 172,
+  "name": "GuardNotice",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 173,
+  "name": "AnswerReset",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 174,
+  "name": "ObjQuestListSend",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 175,
+  "name": "UpdateBankGld",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 176,
+  "name": "PelearConPezEspecial",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 177,
+  "name": "Privilegios",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 178,
+  "name": "ShopInit",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 179,
+  "name": "UpdateShopClienteCredits",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 180,
+  "name": "SendSkillCdUpdate",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 181,
+  "name": "UpdateFlag",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 182,
+  "name": "CharAtaca",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 183,
+  "name": "NotificarClienteSeguido",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 184,
+  "name": "GetInventarioHechizos",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 185,
+  "name": "NotificarClienteCasteo",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 186,
+  "name": "PosUpdateUserChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 187,
+  "name": "PosUpdateChar",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 188,
+  "name": "PlayWaveStep",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 189,
+  "name": "ShopPjsInit",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 190,
+  "name": "DebugDataResponse",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 191,
+  "name": "CreateProjectile",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 192,
+  "name": "UpdateTrap",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 193,
+  "name": "UpdateGroupInfo",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 194,
+  "name": "UpdateCharValue",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 195,
+  "name": "SendClientToggles",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 196,
+  "name": "AntiCheatMessage",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 197,
+  "name": "AntiCheatStartSession",
+  "status": "same (primitive order matches)"
+ },
+ {
+  "dir": "S->C",
+  "id": 198,
+  "name": "ReportLobbyList",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 199,
+  "name": "AccountCharacterList",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 200,
+  "name": "ChangeSkinSlot",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 201,
+  "name": "GuildConfig",
+  "status": "same as HEAD; loops/conditionals"
+ },
+ {
+  "dir": "S->C",
+  "id": 202,
+  "name": "ShowPickUpObj",
+  "status": "same (primitive order matches)"
+ }
+]
