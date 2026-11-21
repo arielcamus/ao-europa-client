@@ -10,8 +10,8 @@ export interface WorldMap {
   /** Per-tile trigger id (e_Trigger); 0 when none. Drives the roof rule. */
   triggers: Uint16Array;
   /**
-   * Objects stored in the map file (CargarMapa reads them into MapData.ObjGrh). The server never sends the "fixed" ones
-   * (trees, signs, deposits, decorations; ModAreas.EsObjetoFijo), so the map file is the only source for them.
+   * Objects stored in the map file (CargarMapa reads them into MapData.ObjGrh). The server never sends trees, ore deposits and decorations
+   * (its GameLogic.EsObjetoFijo, checked by ModAreas), so the map file is the only source for them; it DOES send signs (see map-objects.ts FIXED_TYPES).
    */
   objects: MapFileObject[];
   /** NPCs stored in the map file (frmMapaGrande's creature list counts them per NpcIndex). */
