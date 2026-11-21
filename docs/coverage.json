@@ -16,23 +16,13 @@
   "s2cCovered": 202,
   "c2sCovered": 310,
   "forms": 86,
-<<<<<<< HEAD
-  "formsCovered": 53,
-  "formsPartial": 5,
-  "fixturePackets": 262,
+  "formsCovered": 56,
+  "formsPartial": 2,
+  "fixturePackets": 274,
   "packetsPct": 97.9,
   "packetsMergedPct": 97.9,
-  "formsPct": 61.6,
-  "formsStartedPct": 67.4
-=======
-  "formsCovered": 56,
-  "formsPartial": 1,
-  "fixturePackets": 271,
-  "packetsPct": 97.5,
-  "packetsMergedPct": 97.5,
   "formsPct": 65.1,
-  "formsStartedPct": 66.3
->>>>>>> 6591039 (fix(windows): review fixes (P key not while a window is open, 200/130 dialog, kick assertions), strays removed, coverage map)
+  "formsStartedPct": 67.4
  },
  "groups": [
   {

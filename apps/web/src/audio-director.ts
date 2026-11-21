@@ -5,11 +5,7 @@
  * Adapted 2026-11-20 from client Protocol.bas, TileEngine.bas, TileEngine_Map.bas and ao20audio.bas.
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty. See ../../../LICENSE.
  */
-<<<<<<< HEAD
-import { AudioServerPacketId as A, CombatServerPacketId as C, ServerPacketId as S, SkillsServerPacketId as SK, SpellServerPacketId as SP } from '@ao/protocol';
-=======
-import { AudioServerPacketId as A, CombatServerPacketId as C, CraftingServerPacketId as CF, ServerPacketId as S, SpellServerPacketId as SP } from '@ao/protocol';
->>>>>>> 0df27ce (feat(windows): alchemy, tailor and crafting-station windows, special-fish fight, RGB work prompts)
+import { AudioServerPacketId as A, CombatServerPacketId as C, CraftingServerPacketId as CF, ServerPacketId as S, SkillsServerPacketId as SK, SpellServerPacketId as SP } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import {
   SND, Terrain, ambientWave, inHearingArea, mapMusicId, musicFile, panAt, panByDistance, stepWave, terrainOf, volumeByDistance, waveFile,

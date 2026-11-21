@@ -10,15 +10,9 @@ Scanned refs: `main`
 
 ## Headline
 
-<<<<<<< HEAD
 - **Packets covered (merged + open branches): 512 of 523 = 97.9%.** Merged on main only: 512 = 97.9%.
-  - Server to client: 202 of 207. Client to server: 310 of 316. Packets with a recorded VB6 fixture: 262.
-- **Forms covered: 53 of 86 = 61.6%** (5 more partially, 67.4% started).
-=======
-- **Packets covered (merged + open branches): 510 of 523 = 97.5%.** Merged on main only: 510 = 97.5%.
-  - Server to client: 200 of 207. Client to server: 310 of 316. Packets with a recorded VB6 fixture: 271.
-- **Forms covered: 56 of 86 = 65.1%** (1 more partially, 66.3% started).
->>>>>>> 6591039 (fix(windows): review fixes (P key not while a window is open, 200/130 dialog, kick assertions), strays removed, coverage map)
+  - Server to client: 202 of 207. Client to server: 310 of 316. Packets with a recorded VB6 fixture: 274.
+- **Forms covered: 56 of 86 = 65.1%** (2 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
 
@@ -189,19 +183,10 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 - frmMSG: Never opened by the classic client code (dead form)
 - frmProcesses: Never opened by the classic client code (anti-cheat leftover)
 
-<<<<<<< HEAD
-**Partial** (5)
+**Partial** (2)
 
 - frmMain: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not
-- frmAlqui: crafting state and packets only; no alchemy window yet
-- frmCrafteo: crafting state and packets only; no catalyst crafting window yet
-- FrmSastre: crafting state and packets only; no tailor window yet
 - frmMapaGrande: null
-=======
-**Partial** (1)
-
-- frmMain: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not
->>>>>>> 6591039 (fix(windows): review fixes (P key not while a window is open, 200/130 dialog, kick assertions), strays removed, coverage map)
 
 
 ## (a) VB6 packets
