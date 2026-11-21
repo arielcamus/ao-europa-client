@@ -9,18 +9,18 @@
  ],
  "headline": {
   "packets": 523,
-  "packetsCovered": 206,
-  "packetsMerged": 206,
+  "packetsCovered": 252,
+  "packetsMerged": 252,
   "s2c": 207,
   "c2s": 316,
-  "s2cCovered": 117,
-  "c2sCovered": 89,
+  "s2cCovered": 131,
+  "c2sCovered": 121,
   "forms": 86,
   "formsCovered": 4,
   "formsPartial": 5,
-  "fixturePackets": 162,
-  "packetsPct": 39.4,
-  "packetsMergedPct": 39.4,
+  "fixturePackets": 183,
+  "packetsPct": 48.2,
+  "packetsMergedPct": 48.2,
   "formsPct": 4.7,
   "formsStartedPct": 10.5
  },
@@ -125,9 +125,9 @@
    "id": "party",
    "title": "Party",
    "packets": 9,
-   "packetsCovered": 2,
-   "packetsMerged": 2,
-   "packetsPct": 22.2,
+   "packetsCovered": 9,
+   "packetsMerged": 9,
+   "packetsPct": 100,
    "forms": 2,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -137,9 +137,9 @@
    "id": "guild",
    "title": "Guild / clan",
    "packets": 41,
-   "packetsCovered": 2,
-   "packetsMerged": 2,
-   "packetsPct": 4.9,
+   "packetsCovered": 41,
+   "packetsMerged": 41,
+   "packetsPct": 100,
    "forms": 11,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -286,6 +286,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -341,6 +344,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -408,6 +414,8 @@
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -781,6 +789,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -845,8 +856,10 @@
    "merged": false,
    "branches": [],
    "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+   ]
   },
   {
    "key": "s2c:24",
@@ -1028,6 +1041,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1233,6 +1249,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1369,6 +1388,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1418,6 +1440,8 @@
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -1518,6 +1542,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1573,6 +1600,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1676,6 +1706,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1767,6 +1800,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1839,6 +1875,9 @@
     "tests/fixtures/vb6/items/use-items.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -1855,13 +1894,17 @@
    "writer": "server Protocol_Writes.bas:WriteGuildList",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "s2c:57",
@@ -1906,6 +1949,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1988,6 +2034,8 @@
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -2040,6 +2088,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2074,6 +2125,7 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
     "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -2127,6 +2179,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2236,6 +2291,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2512,6 +2570,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2588,6 +2649,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2747,6 +2811,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2787,11 +2854,13 @@
    "writer": "server Protocol_Writes.bas:WriteGuildNews",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2804,11 +2873,13 @@
    "writer": "server Protocol_Writes.bas:WriteOfferDetails",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2821,11 +2892,13 @@
    "writer": "server Protocol_Writes.bas:WriteAlianceProposalsList",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2838,11 +2911,13 @@
    "writer": "server Protocol_Writes.bas:WritePeaceProposalsList",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2855,11 +2930,13 @@
    "writer": "server Protocol_Writes.bas:WriteCharacterInfo",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2872,11 +2949,13 @@
    "writer": "server Protocol_Writes.bas:WriteGuildLeaderInfo",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2889,11 +2968,13 @@
    "writer": "server Protocol_Writes.bas:WriteGuildDetails",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2906,11 +2987,13 @@
    "writer": "server Protocol_Writes.bas:WriteShowGuildFundationForm",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -3007,7 +3090,9 @@
    "codecFiles": [],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/audio/walk-dummy-door.jsonl"
+    "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
    ]
   },
   {
@@ -3054,6 +3139,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -3124,6 +3212,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -3306,6 +3397,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -3365,6 +3459,8 @@
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -3473,6 +3569,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -3575,6 +3674,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -3691,6 +3793,7 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl"
    ]
   },
@@ -3904,6 +4007,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -3982,6 +4088,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4117,6 +4226,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4159,6 +4271,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/trade/cancel-responder.jsonl",
     "tests/fixtures/vb6/trade/give-back-responder.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
@@ -4177,13 +4290,18 @@
    "writer": "server Protocol_Writes.bas:WriteDatosGrupo",
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+   ]
   },
   {
    "key": "s2c:144",
@@ -4199,8 +4317,11 @@
    "merged": false,
    "branches": [],
    "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+   ]
   },
   {
    "key": "s2c:145",
@@ -4224,6 +4345,7 @@
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl"
    ]
   },
@@ -4287,11 +4409,13 @@
    "writer": "server Protocol_Writes.bas:WriteShowFundarClanForm",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4314,6 +4438,7 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl"
    ]
   },
@@ -4343,11 +4468,13 @@
    "writer": null,
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4497,6 +4624,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4569,6 +4699,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4624,6 +4757,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4740,8 +4876,10 @@
    "merged": false,
    "branches": [],
    "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "s2c:168",
@@ -4953,6 +5091,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -5243,13 +5384,18 @@
    "writer": null,
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+   ]
   },
   {
    "key": "s2c:194",
@@ -5309,6 +5455,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -5379,6 +5528,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -5451,6 +5603,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -5489,11 +5644,13 @@
    "writer": "server Protocol_Writes.bas:WriteGuildConfig",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -5521,6 +5678,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -5679,6 +5839,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -5694,11 +5855,13 @@
    "writer": "client Protocol_Writes.bas:WriteCreateNewGuild",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5942,11 +6105,13 @@
    "writer": "client Protocol_Writes.bas:WriteClanCodexUpdate",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5985,11 +6150,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildAcceptPeace",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6002,11 +6169,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildRejectAlliance",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6019,11 +6188,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildRejectPeace",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6036,11 +6207,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildAcceptAlliance",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6053,11 +6226,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildOfferPeace",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6070,11 +6245,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildOfferAlliance",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6087,11 +6264,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildAllianceDetails",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6104,11 +6283,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildPeaceDetails",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6121,11 +6302,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildRequestJoinerInfo",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6138,13 +6321,17 @@
    "writer": "client Protocol_Writes.bas:WriteGuildAlliancePropList",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:27",
@@ -6155,13 +6342,17 @@
    "writer": "client Protocol_Writes.bas:WriteGuildPeacePropList",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:28",
@@ -6172,11 +6363,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildDeclareWar",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6189,11 +6382,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildNewWebsite",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6206,11 +6401,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildAcceptNewMember",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6223,11 +6420,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildRejectNewMember",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6240,11 +6439,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildKickMember",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6257,11 +6458,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildUpdateNews",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6274,13 +6477,17 @@
    "writer": "client Protocol_Writes.bas:WriteGuildMemberInfo",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:35",
@@ -6291,11 +6498,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildOpenElections",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6308,13 +6517,17 @@
    "writer": "client Protocol_Writes.bas:WriteGuildRequestMembership",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:37",
@@ -6325,13 +6538,17 @@
    "writer": "client Protocol_Writes.bas:WriteGuildRequestDetails",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:38",
@@ -6378,13 +6595,17 @@
    "writer": "client Protocol_Writes.bas:WriteGuildLeave",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:41",
@@ -6867,11 +7088,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildVote",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -7049,6 +7272,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -7298,8 +7524,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/keys.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+   ]
   },
   {
    "key": "c2s:84",
@@ -7310,13 +7538,17 @@
    "writer": "client Protocol_Writes.bas:WriteRequestGuildLeaderInfo",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:85",
@@ -9998,13 +10230,17 @@
    "writer": "client Protocol_Writes.bas:WriteInvitarGrupo",
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:235",
@@ -10024,6 +10260,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/trade/cancel-responder.jsonl",
     "tests/fixtures/vb6/trade/give-back-responder.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-responder.jsonl",
@@ -10042,13 +10279,18 @@
    "writer": "client Protocol_Writes.bas:WriteRequestGrupo",
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+   ]
   },
   {
    "key": "c2s:237",
@@ -10059,13 +10301,17 @@
    "writer": "client Protocol_Writes.bas:WriteAbandonarGrupo",
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+   ]
   },
   {
    "key": "c2s:238",
@@ -10076,13 +10322,17 @@
    "writer": null,
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:239",
@@ -10353,13 +10603,17 @@
    "writer": "client Protocol_Writes.bas:WriteQuieroFundarClan",
    "group": "guild",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/guild.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:255",
@@ -10377,8 +10631,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/keys.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:256",
@@ -10396,8 +10652,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/keys.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+   ]
   },
   {
    "key": "c2s:257",
@@ -11190,11 +11448,13 @@
    "writer": "client Protocol_Writes.bas:WriteActionOnGroupFrame",
    "group": "party",
    "package": "wp07",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/party.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11328,6 +11588,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -12824,102 +13087,8 @@
    "id": "wp07",
    "title": "Party and guild/clan",
    "scope": "Group frame/invites, every guild form, proposals, news, elections",
-   "packetIds": [
-    "s2c:56",
-    "s2c:89",
-    "s2c:90",
-    "s2c:91",
-    "s2c:92",
-    "s2c:93",
-    "s2c:94",
-    "s2c:95",
-    "s2c:96",
-    "s2c:143",
-    "s2c:149",
-    "s2c:152",
-    "s2c:193",
-    "s2c:201",
-    "c2s:3",
-    "c2s:15",
-    "c2s:17",
-    "c2s:18",
-    "c2s:19",
-    "c2s:20",
-    "c2s:21",
-    "c2s:22",
-    "c2s:23",
-    "c2s:24",
-    "c2s:25",
-    "c2s:26",
-    "c2s:27",
-    "c2s:28",
-    "c2s:29",
-    "c2s:30",
-    "c2s:31",
-    "c2s:32",
-    "c2s:33",
-    "c2s:34",
-    "c2s:35",
-    "c2s:36",
-    "c2s:37",
-    "c2s:40",
-    "c2s:65",
-    "c2s:84",
-    "c2s:234",
-    "c2s:236",
-    "c2s:237",
-    "c2s:238",
-    "c2s:254",
-    "c2s:299"
-   ],
-   "packetNames": [
-    "S56 GuildList",
-    "S89 GuildNews",
-    "S90 OfferDetails",
-    "S91 AlianceProposalsList",
-    "S92 PeaceProposalsList",
-    "S93 CharacterInfo",
-    "S94 GuildLeaderInfo",
-    "S95 GuildDetails",
-    "S96 ShowGuildFundationForm",
-    "S143 DatosGrupo",
-    "S149 ShowFundarClanForm",
-    "S152 PosLLamadaDeClan",
-    "S193 UpdateGroupInfo",
-    "S201 GuildConfig",
-    "C3 CreateNewGuild",
-    "C15 ClanCodexUpdate",
-    "C17 GuildAcceptPeace",
-    "C18 GuildRejectAlliance",
-    "C19 GuildRejectPeace",
-    "C20 GuildAcceptAlliance",
-    "C21 GuildOfferPeace",
-    "C22 GuildOfferAlliance",
-    "C23 GuildAllianceDetails",
-    "C24 GuildPeaceDetails",
-    "C25 GuildRequestJoinerInfo",
-    "C26 GuildAlliancePropList",
-    "C27 GuildPeacePropList",
-    "C28 GuildDeclareWar",
-    "C29 GuildNewWebsite",
-    "C30 GuildAcceptNewMember",
-    "C31 GuildRejectNewMember",
-    "C32 GuildKickMember",
-    "C33 GuildUpdateNews",
-    "C34 GuildMemberInfo",
-    "C35 GuildOpenElections",
-    "C36 GuildRequestMembership",
-    "C37 GuildRequestDetails",
-    "C40 GuildLeave",
-    "C65 GuildVote",
-    "C84 RequestGuildLeaderInfo",
-    "C234 InvitarGrupo",
-    "C236 RequestGrupo",
-    "C237 AbandonarGrupo",
-    "C238 HecharDeGrupo",
-    "C254 QuieroFundarClan",
-    "C299 ActionOnGroupFrame"
-   ],
+   "packetIds": [],
+   "packetNames": [],
    "forms": [
     "FrmPregunta",
     "FrmGrupo",
