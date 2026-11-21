@@ -93,7 +93,7 @@ describe('parseIni section headers (clsIniManager.Initialize, GetPrivateProfileS
 // Every Dat the client parses with parseIni: each header line of the real file is its own section (pre-HOO obj.dat has 211 commented headers).
 const datRoot = process.env.AO_ASSETS;
 describe.skipIf(!datRoot || !existsSync(join(datRoot, 'init')))('parseIni on the real Dats', () => {
-  const files = ['Dat/obj.dat', 'Dat/Obj.dat', 'Dat/Hechizos.dat', 'Dat/npcs.dat', 'init/armas.dat', 'init/colores.dat', 'init/sp_localindex.dat', 'init/FXs.ini', 'init/cuerpos.dat', 'init/escudos.dat']
+  const files = !datRoot ? [] : ['Dat/obj.dat', 'Dat/Obj.dat', 'Dat/Hechizos.dat', 'Dat/npcs.dat', 'init/armas.dat', 'init/colores.dat', 'init/sp_localindex.dat', 'init/FXs.ini', 'init/cuerpos.dat', 'init/escudos.dat']
     .filter((file, i, all) => existsSync(join(datRoot!, file)) && all.findIndex(f => f.toLowerCase() === file.toLowerCase()) === i);
   it.each(files)('%s: one section per header line', file => {
     const text = readFileSync(join(datRoot!, file), 'latin1');
