@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
 import {
-  FrameDecoder, ServerPacketId as SP, OptionsClientPacketId as OC, OptionsServerPacketId as OS, KeysClientPacketId as KC, ItemsClientPacketId as IC,
+  FrameDecoder, ServerPacketId as SP, OptionsClientPacketId as OC, OptionsServerPacketId as OS, KeysClientPacketId as KC, ItemsClientPacketId as IC, CombatClientPacketId as CC,
   HOTKEY_TOGGLE, decodeClientPacket, encodeServerFrame,
 } from '../../../packages/protocol/src/index.js';
 import type { ClientPacket, ServerPacket } from '../../../packages/protocol/src/index.js';
@@ -162,4 +162,45 @@ test.describe('key editor and hotkey bar, the way a Mac player uses them', () =>
       await expect.poll(() => seen.filter(p => p.id === KC.UseHKeySlot).map(p => (p as { slot: number }).slot)).toEqual([2, 4]);
     });
   }
+
+  // Issue #103: Control is also the default Attack key and repeats while held. A Mac Control+click drag must not attack at all.
+  test('Mac Control+click drag from the inventory sends no Attack, press or repeats; Control over the world still attacks', async ({ page }) => {
+    await page.addInitScript(() => Object.defineProperty(Navigator.prototype, 'platform', { get: () => 'MacIntel' }));
+    const { seen, inject } = await login(page, p => p.id === OC.SetHotkeySlot);
+    inject({ id: OS.SendClientToggles, toggles: [HOTKEY_TOGGLE] });
+    const bar = page.locator('#hotkeys');
+    await expect(bar).toBeVisible();
+    inject({ id: SP.ChangeInventorySlot, slot: 20, object: 38, amount: 5, equipped: false, value: 10, canUse: 1, elementalTags: 0, bindable: true });
+    const item = page.locator('#inventory .inventory-slot:nth-child(20)');
+    await expect(item).toHaveAttribute('aria-label', /.+/);
+    const a = await boxOf(item), b = await boxOf(bar.locator('.hk-slot').nth(4));
+    // A person: pointer on the item, hold Control (the OS repeats it), press, drag to the bar, let go, release Control.
+    await page.mouse.move(a.x + 12, a.y + 8);
+    await page.keyboard.down('Control'); await page.waitForTimeout(150); await page.keyboard.down('Control'); // a repeat
+    await page.mouse.down();
+    await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 8 });
+    await page.keyboard.down('Control'); // repeats during the drag
+    await page.mouse.up();
+    await page.keyboard.down('Control'); // and after the drop, before Control is let go
+    await page.keyboard.up('Control');
+    await expect.poll(() => seen.find(p => p.id === OC.SetHotkeySlot && (p as { index: number }).index === 38)).toBeDefined();
+    await page.waitForTimeout(300);
+    expect(count(seen, CC.Attack)).toBe(0);
+    // VB6 unchanged elsewhere: Control with the pointer over the world attacks.
+    await page.mouse.move(400, 300);
+    await page.locator('#viewport canvas[tabindex]').focus();
+    await page.keyboard.press('Control');
+    await expect.poll(() => count(seen, CC.Attack)).toBe(1);
+  });
+
+  test('off a Mac, Control over the inventory attacks as in VB6', async ({ page }) => {
+    await page.addInitScript(() => Object.defineProperty(Navigator.prototype, 'platform', { get: () => 'Win32' }));
+    const { seen } = await login(page);
+    const item = page.locator('#inventory .inventory-slot').first();
+    const a = await boxOf(item);
+    await page.mouse.move(a.x + 12, a.y + 8);
+    await page.locator('#viewport canvas[tabindex]').focus();
+    await page.keyboard.press('Control');
+    await expect.poll(() => count(seen, CC.Attack)).toBe(1);
+  });
 });
