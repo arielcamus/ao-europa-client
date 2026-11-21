@@ -6,6 +6,7 @@
  */
 import { loadInterface } from './interface-assets.js';
 import type { Session } from './session.js';
+import { windows } from './window-stack.js';
 
 /** Label controls: left, top, width, height (twips / 15), caption, text colour (VB6 BGR value), link. */
 export const PAPIRO_LINKS: readonly { id: string; box: readonly [number, number, number, number]; text: string; color: string; center?: boolean; url: string }[] = [
@@ -34,7 +35,10 @@ async function blackToTransparent(url: string): Promise<string> {
 export class PapiroUI {
   private root: HTMLElement | undefined;
   private session: Session | undefined;
-  constructor(private readonly parent: HTMLElement, private readonly open: (url: string) => void = url => { window.open(url, '_blank', 'noopener,noreferrer'); }) {}
+  constructor(private readonly parent: HTMLElement, private readonly open: (url: string) => void = url => { window.open(url, '_blank', 'noopener,noreferrer'); }) {
+    // The shared window stack owns Escape (frmMensajePapiro unloads on Esc/LostFocus alike).
+    windows.watch('papiro-window', () => this.root !== undefined, () => this.close());
+  }
 
   get isOpen() { return !!this.root; }
   update(session: Session | undefined) {

@@ -11,6 +11,7 @@ import { ObjType } from './object-catalog.js';
 import type { ObjectInfo } from './object-catalog.js';
 import type { ClassicUI } from './classic-ui.js';
 import type { Session } from './session.js';
+import { windows } from './window-stack.js';
 
 /** e_ElementalTags (Declares.bas): Fire 1, Water 2, Earth 4, Wind 8. */
 export function elementalTagsText(tags: number): string {
@@ -72,6 +73,7 @@ export class InventoryExtras {
     }
     this.confirm.addEventListener('keydown', event => { if (event.key === 'Escape') { event.stopPropagation(); this.answer(false); } });
     root.append(this.label, this.ghost, this.deleteButton, this.confirm);
+    windows.watchElement('delete-confirm', this.confirm, () => this.answer(false));
 
     const inventory = root.querySelector<HTMLElement>('#inventory');
     if (!inventory) return;
