@@ -71,7 +71,7 @@ step('CMB-01', async c => {
       const before = w.mark(), sta0 = w.stats!.stamina; attack(w); await w.sleep(1350); swings++;
       const r = w.since(before), dmg = r.filter(x => x.name === 'TextOverChar' && (x.packet as any).charIndex === mine.charIndex);
       const hp = r.filter(x => x.name === 'CharUpdateHP' && (x.packet as any).charIndex === mine.charIndex).map(x => (x.packet as any).hp as number);
-      if (hp.length) { hits++; const d = lastHp - hp[hp.length - 1]!; lastHp = hp[hp.length - 1]!; (c.shared.melee as any).damages.push(d); (c.shared.melee as any).texts.push(dmg.map(x => (x.packet as any).text).join('|')); }
+      if (hp.length) { hits++; const d = lastHp - hp[hp.length - 1]!; lastHp = hp[hp.length - 1]!; if (d > 0) (c.shared.melee as any).damages.push(d); /* the dummy refills itself now and then: a rise is not a hit's damage */ (c.shared.melee as any).texts.push(dmg.map(x => (x.packet as any).text).join('|')); }
       const sta = r.filter(x => x.name === 'UpdateSta').map(x => (x.packet as any).stamina as number); if (sta.length) spent.push(sta0 - Math.min(...sta));
     }
     c.ok(swings >= 6, `${swings} swings before stamina fell under 10 (each costs 1..10)`);
@@ -349,7 +349,7 @@ step('CMB-15', async c => {
       const b = w.mark(); attack(w); await w.waitFor('WorkRequestTarget', b, 2500).catch(() => undefined);
       workClick(w, at.x, at.y, 12); await w.sleep(1500);
       const r = w.since(b); if (r.some(x => x.name === 'ArmaMov' && (x.packet as any).isRanged)) ranged++;
-      for (const x of r) if (x.name === 'CharUpdateHP' && (x.packet as any).charIndex === mine.charIndex) { dmg.push(hp - (x.packet as any).hp); hp = (x.packet as any).hp; }
+      for (const x of r) if (x.name === 'CharUpdateHP' && (x.packet as any).charIndex === mine.charIndex) { if (hp - (x.packet as any).hp > 0) dmg.push(hp - (x.packet as any).hp); hp = (x.packet as any).hp; }
     }
     c.ok(ranged >= 6, `${ranged} of ${shots} shots sent ArmaMov with isRanged (the arrow animation)`);
     c.eq(arrows0 - amountOf(w, 3492), ranged, `one arrow consumed per shot (${arrows0} -> ${amountOf(w, 3492)})`);
