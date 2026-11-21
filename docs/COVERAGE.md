@@ -10,8 +10,8 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 196 of 523 = 37.5%.** Merged on main only: 196 = 37.5%.
-  - Server to client: 112 of 207. Client to server: 84 of 316. Packets with a recorded VB6 fixture: 153.
+- **Packets covered (merged + open branches): 206 of 523 = 39.4%.** Merged on main only: 206 = 39.4%.
+  - Server to client: 117 of 207. Client to server: 89 of 316. Packets with a recorded VB6 fixture: 162.
 - **Forms covered: 4 of 86 = 4.7%** (5 more partially, 10.5% started).
 
 ## (c) Feature groups, ordered by player value
@@ -28,7 +28,7 @@ Scanned refs: `main`
 | 8 | Trade (player to player) | 8/8 | 100% | 8 | 0/2 | 0% | 0 |
 | 9 | Party | 2/9 | 22.2% | 2 | 0/2 | 0% | 0 |
 | 10 | Guild / clan | 2/41 | 4.9% | 2 | 0/11 | 0% | 0 |
-| 11 | Quests | 0/10 | 0% | 0 | 0/2 | 0% | 0 |
+| 11 | Quests | 10/10 | 100% | 10 | 0/2 | 0% | 0 |
 | 12 | Skills / training / stats | 19/19 | 100% | 19 | 0/3 | 0% | 0 |
 | 13 | Crafting (smith / carpenter / alchemy / tailor) | 25/25 | 100% | 25 | 2/5 | 40% | 3 |
 | 14 | Fishing / mining / lumber (work skills) | 10/10 | 100% | 10 | 0/0 | n/a | 0 |
@@ -182,7 +182,7 @@ Ids only: .
 | 37 | ConsoleMsg | client Protocol.bas:HandleConsoleMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 38 | ConsoleFactionMessage | client Protocol.bas:HandleConsoleFactionMessage | chat | merged | `main:packages/protocol/src/packets.ts` | no |
 | 39 | GuildChat | client Protocol.bas:HandleGuildChat | chat | merged | `main:packages/protocol/src/packets.ts` | no |
-| 40 | ShowMessageBox | client Protocol.bas:HandleShowMessageBox | chat | not started |  | no |
+| 40 | ShowMessageBox | client Protocol.bas:HandleShowMessageBox | chat | not started |  | yes |
 | 41 | MostrarCuenta | client Protocol.bas:HandleMostrarCuenta | core | not started |  | no |
 | 42 | CharacterCreate | client Protocol.bas:HandleCharacterCreate | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 43 | CharacterRemove | client Protocol.bas:HandleCharacterRemove | core | merged | `main:packages/protocol/src/packets/npcs.ts` | yes |
@@ -295,10 +295,10 @@ Ids only: .
 | 150 | CharUpdateHP | client Protocol.bas:HandleCharUpdateHP | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 151 | CharUpdateMAN | client Protocol.bas:HandleCharUpdateMAN | combat | not started |  | no |
 | 152 | PosLLamadaDeClan | client Protocol.bas:HandlePosLLamadaDeClan | guild | not started |  | no |
-| 153 | QuestDetails | client Protocol.bas:HandleQuestDetails | quests | not started |  | no |
-| 154 | QuestListSend | client Protocol.bas:HandleQuestListSend | quests | not started |  | no |
-| 155 | NpcQuestListSend | client Protocol.bas:HandleNpcQuestListSend | quests | not started |  | no |
-| 156 | UpdateNPCSimbolo | client Protocol.bas:HandleUpdateNPCSimbolo | quests | not started |  | no |
+| 153 | QuestDetails | client Protocol.bas:HandleQuestDetails | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
+| 154 | QuestListSend | client Protocol.bas:HandleQuestListSend | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
+| 155 | NpcQuestListSend | client Protocol.bas:HandleNpcQuestListSend | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
+| 156 | UpdateNPCSimbolo | client Protocol.bas:HandleUpdateNPCSimbolo | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
 | 157 | ClanSeguro | client Protocol.bas:HandleClanSeguro | combat | not started |  | no |
 | 158 | Intervals | client Protocol.bas:HandleIntervals | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 159 | UpdateUserKey | client Protocol.bas:HandleUpdateUserKey | gm | not started |  | no |
@@ -316,7 +316,7 @@ Ids only: .
 | 171 | CraftingResult | client Protocol.bas:HandleCraftingResult | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 172 | GuardNotice | (none in dispatcher) | gm | not started |  | no |
 | 173 | AnswerReset | client Protocol.bas:HandleAnswerReset | core | not started |  | no |
-| 174 | ObjQuestListSend | client Protocol.bas:HandleObjQuestListSend | quests | not started |  | no |
+| 174 | ObjQuestListSend | client Protocol.bas:HandleObjQuestListSend | quests | merged | `main:packages/protocol/src/packets/quests.ts` | no |
 | 175 | UpdateBankGld | client Protocol.bas:HandleUpdateBankGld | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 176 | PelearConPezEspecial | client Protocol.bas:HandlePelearConPezEspecial | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 177 | Privilegios | client Protocol.bas:HandlePrivilegios | gm | not started |  | yes |
@@ -612,11 +612,11 @@ Ids only: .
 | 255 | Llamadadeclan | server Protocol.bas:HandleLlamadadeClan | guild | merged | `main:packages/protocol/src/packets/keys.ts` | no |
 | 256 | MarcaDeClanPack | server Protocol.bas:HandleMarcaDeClan | guild | merged | `main:packages/protocol/src/packets/keys.ts` | no |
 | 257 | MarcaDeGMPack | server Protocol.bas:HandleMarcaDeGM | gm | not started |  | no |
-| 258 | Quest | server Protocol.bas:HandleQuest | quests | not started |  | no |
-| 259 | QuestAccept | server Protocol.bas:HandleQuestAccept | quests | not started |  | no |
-| 260 | QuestListRequest | server Protocol.bas:HandleQuestListRequest | quests | not started |  | no |
-| 261 | QuestDetailsRequest | server Protocol.bas:HandleQuestDetailsRequest | quests | not started |  | no |
-| 262 | QuestAbandon | server Protocol.bas:HandleQuestAbandon | quests | not started |  | no |
+| 258 | Quest | server Protocol.bas:HandleQuest | quests | merged | `main:packages/protocol/src/packets/quests.ts` | no |
+| 259 | QuestAccept | server Protocol.bas:HandleQuestAccept | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
+| 260 | QuestListRequest | server Protocol.bas:HandleQuestListRequest | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
+| 261 | QuestDetailsRequest | server Protocol.bas:HandleQuestDetailsRequest | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
+| 262 | QuestAbandon | server Protocol.bas:HandleQuestAbandon | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
 | 263 | SeguroClan | server Protocol.bas:HandleSeguroClan | combat | not started |  | no |
 | 264 | Home | server Protocol.bas:HandleHome | core | not started |  | no |
 | 265 | Consulta | server Protocol.bas:HandleConsulta | gm | not started |  | no |
@@ -729,7 +729,7 @@ Group frame/invites, every guild form, proposals, news, elections.
 
 Quest list/details/abandon, NPC quest markers.
 
-- Packets (10): S153 QuestDetails, S154 QuestListSend, S155 NpcQuestListSend, S156 UpdateNPCSimbolo, S174 ObjQuestListSend, C258 Quest, C259 QuestAccept, C260 QuestListRequest, C261 QuestDetailsRequest, C262 QuestAbandon
+- Packets (0): none left
 - Forms (2): FrmQuest, frmQuestInfo
 
 ### wp09: Skills, training and stats

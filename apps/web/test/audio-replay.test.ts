@@ -51,8 +51,9 @@ describe('PlayWave as the real VB6 server sends it (every recorded fixture)', ()
           const here = session.position;
           if ('unknown' in packet || packet.id !== SP.PlayWave) throw new Error('not a PlayWave');
           const audible = packet.x === 0 || packet.y === 0 || (here !== undefined && Math.abs(packet.x - here.x) < 12 && Math.abs(packet.y - here.y) < 10);
+          // HandlePlayWave: cancelLast = 2 only stops the wave and returns, nothing is played.
           const fog = packet.wave >= 400 && packet.wave <= 404;
-          if (audible && !fog) expected.push(String(packet.wave));
+          if (audible && !fog && packet.cancelLast !== 2) expected.push(String(packet.wave));
         }
         try { session.receive(new Uint8Array([body.length & 255, body.length >> 8, ...body])); } catch { break; } // a recorded kick ends the replay
       }
