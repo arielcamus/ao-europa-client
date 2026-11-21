@@ -12,7 +12,11 @@ export interface BridgeOptions {
   tcpHost: string;
   tcpPort: number;
   log?: (message: string) => void;
+  /** WebSocket ping period; a browser that misses a whole period is dropped. Default 15 s. Tests shorten it. */
+  heartbeatMs?: number;
 }
+/** First TCP keepalive probe after this much silence, on both sockets (the browser's crosses Tailscale). */
+export const TCP_KEEPALIVE_MS = 10_000;
 
 function buffer(data: RawData): Buffer {
   if (Array.isArray(data)) return Buffer.concat(data);
@@ -25,12 +29,23 @@ export async function startBridge(options: BridgeOptions) {
   const server = createServer((_request, response) => {
     response.writeHead(404).end('AO bridge: binary WebSocket required\n');
   });
-  server.on('connection', socket => socket.setNoDelay(true));
+  server.on('connection', socket => { socket.setNoDelay(true); socket.setKeepAlive(true, TCP_KEEPALIVE_MS); });
   const wss = new WebSocketServer({ server, perMessageDeflate: false, maxPayload: 1024 * 1024 });
   wss.on('connection', ws => {
     const tcp = createConnection({ host: options.tcpHost, port: options.tcpPort });
     tcpSockets.add(tcp);
     tcp.setNoDelay(true);
+    tcp.setKeepAlive(true, TCP_KEEPALIVE_MS);
+    // The client waits out a stalled server instead of disconnecting, so a half-open browser connection (a laptop that slept, a dropped
+    // network) must still end the session: browsers answer pings in the network stack, even with the tab throttled or the game stalled.
+    let alive = true;
+    ws.on('pong', () => { alive = true; });
+    const heartbeat = setInterval(() => {
+      if (!alive) { log('WebSocket heartbeat missed; closing'); ws.terminate(); tcp.destroy(); return; }
+      alive = false;
+      if (ws.readyState === WebSocket.OPEN) ws.ping();
+    }, options.heartbeatMs ?? 15_000);
+    heartbeat.unref();
     ws.pause(); // Bound data buffered before TCP is connected.
     const fail = (error: Error) => {
       log(`connection error: ${error.message}`);
@@ -71,7 +86,7 @@ export async function startBridge(options: BridgeOptions) {
       if (ws.readyState === WebSocket.OPEN) { ws.resume(); ws.close(1000, 'TCP closed'); }
     });
     ws.on('error', error => { log(`WebSocket error: ${error.message}`); tcp.destroy(); });
-    ws.on('close', () => tcp.destroy());
+    ws.on('close', () => { clearInterval(heartbeat); tcp.destroy(); });
   });
   await new Promise<void>((resolve, reject) => {
     server.once('error', reject);

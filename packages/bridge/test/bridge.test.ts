@@ -1,10 +1,11 @@
 import { once } from 'node:events';
 import { createServer } from 'node:net';
 import type { Socket } from 'node:net';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { Socket as NetSocket } from 'node:net';
 import WebSocket from 'ws';
 import type { RawData } from 'ws';
-import { startBridge } from '../src/index.js';
+import { startBridge, TCP_KEEPALIVE_MS } from '../src/index.js';
 import { startStandin } from '../../../tools/standin-server/src/index.js';
 import {
   ClientPacketId as C, ServerPacketId as S, FrameDecoder, encodeClientFrame, decodeServerPacket,
@@ -46,6 +47,32 @@ async function connection(tcpPort: number) {
 }
 
 describe('binary WebSocket to TCP bridge', () => {
+  it('drops a browser that stops answering pings (half-open) and closes its server socket; a live one stays', async () => {
+    let serverSocketClosed = false;
+    const tcpPort = await peer(socket => { socket.on('close', () => { serverSocketClosed = true; }); });
+    const bridge = await startBridge({ tcpHost: '127.0.0.1', tcpPort, heartbeatMs: 50 });
+    cleanups.push(bridge.close);
+    const live = new WebSocket(`ws://127.0.0.1:${bridge.port}`, { perMessageDeflate: false });
+    const dead = new WebSocket(`ws://127.0.0.1:${bridge.port}`, { perMessageDeflate: false, autoPong: false });
+    cleanups.push(async () => { live.terminate(); dead.terminate(); });
+    await Promise.all([once(live, 'open'), once(dead, 'open')]);
+    const [code] = await once(dead, 'close') as [number];
+    expect(code).toBe(1006); // terminated, no close handshake
+    await new Promise(resolve => setTimeout(resolve, 300)); // six more periods
+    expect(serverSocketClosed).toBe(true);
+    expect(live.readyState).toBe(WebSocket.OPEN);
+  });
+  it('turns on TCP keepalive on the browser socket and on the server socket', async () => {
+    const spy = vi.spyOn(NetSocket.prototype, 'setKeepAlive');
+    try {
+      const tcpPort = await peer(() => {});
+      const ws = await connection(tcpPort);
+      await once(ws, 'open');
+      await new Promise(resolve => setTimeout(resolve, 50));
+      const calls = spy.mock.calls.filter(([enable, delay]) => enable === true && delay === TCP_KEEPALIVE_MS);
+      expect(calls.length).toBeGreaterThanOrEqual(2);
+    } finally { spy.mockRestore(); }
+  });
   it('passes bytes unchanged across fragmented/coalesced boundaries with backpressure', async () => {
     const expected = Buffer.alloc(2 * 1024 * 1024);
     for (let index = 0; index < expected.length; index++) expected[index] = index % 256;

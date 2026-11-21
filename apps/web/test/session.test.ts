@@ -60,6 +60,22 @@ describe('browser session', () => {
     h.advance(4000); h.session.tick(); h.recv({ id: S.PosUpdate, x: 52, y: 60 });
     expect(h.session.ui.messages.filter(m => m.text.startsWith('El servidor'))).toHaveLength(2);
   });
+  it('a warp or a close during a stall clears the stall: no stray recovery line, the next stall is announced again', () => {
+    const h = harness(); h.login();
+    const lines = () => h.session.ui.messages.map(m => m.text).filter(t => t.startsWith('El servidor'));
+    expect(h.session.walk(Heading.East)).toBe(true);
+    h.advance(5001); h.session.tick();
+    expect(lines()).toEqual(['El servidor no responde. Esperando...']);
+    h.recv({ id: S.ChangeMap, map: 2, resourceMap: 3 }); // the walk's reply never comes: the server warped us
+    expect(h.session.serverSilentSince).toBeUndefined();
+    h.recv({ ...f.CharacterCreate, x: 40, y: 50 });
+    expect(lines()).toEqual(['El servidor no responde. Esperando...']); // no 'volvió a responder' for a probe that was voided
+    h.advance(330); expect(h.session.walk(Heading.East)).toBe(true);
+    h.advance(5001); h.session.tick();
+    expect(lines()).toEqual(['El servidor no responde. Esperando...', 'El servidor no responde. Esperando...']);
+    h.session.finish();
+    expect(h.session.serverSilentSince).toBeUndefined();
+  });
   it('clears old map placement and accepts the same self index on a warp', () => {
     const h = harness(); h.login(); h.session.walk(Heading.East);
     h.advance(30_000);
