@@ -1,5 +1,7 @@
 # VB6 conformance fixtures
 
+**No HOO-era assets or data.** (Ariel, 2026-11-21.) HOO is Heroes of Old, AO20's next-generation client. Code, data and assets come only from the pre-HOO pins in `docs/DATA-PATCHES.md` ("Pre-HOO data pin"): no Dat, map, graphic or sound newer than Recursos `2bfa51e`, and no HOO packet (`Hoo*`, `Remort*`) in a fixture or codec.
+
 The VB6 server (twinBASIC build of ao-org `argentum-online-server-classic`) is the **reference**. A recording of a real
 session against it is a golden fixture: the new server must answer the same client packets with the same server packets.
 

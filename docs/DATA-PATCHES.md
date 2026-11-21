@@ -1,3 +1,47 @@
+# Pre-HOO data pin (2026-11-21)
+
+**Rule (Ariel): nothing made for the HOO client** (Heroes of Old, AO20's next-generation client; its assets are not public).
+HOO work starts 2026-08-12 (server `0b9217ba`, client `547ca10`). The only Recursos Dat commit after that is `1b50fd6`
+(2026-10-10, "Update DAT", 41 files), and it is the cause of the invisible shopkeepers: with it, 576 of 907 NPCs point at bodies
+that the classic `init/cuerpos.dat` (last changed 2024-04-05) does not have, and the server logs 241 "NPC no existe" for spawns of
+the 2024 maps (the NPC ids were renumbered). Its `obj.dat` is also where every door gap of sections 1 and 2 came from.
+
+**The pin: `Dat/` at Recursos `2bfa51e` (2026-08-01)**, identical to `552d4ed`, the parent of `1b50fd6`: the 41 files at their
+previous version, and the 17 files `1b50fd6` added removed (`EquipamientoInicial.dat`, `BlackSmithElementalRunes.dat`,
+`UnderworldMapPool.dat`, `Collectiblecards.dat`, `BlockedWordsDescription.txt`, `obj - copia.dat`, `audios_generados*`, ...).
+A copy is at `~/Projects/ao-reference/Recursos-prehoo/Dat` (the whole tree restored to `2bfa51e`, verified file by file).
+
+What the pin gives:
+- Every NPC body and head on the 2024 maps exists; 0 dangling NPC spawns (was 241). Ullathorpe sastre (Rethor, Amarie, Celyne),
+  carpintería (Halving) and herrería (Khor, Onur) render (checked on a throwaway server, see below).
+- **Sections 1 and 2 become unnecessary**: the pinned `obj.dat` has OBJ241, 242, 244, 245, 248, 249, 1235, 3598-3600, 1423-1426 with
+  a non-empty OBJ1425, and also 1404, 1406, 1412, 1414, 1420, 1422, 1428, 1430, 1447, 1449, 1450 (only 1645 is absent, as before).
+- Section 4 must be regenerated from the pinned Dat if quest text is wanted (the pin has 353 quests; the snapshot localindex has 255).
+
+What it loses: the content added in October 2026 (375 NPC ids, 1,176 objects, 72 spells, 77 quests that only `1b50fd6` defines).
+Pinned upstream gaps that remain: map objects 566, 567, 568, 570, 757, 759 (collectible cards), 20, 727, 1645 on 171 tiles; 4 NPC bodies
+(NPCs 103, 425, 1271, 1294); `Quests.DAT` (from `640bea1`, 2026-05) names 42 NPCs, 107 objects and 10 spells the pinned
+`npcs.dat`/`obj.dat` do not have, so those quests cannot be completed.
+
+**Test on a throwaway copy (2026-11-21):** `C:\ao\server-prehoo` (copy of `C:\ao\server`, `server.exe` renamed
+`server-prehoo.exe` because the server asks "more than 1 instance" when two `server.exe` run, `DatPath=.\Dat\`, `StartPort=7697`,
+DB copied with `.backup`). It loaded and listened, no map errors, login and character creation worked. **It also logged 15 errors,
+all from post-pin server code reading files the pre-HOO data does not have:** `TCP.LoadEquipSet` x13 (`EquipamientoInicial.dat`
+is absent, so **new characters start with an empty inventory and no spells**), `ES.LoadBalance` (no `[ElementalMatrixForNpcs]`;
+unused, no pinned NPC or object has `ElementalTags`) and `ES.LoadGuildsConfig` (clan levels config, `Clanes.dat` predates it).
+Existing characters keep their items: 22 of the 23 object ids in the DB inventories have the same name in both sets
+(3791 becomes "Boleto de viaje a Jourmut"); spell 352 "Orbe de Luz" does not exist at the pin.
+
+**Status: NOT applied to the live server.** The code that expects the October files is itself post-pin (`caac3133`), so the clean
+fix is a server rebuilt at the pre-HOO commit `9ccd7fad` (a manual twinBASIC step). Applying the data alone trades the invisible
+NPCs for the empty starting kit.
+
+To apply (when decided): stop `server.exe` (`taskkill /IM server.exe /F`), `Rename-Item C:\ao\Recursos\Dat Dat.bak-prehoo-<time>`,
+copy the pinned `Dat` to `C:\ao\Recursos\Dat` (the server reads `DatPath=..\Recursos\Dat\`), start `C:/ao/start-server.ps1`
+(~150 s). Mirror on this Mac: point `AO_ASSETS` at `~/Projects/ao-reference/Recursos-prehoo` (the client reads `Dat/Obj.dat`,
+`Hechizos.dat`, `npcs.dat`, `zonas.dat` from there). Undo: stop the server, put `Dat.bak-prehoo-<time>` back, restart.
+The throwaway copy is removed with `Remove-Item -Recurse C:\ao\server-prehoo`.
+
 # Server data patches (Ullathorpe buildings)
 
 Applied 2026-11-20 to `C:\ao\Recursos` in the VM and to `~/Projects/ao-reference/Recursos`. Re-apply to a fresh install with
