@@ -34,10 +34,10 @@
     {
      "id": "ACC-04",
      "step": "Read the starting position of a new character",
-     "expected": "Code sets .Hogar = cForgat regardless of the Hogar value the client sent (the client value is only range-checked 1..CITY_COUNT), and spawns at Cities(Hogar) = Forgat; Dat/Ciudades.Dat says map 517 x48 y65, but the server's documented Forgat data patch (docs/DATA-PATCHES.md section 6) moves the spawn to 751:60,57. CONTRADICTS the common belief that the chosen home city decides the spawn. The /HOGAR target after death is the same Hogar.",
-     "source": "TCP.bas:ConnectNewUser (.Hogar = cForgat; .pos = Cities(.Hogar)); Ciudades.Dat [Forgat]",
+     "expected": "LIVE SERVER (since 21 Nov, home-city backport #76 of upstream 07009f8a, not HOO): ConnectNewUser honours the e_City the client picked when it is one of the five start cities (1 Ullathorpe 1:57,44, 2 Nix 34:40,87, 3 Banderbill 59:47,41, 4 Lindos 64:50,59, 5 Arghal 151:61,43, Ciudades.Dat on the server); anything else (Forgat 7 included) starts in Ullathorpe. The pinned code alone set .Hogar = cForgat whatever the client sent (751:60,57 after DATA-PATCHES 6). The /HOGAR target after death is the same Hogar.",
+     "source": "TCP.bas:ConnectNewUser + docs/patches home-city backport; Dat/Ciudades.Dat (live server copy)",
      "mode": "auto",
-     "how": "one bridge session on a throwaway account, create two chars with different Hogar bytes and compare first PosUpdate / map",
+     "how": "the harness's own mage is created with AO_HOME (default 2 = Nix), the newbie character (NWB-01) with 1 = Ullathorpe; first ChangeMap + position compared with Ciudades.Dat",
      "status": "untested"
     },
     {
@@ -133,6 +133,84 @@
    ]
   },
   {
+   "id": "newbie",
+   "title": "Newbie path: city, Cartelera, Newbie Dungeon, quest 190, graduation",
+   "steps": [
+    {
+     "id": "NWB-01",
+     "step": "New character picks its city and reads the welcome text",
+     "expected": "Since the home-city backport (#76) ConnectNewUser starts the character in the e_City it picked (1-5; anything else falls back to Ullathorpe): home 1 spawns at Ciudades.Dat [Ullathorpe] 1:57,44, level 1, exp 0. The MOTD (Dat/Motd.ini, 11 lines since 21 Nov) carries the rates line 'EXP X4 - RECOLECCIÓN X2 - ORO X1', '¿Eres nuevo? Hasta el nivel 12 entrena en el Dungeon Newbie: su entrada está en tu ciudad.' and 'Busca la Cartelera de tu ciudad y toma los encargos de Makrom...'.",
+     "source": "TCP.bas:ConnectNewUser (+ docs/patches home-city backport); Dat/Ciudades.Dat; Dat/Motd.ini (DATA-PATCHES 8)",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-02",
+     "step": "Take Makrom's first quest at the city's Cartelera",
+     "expected": "Clicking the Cartelera (NPC 1331, NpcType Quest) within 5 tiles: EnviarQuest sends NpcQuestListSend with 190, 191, 192, 193, 194, 4, 154, 163, 164, 165 (DATA-PATCHES 8); 190 'Primeros Pasos' is available at level 1 (state 0), 191-194 are not (RequiredLevel 3/5/6/9 or RequiredQuest). QuestAccept(slot) answers Msg1264 and the log holds 190 with four kill counters at 0: Hormiga 508 x2, Murciélago 506 x7, Serpiente 502 x10, Gallo 501 x8. Server quirk: HandleLeftClick also takes a USER standing one tile BELOW the clicked tile (tall-sprite offset), so clicking an NPC from the tile right below it hits yourself and does nothing; the same holds for doors.",
+     "source": "ModQuest.bas:EnviarQuest, CanUserAcceptQuest; Protocol.bas:HandleQuestAccept; Dat/Quests.DAT [QUEST190]; Dat/npcs.dat [NPC1331]",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-03",
+     "step": "Walk from the city into the Newbie Dungeon",
+     "expected": "The city's dungeon door is a tile exit: Ullathorpe 1:74,22 -> 168:50,32 'Dungeon Newbie Central' (Nix 34:59,78 -> 168, Banderbill 59:60,42 -> 168, Lindos via 62:63,41 -> 168, Arghal 151:46,40 -> 264). Newbie maps (168, 37, 167, 264) have restrict_mode bit 1: only ELV <= LimiteNewbie 12.",
+     "source": "Mapas/Mapa1.csm tile exits; MapInfo restrict_mode; Declares.bas:LimiteNewbie",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-04",
+     "step": "Kill a creature in the Newbie Dungeon",
+     "expected": "A full kill at a level with no penalty gives GiveEXP x ExpMult: Configuracion.ini ExpMult=4 since 21 Nov 19:37, so a Hormiga (GiveEXP 11) gives 44, a Serpiente 88, a Gallo or Murciélago 72. The matching quest-190 counter ticks (QuestDetails killed + 1).",
+     "source": "SistemaCombate.bas:GetExpForUser; MODULO_NPCs.bas:MuereNpc (quest kill counters); Configuracion.ini ExpMult",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-05",
+     "step": "Hand quest 190 in at Makrom",
+     "expected": "With all four counters complete, clicking Makrom (NPC 407, Ullathorpe 77,18 by the dungeon door, 54,56 in the square, or 37:73,84 in the dungeon) runs EnviarQuest -> FinishQuest: ChatOverHead 'QUESTFIN*190', gold + RewardGLD 60 x OroMult 1, exp + RewardEXP 250 x ExpMult 4 = 1000, the quest leaves the log (Repetible=1). The way back is the dungeon exit 168:50,33 -> 1:74,23.",
+     "source": "ModQuest.bas:EnviarQuest, FinishQuest; Dat/Quests.DAT [QUEST190]; Dat/npcs.dat [NPC407]",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-06",
+     "step": "Level up from the quest reward",
+     "expected": "CheckUserLevel: Exp >= ExpLevelUp[ELV] (500 at level 1, 750 at 2) raises the level, the surplus carries; LevelUp is sent with the free skill points; MaxSta +15 per level (AumentoSta). A level-1 character with a first kill's 44-88 exp reaches level 2 with the 1000 reward.",
+     "source": "Modulo_UsUaRiOs.bas:CheckUserLevel; Balance.dat [EXP], [AUMENTO_STA]",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-07",
+     "step": "Graduate at level 13 inside the Newbie Dungeon",
+     "expected": "Reaching ELV 13 (ExpLevelUp[12] = 43248): QuitarNewbieObj removes every Newbie=1 item (inventory and bank), Msg671 'Has dejado de ser Newbie', and with the -c server (21 Nov 20:18) sends the character to its OWN home city only when it graduates on a newbie map; elsewhere it stays put.",
+     "source": "InvUsuario.bas:QuitarNewbieObj + docs/patches/2026-11-21-server-9ccd-newbie-graduation.patch (SERVER-PREHOO-BUILD.md 'Newbie graduation')",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    },
+    {
+     "id": "NWB-08",
+     "step": "The browser client shows the same character",
+     "expected": "The classic UI logs the newbie in (login, character list, Jugar), renders the world and shows the MOTD in the console, including the windows-1252 text of the newbie lines.",
+     "source": "client frmMain console (RecTxt); apps/web #messages",
+     "mode": "auto",
+     "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
+     "status": "untested"
+    }
+   ]
+  },
+  {
    "id": "movement",
    "title": "Movement and world",
    "steps": [
@@ -178,7 +256,7 @@
      "expected": "Refused with a locale message and no warp: MapInfo.Newbie needs ELV<=12 (EsNewbie, LimiteNewbie=12); NoPKs refuses status Criminal(0)/Caos(2); NoCiudadanos refuses Ciudadano(1)/Armada(3); SoloClanes needs GuildIndex>0; MinLevel/MaxLevel (ELV >= MaxLevel is refused); OnlyGroups needs a party; OnlyPatreon needs patron.",
      "source": "GameLogic.bas:CheckMapRestrictions",
      "mode": "auto",
-     "how": "one bridge session on a throwaway account, DB UPDATE level to 13 and try a Newbie map; level 12 vs MaxLevel maps",
+     "how": "the newbie character after graduating (NWB-07, level 13) walks onto Ullathorpe's Newbie Dungeon door 1:74,22 (newbie.ts)",
      "status": "untested"
     },
     {
@@ -397,7 +475,7 @@
     {
      "id": "SUR-02",
      "step": "Effects of hunger or thirst at 0",
-     "expected": "No damage, but: no HP regen (EfectoStamina skips Sanar), stamina regen turns into stamina LOSS (PierdeEnergia), SubirSkill returns early (no skill gain by use), spell scrolls refused ('demasiado hambriento/sediento'), and a resurrection spell sets both to 0.",
+     "expected": "No damage, but: no HP regen (EfectoStamina skips Sanar), stamina regen turns into stamina LOSS (PierdeEnergia), SubirSkill returns early (no skill gain by use), spell scrolls refused ('demasiado hambriento/sediento'), and a resurrection spell sets both to 0. Clothing note: a revive does not re-equip the gear UserDie took off, and the Newbie=1 starter armour (OBJ3500, 3502) is refused above level 12 (the character is then Desnudo); tests that need clothes re-equip with EquipItem or wear a non-newbie item (OBJ32).",
      "source": "General.bas:EfectoStamina; Modulo_UsUaRiOs.bas:SubirSkill; InvUsuario.bas:UseInvItem (otParchment)",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, DB UPDATE MinHam=0, compare HP over 30 s and try SubirSkill action",
@@ -415,7 +493,7 @@
     {
      "id": "SUR-04",
      "step": "Drink water or a drink (otDrinks)",
-     "expected": "Adds obj.MinSed to thirst up to MaxAGU=100, consumes 1, applies obj.ApplyEffectId if any, plays SND_BEBER (135) or obj.Snd1.",
+     "expected": "Adds obj.MinSed to thirst up to MaxAGU=100, consumes 1, applies obj.ApplyEffectId if any, plays SND_BEBER (135) or obj.Snd1. Check (21 Nov, live): Obj.dat OBJ3685 has MinAgu=15 although its text says 30; the server adds 15.",
      "source": "InvUsuario.bas:UseInvItem (otDrinks)",
      "mode": "auto",
      "how": "recorded: tests/fixtures/vb6/items/use-items.jsonl",
@@ -433,7 +511,7 @@
     {
      "id": "SUR-06",
      "step": "Drink a blue potion (Pocion de Mana (P), obj 4336)",
-     "expected": "TipoPocion 4: adds Porcentaje(MaxMAN, 3) = 3% of max mana, capped at MaxMAN (and at 20000). Consumes 1.",
+     "expected": "TipoPocion 4: adds Porcentaje(MaxMAN, 3) = 3% of max mana, capped at MaxMAN (and at 20000). Consumes 1. Check (21 Nov): 150 * 3 / 100 = 4.5 and the VB6 Long conversion rounds half to even, so a 150 mana mage gains 4.",
      "source": "InvUsuario.bas:UseInvItem (ModifiesMp); obj.dat OBJ4336",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, mage char",
@@ -460,7 +538,7 @@
     {
      "id": "SUR-09",
      "step": "Poison tick",
-     "expected": "A poisoned char (Envenenado) loses 1 + (3..5)*MaxHp\\100 HP every IntervaloVeneno+1 = 91 game ticks (~3.64 s); the poison has NO expiry, only cure (violet potion, antidote spell, priest heal or death) ends it. Each tick cancels /SALIR. Poison can kill.",
+     "expected": "A poisoned char (Envenenado) loses 1 + (3..5)*MaxHp\\100 HP every IntervaloVeneno+1 = 91 game ticks (~3.64 s); the poison has NO expiry, only cure (violet potion, antidote spell, priest heal or death) ends it. Each tick cancels /SALIR. Poison can kill. Check (21 Nov): a 20 HP character takes 1 per tick (2 when the roll is 5); ticks measured 3.9 s apart on the live server.",
      "source": "General.bas:EfectoVeneno; intervalos.ini IntervaloVeneno=90",
      "mode": "auto",
      "how": "recorded: tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
@@ -469,7 +547,7 @@
     {
      "id": "SUR-10",
      "step": "Natural HP regeneration",
-     "expected": "EfectoStamina (every 40 ms tick) calls Sanar only if neither hungry nor thirsty and Counters.EnCombate = 0: counter reaches SanaIntervaloSinDescansar = 200 ticks (~8.0 s) standing, SanaIntervaloDescansar = 50 ticks (~2.0 s) while resting at a campfire. Each heal = random(5%..10% of MaxHp) * self-healing bonus. Naked chars do not heal. IntervaloEnCombate = 10 s after hitting or being hit blocks regeneration.",
+     "expected": "EfectoStamina (every 40 ms tick) calls Sanar only if neither hungry nor thirsty and Counters.EnCombate = 0: counter reaches SanaIntervaloSinDescansar = 200 ticks (~8.0 s) standing, SanaIntervaloDescansar = 50 ticks (~2.0 s) while resting at a campfire. Each heal = random(5%..10% of MaxHp) * self-healing bonus. Naked chars do not heal. IntervaloEnCombate = 10 s after hitting or being hit blocks regeneration. Clothing note: a revive does not re-equip the gear UserDie took off, and the Newbie=1 starter armour (OBJ3500, 3502) is refused above level 12 (the character is then Desnudo); tests that need clothes re-equip with EquipItem or wear a non-newbie item (OBJ32).",
      "source": "General.bas:EfectoStamina, Sanar; intervalos.ini SanaIntervalo*; IntervaloEnCombate=10",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, DB UPDATE MinHp low, sample UpdateHP",
@@ -478,7 +556,7 @@
     {
      "id": "SUR-11",
      "step": "Natural stamina regeneration",
-     "expected": "RecStamina: every StaminaIntervaloSinDescansar = 10 ticks (~0.44 s) standing, StaminaIntervaloDescansar = 5 ticks (~0.24 s) resting, adds random(1, MaxSta*Suerte%) (divided by 1.6 for non-Trabajador) where Suerte = 5,7,9,...,25 by Supervivencia band 0-10,11-20,...,91-99,100. Not while working (Counters.Trabajando), while naked, hungry/thirsty, or in an AutomatedAction. Rain outdoors stops regen (Lloviendo And Intemperie).",
+     "expected": "RecStamina: every StaminaIntervaloSinDescansar = 10 ticks (~0.44 s) standing, StaminaIntervaloDescansar = 5 ticks (~0.24 s) resting, adds random(1, MaxSta*Suerte%) (divided by 1.6 for non-Trabajador) where Suerte = 5,7,9,...,25 by Supervivencia band 0-10,11-20,...,91-99,100. Not while working (Counters.Trabajando), while naked, hungry/thirsty, or in an AutomatedAction. Rain outdoors stops regen (Lloviendo And Intemperie). Clothing note: a revive does not re-equip the gear UserDie took off, and the Newbie=1 starter armour (OBJ3500, 3502) is refused above level 12 (the character is then Desnudo); tests that need clothes re-equip with EquipItem or wear a non-newbie item (OBJ32).",
      "source": "General.bas:RecStamina, EfectoStamina; intervalos.ini",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, drain stamina by attacking, sample UpdateSta",
@@ -487,7 +565,7 @@
     {
      "id": "SUR-12",
      "step": "Stamina loss: naked, hungry or raining",
-     "expected": "PierdeEnergia every IntervaloPerderStamina = 40 ticks (1.6 s) (20 ticks in rain outdoors, 80 ticks resting) removes random(1, MaxSta * (150 - Supervivencia)*0.25 %) stamina.",
+     "expected": "PierdeEnergia every IntervaloPerderStamina = 40 ticks (1.6 s) (20 ticks in rain outdoors, 80 ticks resting) removes random(1, MaxSta * (150 - Supervivencia)*0.25 %) stamina. Clothing note: a revive does not re-equip the gear UserDie took off, and the Newbie=1 starter armour (OBJ3500, 3502) is refused above level 12 (the character is then Desnudo); tests that need clothes re-equip with EquipItem or wear a non-newbie item (OBJ32).",
      "source": "General.bas:PierdeEnergia, EfectoStamina",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, unequip armor (Desnudo) and sample UpdateSta",
@@ -547,7 +625,7 @@
     {
      "id": "CMB-03",
      "step": "Melee attack another player (PvP)",
-     "expected": "PuedeAtacar must allow it: not dead, not same party (Grupo.Id), not EnConsulta, not Maldicion (cursed), not mounted, not safe map/ZonaSegura, not own guild if SeguroClan and guild level >= 4. Hit chance = clamp(50 + (AttackPower - victim PoderEvasion)*0.4 + weapon bonus, 5, 95) where victim evasion = (Tacticas + 3*Tacticas/100*AGI)*classEvasion + 2.5*max(ELV-12,0) + shield term (Defensa*classShield/2 * shield%/100). Meditating victims are hit with ProbEvadir=(100-p)*0.75 (cap 90%). A shield block (probability 10..90% from shield % and Defensa vs Tacticas) calls SubirSkill(Defensa).",
+     "expected": "PuedeAtacar must allow it: not dead, not same party (Grupo.Id), not EnConsulta, not Maldicion (cursed), not mounted, not safe map/ZonaSegura, not own guild if SeguroClan and guild level >= 4. Hit chance = clamp(50 + (AttackPower - victim PoderEvasion)*0.4 + weapon bonus, 5, 95) where victim evasion = (Tacticas + 3*Tacticas/100*AGI)*classEvasion + 2.5*max(ELV-12,0) + shield term (Defensa*classShield/2 * shield%/100). Meditating victims are hit with ProbEvadir=(100-p)*0.75 (cap 90%). A shield block (probability 10..90% from shield % and Defensa vs Tacticas) calls SubirSkill(Defensa). Order in PuedeAtacar: the citizen safe toggle (1057) is tested BEFORE the map: with the toggle off a Seguro=1 map (Forgat, maps 11 and 31) answers 1062 \"zona segura\" and a ZonaSegura trigger tile 1063.",
      "source": "SistemaCombate.bas:PuedeAtacar, UsuarioImpacto, PoderEvasion, PoderEvasionEscudo",
      "mode": "auto",
      "how": "two bridge sessions (two throwaway accounts), /CI weapons, DB UPDATE level, A attacks B outside safe zones",
@@ -565,7 +643,7 @@
     {
      "id": "CMB-05",
      "step": "Citizen attacks a citizen or Armada member",
-     "expected": "While the safe toggle is on the attack is refused (msg 1057/1058). With the toggle off (/SEG), UsuarioAtacadoPorUsuario calls VolverCriminal(attacker) -> Faccion.Status = 0 (Criminal), FactionScore reset to 0 if he was a citizen, removed from party (FinalizarGrupo/SalirDeGrupo), pushed out of NoPKs maps. There is NO numeric reputation: status is a flag (Criminal 0, Ciudadano 1, Caos 2, Armada 3, Concilio 4, Consejo 5).",
+     "expected": "While the safe toggle is on the attack is refused (msg 1057/1058). With the toggle off (/SEG), UsuarioAtacadoPorUsuario calls VolverCriminal(attacker) -> Faccion.Status = 0 (Criminal), FactionScore reset to 0 if he was a citizen, removed from party (FinalizarGrupo/SalirDeGrupo), pushed out of NoPKs maps. There is NO numeric reputation: status is a flag (Criminal 0, Ciudadano 1, Caos 2, Armada 3, Concilio 4, Consejo 5). UsuarioAtacadoPorUsuario runs BEFORE the hit roll: even a miss turns a citizen attacker into a criminal; a criminal then gets 696 from /SEG.",
      "source": "SistemaCombate.bas:PuedeAtacar, UsuarioAtacadoPorUsuario; Modulo_UsUaRiOs.bas:VolverCriminal; Declares.bas:e_Facciones",
      "mode": "auto",
      "how": "recorded: tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl (toggle packets); combat/safezone-attack-blocked.jsonl",
@@ -585,7 +663,7 @@
      "step": "Become a criminal by attacking a citizen creature or stealing",
      "expected": "UserCanAttackNpc TurnPK=True attacks on citizen-faction NPCs call VolverCriminal. Stealing (DoRobar) as a citizen makes the thief Criminal; needs 15 stamina, not on safe maps, not on a victim in fight zones, thief needs the Robar skill; citizens with safe on cannot steal. SubirSkill(Robar) on success.",
      "source": "SistemaCombate.bas:UsuarioAtacaNpc; Trabajo.bas:DoRobar (line 1388)",
-     "mode": "auto",
+     "mode": "manual",
      "how": "two bridge sessions (two throwaway accounts), thief steals from a citizen",
      "status": "untested"
     },
@@ -594,14 +672,14 @@
      "step": "Become a citizen again (pardon by donating to a priest)",
      "expected": "HandleDonateGold: target a Revividor NPC within 3 tiles, you must be Criminal (citizens/army/chaos refused). Cost = ciudadanosMatados * GoldMult * CostoPerdonPorCiudadano (5000 in Example.Configuracion.ini), or CostoPerdon/2 = 2500 if none killed. Clan of criminal/chaotic alignment blocks it. On success VolverCiudadano: Status 1, safe toggle ON, left party if mixed.",
      "source": "Protocol.bas:HandleDonateGold; Modulo_UsUaRiOs.bas:VolverCiudadano",
-     "mode": "auto",
+     "mode": "manual",
      "how": "one bridge session on a throwaway account, make char criminal via DB (Faccion.Status 0), DB UPDATE gold",
      "status": "untested"
     },
     {
      "id": "CMB-09",
      "step": "Kill a player: faction points and kill counters",
-     "expected": "ContarMuerte (skipped if victim is newbie ELV<=12, in a safe fight zone, or attacker >10 levels above): kills of criminals/chaos increment CriminalesMatados, kills of citizens/army increment ciudadanosMatados, only once per killer per FactionReKillTime=600000 ms (10 min). A citizen/army killer gets FactionScore = 10 +/- level difference (10 + victimELV - ELV if attacker lower; else 10 - (ELV - victimELV)), x1.5 for Armada vs Caos and vice versa, cap 20, minus 1 for each valid assist (8000 ms window).",
+     "expected": "ContarMuerte (skipped if victim is newbie ELV<=12, in a safe fight zone, or attacker >10 levels above): kills of criminals/chaos increment CriminalesMatados, kills of citizens/army increment ciudadanosMatados, only once per killer per FactionReKillTime=600000 ms (10 min). A citizen/army killer gets FactionScore = 10 +/- level difference (10 + victimELV - ELV if attacker lower; else 10 - (ELV - victimELV)), x1.5 for Armada vs Caos and vice versa, cap 20, minus 1 for each valid assist (8000 ms window). Check (21 Nov): EsNewbie(victim) (ELV <= LimiteNewbie 12) exits ContarMuerte first, so killing a starter character moves no counter.",
      "source": "Modulo_UsUaRiOs.bas:ContarMuerte, CalculateBaseFactionScore, HandleFactionScoreForKill; Balance.dat FactionReKillTime, AssistDamageValidTime",
      "mode": "auto",
      "how": "two bridge sessions (two throwaway accounts), DB UPDATE levels and kill with GM-set HP",
@@ -612,7 +690,7 @@
      "step": "Enlist in the Royal Army (talk to Enlistador, /ENLISTAR flow)",
      "expected": "EnlistarArmadaReal refuses: already in army; Caos; Criminal status; class Ladron; ciudadanosMatados > 0; no inventory slot; Reenlistadas > MAX_FACTION_ENLISTMENTS (=0) i.e. you can only enlist ONCE in a lifetime; FactionScore < first rank score; ELV < first-rank level; neutral guild leader. Rank 1 requires level 25 and 100 faction points (rangos_faccion.dat). On success Status = Armada(3), RecompensasReal = 1, armour given.",
      "source": "ModFacciones.bas:EnlistarArmadaReal; rangos_faccion.dat [ArmadaReal]; ModFacciones.bas:MAX_FACTION_ENLISTMENTS",
-     "mode": "auto",
+     "mode": "manual",
      "how": "one bridge session on a throwaway account, DB UPDATE level 25 + FactionScore 100, stand near the army enlister",
      "status": "untested"
     },
@@ -621,7 +699,7 @@
      "step": "Enlist in the Dark Legion (Caos enlister)",
      "expected": "EnlistarCaos requires Status criminal (Armada/Ciudadano refused with msg 1369), a free inventory slot, FactionScore >= first rank (100) and level >= 25, one enlistment only (MAX_FACTION_ENLISTMENTS=0), neutral clan leaders refused. Status becomes Caos(2); Legion armour given on first entry.",
      "source": "ModFacciones.bas:EnlistarCaos; rangos_faccion.dat [LegionCaos]",
-     "mode": "auto",
+     "mode": "manual",
      "how": "one bridge session on a throwaway account",
      "status": "untested"
     },
@@ -630,7 +708,7 @@
      "step": "Ask the enlister for a rank reward (/RECOMPENSA)",
      "expected": "RecompensaArmadaReal/RecompensaCaos: within 4 tiles of an Enlistador of your faction; next rank needs FactionScore and ELV: Army ranks 1-5 = levels 25/30/35/40/43 and scores 100/500/2500/5000/10000 (Soldado, Caballero, Capitan, Protector del Reino, Campeon de la Luz); Legion = Acolito, Emisario del Caos, Sanguinario, Caballero de la Oscuridad, Devorador de Almas with the same numbers. Gives every item for ranks above the last received (recompensas_faccion.dat); inventory space required.",
      "source": "Protocol.bas:HandleReward; ModFacciones.bas:RecompensaArmadaReal, DarRecompensas; rangos_faccion.dat; recompensas_faccion.dat",
-     "mode": "auto",
+     "mode": "manual",
      "how": "one bridge session on a throwaway account, DB UPDATE FactionScore and ELV",
      "status": "untested"
     },
@@ -639,7 +717,7 @@
      "step": "Leave the faction (LeaveFaction)",
      "expected": "Handler for armies/legion: inside faction NPC proximity; ExpulsarFaccionReal/Caos set Status Ciudadano/Criminal, remove all items with Real=1/Caos=1 from inventory (PerderItemsFaccionarios). Re-enlisting is impossible afterwards (Reenlistadas=1 > 0).",
      "source": "Protocol.bas:HandleLeaveFaction; ModFacciones.bas:ExpulsarFaccionReal, PerderItemsFaccionarios",
-     "mode": "auto",
+     "mode": "manual",
      "how": "one bridge session on a throwaway account, after CMB-10 setup",
      "status": "untested"
     },
@@ -648,7 +726,7 @@
      "step": "Army member attacks a citizen or another army member",
      "expected": "esArmada attacker: refused vs Armada (msg 1055) and vs Ciudadano (1056). Chaos vs chaos is allowed unless LegionarySecure is on. Armada attacking Caos/Criminal does not turn them criminal.",
      "source": "SistemaCombate.bas:PuedeAtacar",
-     "mode": "auto",
+     "mode": "manual",
      "how": "two bridge sessions (two throwaway accounts)",
      "status": "untested"
     },
@@ -682,7 +760,7 @@
     {
      "id": "CMB-18",
      "step": "Spell types: self, heal, buff/debuff state, summon, area",
-     "expected": "Hechizos.Tipo: 1 uPropiedades (HP/mana/sta/hunger/thirst), 2 uEstado (paralysis, invisibility, poison, curses, mimetism...), 3 materializa, 4 invocacion (summons, MaxMascotas 3 per user), 5 area, 6 portals, 8 combinados, 9 multishot, 10 physical skill. Heal: Curar heridas leves (id 12) heals 5..15 for 10 mana, MinSkill 10; Aliento de Dragon (id 4) 92..96 for 1100 mana needs Magia 100 and a staff power 2.",
+     "expected": "Hechizos.Tipo: 1 uPropiedades (HP/mana/sta/hunger/thirst), 2 uEstado (paralysis, invisibility, poison, curses, mimetism...), 3 materializa, 4 invocacion (summons, MaxMascotas 3 per user), 5 area, 6 portals, 8 combinados, 9 multishot, 10 physical skill. Heal: Curar heridas leves (id 12) heals 5..15 for 10 mana, MinSkill 10; Aliento de Dragon (id 4) 92..96 for 1100 mana needs Magia 100 and a staff power 2. The starter data has no scroll for Curar heridas leves (12); Curar heridas graves (13, scroll OBJ1651) heals 20..50 for 40 mana and Magia 38. At level 13+ a character cannot wear Newbie=1 items (OBJ3502, 3500), so high-level mage tests wear OBJ32 Vestimenta Comun.",
      "source": "modHechizos.bas:HandleHechizoUsuario, HechizoInvocacion; Hechizos.dat header",
      "mode": "auto",
      "how": "recorded: tests/fixtures/vb6/spells/* (self, orb, summon, invalid target)",
@@ -729,7 +807,7 @@
      "step": "Tame a creature (Domar skill, click with taming selected)",
      "expected": "DoDomar: needs NroMascotas < 3 and a free pet slot; target must have no master; NPC MinTameLevel <= ELV; taming points = CHA*Domar divided by 6 (Druid) or 118 (every other class, effectively druid-only); success requires NPC Domable <= points AND a 1-in-5 roll. SubirSkill(Domar) every attempt. Creature is re-spawned and follows you (not allowed in NoMascotas safe zones: pet waits outside).",
      "source": "Trabajo.bas:DoDomar; Trabajo.bas:ModDomar (class mod 6/6/7/10 for display)",
-     "mode": "auto",
+     "mode": "manual",
      "how": "recorded (empty tile refusal + pet commands): tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl, tame-and-pet-commands.jsonl",
      "status": "recorded"
     },
@@ -738,7 +816,7 @@
      "step": "Backstab (Apunalar) with a dagger",
      "expected": "Apunalar needs a dagger weapon; chance depends on class base from Balance.dat [BACKSTAB] (AssasinStabbingChance, HunterStabbingChance, BardStabbingChance, ExtraBackstabChance) and the Apunalar skill; damage multiplied by class MODAPUNALAR; hides are broken. SubirSkill(Apunalar) on hit.",
      "source": "SistemaCombate.bas:PuedeApunalar, GetStabbingChanceBase; Balance.dat [BACKSTAB]",
-     "mode": "auto",
+     "mode": "manual",
      "how": "two bridge sessions (two throwaway accounts), assassin with dagger",
      "status": "untested"
     },
@@ -781,7 +859,7 @@
      "expected": "Only if map DropItems is on and trigger is not ZONAPELEA, for normal users: TirarTodosLosItems drops EVERY slot (including equipped items, full stack amounts) onto free tiles near the corpse, except items where ItemSeCae() is False: NoSeCae=1, keys, ships, saddles, Intirable, Destruye, Instransferible (those stay in the inventory). Items flagged Newbie stay in a newbie's (ELV<=12) inventory (the starter kit survives). Pirates level >=37 on a galeon keep each item with 33% chance. Elemental-tag amulets (EfectoMagico 12) protect a % of ore/wood/fish stacks.",
      "source": "InvUsuario.bas:TirarTodosLosItems, ItemSeCae, PirataCaeItem, DropAmmount; Modulo_UsUaRiOs.bas:UserDie",
      "mode": "auto",
-     "how": "one bridge session on a throwaway account, /CI items incl. a newbie-flag item and a NoSeCae one, kill the char, read ObjectCreate packets",
+     "how": "tools/playthrough/steps/newbie.ts on the newbie character (pnpm playthrough): a level-1/2 newbie with 5 Manzana Roja and 1000 x ELV + 600 gold dies to a GM-spawned Gallo on map 2 (DropItems on); apples and the 600 fall, newbie items and 1000 x ELV gold stay",
      "status": "untested"
     },
     {
@@ -790,7 +868,7 @@
      "expected": "Gold above OroPorNivelBilletera * ELV (1000 per level in Example.Configuracion.ini) is dropped as gold piles (TirarOro; max GetMaxInvOBJ per pile); the first 1000*ELV gold stays on the char. At level 1 you keep 1000 gold, at 20 you keep 20000. GMs never drop. Sacrifice pendant (PENDIENTE) consumes 1 pendant INSTEAD of dropping anything.",
      "source": "InvUsuario.bas:TirarTodosLosItems, TirarOro; Modulo_UsUaRiOs.bas:UserDie; Example.Configuracion.ini OroPorNivelBilletera",
      "mode": "auto",
-     "how": "one bridge session on a throwaway account, DB UPDATE gold 5000 at level 1, die, see 4000 drop",
+     "how": "tools/playthrough/steps/newbie.ts on the newbie character (pnpm playthrough): a level-1/2 newbie with 5 Manzana Roja and 1000 x ELV + 600 gold dies to a GM-spawned Gallo on map 2 (DropItems on); apples and the 600 fall, newbie items and 1000 x ELV gold stay",
      "status": "untested"
     },
     {
@@ -967,7 +1045,7 @@
      "expected": "CODE CONTRADICTS THE BELIEF IN ONE POINT: each level adds ModClase.LevelSkillPoints to .Stats.SkillPts = 5 for every class (Trabajador 6; Balance.dat [MODSKILLPOINTS]), but they are FREE POINTS the player spends (ModifySkills) via frmSkills, NOT automatically added to skills. A new character starts with 10 free points. A level-up sends WriteLevelUp(SkillPts) and a 'has ganado N skillpoints' message. Max free points from creation to 47: 10 + 46*5 = 240 (286 for Trabajador).",
      "source": "Modulo_UsUaRiOs.bas:CheckUserLevel (Pts += ModClase.LevelSkillPoints; .Stats.SkillPts += Pts); Balance.dat [MODSKILLPOINTS]; TCP.bas:ConnectNewUser (.Stats.SkillPts = 10)",
      "mode": "auto",
-     "how": "recorded (assignment packet): tests/fixtures/vb6/skills/spend-skill-point.jsonl, stats-skills-rest-requests.jsonl; the per-level +5 grant itself is untested",
+     "how": "tools/playthrough/steps/newbie.ts on the newbie character (pnpm playthrough): the level-up from the quest-190 reward (LevelUp skillPoints 10 + 5), then ModifySkills 4 Armas + 3 Tacticas and a relog (free pool 15 -> 8)",
      "status": "recorded"
     },
     {
@@ -976,7 +1054,7 @@
      "expected": "Client sends 24 signed bytes; any negative value or a total above SkillPts => security log, SkillPts=0 and the socket is closed. Otherwise SkillPts -= each value, skill += value, and any skill above 100 is capped with the excess returned to SkillPts (MAXSKILLPOINTS = 100). No per-level cap on assigned points and no minimum, any of the 24 skills may be raised directly (Magia, Robar, Tacticas, Armas, Meditar, Apunalar, Ocultarse, Supervivencia, Comerciar, Defensa, Liderazgo, Proyectiles, Wrestling, Navegacion, Equitacion, Resistencia, Talar, Pescar, Mineria, Herreria, Carpinteria, Alquimia, Sastreria, Domar).",
      "source": "Protocol.bas:HandleModifySkills; Declares.bas:NUMSKILLS=24, MAXSKILLPOINTS",
      "mode": "auto",
-     "how": "recorded: tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+     "how": "tools/playthrough/steps/newbie.ts on the newbie character (pnpm playthrough): the level-up from the quest-190 reward (LevelUp skillPoints 10 + 5), then ModifySkills 4 Armas + 3 Tacticas and a relog (free pool 15 -> 8)",
      "status": "recorded"
     },
     {
@@ -1000,7 +1078,7 @@
     {
      "id": "PRG-10",
      "step": "Newbie limits",
-     "expected": "EsNewbie = ELV <= LimiteNewbie = 12. Newbies: keep newbie-flag items on death (DTH-02), cannot sell newbie items (NPC refuses), cannot drop newbie items, can use ResucitadorNewbie priests, can enter Newbie maps, exempt from ContarMuerte (no faction points for killing them). On reaching 13 QuitarNewbieObj deletes every newbie-flag item from inventory AND bank and warps to Renacimiento with MSG_DEJADO_NEWBIE.",
+     "expected": "EsNewbie = ELV <= LimiteNewbie = 12. Newbies: keep newbie-flag items on death (DTH-02), cannot sell newbie items (NPC refuses), cannot drop newbie items, can use ResucitadorNewbie priests, can enter Newbie maps, exempt from ContarMuerte (no faction points for killing them). On reaching 13 QuitarNewbieObj deletes every newbie-flag item from inventory AND bank and sends MSG_DEJADO_NEWBIE (671). LIVE SERVER (-c build, 21 Nov 20:18): the graduate is warped to its OWN home city only when it graduates on a newbie map, elsewhere it stays put (the pinned code warped everybody to Renacimiento). See NWB-07.",
      "source": "GameLogic.bas:EsNewbie; Declares.bas:LimiteNewbie; Modulo_UsUaRiOs.bas:CheckUserLevel; InvUsuario.bas:QuitarNewbieObj",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, DB UPDATE ELV 12 with exp just below, kill a creature",
@@ -1276,7 +1354,7 @@
      "expected": "BankDepositGold / BankExtractGold: banker target within 10 tiles, alive, 0 < amount <= your gold (or bank balance); replies 'Tenes N monedas de oro en tu cuenta' (msg 1418) and WriteUpdateBankGld; insufficient: msg 1419 / 1395.",
      "source": "Protocol.bas:HandleBankDepositGold, HandleBankExtractGold",
      "mode": "auto",
-     "how": "recorded: tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+     "how": "tools/playthrough/steps/newbie.ts on the newbie character (pnpm playthrough): Ullathorpe bank hall (door 77,55 opened with a click from the side, banker Krix 77,47), deposit then withdraw the quest gold",
      "status": "recorded"
     },
     {
@@ -1408,10 +1486,10 @@
     {
      "id": "ECO-20",
      "step": "Say / whisper / yell",
-     "expected": "Talk goes to the area (not shown when dead except to ghosts); Whisper to a nearby named player; Yell is louder. Muted players (Silenciado) are refused with MSG_ADMINS_MUTED_YOU. Chat is throttled (Talk packet Limit 300 ms; per-message timeChat = 1 + ceil((3000 + 60*len)/1000) s bubble).",
+     "expected": "Talk goes to the area (not shown when dead except to ghosts); Whisper to a nearby named player; Yell is louder. Muted players (Silenciado) are refused with MSG_ADMINS_MUTED_YOU. Chat is throttled (Talk packet Limit 300 ms; per-message timeChat = 1 + ceil((3000 + 60*len)/1000) s bubble). Whisper: HandleWhisper first does 'If CompararPrivilegios(sender, target) < 0 Then Exit Sub', so a player's whisper to a GM is dropped with no message to either side; a GM's whisper to a player arrives as ConsoleCharText (and over the sender's head only for GMs, ToSuperioresArea).",
      "source": "Protocol.bas:HandleTalk, HandleWhisper, HandleYell; PacketRatePolicy.ini [Talk]",
      "mode": "auto",
-     "how": "recorded: tests/fixtures/vb6/chat/say.jsonl, whisper.jsonl, yell.jsonl, channels.jsonl",
+     "how": "tools/playthrough/steps/newbie.ts on the newbie character (pnpm playthrough): talk heard by a character 2 tiles away (ChatOverHead over the speaker), player->GM whisper silently dropped, GM->player whisper delivered",
      "status": "recorded"
     },
     {

@@ -43,13 +43,20 @@ step('ACC-03', async c => {
   c.eq((await miniStats(s)).alignment, 1, 'Faccion.Status = citizen (1)');
 });
 
+/** Ciudades.Dat on the live server (C:\\ao\\server-9ccd\\Dat), keyed by the e_City id the city picker sends (HOME_CITIES, apps/web/src/connect-text.ts). */
+export const START_CITIES: Record<number, { name: string; map: number; x: number; y: number }> = {
+  1: { name: 'Ullathorpe', map: 1, x: 57, y: 44 }, 2: { name: 'Nix', map: 34, x: 40, y: 87 }, 3: { name: 'Banderbill', map: 59, x: 47, y: 41 },
+  4: { name: 'Lindos', map: 64, x: 50, y: 59 }, 5: { name: 'Arghal', map: 151, x: 61, y: 43 },
+};
 step('ACC-04', async c => {
   needFresh(c, 'ACC-04');
+  // Since the home-city backport (#76, server ConnectNewUser honours e_City 1-5; anything else, Forgat 7 included, starts in Ullathorpe) a new
+  // character starts in the city it picked. The harness picks AO_HOME (default 2 = Nix).
+  const home = Number(process.env.AO_HOME ?? 2), city = START_CITIES[home] ?? START_CITIES[1]!;
   const first = c.player.rx.find(r => r.name === 'ChangeMap')!.packet as any;
-  const spawn = (process.env.AO_SPAWN ?? '751,60,57').split(',').map(Number) as [number, number, number]; // Forgat after the server's data patch (docs/DATA-PATCHES.md); the unpatched Ciudades.Dat says 517,48,65
-  c.eq(first.map, spawn[0], 'spawn map (Forgat)');
-  c.eq([c.player.x, c.player.y], [spawn[1], spawn[2]], 'spawn tile (Cities(Forgat))');
-  c.note('client home byte was 7 (HOME_CITY); the contradiction check against a second Hogar needs a 2nd character and is skipped to save the 15-per-IP creation budget');
+  c.eq(first.map, city.map, `home byte ${home}: spawn map (${city.name})`);
+  c.eq([c.player.x, c.player.y], [city.x, city.y], `spawn tile = Ciudades.Dat [${city.name}]`);
+  c.note('Ullathorpe (home 1) is asserted by NWB-01 with a second fresh character; Forgat (7) falls back to Ullathorpe per #76 and is not re-created here (15-per-IP creation budget)');
 });
 
 step('ACC-05', async c => {

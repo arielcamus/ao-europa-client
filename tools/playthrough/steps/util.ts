@@ -39,6 +39,10 @@ import { execFileSync } from 'node:child_process';
  * AO_DB_SSH ("user@host") / AO_DB_SSH_PORT / AO_DB_SSH_KEY / AO_DB_CLI (sqlite3 path on the server host).
  */
 export function sql(statement: string): string {
+  // the VM's ssh answers slowly when the Mac is overloaded (21 Nov: load 150+): retry a timed-out call twice before failing the step
+  for (let i = 0; ; i++) { try { return sqlOnce(statement); } catch (e) { if (i >= 2 || !/ETIMEDOUT/.test(String(e))) throw e; Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 5000); } }
+}
+function sqlOnce(statement: string): string {
   const key = process.env.AO_DB_SSH_KEY ?? `${process.env.HOME}/Projects/ao-reference/runtime/ao-vm/id_ed25519`;
   const cli = process.env.AO_DB_CLI ?? 'C:\\ao\\sqlite-cli\\sqlite3.exe C:\\ao\\server-9ccd\\Database.db';
   return execFileSync('ssh', ['-o', 'BatchMode=yes', '-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no', '-o', 'LogLevel=ERROR', '-i', key, '-p', process.env.AO_DB_SSH_PORT ?? '2222', process.env.AO_DB_SSH ?? 'aobuilder@127.0.0.1', `${cli} "${statement}"`], { encoding: 'utf8', timeout: 30_000 }).trim();

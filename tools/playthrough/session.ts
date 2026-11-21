@@ -92,6 +92,7 @@ export class Sess {
       default: {
         const anyp = p as unknown as { message?: string; id: number; privileges?: number };
         if (p.id === 177 /* Privilegios */) this.isGM = !!(p as any).isGM;
+        if ((p.id as number) === 43 /* CharacterRemove */) this.chars.delete((p as any).charIndex);
         if (p.id === 141 /* LocaleMsg */) this.messages.push(`[${(p as any).messageId}] ${(p as any).text}`);
       }
     }
@@ -144,7 +145,9 @@ export class Sess {
   /** Waits for a packet by name (optionally matching) after `mark`. */
   async waitFor(name: string, after = 0, ms = 5000, match: (p: any) => boolean = () => true): Promise<any> {
     await this.until(() => this.rx.slice(after).some(r => r.name === name && match(r.packet)), ms, name);
-    return this.rx.slice(after).find(r => r.name === name && match(r.packet))!.packet;
+    const hit = this.rx.slice(after).find(r => r.name === name && match(r.packet));
+    if (!hit) throw new Error(`the session closed while waiting for ${name}`);
+    return hit.packet;
   }
   /** LocaleMsg (141) lines since mark as {id, params}: the server's own messages are locale ids, the params are joined by the char 172. */
   localeSince(mark: number) { return this.rx.slice(mark).filter(r => r.name === 'LocaleMsg').map(r => ({ id: (r.packet as any).messageId as number, text: (r.packet as any).text as string })); }

@@ -38,7 +38,7 @@ export function makeCtx(env: Env): { ctx: Ctx; notes: string[] } {
   return { ctx, notes };
 }
 
-export async function runSteps(env: Env, only: string[] | undefined, log: (m: string) => void): Promise<StepResult[]> {
+export async function runSteps(env: Env, only: string[] | undefined, log: (m: string) => void, onResult?: (results: StepResult[]) => void): Promise<StepResult[]> {
   const results: StepResult[] = [];
   for (const { id, body } of registry) {
     if (only && !only.some(p => id.startsWith(p))) continue;
@@ -56,6 +56,7 @@ export async function runSteps(env: Env, only: string[] | undefined, log: (m: st
     const r = { id, outcome, detail: detail.slice(0, 900), ms: Date.now() - t, at: new Date().toISOString() };
     results.push(r);
     log(`${outcome.toUpperCase().padEnd(7)} ${id} ${r.detail.slice(0, 160)}`);
+    onResult?.(results); // the report is written after every step, so a timeout or a crash keeps what already ran
   }
   return results;
 }

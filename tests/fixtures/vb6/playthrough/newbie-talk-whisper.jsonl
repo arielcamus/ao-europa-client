@@ -1,0 +1,8 @@
+{"t_ms":0,"dir":"s2c","id":201,"name":"GuildConfig","hex":"c9000306040507030507090b0d0f"}
+{"t_ms":1,"dir":"c2s","id":79,"name":"RequestPositionUpdate","hex":"4f00"}
+{"t_ms":2,"dir":"s2c","id":31,"name":"PosUpdate","hex":"1f004b11"}
+{"t_ms":3,"dir":"c2s","id":75,"name":"Talk","hex":"4b001e686f6c6120646573646520656c20706c61797468726f756768207565626601000000"}
+{"t_ms":4,"dir":"s2c","id":35,"name":"ChatOverHead","hex":"23001e686f6c6120646573646520656c20706c61797468726f75676820756562660109ffffff00004b1100000000"}
+{"t_ms":5,"dir":"c2s","id":77,"name":"Whisper","hex":"4d0006416f7465737409707373742074787478"}
+{"t_ms":6,"dir":"s2c","id":128,"name":"ConsoleCharText","hex":"800010686f6c61206e6f7661746f206b786c6b9de2140006416f7465737400002000"}
+{"t_ms":7,"dir":"s2c","id":112,"name":"UserOnline","hex":"70000300"}

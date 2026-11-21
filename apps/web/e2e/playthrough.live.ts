@@ -35,7 +35,7 @@ test('playthrough', async ({ page, baseURL }) => {
     try {
       if (i === 0) await s.createAccount(email, password); else await s.loginAccount(email, password);
       charName = `Pt${letters(7)}`;
-      const r = await s.createChar({ name: charName, race: 1, gender: 1, characterClass: 1, head: 1 });
+      const r = await s.createChar({ name: charName, race: 1, gender: 1, characterClass: 1, head: 1, home: Number(process.env.AO_HOME ?? 2) }); // Nix: the city picker's 2nd entry (ACC-04)
       if (r.ok) { creation.ok = true; player = s; mkdirSync('artifacts/playthrough', { recursive: true }); writeFileSync(CACHE, JSON.stringify({ email, password, charName })); } else { creation.errors.push(r.error); s.close(); await s.sleep(3000); }
     } catch (e) { creation.errors.push(String(e)); s.close(); }
   }
@@ -76,7 +76,8 @@ test('playthrough', async ({ page, baseURL }) => {
   };
   registerAll();
   let results;
-  try { results = await runSteps(env, only, log); }
+  const meta = () => ({ account: creation.reused ? 'reused' : creation.ok ? 'fresh' : 'fallback', character: charName, creation, wallClockSeconds: Math.round((Date.now() - t0) / 1000) });
+  try { results = await runSteps(env, only, log, so_far => writeReport(so_far, meta(), 'tools/completion/playthrough-report.json')); }
   finally { env.player.close(); gm.close(); }
   writeReport(results, { account: creation.reused ? 'reused' : creation.ok ? 'fresh' : 'fallback', character: charName, creation, wallClockSeconds: Math.round((Date.now() - t0) / 1000) }, 'tools/completion/playthrough-report.json');
   log(`done: ${results.filter(r => r.outcome === 'pass').length} pass, ${results.filter(r => r.outcome === 'fail').length} fail, ${results.filter(r => r.outcome === 'blocked').length} blocked`);

@@ -1,305 +1,706 @@
 {
- "generated": "2026-11-21T12:18:37.053Z",
+ "generated": "2026-11-21T22:41:58.545Z",
  "server": "127.0.0.1:7667",
- "account": "fresh",
- "character": "Ptteizkxg",
+ "account": "reused",
+ "character": "Ptkyvwymu",
  "creation": {
-  "attempts": 1,
-  "ok": true,
+  "attempts": 0,
+  "ok": false,
   "errors": [],
-  "reused": false
+  "reused": true
  },
- "wallClockSeconds": 72,
+ "wallClockSeconds": 70,
  "totals": {
-  "pass": 26,
-  "fail": 2,
-  "blocked": 15
+  "pass": 70,
+  "fail": 0,
+  "blocked": 28
  },
  "results": [
   {
    "id": "ACC-01",
    "outcome": "pass",
-   "detail": "Connected on TCP open; AccountCharacterList after LoginAccount; character count 1 <= MAX_PERSONAJES 10; list holds Ptpjdyxkp",
-   "ms": 5
+   "detail": "Connected on TCP open; AccountCharacterList after LoginAccount; character count 1 <= MAX_PERSONAJES 10; list holds Ptkyvwymu",
+   "ms": 10,
+   "at": "2026-11-21T21:12:31.699Z"
   },
   {
    "id": "ACC-02",
    "outcome": "pass",
    "detail": "human attributes STR/AGI/INT/CHA/CON (18 + MODRAZA) = [19,19,18,18,20]; only the human race is created per run: the per-IP cap is 15 new characters per server run, shared by all agents; the other 5 races need dedicated runs",
-   "ms": 1
+   "ms": 2,
+   "at": "2026-11-21T21:12:31.702Z"
   },
   {
    "id": "ACC-03",
    "outcome": "pass",
    "detail": "ELV = 1; Exp = 0; gold = 0; MaxHp = CON = 20; MinHp = MaxHp = 20; mage mana = INT*8.33 = 150; MaxSta 60 in {40, 60} for a human; hunger/thirst 100/100 = [100,100,100,100]; safe toggle on (SafeModeOn); free SkillPts = 10; Faccion.Status = citizen (1) = 1",
-   "ms": 1
+   "ms": 3,
+   "at": "2026-11-21T21:12:31.706Z"
   },
   {
    "id": "ACC-04",
    "outcome": "pass",
-   "detail": "spawn map (Forgat) = 751; spawn tile (Cities(Forgat)) = [60,57]; client home byte was 7 (HOME_CITY); the contradiction check against a second Hogar needs a 2nd character and is skipped to save the 15-per-IP creation budget",
+   "detail": "home byte 2: spawn map (Nix) = 34; spawn tile = Ciudades.Dat [Nix] = [40,87]; Ullathorpe (home 1) is asserted by NWB-01 with a second fresh character; Forgat (7) falls back to Ullathorpe per #76 and is not re-created here (15-per-IP creation budget)",
    "ms": 0,
-   "at": "2026-11-21T12:07:59.856Z"
+   "at": "2026-11-21T21:12:31.707Z"
   },
   {
    "id": "ACC-05",
    "outcome": "pass",
    "detail": "Pocion de Vida (obj 4335) = 500; Pocion Violeta (obj 4334) = 35; Pasaje a Jourmut (obj 3791) = 4; mage blue potions (obj 4336) = 850; mage yellow potions (obj 4337) = 80",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T21:12:31.708Z"
   },
   {
    "id": "ACC-06",
    "outcome": "pass",
    "detail": "slot 1 = Dardo Magico (id 1) = 1; slot 2 = Llamado a la Naturaleza (id 7) = 7",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T21:12:31.708Z"
   },
   {
    "id": "ACC-07",
    "outcome": "pass",
    "detail": "existing name -> ShowMessageBox id = 1769",
-   "ms": 4004
+   "ms": 4009,
+   "at": "2026-11-21T21:12:35.717Z"
   },
   {
    "id": "ACC-08",
    "outcome": "pass",
-   "detail": "Logged after LoginExistingChar; position restored from the database = {\"map\":751,\"x\":60,\"y\":57}; stats and inventory sent",
-   "ms": 3925
+   "detail": "Logged after LoginExistingChar; position restored from the database = {\"map\":34,\"x\":40,\"y\":87}; stats and inventory sent",
+   "ms": 4408,
+   "at": "2026-11-21T21:12:40.126Z"
   },
   {
    "id": "ACC-10",
    "outcome": "blocked",
-   "detail": "the character stands on map 751, a Seguro=1 map: /SALIR disconnected in 7 ms (that is ACC-11's safe-map half). The countdown needs a character on an unsafe map (a fresh character spawns on 517 Forgat)",
-   "ms": 8
+   "detail": "the character stands on map 34, a Seguro=1 map: /SALIR disconnected in 158 ms (that is ACC-11's safe-map half). The countdown needs a character on an unsafe map (a fresh character spawns on 517 Forgat)",
+   "ms": 159,
+   "at": "2026-11-21T21:12:40.295Z"
   },
   {
    "id": "ACC-11",
    "outcome": "pass",
-   "detail": "GM /SALIR disconnected in 12 ms, no countdown; non-GM /SALIR on map 751 disconnected in 0 ms (Seguro=1 map)",
-   "ms": 3934
+   "detail": "GM /SALIR disconnected in 298 ms, no countdown; non-GM /SALIR on map 34 disconnected in 3 ms (Seguro=1 map)",
+   "ms": 4341,
+   "at": "2026-11-21T21:12:44.637Z"
   },
   {
    "id": "ACC-12",
    "outcome": "blocked",
    "detail": "ACC-12 (cancelling the /SALIR countdown) needs an unsafe map; the character stands on a Seguro=1 map (ACC-10 saw an instant /SALIR)",
-   "ms": 1
+   "ms": 1,
+   "at": "2026-11-21T21:12:48.753Z"
   },
   {
    "id": "ACC-13",
    "outcome": "blocked",
    "detail": "ACC-13 (combat-log countdown after a dropped socket) needs an unsafe map; the character stands on a Seguro=1 map (ACC-10 saw an instant /SALIR)",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T21:12:48.760Z"
   },
   {
    "id": "ACC-14",
    "outcome": "pass",
    "detail": "/PROMEDIO printed 3 locale lines: 1988:1¬1¬1 | 1220:20¬7 | 1221:20 (+0)¬7",
-   "ms": 1502
+   "ms": 1507,
+   "at": "2026-11-21T21:12:50.268Z"
   },
   {
    "id": "MOV-01",
    "outcome": "pass",
-   "detail": "Intervals.walk ms (IntervaloCaminar = 210) = 210; heading 2 delta = [1,0]; heading 3 delta = [0,1]; heading 4 delta = [-1,0]; heading 1 delta = [0,-1]; self 5428 at 60,57; recent moves ; wire tail: <PosUpdate >Walk <UpdateSta >RequestPositionUpdate <PosUpdate >Walk >RequestPositionUpdate <PosUpdate; 4/4 headings moved the character exactly one tile (others hit a blocked tile); fixture walk-four-headings",
-   "ms": 3835,
-   "at": "2026-11-21T12:12:49.201Z"
+   "detail": "Intervals.walk ms (IntervaloCaminar = 210) = 210; heading 2 delta = [1,0]; heading 3 delta = [0,1]; heading 4 delta = [-1,0]; heading 1 delta = [0,-1]; self 1729 at 60,57; recent moves ; wire tail: >RequestPositionUpdate <PosUpdate >Walk >RequestPositionUpdate <PosUpdate >Walk >RequestPositionUpdate <PosUpdate; 4/4 headings moved the character exactly one tile (others hit a blocked tile); fixture walk-four-headings",
+   "ms": 3909,
+   "at": "2026-11-21T22:01:00.731Z"
   },
   {
    "id": "MOV-02",
    "outcome": "pass",
-   "detail": "a blocked tile answered with PosUpdate (old position) after 40 steps; moved one tile off the wall; second character at 751:60,57; first at 751:23,57; the step into the second character's tile (step 37 of 37) was refused, all earlier steps moved = 37; fixture walk-into-wall-and-player; NPC half not driven: spawning a creature next to the player needs /ACC + a cleanup by the spawned index only (brief rule); covered by tests/fixtures/vb6/movement walk-into-creature",
-   "ms": 30292,
-   "at": "2026-11-21T12:13:19.493Z"
+   "detail": "a blocked tile answered with PosUpdate (old position) after 40 steps; moved one tile off the wall; second character at 751:64,58; first at 751:23,57; the step into the second character's tile (step 42 of 42) was refused, all earlier steps moved = 42; fixture walk-into-wall-and-player; NPC half not driven: spawning a creature next to the player needs /ACC + a cleanup by the spawned index only (brief rule); covered by tests/fixtures/vb6/movement walk-into-creature",
+   "ms": 33073,
+   "at": "2026-11-21T22:01:33.806Z"
   },
   {
    "id": "MOV-03",
    "outcome": "pass",
-   "detail": "position unchanged by a heading change = [59,57]; the GM next door received CharacterChange for the turn; broadcast heading = 1",
-   "ms": 2707,
-   "at": "2026-11-21T12:13:22.200Z"
+   "detail": "position unchanged by a heading change = [64,57]; the GM next door received CharacterChange for the turn; broadcast heading = 1",
+   "ms": 2715,
+   "at": "2026-11-21T22:01:36.523Z"
   },
   {
    "id": "MOV-04",
    "outcome": "pass",
    "detail": "stepping on exit tile 751:88,57 sent ChangeMap; destination map (tile exit -> 753:14,57) = 753; arrived at 14,57 (exit says 14,57; ClosestLegalPos may shift it)",
-   "ms": 15922,
-   "at": "2026-11-21T12:15:06.335Z"
+   "ms": 16328,
+   "at": "2026-11-21T22:01:52.853Z"
   },
   {
    "id": "MOV-05",
-   "outcome": "blocked",
-   "detail": "needs the ids of a Newbie / MaxLevel map from the server map files (MapInfo) and a level-13 character; the harness has no map-info reader yet. Route: GM /MOD level 13 on the own character, /TELEP to that map, expect the refusal locale message and no warp",
-   "ms": 0,
-   "at": "2026-11-21T12:13:22.200Z"
+   "outcome": "pass",
+   "detail": "a level-13 character stepping on the dungeon door stays in the city = 1; Msg771 \"Sólo los newbies pueden entrar a este mapa\" (got 771); fixture newbie-graduate-refused",
+   "ms": 11885,
+   "at": "2026-11-21T22:26:02.705Z"
   },
   {
    "id": "MOV-06",
    "outcome": "blocked",
    "detail": "same missing map-info data as MOV-05 (a map with MaxLevel and Salida)",
-   "ms": 0,
-   "at": "2026-11-21T12:13:22.200Z"
+   "ms": 1,
+   "at": "2026-11-21T22:01:36.525Z"
   },
   {
    "id": "MOV-07",
    "outcome": "pass",
-   "detail": "stepped onto the otTeleport tile 24:76,29 (obj 19) from 24,76,30; now 391:53,53; saw RemoveCharDialog,RemoveDialogs,CharacterRemove,ChangeMap,AreaChanged,CharacterCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,CharacterCreate,ObjectCreate,CharacterCreate,CharacterCreate,CharacterCreate,UserCharIndexInServer,PlayWave,CreateFX,CreateFX,PlayWave,TextOverChar,UpdateHP,NPCKillUser,UpdateTagAndStatus,PlayWave,RemoveCharDialog,UpdateHP,UpdateSta,ObjectCreate,ChangeInventorySlot,ObjectCreate,ChangeInventorySlot,ObjectCreate,ChangeInventorySlot,SpeedToChar,VelocidadToggle,LocaleMsg,AreaChanged,ObjectCreate,CharacterCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,CharacterCreate,CharacterCreate,CharacterCreate,LocaleMsg,ConsoleMsg,PosUpdate,UserOnline; the teleport moved the character away (moved=true); the til",
-   "ms": 34085,
-   "at": "2026-11-21T12:18:01.428Z"
+   "detail": "stepped onto the otTeleport tile 24:76,29 (obj 19) from 24,76,30; now 391:47,49; saw RemoveCharDialog,RemoveDialogs,CharacterRemove,ChangeMap,AreaChanged,CharacterCreate,CharacterCreate,CharacterCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,CharacterCreate,UserCharIndexInServer,PlayWave,CreateFX,CreateFX,PlayWave,TextOverChar,UpdateHP,NPCKillUser,UpdateTagAndStatus,PlayWave,RemoveCharDialog,UpdateHP,UpdateSta,ObjectCreate,ChangeInventorySlot,SpeedToChar,VelocidadToggle,LocaleMsg,AreaChanged,CharacterCreate,CharacterCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,CharacterCreate,LocaleMsg,ConsoleMsg,PosUpdate; the teleport moved the character away (moved=true); the tile exit says 391:50,50 +-5; arrived on the TileExit map = 391; landed within Radio 5 of the exit (+3 for ClosestLegalPos); fixture telep",
+   "ms": 42998,
+   "at": "2026-11-21T22:02:35.852Z"
   },
   {
    "id": "MOV-08",
    "outcome": "pass",
-   "detail": "at 751:70,56 door 71,55; rx [[\"ConsoleMsg\",{\"id\":37,\"message\":\"O*3580*\",\"font\":3}],[\"BlockPosition\",{\"id\":53,\"x\":71,\"y\":55,\"sides\":0}],[\"BlockPosition\",{\"id\":53,\"x\":70,\"y\":55,\"sides\":0}],[\"BlockPosition\",{\"id\":53,\"x\":71,\"y\":56,\"sides\":0}],[\"BlockPosition\",{\"id\":53,\"x\":70,\"y\":56,\"sides\":0}],[\"ObjectCreate\",{\"id\":50,\"x\":71,\"y\":55,\"objIndex\":3579,\"amount\":1,\"elementalTags\":0}],[\"PlayWave\",{\"id\":55,\"wave\":5,\"x\":71,\"y\":55,\"cancelLast\":0,\"localize\":0}],[\"UserOnline\",{\"id\":112,\"count\":2}]]; LeftClick on door 3580 at 71,55 answered BlockPosition,BlockPosition,BlockPosition,BlockPosition,ObjectCreate (Toggles open/closed: ObjectCreate + BlockPosition); a second click toggles it back; fixture door-open-close",
-   "ms": 6335,
-   "at": "2026-11-21T12:18:07.763Z"
+   "detail": "LeftClick on door 3580 at 71,55 answered BlockPosition,BlockPosition,BlockPosition,BlockPosition,ObjectCreate (Toggles open/closed: ObjectCreate + BlockPosition); a second click toggles it back; fixture door-open-close",
+   "ms": 6362,
+   "at": "2026-11-21T22:02:42.217Z"
   },
   {
    "id": "MOV-09",
    "outcome": "blocked",
    "detail": "needs a locked door + its key object from the map files; recorded in tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
    "ms": 0,
-   "at": "2026-11-21T12:13:22.200Z"
+   "at": "2026-11-21T22:01:36.525Z"
   },
   {
    "id": "MOV-10",
    "outcome": "blocked",
    "detail": "needs a dock tile and a boat object id plus Navegacion skill and level 25 via GM /MOD; map data not parsed yet",
    "ms": 0,
-   "at": "2026-11-21T12:13:22.200Z"
+   "at": "2026-11-21T21:24:07.207Z"
   },
   {
    "id": "MOV-11",
    "outcome": "pass",
    "detail": "walking into water at 88,77 without a boat was refused (stayed at 14,76)",
-   "ms": 5958,
-   "at": "2026-11-21T12:15:57.201Z"
+   "ms": 65753,
+   "at": "2026-11-21T21:29:53.967Z"
   },
   {
    "id": "MOV-13",
    "outcome": "blocked",
    "detail": "needs a Transportista/Pirata NPC; checked in the next milestone against the pinned npcs.dat (see report note)",
    "ms": 0,
-   "at": "2026-11-21T12:13:22.200Z"
+   "at": "2026-11-21T21:24:07.207Z"
   },
   {
    "id": "MOV-14",
    "outcome": "pass",
    "detail": "UseItem answered: ShowFrmMapa | ; the server answered the ticket use",
-   "ms": 1502,
-   "at": "2026-11-21T12:13:23.702Z"
+   "ms": 1506,
+   "at": "2026-11-21T21:24:08.714Z"
   },
   {
    "id": "MOV-15",
    "outcome": "pass",
-   "detail": "Work(Ocultarse) answered with LocaleMsg,UserOnline; hide answered (success sets invisible, failure prints a locale message)",
-   "ms": 2000,
-   "at": "2026-11-21T12:13:25.702Z"
+   "detail": "Work(Ocultarse) answered with LocaleMsg; hide answered (success sets invisible, failure prints a locale message)",
+   "ms": 2003,
+   "at": "2026-11-21T21:24:10.724Z"
   },
   {
    "id": "MOV-16",
    "outcome": "pass",
    "detail": "MeditateToggle with a meditation FX",
-   "ms": 9042,
-   "at": "2026-11-21T12:13:34.745Z"
+   "ms": 29126,
+   "at": "2026-11-21T21:24:39.851Z"
   },
   {
    "id": "MOV-17",
    "outcome": "pass",
-   "detail": "30 UpdateMana ticks in 70 s of meditation; mana 5 -> 150; median gap between mana ticks 425 ms (the doc says ~400 ms after an initial ~840 ms); first tick gain 5 of max 150 (doc: 3.5% = 5); median ms between meditation mana ticks (IntervaloMeditar = 10 game ticks of 40 ms) = 425",
-   "ms": 75668,
-   "at": "2026-11-21T12:14:50.413Z"
+   "detail": "30 UpdateMana ticks in 70 s of meditation; mana 5 -> 150; median gap between mana ticks 502 ms (the doc says ~400 ms after an initial ~840 ms); first tick gain 5 of max 150 (doc: 3.5% = 5); median ms between meditation mana ticks (IntervaloMeditar = 10 game ticks of 40 ms) = 502",
+   "ms": 109226,
+   "at": "2026-11-21T21:26:29.085Z"
   },
   {
    "id": "MOV-18",
    "outcome": "blocked",
    "detail": "needs a FOGATA (obj 63) from MOV-19",
    "ms": 0,
-   "at": "2026-11-21T12:14:50.413Z"
+   "at": "2026-11-21T21:26:29.090Z"
   },
   {
    "id": "MOV-19",
    "outcome": "blocked",
    "detail": "needs /CI 58 3 on the floor + Work on it; pending",
    "ms": 0,
-   "at": "2026-11-21T12:14:50.413Z"
+   "at": "2026-11-21T21:26:29.090Z"
   },
   {
    "id": "MOV-20",
    "outcome": "blocked",
    "detail": "needs Magia 87+ via DB UPDATE on a logged-out char; pending",
    "ms": 0,
-   "at": "2026-11-21T12:14:50.413Z"
+   "at": "2026-11-21T21:26:29.091Z"
   },
   {
    "id": "MOV-21",
    "outcome": "blocked",
    "detail": "needs a saddle object id; pending",
    "ms": 0,
-   "at": "2026-11-21T12:14:50.413Z"
+   "at": "2026-11-21T21:26:29.091Z"
   },
   {
    "id": "MOV-22",
    "outcome": "blocked",
    "detail": "needs a dead character on a NEWBIE map; pending (DTH-01 first)",
    "ms": 0,
-   "at": "2026-11-21T12:14:50.413Z"
+   "at": "2026-11-21T21:26:29.091Z"
   },
   {
    "id": "MOV-23",
    "outcome": "blocked",
    "detail": "needs a Seguro map id; the safe-zone refusal is recorded in tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
    "ms": 0,
-   "at": "2026-11-21T12:14:50.413Z"
+   "at": "2026-11-21T21:26:29.092Z"
   },
   {
    "id": "MOV-25",
    "outcome": "blocked",
    "detail": "needs GM kill (DTH-01) first; pending",
    "ms": 0,
-   "at": "2026-11-21T12:14:50.413Z"
+   "at": "2026-11-21T21:26:29.092Z"
   },
   {
    "id": "PRG-16",
    "outcome": "pass",
    "detail": "cap at level 1 (Ariel: 3) = 3; cap at level 2 (Ariel: 5) = 5; cap at level 4 (Ariel: 10) = 10; cap at level 6 (Ariel: 15) = 15; cap at level 8 (Ariel: 20) = 20; odd levels 3, 5, 7 = 7, 13, 17 (+3 or +2) = [7,13,17]; levels 10/20/30/40/47 (PRG-08 table) = [25,50,75,100,117]; Ariel's remembered numbers MATCH the pinned code exactly; the table is SubirSkill, not a guess",
-   "ms": 0
+   "ms": 1,
+   "at": "2026-11-21T22:02:42.219Z"
   },
   {
    "id": "PRG-17",
    "outcome": "pass",
-   "detail": "Meditar reached the level-1 cap 3 by use and stayed 3 after one more round (run 4). Flaky: run 5 was blocked because the DB mana drain was not seen after relogin. ",
-   "manual": true,
-   "note": "hand-merged from run 4, not reproduced in run 5",
-   "ms": 50007
+   "detail": "ELV 1 = 1; Meditar reached the level-1 cap 3 by use = 3; Meditar still 3 after 1 more meditation rounds (no gain at the cap) = 3",
+   "ms": 214159,
+   "at": "2026-11-21T22:06:16.393Z"
   },
   {
    "id": "PRG-18",
-   "outcome": "fail",
-   "detail": "Meditar rose again to the level-2 cap 5: expected 5, got 0 [ok so far: ELV 2 (set through the DB: the GM helper cannot /MOD others) = 2; free points 10 + 5 = 15]",
-   "ms": 487399
+   "outcome": "pass",
+   "detail": "ELV 2 (set through the DB: the GM helper cannot /MOD others) = 2; free points 10 + 5 = 15; Meditar rose again to the level-2 cap 5 = 5; and stopped at 5 = 5",
+   "ms": 215604,
+   "at": "2026-11-21T22:09:51.999Z"
   },
   {
    "id": "PRG-19",
    "outcome": "pass",
-   "detail": "assigned points are added to the skill = 8; skill 8 is at or above the level-3 natural cap 7; no natural gain at or above the cap = 8",
-   "ms": 116975
+   "detail": "assigned points are added to the skill = 18; skill 18 is at or above the level-4 natural cap 10; no natural gain at or above the cap = 18",
+   "ms": 107008,
+   "at": "2026-11-21T22:18:46.418Z"
   },
   {
    "id": "PRG-20",
-   "outcome": "fail",
-   "detail": "a skill-up (+5 exp) crossed 1125 and CheckUserLevel sent LevelUp: false [ok so far: ELV 3 (DB) = 3]",
-   "ms": 480539
+   "outcome": "pass",
+   "detail": "ELV 3 (DB) = 3; a skill-up (+5 x ExpMult = +20 exp on the live server) crossed 1125 and CheckUserLevel levelled up; free points = 15 never spent + 5 for the new level = 20; ELV 4 = 4",
+   "ms": 111998,
+   "at": "2026-11-21T22:28:11.825Z"
   },
   {
    "id": "DTH-01",
    "outcome": "pass",
-   "detail": "placed on map 2 (an unsafe field map) with 1 HP = 2; the creature (, char 5430) killed the 1 HP character; after death: last own CharacterChange body 829 (ghost body 829), hp 0; UserDie: body becomes the ghost 829 = 829; fixture death-by-creature; reverted: is_dead=0, min_hp=20, back on 751",
-   "ms": 29288,
-   "at": "2026-11-21T12:18:37.051Z"
+   "detail": "placed on map 2 (an unsafe field map) with 1 HP = 2; the creature (, char 5431) killed the 1 HP character; after death: last own CharacterChange body 829 (ghost body 829), hp 0; UserDie: body becomes the ghost 829 = 829; fixture death-by-creature; reverted: is_dead=0, min_hp=20, back on 751",
+   "ms": 24560,
+   "at": "2026-11-21T22:19:10.981Z"
   },
   {
    "id": "OTH-06",
    "outcome": "pass",
    "detail": "fixture trainer-train-list; TrainList answered with TrainerCreatureList: {\"id\":88,\"creatures\":[\"Murcielago\",\"Lobo\",\"Serpiente\",\"Escorpion\",\"Goblin\"]}",
-   "ms": 5827
+   "ms": 6109,
+   "at": "2026-11-21T21:33:01.156Z"
+  },
+  {
+   "id": "CMB-01",
+   "outcome": "pass",
+   "detail": "warrior on map 751 (Forgat, no hostile creatures) = 751; sword equipped; two Attack packets in the same instant produce ONE swing (1165 ms interval) = 1; 14 swings before stamina fell under 10 (each costs 1..10); 6 hits in 14 swings (50% expected; every hit or no hit would mean a clamp bug); per-swing stamina cost 5,8,9,3,8,2,9,4,4,9,6,10,10,4 (1..10, regen can add back 1-2); stamina 55 -> 16; damage (floating numbers) 11,11,10,7,8,11,13; last dummy HP 999940; floating texts 11,10,7,8,11,13",
+   "ms": 39127,
+   "at": "2026-11-21T22:38:36.487Z"
+  },
+  {
+   "id": "CMB-02",
+   "outcome": "pass",
+   "detail": "7 damage samples: 11,11,10,7,8,11,13; every hit in [4, 14] (STR 19, DañoArmas 1.05); the damage varies (not a constant)",
+   "ms": 0,
+   "at": "2026-11-21T22:38:36.489Z"
+  },
+  {
+   "id": "CMB-03",
+   "outcome": "pass",
+   "detail": "both characters on map 751 (warrior 751:62,57 mage 751:63,57); adjacent: warrior 62,57 mage 63,57; Forgat, safe toggle on: message 1057 (no podes atacar ciudadanos, desactiva el seguro); the mage lost nothing (20 -> 20); SafeModeOff after the toggle; Forgat is a Seguro=1 map: toggle off, still refused with message 1062 (got 1062); still no damage on the safe map (23); both characters on map 84 (warrior 84:50,50 mage 84:51,50); adjacent: warrior 50,50 mage 51,50; map 84: SafeModeOff after the toggle (it is ON again after every login); warrior is a citizen (alignment 1) before attacking = 1; HP before the duel: warrior 20, mage 20; locale ids during the duel (warrior): 519,76,140; 2 hits in 2 swings reached the mage as UserHittedByUser: [{\"place\":2,\"damage\":10},{\"place\":6,\"damage\":10}]; the mage's HP fell 20 -> 0",
+   "ms": 37934,
+   "at": "2026-11-21T22:39:14.423Z"
+  },
+  {
+   "id": "CMB-04",
+   "outcome": "pass",
+   "detail": "every hit in [4, 14] (defence 0): 10,10; body parts 2,6 are within 1..6 (head, arms, legs, torso)",
+   "ms": 0,
+   "at": "2026-11-21T22:39:14.425Z"
+  },
+  {
+   "id": "CMB-05",
+   "outcome": "pass",
+   "detail": "the attacker is now a criminal (alignment 0) = 0; the victim stays a citizen (alignment 1) = 1; a criminal cannot change the toggle: message 696 (solo los ciudadanos pueden cambiar el seguro); no SafeModeOn/Off came back",
+   "ms": 1004,
+   "at": "2026-11-21T22:39:15.430Z"
+  },
+  {
+   "id": "CMB-06",
+   "outcome": "pass",
+   "detail": "safe toggle (/SEG) #1: SafeModeOff; safe toggle (/SEG) #2: SafeModeOn; safe toggle (/SEG) flips between the two presses (false then true); party safe toggle #1: PartySafeOff; party safe toggle #2: PartySafeOn; party safe toggle flips between the two presses (false then true); clan safe toggle #1: ClanSeguro; clan safe toggle #2: ClanSeguro; clan safe toggle flips between the two presses (false then true); resurrection safe toggle #1: SeguroResu; resurrection safe toggle #2: SeguroResu; resurrection safe toggle flips between the two presses (false then true); legionary safe toggle #1: LegionarySecure; legionary safe toggle #2: LegionarySecure; legionary safe toggle flips between the two presses (false then true); the army/citizen-guild lock (message 697) needs a guild of that alignment: asserted in the guild flows, not here",
+   "ms": 27672,
+   "at": "2026-11-21T22:39:43.102Z"
+  },
+  {
+   "id": "CMB-16",
+   "outcome": "pass",
+   "detail": "Paralizar not known yet = false; Paralizar learned into slot 3 (ChangeSpellSlot); one scroll consumed (2 -> 1) = 1; second scroll of the same spell: message 525 (tenes ese hechizo); and it was NOT consumed = 1; spell 26 learned from scroll 1659; scroll 1659 consumed = 0; spell 27 learned from scroll 1660; scroll 1660 consumed = 0; spell 24 learned from scroll 1657; scroll 1657 consumed = 0; spell 13 learned from scroll 1651; scroll 1651 consumed = 0; hungry: message 904 (demasiado hambriento y sediento), scroll kept (1); scroll not consumed while hungry = 1; class and race refusal (906) and the full-list refusal (777) are not reachable with the starter data: no scroll prohibits a mage, and 40 spell slots need 38 more scrolls",
+   "ms": 42055,
+   "at": "2026-11-21T21:45:29.136Z"
+  },
+  {
+   "id": "CMB-17",
+   "outcome": "pass",
+   "detail": "Dardo Magico in slot 1 = 1; 3 of 3 casts hit the dummy: damage 14,11,13; every Dardo did 10..16 (14-18 plus 3%, minus the dummy's 20% magic reduction); mana spent by three casts (10 each, nothing regenerates mana here) = 30 = 30; stamina cost per cast 2,2,2 (StaRequerido 2; a regeneration tick of 1-2 can land in between); two casts inside 1230 ms charged mana ONCE = 10",
+   "ms": 18937,
+   "at": "2026-11-21T21:45:48.076Z"
+  },
+  {
+   "id": "CMB-18",
+   "outcome": "pass",
+   "detail": "level 30 (DB) = 30; MaxMan 1533 at level 30 = 1533; self-heal: HP 2 -> 20 (20..50 healed, capped at MaxHp 20); Curar heridas graves cost 40 mana = 40; Invisibilidad cost 500 mana (messages 1105) = 500; SetInvisible(true) for the own character; seconds invisible (16..21 expected) = 17.478; message 307 (has vuelto a ser visible)",
+   "ms": 37561,
+   "at": "2026-11-21T21:46:25.641Z"
+  },
+  {
+   "id": "CMB-19",
+   "outcome": "pass",
+   "detail": "caster safe toggle off; caster stats at login: stamina 495/495, mana 1533, level 30, hunger {\"id\":78,\"maxWater\":100,\"water\":100,\"maxFood\":100,\"food\":100}; Paralizar cost 400 mana (caster 84:50,50 target 84:51,50; messages 1105; caster status [\"HecMSGU*25*Pqgjtiwec\"]) = 400; the victim got ParalizeOK; walk refused while paralysed (false,false,false,false,false,false); seconds until the warrior could walk again (15 x 0.7 = 10.5 expected, 11.6 measured) = 11.551",
+   "ms": 31725,
+   "at": "2026-11-21T21:46:57.378Z"
+  },
+  {
+   "id": "CMB-20",
+   "outcome": "pass",
+   "detail": "caster stamina before Inmovilizar 495; Inmovilizar cost 300 mana (messages 1105) = 300; the victim got InmovilizadoOK; immobilised: walking is refused; but turning on the spot is accepted; Remover Paralisis cost 300 mana = 300; after Remover Paralisis the warrior walks at once (well before the 14 s)",
+   "ms": 57283,
+   "at": "2026-11-21T21:47:54.664Z"
+  },
+  {
+   "id": "CMB-15",
+   "outcome": "pass",
+   "detail": "warrior on map 751 (Forgat, no hostile creatures) = 751; bow equipped; arrows equipped; 8 of 8 shots sent ArmaMov with isRanged (the arrow animation); one arrow consumed per shot (634 -> 626) = 8; 1 hits in 8 shots: 11 (chance 50%); every hit in [8, 12] (STR 19, DañoProyectiles 0.87); arrows unequipped: message 709 (no tenes municiones) and no shot (messages 1125,709)",
+   "ms": 53432,
+   "at": "2026-11-21T21:48:48.098Z"
+  },
+  {
+   "id": "CMB-22",
+   "outcome": "pass",
+   "detail": "packets after the cast: WorkRequestTarget,LocaleMsg,CharacterCreate,CreateFX,UpdateCharValue,ChatOverHead,PlayWave,UpdateMana,UpdateSta,CharacterChange,CharacterMove,UserOnline; mage at 84:50,50; CharacterCreate [[2315,\"\",2,4372,51,50],[5434,\"\",2,4372,50,49],[5436,\"\",2,4372,51,49]]; Llamado a la Naturaleza cost 120 mana (messages 1114) = 120; 3 creatures appeared next to the mage: @51,50 @50,49 @51,49 (MAXMASCOTAS 3); PetStand without a selected pet: message 757 (selecciona un personaje con click izquierdo), got 757; PetStand on the selected pet was accepted (the pet answers with Expresar); PetFollow on the selected pet was accepted; PetLeave removed the selected pet only; PetLeaveAll removed the other 2 pets (2 CharacterRemove); message 1278 (liberaste a tus mascotas)",
+   "ms": 50172,
+   "at": "2026-11-21T21:49:38.273Z"
+  },
+  {
+   "id": "CMB-09",
+   "outcome": "pass",
+   "detail": "ciudadanosMatados after killing a newbie citizen = 0; criminalesMatados = 0; killer alignment now 1 (CMB-06 sets both characters back to citizens before this step; the criminal status itself is CMB-05)",
+   "ms": 1,
+   "at": "2026-11-21T22:39:43.105Z"
+  },
+  {
+   "id": "CMB-07",
+   "outcome": "blocked",
+   "detail": "manual: UserCanAttackNpc sets TurnPK only against citizen-faction creatures (royal guards, which kill a level 1 character) and DoRobar needs the Ladron class and 15 stamina; neither exists as a safe fixture",
+   "ms": 0,
+   "at": "2026-11-21T22:39:43.106Z"
+  },
+  {
+   "id": "CMB-08",
+   "outcome": "blocked",
+   "detail": "manual: HandleDonateGold needs a criminal inside a city with a Revividor (priest) in 3 tiles and 2500 gold; criminals are pushed out of NoPKs maps (VolverCriminal), so the walk to the priest needs a hand-held session",
+   "ms": 0,
+   "at": "2026-11-21T22:39:43.106Z"
+  },
+  {
+   "id": "CMB-10",
+   "outcome": "blocked",
+   "detail": "manual: EnlistarArmadaReal needs ELV >= 25 and 100 FactionScore (rangos_faccion.dat), which the newbie starter items cannot survive (OBJ Newbie=1 stops at ELV 12), plus an Enlistador NPC of the faction",
+   "ms": 0,
+   "at": "2026-11-21T21:49:38.282Z"
+  },
+  {
+   "id": "CMB-11",
+   "outcome": "blocked",
+   "detail": "manual: EnlistarCaos needs a criminal with FactionScore >= 100 and ELV >= 25 next to a Caos enlister; same level problem as CMB-10",
+   "ms": 0,
+   "at": "2026-11-21T21:49:38.282Z"
+  },
+  {
+   "id": "CMB-12",
+   "outcome": "blocked",
+   "detail": "manual: /RECOMPENSA needs an enlisted character at the rank score and level of rangos_faccion.dat (25/30/35/40/43)",
+   "ms": 0,
+   "at": "2026-11-21T21:49:38.283Z"
+  },
+  {
+   "id": "CMB-13",
+   "outcome": "blocked",
+   "detail": "manual: LeaveFaction needs an enlisted character (CMB-10) beside its enlister",
+   "ms": 0,
+   "at": "2026-11-21T21:49:38.283Z"
+  },
+  {
+   "id": "CMB-14",
+   "outcome": "blocked",
+   "detail": "manual: needs an Armada member (CMB-10) next to a citizen: msgs 1055/1056 come from the Armada branch of PuedeAtacar",
+   "ms": 0,
+   "at": "2026-11-21T21:49:38.283Z"
+  },
+  {
+   "id": "CMB-21",
+   "outcome": "blocked",
+   "detail": "manual: Ceguera, Estupidez and Maldicion have no learnable scroll in the starter data and only NPC casters apply them",
+   "ms": 0,
+   "at": "2026-11-21T21:49:38.284Z"
+  },
+  {
+   "id": "CMB-23",
+   "outcome": "blocked",
+   "detail": "manual: DoDomar needs a Druid (taming points = CHA * Domar / 6 for druids, / 118 for everybody else) and a tameable creature; the harness characters are a mage and a warrior",
+   "ms": 0,
+   "at": "2026-11-21T21:49:38.284Z"
+  },
+  {
+   "id": "CMB-24",
+   "outcome": "blocked",
+   "detail": "manual: Apunalar needs a dagger user of a class with a backstab chance (Assassin, Hunter, Bard); the harness characters are a mage and a warrior",
+   "ms": 0,
+   "at": "2026-11-21T21:49:38.285Z"
+  },
+  {
+   "id": "CMB-25",
+   "outcome": "blocked",
+   "detail": "manual: Cleave, Provoke and DivineBlood come from class effects (EffectsOverTime.dat) of a Warrior or Cleric at the toggled feature level",
+   "ms": 0,
+   "at": "2026-11-21T21:49:38.286Z"
+  },
+  {
+   "id": "CMB-26",
+   "outcome": "blocked",
+   "detail": "manual: guild war declarations need two guild leaders (guild creation needs level and gold); the clan-safe toggle is asserted in CMB-06",
+   "ms": 0,
+   "at": "2026-11-21T21:49:38.286Z"
+  },
+  {
+   "id": "NWB-01",
+   "outcome": "pass",
+   "detail": "home byte 1 (Ullathorpe): spawn map = 1; spawn tile = Ciudades.Dat [Ullathorpe] = [57,44]; ELV 1 = 1; Exp 0 = 0; the MOTD rates line says \"EXP X4\"; the MOTD points to the Newbie Dungeon (\"¿Eres nuevo? Hasta el nivel 12 entrena en el Dungeon Newbie...\", windows-1252 decoded); the MOTD points to the Cartelera and Makrom; fixture newbie-create-motd",
+   "ms": 1097,
+   "at": "2026-11-21T22:40:51.525Z"
+  },
+  {
+   "id": "NWB-02",
+   "outcome": "pass",
+   "detail": "the Cartelera is on screen (Cartelera <Quest> at 60,56); the board offers Makrom's 190-194, quest 4, then its own 154/163/164/165 = [190,191,192,193,194,4,154,163,164,165]; quest 190 available (state 0) = 0; 191-194 not available at level 1 (states 3,3,3,3); QuestAccept answered Msg1264 \"Has aceptado la misión\"; the quest log holds 190 = [190]; quest 190 asks 2 Hormigas, 7 Murciélagos, 10 Serpientes, 8 Gallos; none killed = [[508,2,0],[506,7,0],[502,10,0],[501,8,0]]; fixture newbie-cartelera-accept-190",
+   "ms": 4923,
+   "at": "2026-11-21T22:40:56.450Z"
+  },
+  {
+   "id": "NWB-03",
+   "outcome": "pass",
+   "detail": "walking onto the door at 1:74,22 entered the Newbie Dungeon (map 168) = 168; arrival tile = the door's exit = [50,32]; map name \"Dungeon Newbie Central.\", 5 creatures in view; fixture newbie-enter-dungeon",
+   "ms": 12075,
+   "at": "2026-11-21T22:41:08.526Z"
+  },
+  {
+   "id": "NWB-04",
+   "outcome": "pass",
+   "detail": "the GM helper spawned one Hormiga (char 5431) next to the player; removed afterwards if alive; killed a Hormiga after 31 swings (route 50,32>49,30:20/60 50,30>49,31:20/60 50,31>49,31:20/60 50,31>49,31:20/52 50,31>49,31:19/54 50,31>49,31:19/49 50,31>49,31:18/52 50,31>49,31:18/51 50,31>49,31:18/51 50,31>49,31:16/48 50,31>49,31:15/48 50,31>49,31:12/44 50,31>49,31:12/41 50,31>49,31:10/43 50,31>49,31:10/37 50,31>49,31:7/40 50,31>49,31:19/39 50,31>49,31:19/39 50,31>49,31:18/34 50,31>49,31:18/33 50,31>49,31:18/29 50,31>49,31:18/28 50,31>49,31:17/22 50,31>49,31:16/21 50,31>49,31:15/20 50,31>49,31:15/15 50,31>49,31:12/10 50,31>49,31:11/2 50,31>49,31:9/13 50,31>49,31:9/8 50,31>49,31:3/17 50,31>49,31:15/16 50,31>49,31:15/10 50,31>49,31:14/12 50,31>49,31:14/10 gone); fixture newbie-first-kill; floating exp texts 6,6,6,6,6,6,6,6,3 (sum 51); skill-up bonus 120 (Msg140) counted apart; exp for the kill ",
+   "ms": 50017,
+   "at": "2026-11-21T22:41:58.544Z"
+  },
+  {
+   "id": "NWB-05",
+   "outcome": "pass",
+   "detail": "stored progress \"1-0-0-0\" (slot 1); all four counters complete after the relog = [2,7,10,8]; the dungeon exit (168:50,33) leads back to Ullathorpe = 1; Makrom is on screen at 77,16 (map spawn 77,18); Makrom answered ChatOverHead QUESTFIN*190 (FinishQuest); gold reward = RewardGLD 60 x OroMult 1 = 60; the quest log is empty after the turn-in = []; fixture newbie-turn-in-190",
+   "ms": 9323,
+   "at": "2026-11-21T22:37:26.308Z"
+  },
+  {
+   "id": "NWB-06",
+   "outcome": "pass",
+   "detail": "the turn-in sent LevelUp; ELV after +1000 exp (RewardEXP 250 x 4) from 191 at level 1 = 2; the surplus exp carries over = 691; MaxSta +15 per level (AumentoSta) = 15; MaxHP 29 at level 2",
+   "ms": 1,
+   "at": "2026-11-21T22:37:26.310Z"
+  },
+  {
+   "id": "PRG-06",
+   "outcome": "pass",
+   "detail": "free skill points = 10 at creation + 5 x 1 level(s) (LevelSkillPoints, not added to skills) = 15",
+   "ms": 0,
+   "at": "2026-11-21T22:23:29.293Z"
+  },
+  {
+   "id": "PRG-07",
+   "outcome": "pass",
+   "detail": "assigned 4 to Armas and 3 to Tacticas = [4,3]; Armas 4 may exceed the natural cap of level 2 (assigned points have no per-level cap); the 7 spent points are gone from the free pool after a relog = 8",
+   "ms": 3348,
+   "at": "2026-11-21T22:23:32.642Z"
+  },
+  {
+   "id": "ECO-20",
+   "outcome": "pass",
+   "detail": "a character 2 tiles away received the talk (ChatOverHead); over the speaker's char index = 2305; the speaker sees its own bubble; a player's whisper to the GM Aotest is not delivered (CompararPrivilegios < 0); and the sender gets no echo either; the GM's whisper reached the player as ConsoleCharText from Aotest; fixture newbie-talk-whisper",
+   "ms": 6314,
+   "at": "2026-11-21T22:23:38.957Z"
+  },
+  {
+   "id": "ECO-05",
+   "outcome": "pass",
+   "detail": "door 77,55: 1 click(s), answers sides 0; walked through the opened door into the bank hall (at 77,51; door opened by a click); the banker is on screen (Banquero <Finanzas Goliath> at 77,47); clicking the banker opened frmGoliath (Goliath) (got Goliath,UserOnline); the Bóveda button (BankStart) opened the vault (BankInit); deposited 50: gold 60 -> 10 = 10; the banker said Msg1418 \"Tenés N monedas de oro en tu cuenta\"; UpdateBankGld {\"id\":175,\"gold\":50}; withdrew 50 again: gold back to 60 = 60; fixture newbie-bank-gold",
+   "ms": 25282,
+   "at": "2026-11-21T22:24:04.240Z"
+  },
+  {
+   "id": "DTH-02",
+   "outcome": "pass",
+   "detail": "logged in on map 2 with 1 HP and the gold = [2,2600,1]; 5 Manzana Roja in slot 16; a creature killed the 1 HP newbie; the 5 apples fell to the floor (ObjectCreate [[49,49,12,600],[50,49,1,5],[49,49,12,600],[50,48,12,4805],[50,49,1,5],[52,48,1,40]]); the apples left the inventory; the 15 newbie items stayed (4335,4337,4338,4334,3791,3487,3488,3489,3490,3491,3492,3686,3500,3684,3685) = 15; fixture newbie-death-drops",
+   "ms": 9906,
+   "at": "2026-11-21T22:24:14.147Z"
+  },
+  {
+   "id": "DTH-03",
+   "outcome": "pass",
+   "detail": "kept OroPorNivelBilletera 1000 x ELV 2 gold = 2000; the 600 excess gold fell as a pile; picked 4 of 6 dropped piles back up",
+   "ms": 65277,
+   "at": "2026-11-21T22:25:19.424Z"
+  },
+  {
+   "id": "NWB-07",
+   "outcome": "pass",
+   "detail": "level 12 in the Newbie Dungeon (DB) = [12,168]; inventory before: 3500,4335,4337,4338,4334,3791,3487,3488,3489,3490,3491,3492,3686,3684,3685; fight: {\"killed\":true,\"trace\":\"50,32>61,18:20/64 50,30>61,19:20/77 50,28>60,20:20/81 52,28>60,21:20/88 54,28>59,22:20/93 55,27>59,23:20/99 55,25>58,24:20/105 56,24>57,24:20/108 56,24>57,24:20/107 56,24>57,24:20/108 gone\",\"swings\":3,\"hits\":1,\"skillUpExp\":0,\"skillUps\":[],\"exp\":null}, exp now 57/43248, hp 130, map 1; one kill crossed level 13 = 13; Msg671 \"Has dejado de ser Newbie\"; graduating inside a newbie map sent the character home (Ullathorpe) = 1; landed at 57,44: the Ullathorpe spawn 57,44 or the closest free tile (the -c patch uses WarpToLegalPos) = 0; QuitarNewbieObj removed the newbie items (3500,4335,4337,4338,4334,3487,3488,3489,3490,3491,3492,3686,3684,3685); left: 3791; DB after the save: 4335,4337,4338,4334,3791,3487,3488,3489,3490,349",
+   "ms": 13985,
+   "at": "2026-11-21T22:37:40.295Z"
+  },
+  {
+   "id": "NWB-08",
+   "outcome": "pass",
+   "detail": "the classic client's console shows the MOTD newbie line; and the X4 rates line; screenshot artifacts/screenshots/playthrough-newbie-ui.png",
+   "ms": 17063,
+   "at": "2026-11-21T22:37:57.359Z"
+  },
+  {
+   "id": "SUR-01",
+   "outcome": "pass",
+   "detail": "logged in with 50/50 = [50,50]; one tick removes exactly 10 from each = [40,40]; seconds from login to the first thirst tick (161 expected: IntervaloSed+1) = 159.378; seconds from login to the first hunger tick (181 expected: IntervaloHambre+1) = 179.548; hunger ticks 20.2 s after thirst (20 expected); GMs are exempt (HambreYSed exits unless Privilegios = User): not asserted on the GM helper; full drain (26.8 and 30.2 minutes) is arithmetic on the same counters",
+   "ms": 186654,
+   "at": "2026-11-21T22:31:18.483Z"
+  },
+  {
+   "id": "SUR-03",
+   "outcome": "pass",
+   "detail": "hunger 50 before = 50; apple adds MinHAM 15 = 65; one apple consumed = 99; capped at MaxHam 100 = 100",
+   "ms": 16574,
+   "at": "2026-11-21T21:36:40.779Z"
+  },
+  {
+   "id": "SUR-04",
+   "outcome": "pass",
+   "detail": "thirst 50 before = 50; water bottle adds MinAgu 15 (the item text promises 30: data bug in Obj.dat, the server uses MinAgu) = 65; one bottle consumed = 49",
+   "ms": 10217,
+   "at": "2026-11-21T21:36:51.002Z"
+  },
+  {
+   "id": "SUR-05",
+   "outcome": "pass",
+   "detail": "HP 3 of 20 before = 3; one potion heals exactly 13 (3 -> 16); the instant second use was throttled = 16; potions consumed 1 (1 expected; 0 only inside IsConsumableFreeZone); throttle message ids: none (silent click throttle); a later use heals 13 more but is capped at MaxHp 20 = 20",
+   "ms": 15361,
+   "at": "2026-11-21T21:37:06.368Z"
+  },
+  {
+   "id": "SUR-06",
+   "outcome": "pass",
+   "detail": "mana 0 before = 0; mana 4 = 3% of 150 (4.5, VB6 rounding); one blue potion consumed = 1",
+   "ms": 9327,
+   "at": "2026-11-21T21:37:15.697Z"
+  },
+  {
+   "id": "SUR-07",
+   "outcome": "pass",
+   "detail": "agility +3 (2..4) = 3; agility back to the base value = 19; seconds the effect lasted (70 expected, polled every 5 s) = 70.079",
+   "ms": 79999,
+   "at": "2026-11-21T21:38:35.698Z"
+  },
+  {
+   "id": "SUR-09",
+   "outcome": "pass",
+   "detail": "4 poison ticks in 16 s; tick gaps 3.9, 4.1, 4.1 s (IntervaloVeneno+1 = 91 loop ticks, about 3.6 s) = 3.894; each tick took 2,2,1 HP (1 or 2 for MaxHp 20); violet potion answered message 682 (cured); the cure consumed one potion = 1; no poison tick in 9 s after the cure",
+   "ms": 41110,
+   "at": "2026-11-21T22:19:52.092Z"
+  },
+  {
+   "id": "SUR-08",
+   "outcome": "pass",
+   "detail": "not poisoned: message 683 (no estas envenenado); nothing consumed when not poisoned = 35; the poisoned half needs SUR-09 first (cure state: SUR-09 not run); the paralysis-removal potion type (HealsParalysis) has no starter potion; covered by CMB-20 with the Remover Paralisis spell",
+   "ms": 1501,
+   "at": "2026-11-21T21:39:54.539Z"
+  },
+  {
+   "id": "SUR-10",
+   "outcome": "pass",
+   "detail": "4 heals in 40 s; each heal +2,1,1 (1..2 = 5-10% of 20); heal gaps 9.0, 9.3, 9.8 s (200 loop ticks) = 9.038; message 519 Has sanado; resting (SanaIntervaloDescansar = 50) needs a campfire and /DESCANSAR; covered as manual in the notes of SUR-10",
+   "ms": 47469,
+   "at": "2026-11-21T21:40:42.009Z"
+  },
+  {
+   "id": "SUR-11",
+   "outcome": "pass",
+   "detail": "24 stamina updates in 12 s; each regen +1,2,1,1,1,1,1,2,1,1,2,2,2,2,2,2,1,2,1,1,1,2,2 (1 or 2); regen gaps max 0.63 s (10 loop ticks) = 0.63",
+   "ms": 24551,
+   "at": "2026-11-21T21:41:06.575Z"
+  },
+  {
+   "id": "SUR-02",
+   "outcome": "pass",
+   "detail": "hunger and thirst at 0 = [0,0]; no HP regen in 20 s (Sanar skipped) and no damage = 0; hungry and thirsty: 5 stamina updates in 20 s; hungry and thirsty: each loss 10,13,3,25,9 is within 1..40 (RandomNumber(1, Porcentaje(MaxSta 105, (150 - 0) * 0.25 = 37.5))); hungry and thirsty: loss gaps 1.9, 1.8, 1.8, 1.9 s (IntervaloPerderStamina = 40 loop ticks, about 1.6 s) = 1.79; scroll refusal (904 demasiado hambriento) needs a parchment: asserted in CMB-16",
+   "ms": 33740,
+   "at": "2026-11-21T22:20:25.833Z"
+  },
+  {
+   "id": "SUR-12",
+   "outcome": "pass",
+   "detail": "tunic equipped; tunic unequipped (naked); naked: no HP regen (Sanar: Desnudo = 1) = 0; naked: 5 stamina updates in 20 s; naked: each loss 10,19,14,9,3 is within 1..22 (RandomNumber(1, Porcentaje(60, (150 - 0) * 0.25 = 37.5) = 22.5)); naked: loss gaps 1.8, 1.8, 1.8, 1.8 s (IntervaloPerderStamina = 40 loop ticks, about 1.6 s) = 1.774; tunic worn again; dressed again: stamina rises again (RecStamina)",
+   "ms": 56025,
+   "at": "2026-11-21T21:42:30.599Z"
+  },
+  {
+   "id": "SUR-13",
+   "outcome": "pass",
+   "detail": "stamina 0 (< 10); stamina under 10: attack refused with message 93 (estas muy cansado); no swing was made = 0; the no-energy bubble (ChatOverHead) was sent; spell, work and steal stamina costs (Dardo 2, chop/mine/fish 5, smelting 2, craft 2, steal 15) are asserted in CMB-17 for the spell; the work costs need trees, ore, a forge and a thief and stay manual",
+   "ms": 10731,
+   "at": "2026-11-21T21:42:41.332Z"
+  },
+  {
+   "id": "SUR-14",
+   "outcome": "blocked",
+   "detail": "manual: needs a fire-casting creature or spell (Incinerar needs Magia 100 and 1500 mana); EfectoIncineramiento hits random(20,30) every IntervaloFuego/4",
+   "ms": 1,
+   "at": "2026-11-21T21:42:41.336Z"
+  },
+  {
+   "id": "SUR-15",
+   "outcome": "blocked",
+   "detail": "manual: needs an empty bottle and a water tile (otEmptyBottle / otFullBottle); the starter characters carry neither",
+   "ms": 0,
+   "at": "2026-11-21T21:42:41.337Z"
   }
  ]
 }

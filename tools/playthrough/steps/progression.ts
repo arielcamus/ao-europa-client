@@ -58,13 +58,15 @@ step('PRG-18', async c => {
 step('PRG-20', async c => {
   mage(c, 'PRG-20');
   await dbUpdateOwn(c, 'level=3, exp=1120, free_skillpoints=15');
-  const p = c.player; c.eq(p.stats!.level, 3, 'ELV 3 (DB)');
-  const m = p.mark();
-  for (let i = 0; i < 4 && !p.since(m).some(r => r.name === 'LevelUp'); i++) await meditateRound(c, ROUND_MS);
-  const lu = p.since(m).filter(r => r.name === 'LevelUp').pop();
-  c.ok(!!lu, 'a skill-up (+5 exp) crossed 1125 and CheckUserLevel sent LevelUp');
-  c.eq((lu!.packet as any).skillPoints, 20, 'free points = 15 never spent + 5 for the new level');
-  c.eq(p.stats!.level, 4, 'ELV 4');
+  c.eq(c.player.stats!.level, 3, 'ELV 3 (DB)');
+  // every meditateRound relogs (the DB mana drain), so the level is read from whichever session is current, and the LevelUp the server sent
+  // (in the round, or at the next login with the same free points) from the current session
+  let crossed = false;
+  for (let i = 0; i < 4 && !crossed; i++) { const before = c.player, m = before.mark(); await meditateRound(c, ROUND_MS); crossed = before.since(m).some(r => r.name === 'LevelUp') || c.player.stats!.level >= 4; }
+  c.ok(crossed, 'a skill-up (+5 x ExpMult = +20 exp on the live server) crossed 1125 and CheckUserLevel levelled up');
+  const lu = c.player.rx.filter(r => r.name === 'LevelUp').pop();
+  c.eq((lu?.packet as any)?.skillPoints, 20, 'free points = 15 never spent + 5 for the new level');
+  c.eq(c.player.stats!.level, 4, 'ELV 4');
 });
 step('PRG-19', async c => {
   mage(c, 'PRG-19');

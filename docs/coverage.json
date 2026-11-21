@@ -18,7 +18,7 @@
   "forms": 86,
   "formsCovered": 58,
   "formsPartial": 0,
-  "fixturePackets": 295,
+  "fixturePackets": 297,
   "packetsPct": 99.8,
   "packetsMergedPct": 99.8,
   "formsPct": 67.4,
@@ -322,6 +322,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -418,6 +419,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -458,6 +460,9 @@
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl"
    ]
   },
@@ -501,6 +506,10 @@
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
@@ -616,7 +625,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
-    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl"
    ]
   },
   {
@@ -659,7 +669,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
-    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl"
    ]
   },
   {
@@ -792,6 +803,7 @@
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl"
    ]
   },
@@ -855,6 +867,8 @@
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl"
    ]
   },
@@ -929,6 +943,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -1077,8 +1092,14 @@
     "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
-    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/obj-quest-item.jsonl",
     "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
     "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
@@ -1137,6 +1158,9 @@
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
     "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
@@ -1162,7 +1186,10 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
-    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl"
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl"
    ]
   },
   {
@@ -1193,6 +1220,9 @@
     "tests/fixtures/vb6/crafting/mine-flag-then-walk.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
     "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
    ]
@@ -1275,6 +1305,10 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
@@ -1335,6 +1369,15 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduate-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-talk-whisper.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
@@ -1368,6 +1411,8 @@
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
     "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl"
    ]
   },
@@ -1436,6 +1481,11 @@
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-talk-whisper.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
@@ -1467,7 +1517,8 @@
     "tests/fixtures/vb6/bank/far-from-banker.jsonl",
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
     "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
-    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl"
    ]
   },
   {
@@ -1551,6 +1602,8 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
@@ -1739,7 +1792,16 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduate-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
+    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
@@ -1802,6 +1864,10 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
@@ -1858,6 +1924,12 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduate-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -1969,6 +2041,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -2065,6 +2138,11 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduate-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
@@ -2150,6 +2228,9 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl"
@@ -2226,7 +2307,16 @@
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduate-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
@@ -2263,8 +2353,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/spells.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl"
+   ]
   },
   {
    "key": "s2c:52",
@@ -2349,6 +2441,13 @@
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduate-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
@@ -2453,6 +2552,14 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduate-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
@@ -2566,6 +2673,14 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduate-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
@@ -2672,6 +2787,10 @@
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduate-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
@@ -2764,6 +2883,10 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -2905,6 +3028,11 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
@@ -2977,7 +3105,8 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/deposit-move-extract.jsonl",
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
-    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl"
    ]
   },
   {
@@ -3058,6 +3187,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -3384,6 +3514,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -3502,6 +3633,9 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -3729,6 +3863,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -4046,6 +4181,7 @@
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl"
    ]
   },
@@ -4128,6 +4264,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
@@ -4242,6 +4379,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -4496,11 +4634,15 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
-    "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduate-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-talk-whisper.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
-    "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
-    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
@@ -4726,6 +4868,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -4784,6 +4927,7 @@
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl"
    ]
   },
@@ -4870,6 +5014,8 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
@@ -4980,7 +5126,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
-    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl"
    ]
   },
   {
@@ -5010,6 +5157,9 @@
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
@@ -5035,6 +5185,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl"
    ]
   },
@@ -5084,7 +5236,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/chat/whisper.jsonl"
+    "tests/fixtures/vb6/chat/whisper.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-talk-whisper.jsonl"
    ]
   },
   {
@@ -5284,6 +5437,8 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
@@ -5407,6 +5562,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -5599,10 +5755,16 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-death-drops.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduate-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
-    "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
-    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
@@ -5728,6 +5890,8 @@
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl"
    ]
   },
@@ -5836,6 +6000,7 @@
     "tests/fixtures/vb6/followups/trainer-list.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl",
     "tests/fixtures/vb6/spells/dardo-magico-training-dummy.jsonl"
@@ -5899,6 +6064,9 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
    ]
   },
@@ -5920,6 +6088,9 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
@@ -5943,6 +6114,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl"
    ]
@@ -5965,6 +6138,9 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
    ]
   },
@@ -6067,6 +6243,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -6184,6 +6361,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -6280,6 +6458,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -6581,7 +6760,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl"
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl"
    ]
   },
   {
@@ -6681,6 +6861,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -6798,6 +6979,8 @@
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
     "tests/fixtures/vb6/spells/dardo-magico-kills-creature.jsonl"
    ]
   },
@@ -7116,6 +7299,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -7231,6 +7415,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -7347,6 +7532,7 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -7462,6 +7648,8 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-talk-whisper.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
@@ -7649,7 +7837,9 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl"
    ]
   },
   {
@@ -8667,7 +8857,8 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/far-from-banker.jsonl",
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
-    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl"
    ]
   },
   {
@@ -8996,7 +9187,8 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/far-from-banker.jsonl",
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
-    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl"
    ]
   },
   {
@@ -9019,7 +9211,8 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/far-from-banker.jsonl",
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
-    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl"
    ]
   },
   {
@@ -9155,7 +9348,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/char-create/login-new-char-no-answer.jsonl"
+    "tests/fixtures/vb6/char-create/login-new-char-no-answer.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl"
    ]
   },
   {
@@ -9177,6 +9371,7 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/chat/say.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-talk-whisper.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
    ]
   },
@@ -9219,7 +9414,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/chat/whisper.jsonl"
+    "tests/fixtures/vb6/chat/whisper.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-talk-whisper.jsonl"
    ]
   },
   {
@@ -9259,6 +9455,13 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduate-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
@@ -9307,6 +9510,15 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduate-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-talk-whisper.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
@@ -9340,7 +9552,9 @@
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
-    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-graduation.jsonl"
    ]
   },
   {
@@ -9565,7 +9779,8 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/far-from-banker.jsonl",
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
-    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl"
    ]
   },
   {
@@ -9705,6 +9920,10 @@
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-bank-gold.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -9809,6 +10028,7 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
     "tests/fixtures/vb6/quests/obj-quest-item.jsonl"
    ]
   },
@@ -13002,6 +13222,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
    ]
   },
@@ -13023,6 +13245,9 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-turn-in-190.jsonl",
     "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
@@ -13046,6 +13271,9 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/playthrough/newbie-cartelera-accept-190.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-enter-dungeon.jsonl",
+    "tests/fixtures/vb6/playthrough/newbie-first-kill.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
    ]
@@ -13915,8 +14143,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/session.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/playthrough/newbie-create-motd.jsonl"
+   ]
   },
   {
    "key": "c2s:305",
