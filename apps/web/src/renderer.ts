@@ -5,7 +5,7 @@
  */
 import { TRAP_GRH, TRAP_ALPHA } from './status.js';
 import { Application, Container, Rectangle, Sprite, Text, Texture } from 'pixi.js';
-import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody, tileIndex } from './assets.js';
+import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody, tileIndex, assetUrl } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
 import type { Session } from './session.js';
 import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, roofTriggers, TreeFade, fixedObjects, nearRoof, objectDraws, objectGraphicsFromIni, treeCoversPlayer } from './map-objects.js';
@@ -84,7 +84,8 @@ export class WorldRenderer {
   camera = { x: 0, y: 0 };
 
   constructor(private readonly host: HTMLElement, private readonly report: (message: string) => void) {}
-  get settled() { return this.readyMap !== undefined && this.loadedSheets > 0 && this.pending.size === 0; }
+  /** The current frame is complete: every sheet with pixels inside the viewport is loaded (the margin band may still be loading). */
+  get settled() { return this.readyMap !== undefined && this.loadedSheets > 0 && this.pendingVisible.size === 0; }
   async init() {
     await this.app.init({
       background: '#000000', antialias: false, preference: 'webgl',
@@ -138,6 +139,7 @@ export class WorldRenderer {
     for (const texture of this.textures.values()) if (texture !== Texture.EMPTY) texture.destroy();
     for (const source of this.sources.values()) source.destroy(true);
     this.textures.clear(); this.sources.clear(); this.pending.clear(); this.failed.clear(); this.loadedSheets = 0; this.clippedFrames = 0;
+    this.pendingVisible.clear(); this.deferred.clear(); this.deferredLoading = 0;
     const [bytes] = await Promise.all([fetchBytes(`Mapas/mapa${id}.csm`), this.loadMetadata()]);
     if (epoch !== this.epoch) return;
     this.map = parseMap(bytes); this.fixed = fixedObjects(this.map.objects, this.objectGraphics); this.mapName = this.map.name; this.roofTrig = roofTriggers(this.map.triggers); this.roofs.reset(this.roofTrig); this.readyMap = id;
@@ -167,12 +169,17 @@ export class WorldRenderer {
       headOffsetY,
     };
   }
-  private texture(frame: GraphicFrame): Texture {
+  /**
+   * Sheets on demand, on-screen first (#79). The frame walks ten tiles past the viewport (big trees and buildings reach in from there),
+   * and on a slow link the sheets used only out there must not delay the ones the player sees: they wait in `deferred` and download
+   * two at a time once nothing visible is pending. A deferred sheet that comes into view starts at once.
+   */
+  private texture(frame: GraphicFrame, visible = true): Texture {
     const key = `${frame.file}/${frame.x}/${frame.y}/${frame.width}/${frame.height}`;
     const cached = this.textures.get(key);
     if (cached) return cached;
     const source = this.sources.get(frame.file);
-    if (!source) { this.loadSheet(frame.file); return Texture.EMPTY; }
+    if (!source) { this.requestSheet(frame.file, visible); return Texture.EMPTY; }
     const crop = clipFrame(frame, source.width, source.height);
     if (crop.clipped) this.clippedFrames++;
     if (!crop.width || !crop.height) { this.textures.set(key, Texture.EMPTY); return Texture.EMPTY; }
@@ -182,11 +189,28 @@ export class WorldRenderer {
     });
     this.textures.set(key, texture); return texture;
   }
-  private loadSheet(file: number) {
-    if (this.pending.has(file) || this.failed.has(file)) return;
+  private readonly pendingVisible = new Set<number>();
+  private readonly deferred = new Set<number>();
+  private deferredLoading = 0;
+  private requestSheet(file: number, visible: boolean) {
+    if (this.failed.has(file)) return;
+    if (!visible) { if (!this.pending.has(file)) this.deferred.add(file); return; }
+    this.pendingVisible.add(file);
+    if (this.deferred.delete(file) || !this.pending.has(file)) this.loadSheet(file);
+  }
+  /** Start deferred (margin) sheets while nothing on screen is waiting. */
+  private pumpDeferred() {
+    for (const file of this.deferred) {
+      if (this.pendingVisible.size > 0 || this.deferredLoading >= 2) return;
+      this.deferred.delete(file); this.deferredLoading++; this.loadSheet(file, true);
+    }
+  }
+  private loadSheet(file: number, margin = false) {
+    if (this.pending.has(file) || this.failed.has(file)) { if (margin) this.deferredLoading--; return; }
     this.pending.add(file);
     const epoch = this.epoch;
     const image = new Image();
+    const done = () => { this.pending.delete(file); this.pendingVisible.delete(file); if (margin) this.deferredLoading--; };
     image.onload = () => {
       if (epoch !== this.epoch) return;
       try {
@@ -203,17 +227,21 @@ export class WorldRenderer {
         const texture = Texture.from(canvas); texture.source.scaleMode = 'nearest';
         this.sources.set(file, texture); this.loadedSheets++;
       } catch (error) { this.report(String(error)); this.failed.add(file); }
-      this.pending.delete(file);
+      done();
     };
     image.onerror = () => {
       if (epoch !== this.epoch) return;
-      this.pending.delete(file); this.failed.add(file); this.report(`Missing local graphic: Graficos/${file}.png`);
+      done(); this.failed.add(file); this.report(`Missing local graphic: Graficos/${file}.png`);
     };
-    image.src = `/ao-assets/Graficos/${file}.png`;
+    image.src = assetUrl(`Graficos/${file}.png`);
   }
+  /** The viewport of the frame being drawn, in world pixels (draw() asks whether a sprite reaches into it). */
+  private view = { x: 0, y: 0, width: 0, height: 0 };
   private draw(pool: SpritePool, animation: Animation, x: number, y: number, time: number, centered = true, alpha = 1, tint = 0xffffff) {
     const frame = animation.frames[Math.floor(time / animation.frameMs) % animation.frames.length]!;
-    pool.draw(this.texture(frame), x + (centered ? Math.floor((32 - frame.width) / 2) : 0), y + (centered ? 32 - frame.height : 0), alpha, tint);
+    const left = x + (centered ? Math.floor((32 - frame.width) / 2) : 0), top = y + (centered ? 32 - frame.height : 0), v = this.view;
+    const visible = left < v.x + v.width && left + frame.width > v.x && top < v.y + v.height && top + frame.height > v.y;
+    pool.draw(this.texture(frame, visible), left, top, alpha, tint);
   }
   /** Map tile under a pointer, using the same camera as render(); undefined outside the viewport. */
   tileAt(session: Session, clientX: number, clientY: number, now: number): { x: number; y: number } | undefined {
@@ -264,6 +292,7 @@ export class WorldRenderer {
     const cameraX = position.x * 32 + 16 - width / 2;
     const cameraY = position.y * 32 + 16 - height / 2;
     this.world.position.set(-Math.round(cameraX * zoom), -Math.round(cameraY * zoom));
+    this.view = { x: Math.round(cameraX), y: Math.round(cameraY), width, height };
     const dt = this.lastRender ? Math.min(100, now - this.lastRender) : 16; this.lastRender = now;
     this.roofs.update(this.roofTrig[(session.position!.y - 1) * 100 + session.position!.x - 1] ?? 0, dt);
     this.pools.forEach(pool => pool.reset()); this.roofPool!.begin();
@@ -314,6 +343,7 @@ export class WorldRenderer {
     this.drawEffects(session, now, position);
     this.renderWorldFx(session, now, dt, { minX, maxX, minY, maxY }, cameraX, cameraY, width, height);
     this.pools.forEach(item => item.finish());
+    this.pumpDeferred();
   }
   /** Light, particles, projectiles, auras and weather: apply the parsed map once, advance the world FX, draw them. */
   private renderWorldFx(session: Session, now: number, dt: number, view: FrameInfo['view'], cameraX: number, cameraY: number, width: number, height: number) {

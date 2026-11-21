@@ -48,6 +48,7 @@ import { KeysUI } from './keys-ui.js';
 import { QuestVoice } from './quest-voice.js';
 import { HotkeysUI, overHotkeyBar } from './hotkeys-ui.js';
 import { windows } from './window-stack.js';
+import { interfaceBootDone, setInterfaceDrain } from './interface-assets.js';
 import { displayName } from './character-data.js';
 import { KeyringUI } from './keyring-ui.js';
 import { PapiroUI } from './papiro-ui.js';
@@ -232,6 +233,10 @@ const transacting = () => bankUi.dialogOpen || tradeUi.dialogOpen;
 // frmConnect: the login, account and character-creation screens, and the small forms of the connect flow (frmMensaje, frmConnecting, Frmcarga).
 /** False until the splash has done its job: the connect screen, the login box and the HUD stay hidden. */
 let booted = false;
+/** frmMain's pictures and tables (ClassicUI.init) are loaded: they start after the login is up and the world waits for them (#79). */
+let hudReady = false;
+/** Loads that run the first time the link is idle (see setInterfaceDrain in syncConnect). */
+const idleTasks: (() => void)[] = [];
 /** A picture whose download never completes must not hold the boot forever: after this long the screen shows anyway and the art paints when it lands. */
 const STALL_MS = 12_000;
 const stallGuard = (pending: Promise<unknown>) => Promise.race([pending, new Promise<void>(resolve => setTimeout(resolve, STALL_MS))]);
@@ -297,12 +302,19 @@ async function boot() {
   if (config.mode === 'standin') { account.value = 'standin@local'; password.value = 'testpass'; }
   if (new URLSearchParams(location.search).has('debug')) element('classic').classList.add('debug');
   // Frmcarga over black while the resources load; the connect screen appears only once its art is complete.
-  await Promise.all([renderer.init(), ui.init(), bubbles.init(), audio.init(), stallGuard(connectUi.ready), stallGuard(loading.ready), questWindows.init().catch(error => report(`Misiones no disponibles: ${String(error)}`))]);
+  // Only what the splash and the login screen show holds the boot (#79): frmMain's art, the window pictures and the quest tables load
+  // after it, while the player types, and the world is shown only once frmMain's art is complete.
+  await Promise.all([renderer.init(), bubbles.init(), audio.init(), stallGuard(connectUi.ready), stallGuard(loading.ready)]);
   booted = true; element('classic').dataset.boot = 'ready'; performance.mark('ao-boot-ready');
-  // Chat text that the server sends as locale ids; the console is redrawn once it arrives.
-  void Promise.all([fetchText('init/sp_localindex.dat'), fetchText('init/SP_LocalMsg.dat')])
+  interfaceBootDone();
+  // Chat text that the server sends as locale ids. Loaded with frmMain (the world waits for both), so the panels are not redrawn
+  // under the player's mouse right after entering; lines that arrive first are kept and redrawn.
+  const locale = Promise.all([fetchText('init/sp_localindex.dat'), fetchText('init/SP_LocalMsg.dat')])
     .then(([index, messages]) => { sharedLocale.load(index, messages); if (session) { session.ui.chat.flushPending(); session.ui.revision++; } })
     .catch(error => report(String(error)));
+  void Promise.all([ui.init().catch(error => report(String(error))), locale]).finally(() => { hudReady = true; });
+  // The quest tables wait for an idle moment.
+  idleTasks.push(() => { void questWindows.init().catch(error => report(`Misiones no disponibles: ${String(error)}`)); });
   renderer.app.ticker.add(() => {
     const now = performance.now();
     try {
@@ -342,7 +354,12 @@ const shownMapForm = new WeakMap<object, number>();
 function syncConnect() {
   const s = session && session.phase !== 'closed' ? session : undefined;
   while (s?.notices.length) handleNotice(s.notices.shift()!);
-  const playing = !!s && s.ready && renderer.readyMap === s.resourceMap;
+  const playing = !!s && s.ready && renderer.readyMap === s.resourceMap && hudReady;
+  // The queued window pictures download while nothing more urgent does: idle on the connect screens, or once the world is drawn.
+  const idle = hudReady && (!s || s.phase === 'account' || (playing && renderer.settled) || windows.open.length > 0);
+  setInterfaceDrain(idle);
+  if (idle || s?.phase === 'account') connectUi.buildScreens();
+  if (idle) for (const task of idleTasks.splice(0)) task();
   if (s?.phase === 'connecting') { if (!connectingWindow?.isOpen) connectingWindow = showConnecting(element('classic'), () => close('Disconnected', true)); } else connectingWindow?.close();
   element('classic').classList.toggle('in-world', playing); // frmMain exists only in the world
   if (!booted) { form.hidden = true; return; }
@@ -361,7 +378,7 @@ function updateUi(now: number) {
   guard(() => craftingUi.update(session));
   guard(() => craftingExtraUi.update(session));
   if (!session) { hotkeysUi.update(undefined, false); return; }
-  const playing = session.ready && renderer.readyMap === session.resourceMap;
+  const playing = session.ready && renderer.readyMap === session.resourceMap && hudReady;
   // ModSettings.LoadHotkeys: once per entry into the game, send the saved slots to the server.
   if (playing && session.self && !hotkeysLoaded.has(session)) { hotkeysLoaded.add(session); applyOptions(); session.optionsActions.loadHotkeys(session.self.tag); }
   hotkeysUi.update(session, playing);

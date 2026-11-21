@@ -8,7 +8,7 @@ import type { AudioWorld } from './audio-director.js';
 import { AudioEngine, parseCatalog } from './audio-engine.js';
 import { AudioOptions } from './audio-options.js';
 import { parseZones, terrainOf } from './audio-rules.js';
-import { fetchText } from './assets.js';
+import { fetchText, assetUrl } from './assets.js';
 import type { Session } from './session.js';
 import type { WorldRenderer } from './renderer.js';
 
@@ -65,7 +65,7 @@ export class AudioSystem {
   /** Dat/zonas.dat (music rectangles). Sound is optional: without the file the map's own music number is used. */
   async init() {
     try {
-      const response = await fetch('/ao-assets/audio-index.json');
+      const response = await fetch(assetUrl('audio-index.json'));
       if (response.ok) this.engine.setCatalog(parseCatalog(await response.json()));
     } catch { /* no index: every candidate file is tried */ }
     try { this.director.zones = parseZones(await fetchText('Dat/zonas.dat')); }

@@ -8,6 +8,7 @@
  */
 import { DEFAULT_AUDIO_SETTINGS, effectiveVolume, gainOf, panOf, sanitizeSettings } from './audio-rules.js';
 import type { AudioSettings, FxCategory } from './audio-rules.js';
+import { assetUrl } from './assets.js';
 
 /** `unique`: PlayFxUniqueByLabel, an effect already playing under that label keeps playing (its sound is not restarted). */
 export interface PlayOptions { loop?: boolean; volume?: number; pan?: number; label?: string; category?: FxCategory; unique?: boolean }
@@ -40,16 +41,16 @@ export const parseCatalog = (raw: unknown): SoundCatalog | undefined => {
 const sfxUrls = (name: string, catalog?: SoundCatalog) => {
   const key = name.toLowerCase();
   const urls: string[] = [];
-  if (!catalog || catalog.ogg.has(key)) urls.push(`/ao-assets/OGG/${encodeURIComponent(name)}.ogg`);
-  if (!catalog || catalog.wav.has(key)) urls.push(`/ao-assets/wav/${encodeURIComponent(name)}.wav`);
+  if (!catalog || catalog.ogg.has(key)) urls.push(assetUrl(`OGG/${encodeURIComponent(name)}.ogg`));
+  if (!catalog || catalog.wav.has(key)) urls.push(assetUrl(`wav/${encodeURIComponent(name)}.wav`));
   return urls;
 };
 /** OGG/ost_31.ogg is the one track that also ships as Mp3/31.mp3 (for browsers without Vorbis). */
 export const musicUrls = (name: string, catalog?: SoundCatalog) => {
   const urls: string[] = [];
-  if (!catalog || catalog.ogg.has(name.toLowerCase())) urls.push(`/ao-assets/OGG/${name}.ogg`);
+  if (!catalog || catalog.ogg.has(name.toLowerCase())) urls.push(assetUrl(`OGG/${name}.ogg`));
   const mp3 = /^ost_(\d+)$/.exec(name);
-  if (mp3 && (!catalog || catalog.mp3.has(mp3[1]!))) urls.push(`/ao-assets/Mp3/${mp3[1]}.mp3`);
+  if (mp3 && (!catalog || catalog.mp3.has(mp3[1]!))) urls.push(assetUrl(`Mp3/${mp3[1]}.mp3`));
   return urls;
 };
 

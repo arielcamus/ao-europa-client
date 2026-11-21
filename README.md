@@ -51,6 +51,11 @@ AO_ASSETS="$HOME/Projects/ao-reference/Recursos" AO_TCP_PORT=17666 \
 AO_ASSETS="$HOME/Projects/ao-reference/Recursos" pnpm web:preview
 ```
 
+Slow links: the server sends the uncompressed resources (BMP, init/Dat tables, maps) brotli/gzip and
+keeps the best-compressed copies in `AO_ASSET_CACHE` (default: the OS temp dir). Asset URLs carry the
+asset-set version, so a second visit is served from the browser cache. The preview bundle is compressed
+and its hashed files are immutable. Window pictures load after the login screen, while the player types.
+
 Use arrows/WASD or touch the map in a direction from the character. Quick taps and held input work;
 releasing, cancelling a touch, switching tabs or losing focus stops held movement.
 The client picks the first account character, waits for server placement/intervals,

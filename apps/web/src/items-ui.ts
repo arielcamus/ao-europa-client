@@ -12,6 +12,7 @@ import { ObjType, itemInfo, usableSuffix } from './object-catalog.js';
 import type { ClassicUI } from './classic-ui.js';
 import type { Session } from './session.js';
 import './items.css';
+import { assetUrl } from './assets.js';
 
 const BUFF_MULTIPLIER = 2, BUFF_FULL_RED = 204, BUFF_CHANNEL_MAX = 255;
 /** frmMain.GetBuffColor: white until buffed, then fading to red. */
@@ -227,7 +228,7 @@ export class ItemsUI {
       const item = session.ui.inventory.get(card.slot), info = item ? session.catalog?.get(item.object) : undefined;
       this.cardTitle.textContent = info?.name ?? '';
       this.cardImage.hidden = !info?.cardImage;
-      if (info?.cardImage) this.cardImage.src = `/ao-assets/interface/${info.cardImage.replace(/\\/g, '/')}`;
+      if (info?.cardImage) this.cardImage.src = assetUrl(`interface/${info.cardImage.replace(/\\/g, '/')}`);
       this.card.hidden = false;
     } else if (!card && !this.card.hidden) this.card.hidden = true;
     const open = session.items.shopOpen;

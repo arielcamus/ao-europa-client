@@ -6,7 +6,7 @@
  */
 import type { ChatLocale } from './chat-locale.js';
 import type { WorldRenderer } from './renderer.js';
-import { fetchText, parseIni } from './assets.js';
+import { fetchText, parseIni, assetUrl } from './assets.js';
 import { grhCanvas } from './grh-canvas.js';
 
 /** mostrarCartel's duration argument: 200 + 30 * Len(text), in cartel units. */
@@ -109,7 +109,7 @@ export class NpcDialog {
           ctx.putImageData(pixels, 0, 0); resolve(canvas);
         };
         image.onerror = () => reject(new Error(`Missing local graphic ${file}`));
-        image.src = `/ao-assets/Graficos/${file}.png`;
+        image.src = assetUrl(`Graficos/${file}.png`);
       });
       this.sheets.set(file, pending);
     }

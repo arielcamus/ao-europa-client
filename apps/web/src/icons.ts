@@ -4,6 +4,7 @@
  * Artwork is read only from the local mount.
  */
 import type { WorldRenderer } from './renderer.js';
+import { assetUrl } from './assets.js';
 
 export class Icons {
   private sheets = new Map<number, Promise<HTMLCanvasElement>>();
@@ -24,7 +25,7 @@ export class Icons {
           ctx.putImageData(pixels, 0, 0); resolve(canvas);
         };
         image.onerror = () => reject(new Error(`Missing local graphic ${file}`));
-        image.src = `/ao-assets/Graficos/${file}.png`;
+        image.src = assetUrl(`Graficos/${file}.png`);
       });
       this.sheets.set(file, pending);
     }

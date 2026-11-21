@@ -3,7 +3,7 @@
  * clsGrapchicalInventory. Copyright (C) 2022-2026 Noland Studios.
  * AGPL-3.0-or-later; see NOTICE. Artwork is read only from the local mount.
  */
-import { fetchText, parseIni } from './assets.js';
+import { fetchText, parseIni, assetUrl } from './assets.js';
 import type { Ini } from './assets.js';
 import type { Session } from './session.js';
 import type { WorldRenderer } from './renderer.js';
@@ -128,7 +128,7 @@ export class ClassicUI {
   private sheet(file: number) {
     let pending = this.sheets.get(file);
     if (!pending) {
-      const image = new Image(); image.src = `/ao-assets/Graficos/${file}.png`;
+      const image = new Image(); image.src = assetUrl(`Graficos/${file}.png`);
       pending = image.decode().then(() => image); this.sheets.set(file, pending);
     }
     return pending;
@@ -158,7 +158,7 @@ export class ClassicUI {
   }
   async slotBackground(grh: number): Promise<{ image: string; position: string }> {
     const frame = await this.renderer.graphic(grh);
-    return { image: `url("/ao-assets/Graficos/${frame.file}.png")`, position: `-${frame.x}px -${frame.y}px` };
+    return { image: `url("${assetUrl(`Graficos/${frame.file}.png`)}")`, position: `-${frame.x}px -${frame.y}px` };
   }
   private markItem() {
     this.slotButtons.forEach((button, i) => button.setAttribute('aria-pressed', String(i + 1 === this.selectedItem)));
@@ -214,7 +214,7 @@ export class ClassicUI {
         ctx.putImageData(pixels, 0, 0);
       }
       if (generation !== this.generation) return;
-      button.style.backgroundImage = `url("/ao-assets/Graficos/${background.file}.png")`;
+      button.style.backgroundImage = `url("${assetUrl(`Graficos/${background.file}.png`)}")`;
       button.style.backgroundPosition = `-${background.x}px -${background.y}px`;
       const name = item ? object?.get('name') ?? `Objeto ${item.object}` : locked ? 'Bloqueada' : 'Vacía';
       button.title = name; button.setAttribute('aria-label', `Casilla ${slot}: ${name}${item ? ` × ${item.amount}` : ''}`);

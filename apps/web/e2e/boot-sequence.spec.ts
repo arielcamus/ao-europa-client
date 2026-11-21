@@ -75,10 +75,10 @@ test('boot: splash, then login with its background, no HUD before the world (slo
 
 // A picture that is missing, or whose download never completes, must not hold the boot: the login appears anyway (late art paints later).
 const cases: [string, string, 'abort404' | 'hang'][] = [
-  ['backdrop 239 404', '**/ao-assets/Graficos/239.png', 'abort404'],
-  ['backdrop 239 never completes', '**/ao-assets/Graficos/239.png', 'hang'],
-  ['splash art 404', '**/ao-assets/interface/*VentanaCargando.bmp', 'abort404'],
-  ['splash art never completes', '**/ao-assets/interface/*VentanaCargando.bmp', 'hang'],
+  ['backdrop 239 404', '**/ao-assets/Graficos/239.png*', 'abort404'],
+  ['backdrop 239 never completes', '**/ao-assets/Graficos/239.png*', 'hang'],
+  ['splash art 404', '**/ao-assets/interface/*VentanaCargando.bmp*', 'abort404'],
+  ['splash art never completes', '**/ao-assets/interface/*VentanaCargando.bmp*', 'hang'],
 ];
 for (const [name, pattern, mode] of cases) {
   test(`boot: ${name}, login still appears and never shows the HUD`, async ({ page }, info) => {
@@ -98,7 +98,7 @@ for (const [name, pattern, mode] of cases) {
 test('boot: a failed resource load (renderer init) ends on the login with the error line, never the HUD', async ({ page }, info) => {
   test.skip(info.project.name !== 'desktop-chrome', 'single browser is enough');
   await page.route('**/ao-config.json', route => route.fulfill({ json: { mode: 'classic', serverProfile: 'classic', wsPath: '/bridge' } }));
-  await page.route('**/ao-assets/Dat/Obj.dat', route => route.fulfill({ status: 500, body: '' }));
+  await page.route('**/ao-assets/Dat/Obj.dat*', route => route.fulfill({ status: 500, body: '' }));
   await page.addInitScript(observer);
   await page.goto('/');
   await expect(page.locator('#login')).toBeVisible({ timeout: 25_000 });

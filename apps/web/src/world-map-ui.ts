@@ -16,6 +16,7 @@ import type { Session } from './session.js';
 import type { Animation, GraphicFrame } from './assets.js';
 import { PREVIEW_INTERVAL_MS, previewStart, previewStep } from './world-map-npcs.js';
 import type { NpcInfo, NpcRow, PreviewState } from './world-map-npcs.js';
+import { assetUrl } from './assets.js';
 
 /** JsonLanguage MENSAJE_573 (frmMapaGrande.Label1 for a map with no description). */
 export const NO_MAP_INFO = 'Sin información relevante.';
@@ -48,7 +49,7 @@ const PREVIEW_W = 180, PREVIEW_H = 196;
 const sheets = new Map<number, Promise<HTMLImageElement>>();
 const sheet = (file: number) => {
   let pending = sheets.get(file);
-  if (!pending) { const image = new Image(); image.src = `/ao-assets/Graficos/${file}.png`; pending = image.decode().then(() => image); sheets.set(file, pending); }
+  if (!pending) { const image = new Image(); image.src = assetUrl(`Graficos/${file}.png`); pending = image.decode().then(() => image); sheets.set(file, pending); }
   return pending;
 };
 /** A frame as a canvas whose pure black is see-through (Grh_Render_To_Hdc skips black). */
