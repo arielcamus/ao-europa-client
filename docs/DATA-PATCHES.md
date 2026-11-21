@@ -84,11 +84,13 @@ The snapshot's `init/sp_localindex.dat` had `NUMQUESTS=255` and `[QUEST1..255]`,
 Because it rebuilds from the current `Dat/obj.dat`, the object patches of section 1 and 2 are included. Backup of the previous files (and of `FXs.ini` / `fxs.ind`) in
 `~/Projects/ao-reference/Recursos-backup-20261121/`; undo = copy them back over `init/`. The client mount only serves `sp_localindex.dat`; the page reads it at start-up, so reload.
 
-## 5. FX 153 (meditation aura) cannot be restored
+## 5. FX 153-172 (meditation aura): no art in the pre-HOO data, drawn with the classic FX 115-119 (client-side, no data patch)
 The server sends the meditation effect as `MeditateToggle` fx = 153 for levels 1..12 (155 for 13..17, 157 for 18..24, 154/156/... for criminals; `FileIO.bas` defaults and
-`Dat/Meditaciones.dat`). `init/FXs.ini` and `init/fxs.ind` have `NumFxs=150` in every copy on this Mac (the Recursos tree, `argentum-server*/resources/raw`, `argentum-elixir`), so FX 151 and above
-have no animation definition anywhere and the aura is not drawn (the client renders nothing for an unknown FX, like the VB6 client). `generar_localindex.py` does not produce FXs.ini, and inventing
-an `Animacion=` for 153 would be made-up data, so it is left alone. A complete `FXs.ini` from a full client install would fix it.
+`Dat/Meditaciones.dat`). `init/FXs.ini` and `init/fxs.ind` have `NumFxs=150` in every copy on this Mac (and upstream, last changed 2024-04), so FX 151 and above
+have no animation definition and the pinned client draws nothing for them. No made-up `Animacion=` is added to the data. Instead `apps/web/src/meditation-fx.ts` substitutes the classic
+step of the level tier (FX 115 for 1-12, 116 for 13-24, 117 for 25-32, 118 for 33-44, 119 for 45-46; the server's pre-Dec-2025 meditation FX). Those are `IsPNG=0` palette art, so they go
+through the ordinary FX list (additive, alpha 220, +20), like the pinned client's FX path. An id that `FXs.ini` does have (FX 120 at level 47+) is the meditation animation as sent
+(normal blend, +4, alpha 180). The real 153-172 art, if it ever lands in `FXs.ini`, takes precedence automatically.
 
 # wp04 (items-2) test data on the shared VB6 server DB (`C:\ao\server\Database.db`), applied 2026-11-21
 

@@ -146,7 +146,8 @@ describe('rest and meditation', () => {
   it('a level-tier meditation FX missing from FXs.ini loops as the classic aura until fx 0, drawn as the meditation animation', () => {
     const h = harness();
     h.recv({ id: SS.MeditateToggle, charIndex: f.UserCharIndexInServer.charIndex, fx: 155, x: 57, y: 50 });
-    expect(h.session.spells.effects).toEqual([expect.objectContaining({ fx: 116, loops: -1, meditation: true })]);
+    expect(h.session.spells.effects).toEqual([expect.objectContaining({ fx: 116, loops: -1 })]);
+    expect(h.session.spells.effects[0]!.meditation).toBeUndefined(); // ordinary additive FX path (IsPNG=0 art)
     h.recv({ id: SS.MeditateToggle, charIndex: f.UserCharIndexInServer.charIndex, fx: 0, x: 0, y: 0 });
     expect(h.session.spells.effects).toEqual([]);
   });
