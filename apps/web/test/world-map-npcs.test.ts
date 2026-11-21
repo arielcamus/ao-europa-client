@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { dropPercent, npcInfo, npcRows, parseNpcSections, previewStart, previewStep, vbVal } from '../src/world-map-npcs.js';
+import { parseIni } from '../src/assets.js';
+import { dropPercent, npcInfo, npcRows, previewStart, previewStep, vbVal } from '../src/world-map-npcs.js';
 
-const table = parseNpcSections(`[NPC1]
+const table = parseIni(`[NPC1]
 Name=Sacerdote
 NpcType=1
 Body=117
@@ -64,13 +65,13 @@ describe('frmMapaGrande creature data', () => {
 
 describe('NPC section parsing and the drop-key fallback', () => {
   it('keeps a section header with a trailing comment apart from the previous NPC', () => {
-    const ini = parseNpcSections("[NPC559]\nName=Lobo Negro\n\n[NPC560] 'Ogro\nName=Ogro\n");
+    const ini = parseIni("[NPC559]\nName=Lobo Negro\n\n[NPC560] 'Ogro\nName=Ogro\n");
     expect(ini.get('npc559')!.get('name')).toBe('Lobo Negro');
     expect(ini.get('npc560')!.get('name')).toBe('Ogro');
   });
   it('takes NroItems from the server table when the client file has no drop keys', () => {
-    const local = parseNpcSections('[NPC559]\nNAME=Lobo Negro\nHP=400\nEXP=220\n');
-    const server = parseNpcSections('[NPC559]\nName=Lobo Negro\nComercia=0\nNROITEMS=1\nObj1=1146-1\n');
+    const local = parseIni('[NPC559]\nNAME=Lobo Negro\nHP=400\nEXP=220\n');
+    const server = parseIni('[NPC559]\nName=Lobo Negro\nComercia=0\nNROITEMS=1\nObj1=1146-1\n');
     expect(npcInfo(local, server, 559)).toMatchObject({ name: 'Lobo Negro', hp: 400, exp: 220, drops: [{ object: 1146, percent: 100 }] });
     expect(npcInfo(local, undefined, 559)!.drops).toEqual([]);
   });

@@ -98,7 +98,7 @@ describe('server responses', () => {
   it('removes a killed creature and its floating text', () => {
     const h = harness();
     h.recv({ id: CS.TextOverChar, text: '3', charIndex: NPC, color: 0 }, { id: NS.CharacterRemove, charIndex: NPC, vanish: true, warp: false });
-    expect(h.session.characters.has(NPC)).toBe(false); expect(h.session.tracker.chars.has(NPC)).toBe(false); expect(h.session.combat.floating).toHaveLength(0);
+    expect(h.session.tracker.chars.has(NPC)).toBe(false); expect(h.session.combat.floating).toHaveLength(0);
   });
   it('a locale id with no template prints one empty console line (chat pipeline, like HandleLocaleMsg)', () => {
     const h = harness(); h.recv({ id: NS.LocaleMsg, messageId: 9999, text: '', font: 1, channel: 5 });

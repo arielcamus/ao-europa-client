@@ -43,7 +43,7 @@ describe('CharacterTranslate (TranslateCharacterToPos)', () => {
     s.receive(encodeServerFrame({ id: SS.CharacterTranslate, charIndex: SELF, x: f.CharacterCreate.x + 2, y: f.CharacterCreate.y, time: 500 }));
     expect(s.position).toMatchObject({ x: f.CharacterCreate.x + 2 });
     expect(s.motion).toMatchObject({ translate: true, duration: 500 });
-    expect(s.characters.get(SELF)).toMatchObject({ x: f.CharacterCreate.x + 2 });
+    expect(s.self).toMatchObject({ x: f.CharacterCreate.x + 2 });
   });
 });
 
@@ -60,13 +60,13 @@ describe('UpdateTagAndStatus, UpdateFlag, UpdateCharValue', () => {
     t.receive({ id: SS.UpdateTagAndStatus, charIndex: 4, status: 2, tag: '<Solo>', groupIndex: 1, clanIndex: 2, clanAlignment: 1 }, 0);
     expect(t.chars.get(4)).toMatchObject({ name: 'Ana', status: 3, clanIndex: 2, clanAlignment: 1 }); // only the guild fields land before the VB6 error
   });
-  it('keeps the session copy of a character in step', () => {
+  it('keeps one character store: the tracker carries the wire tag, status, guild and flag', () => {
     const { s } = playing();
     s.receive(encodeServerFrame(create(8, { npc: 0, name: 'Beto' })));
     s.receive(encodeServerFrame({ id: SS.UpdateTagAndStatus, charIndex: 8, status: 2, tag: 'Beto <X>', groupIndex: 0, clanIndex: 3, clanAlignment: 3 }));
     s.receive(encodeServerFrame({ id: SS.UpdateFlag, charIndex: 8, flag: 2 }));
-    expect(s.characters.get(8)).toMatchObject({ name: 'Beto <X>', status: 2, clanIndex: 3, clanAlignment: 3, flag: 2 });
-    expect(s.tracker.chars.get(8)).toMatchObject({ banderaIndex: 2 });
+    expect(s.tracker.chars.get(8)).toMatchObject({ tag: 'Beto <X>', name: 'Beto', status: 2, clanIndex: 3, clanAlignment: 3, banderaIndex: 2 });
+    expect('characters' in s).toBe(false);
   });
   it('UpdateCharValue eDontBlockTile (value 1) sets and clears the flag; other value types are ignored', () => {
     expect(CharValueType.DontBlockTile).toBe(1);

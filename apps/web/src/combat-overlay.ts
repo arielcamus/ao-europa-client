@@ -22,7 +22,7 @@ export class CombatOverlay {
   }
   private tile(session: Session, charIndex: number, now: number) {
     if (charIndex === session.charIndex) return session.visualPosition(now);
-    const character = session.characters.get(charIndex);
+    const character = session.tracker.chars.get(charIndex);
     return character ? { x: character.x, y: character.y } : undefined;
   }
   update(session: Session | undefined, now: number) {

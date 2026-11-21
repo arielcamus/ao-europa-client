@@ -18,22 +18,6 @@ export const vbVal = (text: string | undefined) => { const match = /^\s*[-+]?\d*
 export const dropPercent = (denominator: number) => denominator <= 0 ? 0 : Math.round(100 / denominator * 100) / 100;
 
 /**
- * An INI reader that accepts what the NPC files really contain: a trailing comment after a section header ("[NPC560] 'Ogro") and values
- * with a VB comment. assets.parseIni would fold such a section into the previous one and corrupt both.
- */
-export function parseNpcSections(text: string): Ini {
-  const ini: Ini = new Map(); let section = new Map<string, string>();
-  for (const raw of text.split(/\r?\n/)) {
-    const line = raw.trim();
-    const header = /^\[([^\]]+)\]/.exec(line);
-    if (header) { const name = header[1]!.toLowerCase(); section = ini.get(name) ?? new Map(); ini.set(name, section); continue; }
-    const match = /^([^;#'=]+)=(.*)$/.exec(line);
-    if (match) section.set(match[1]!.trim().toLowerCase(), match[2]!.trim());
-  }
-  return ini;
-}
-
-/**
  * NpcData(n) of Recursos.bas, the fields frmMapaGrande reads. The pinned client takes all of them from init/<lang>_localindex.dat (`local`).
  * That pre-HOO file has Name, Body, Head, HP, EXP, ORO, MinHit, MaxHit and GiveEXPClan but none of the DropCount / Drop<n> / NroItems / Obj<n> /
  * NpcType / Comercia keys the client code reads, so those fall back to the server's own [NPCn] (Dat/npcs.dat, `server`) when `local` lacks them.

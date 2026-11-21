@@ -5,7 +5,8 @@
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty. See NOTICE.
  */
 import { BodyPart, CombatServerPacketId as CS, NpcsServerPacketId as NS } from '@ao/protocol';
-import type { CharacterCreate, ServerPacket } from '@ao/protocol';
+import type { ServerPacket } from '@ao/protocol';
+import type { Character } from './characters.js';
 import type { ClassicState } from './ui-state.js';
 
 /** FontTypeNames indexes used by the combat messages (client Recursos.bas). */
@@ -46,7 +47,7 @@ export const ponerPuntos = (value: number) => String(Math.trunc(value)).replace(
 /** VB RGB() long (0x00BBGGRR) to a CSS colour, as RGBA_From_vbColor does. */
 export const vbColor = (value: number) => `rgb(${value & 255}, ${(value >> 8) & 255}, ${(value >> 16) & 255})`;
 export interface FloatingText { text: string; color: string; charIndex: number; start: number; slide: number }
-type Source = { ui: ClassicState; characters: Map<number, CharacterCreate>; charIndex: number | undefined; clock(): number; bleed?: (charIndex: number, fx: number) => void };
+type Source = { ui: ClassicState; characters: ReadonlyMap<number, Character>; charIndex: number | undefined; clock(): number; bleed?: (charIndex: number, fx: number) => void };
 
 export class CombatState {
   floating: FloatingText[] = [];
@@ -83,7 +84,7 @@ export class CombatState {
     this.revision++;
   }
   private name(source: Source, charIndex: number) {
-    const full = source.characters.get(charIndex)?.name ?? '';
+    const full = source.characters.get(charIndex)?.tag ?? '';
     // Names carry a "<clan>" tail; the client keeps the part before it.
     const cut = full.indexOf('<');
     return cut < 0 ? full : full.slice(0, Math.max(0, cut - 1));
@@ -121,7 +122,7 @@ export class CombatState {
         break;
       case CS.CharUpdateHP: {
         const character = source.characters.get(packet.charIndex);
-        if (character) source.characters.set(packet.charIndex, { ...character, minHp: packet.hp, maxHp: packet.maxHp });
+        if (character) { character.minHp = packet.hp; character.maxHp = packet.maxHp; }
         break;
       }
       case NS.CharacterRemove:

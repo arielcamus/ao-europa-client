@@ -146,8 +146,12 @@ export function parseIni(text: string): Ini {
   let section = new Map<string, string>();
   for (const raw of text.split(/\r?\n/)) {
     const line = raw.trim();
-    if (line.startsWith('[') && line.endsWith(']')) {
-      const name = line.slice(1, -1).toLowerCase();
+    // clsIniManager.Initialize / GetPrivateProfileString: a line starting with "[" is a section if a "]" follows, and anything after that
+    // "]" is ignored (the Dats carry VB comments there: "[OBJ195]'Borrar proxima temporada", "[NPC560] 'Ogro"); without "]" it is nothing.
+    if (line.startsWith('[')) {
+      const end = line.indexOf(']', 1);
+      if (end < 0) continue;
+      const name = line.slice(1, end).trim().toLowerCase();
       section = ini.get(name) ?? new Map(); ini.set(name, section);
     } else {
       const match = /^([^;#=]+)=(.*)$/.exec(line);

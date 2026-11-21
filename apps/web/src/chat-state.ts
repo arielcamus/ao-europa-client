@@ -38,7 +38,8 @@ export class ChatState {
   locale: ChatLocale = sharedLocale;
   readonly dialogs = new Map<number, Dialog>();
   /** Set by the owner: the characters the session knows, and its clock. */
-  characters: (index: number) => CharacterCreate | undefined = () => undefined;
+  /** The characters store (Session wires the tracker): the wire name, NPC flag, status and privileges of a char index. */
+  characters: (index: number) => Pick<CharacterCreate, 'name' | 'npc' | 'status' | 'privileges'> | undefined = () => undefined;
   clock: () => number = () => performance.now();
   /** Config option CopiarDialogoAConsola (Configuracion.ini default 1): copy bubbles to the console. */
   copyToConsole = true;

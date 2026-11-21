@@ -122,6 +122,7 @@ export class Minimap {
       if (event.button === 2) { event.preventDefault(); this.rightClick(px, py); } else if (event.button === 0) this.hooks?.openBigMap();
     });
     host.addEventListener('contextmenu', event => event.preventDefault());
+    globalThis.addEventListener?.('resize', () => { this.densityCache = undefined; });
   }
   private map = 0;
   private rightClick(px: number, py: number) {
@@ -181,10 +182,16 @@ export class Minimap {
    * rounded UP to a whole number; the canvas backing store is that many pixels per picture pixel, filled nearest neighbour.
    */
   private density(): number {
+    // Measured once and kept until the window resizes (the classic window's scale and devicePixelRatio only change then): reading the
+    // bounding box every frame forced a layout per frame. A measure taken before layout (width 0) is not kept.
+    if (this.densityCache !== undefined) return this.densityCache;
     const width = this.host.getBoundingClientRect().width, css = this.host.offsetWidth || MINIMAP_SIZE;
     const ratio = (width > 0 ? width / css : 1) * (globalThis.devicePixelRatio || 1);
-    return Math.max(1, Math.min(8, Math.ceil(ratio - 1e-6)));
+    const k = Math.max(1, Math.min(8, Math.ceil(ratio - 1e-6)));
+    if (width > 0) this.densityCache = k;
+    return k;
   }
+  private densityCache: number | undefined;
 
   /** LoadMinimap(ResourceMap) into MiniMap.Picture, then DibujarMiniMapa's SetPixel markers, at `density()` device pixels per pixel. */
   private paintSheet(map: number) {

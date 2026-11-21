@@ -7,7 +7,7 @@ import { ClientPacketId as C, CombatClientPacketId as CC, ServerPacketId as S, H
 import { StatusClientPacketId, KeysClientPacketId } from '@ao/protocol';
 import { DoorClientPacketId, DoorServerPacketId as DoorServer, KeysServerPacketId as KS } from '@ao/protocol';
 import { SessionServerPacketId as SS, SessionClientPacketId as SCP, GmServerPacketId as GmServer } from '@ao/protocol';
-import type { AccountCharacter, CharacterCreate, ClientPacket, ServerPacket } from '@ao/protocol';
+import type { AccountCharacter, ClientPacket, ServerPacket } from '@ao/protocol';
 import { ClassicState } from './ui-state.js';
 import { MapObjects, tileKey } from './map-objects.js';
 import { effectiveBlocked, inWalkBorders, isDeadBody, legalPos, type LegalContext, type LegalTile } from './movement.js';
@@ -15,7 +15,7 @@ import { privilegeIndex } from './character-data.js';
 const HEADING_INTERVAL_MS = 120;
 import { PacketCounters, SEQUENCED_CLIENT_PACKETS } from './packet-counters.js';
 import type { PacketFamily } from './packet-counters.js';
-import { CharacterTracker, characterChange, splitTag } from './characters.js';
+import { CharacterTracker } from './characters.js';
 import { NpcsServerPacketId as NS } from '@ao/protocol';
 import { CombatState } from './combat.js';
 import { SpellState, spellTables } from './spells.js';
@@ -155,7 +155,6 @@ export class Session {
   charIndex: number | undefined;
   position: Position | undefined;
   motion: Motion | undefined;
-  characters = new Map<number, CharacterCreate>();
   /** Shared per-connection packet counters (never reset on ChangeMap). */
   readonly counters = new PacketCounters();
   next(family: PacketFamily): number { return this.counters.next(family); }
@@ -183,7 +182,7 @@ export class Session {
     private readonly clock: () => number = () => performance.now(),
   ) {
     this.credentials = { ...credentials };
-    this.ui.chat.clock = clock; this.ui.chat.characters = index => this.characters.get(index);
+    this.ui.chat.clock = clock; this.ui.chat.characters = index => { const c = this.tracker.chars.get(index); return c && { name: c.tag, npc: c.npc, status: c.status, privileges: c.privileges }; };
     this.connectedAt = clock();
     this.spells = new SpellState(packet => this.send(packet), clock, (text, font) => this.ui.message(text, font), family => this.next(family));
     this.status = new StatusState((text, font) => this.ui.message(text, font), clock);
@@ -198,7 +197,7 @@ export class Session {
     });
     this.placementDeadline = this.connectedAt + 10_000;
   }
-  get self() { return this.charIndex === undefined ? undefined : this.characters.get(this.charIndex); }
+  get self() { return this.charIndex === undefined ? undefined : this.tracker.chars.get(this.charIndex); }
   get ready() {
     return this.phase === 'playing' && this.position !== undefined && this.self !== undefined && this.resourceMap !== undefined && this.walkInterval !== undefined;
   }
@@ -236,7 +235,7 @@ export class Session {
       this.ui.receive(packet);
       this.tracker.receive(packet, this.clock());
       this.combat.receive(packet, {
-        ui: this.ui, characters: this.characters, charIndex: this.charIndex, clock: this.clock,
+        ui: this.ui, characters: this.tracker.chars, charIndex: this.charIndex, clock: this.clock,
         // CharAtaca blood goes into the one spell FX list; VB6 skips it when the victim is sailing.
         bleed: (charIndex, fx) => { if (!this.tracker.chars.get(charIndex)?.sailing) this.spells.addFx({ fx, charIndex, x: 0, y: 0, loops: 0, startedAt: this.clock() }); },
       });
@@ -289,21 +288,15 @@ export class Session {
           this.map = packet.map; this.resourceMap = packet.resourceMap;
           this.position = undefined; this.motion = undefined; this.pending = undefined;
           this.placementDeadline = this.clock() + 10_000;
-          this.characters.clear(); this.mapObjects.clear();
+          this.mapObjects.clear(); // the tracker drops every character on ChangeMap itself
           // Retain self index across warps; require a fresh CharacterCreate for placement.
           break;
         case S.CharacterCreate:
           if (!Number.isFinite(packet.speeding) || packet.speeding < 0 || packet.speeding > 100) throw new Error('Invalid character speed');
           if (packet.heading < 1 || packet.heading > 4) throw new Error('Invalid character heading');
           this.validPosition(packet);
-          this.characters.set(packet.charIndex, packet);
           if (this.charIndex === packet.charIndex) this.place(packet.x, packet.y);
           break;
-        case NS.CharacterChange: { // death (ghost), revival, equipping: the tracker's rule, applied to this copy too
-          const character = this.characters.get(packet.charIndex);
-          if (character) this.characters.set(packet.charIndex, { ...character, ...characterChange(character, packet), cart: packet.cart, backpack: packet.backpack, fx: packet.fx, fxLoops: packet.fxLoops });
-          break;
-        }
         case S.UserCharIndexInServer:
           this.charIndex = packet.charIndex;
           if (this.self) this.place(this.self.x, this.self.y);
@@ -328,8 +321,6 @@ export class Session {
         case S.PosUpdateChar:
         case S.CharacterMove: {
           this.validPosition(packet);
-          const character = this.characters.get(packet.charIndex);
-          if (character) this.characters.set(packet.charIndex, { ...character, x: packet.x, y: packet.y });
           if (packet.charIndex === this.charIndex) this.place(packet.x, packet.y);
           break;
         }
@@ -339,8 +330,8 @@ export class Session {
           break;
         case DoorServer.ObjectDelete: if (inMap(packet)) this.mapObjects.delete(packet.x, packet.y); break;
         case DoorServer.BlockPosition: if (inMap(packet)) this.mapObjects.block(packet.x, packet.y, packet.sides); break;
-        // The tracker owns appearance; this store (positions for the door rule, chat bubbles) only forgets who left.
-        case NS.CharacterRemove: if (packet.charIndex !== this.charIndex) { this.characters.delete(packet.charIndex); this.status.forget(packet.charIndex); } break;
+        // The tracker drops the character (self too, as EraseChar does; a warp's CharacterCreate follows); status forgets others.
+        case NS.CharacterRemove: if (packet.charIndex !== this.charIndex) this.status.forget(packet.charIndex); break;
         // LocaleMsg (141) reaches the console through ui.receive -> ChatState (one print, chat's pipeline).
         case KS.SafeModeOn: this.safeMode = true; break;
         case KS.SafeModeOff: this.safeMode = false; break;
@@ -373,14 +364,6 @@ export class Session {
         case SS.TextCharDrop: this.addFloatingText({ text: packet.text, charIndex: packet.charIndex, color: packet.color, duration: packet.duration, offsetY: 0, animated: packet.animated }); break;
         case SS.ForceCharMove: this.forceMove(packet.heading); break;
         case SS.CharacterTranslate: this.translate(packet); break;
-        case SS.UpdateTagAndStatus: {
-          const copy = this.characters.get(packet.charIndex);
-          if (!copy) break;
-          const parts = splitTag(packet.tag);
-          this.characters.set(packet.charIndex, { ...copy, ...(packet.clanIndex !== undefined ? { clanIndex: packet.clanIndex } : {}), ...(packet.clanAlignment !== undefined ? { clanAlignment: packet.clanAlignment } : {}), ...(parts ? { name: packet.tag, status: packet.status, groupIndex: packet.groupIndex } : {}) });
-          break;
-        }
-        case SS.UpdateFlag: { const copy = this.characters.get(packet.charIndex); if (copy) this.characters.set(packet.charIndex, { ...copy, flag: packet.flag }); break; }
         // HandleShowSignal: ObjData(objIndex).Texto in the sign window (InitCartel); the UI shows it.
         case SS.ShowSignal: if (!this.sign) this.sign = { text: this.catalog?.get(packet.objIndex)?.text ?? '', grh: packet.grh }; break;
         case SS.AnswerReset: this.resetRequested = true; break;
@@ -392,7 +375,6 @@ export class Session {
   private leaveArea(bounds: { minX: number; maxX: number; minY: number; maxY: number }) {
     const outside = (x: number, y: number) => x < bounds.minX || x > bounds.maxX || y < bounds.minY || y > bounds.maxY;
     for (const [index, char] of [...this.tracker.chars]) if (index !== this.charIndex && outside(char.x, char.y)) this.tracker.chars.delete(index);
-    for (const [index, char] of [...this.characters]) if (index !== this.charIndex && outside(char.x, char.y)) this.characters.delete(index);
     for (const key of [...this.mapObjects.objects.keys()]) {
       const x = (key % 100) + 1, y = Math.floor(key / 100) + 1;
       if (outside(x, y)) this.mapObjects.objects.delete(key);
@@ -404,8 +386,6 @@ export class Session {
     if (!Number.isFinite(speeding) || speeding < 0 || speeding > 100) return;
     const tracked = this.tracker.chars.get(charIndex);
     if (tracked) tracked.speeding = speeding > 0 ? speeding : 1;
-    const copy = this.characters.get(charIndex);
-    if (copy) this.characters.set(charIndex, { ...copy, speeding });
   }
   private validPosition(position: Position) {
     if (position.x < 1 || position.y < 1 || position.x > 100 || position.y > 100) throw new Error('Server position outside map');
@@ -420,7 +400,7 @@ export class Session {
     if (this.position && (x !== this.position.x || y !== this.position.y)) this.motion = undefined;
     this.pending = undefined;
     this.position = { x, y };
-    if (this.self) { this.characters.set(this.self.charIndex, { ...this.self, x, y }); this.tracker.place(this.self.charIndex, x, y); }
+    if (this.self) this.tracker.place(this.self.charIndex, x, y);
   }
   /** CONST_INTERVALO_HEADING gate of IntervaloPermiteHeading. */
   private lastHeading = -Infinity;
@@ -461,7 +441,6 @@ export class Session {
     if (!(inWalkBorders(to.x, to.y) && legalPos(heading, this.legalContext(to.x, to.y)) && this.status.canMove(now))) {
       if (this.self.heading !== heading && now - this.lastHeading >= HEADING_INTERVAL_MS) {
         this.lastHeading = now;
-        this.characters.set(this.self.charIndex, { ...this.self, heading });
         this.tracker.place(this.self.charIndex, this.position.x, this.position.y, heading);
         this.send({ id: SCP.ChangeHeading, heading, counter: this.next('changeHeading') });
       }
@@ -469,7 +448,6 @@ export class Session {
     }
     this.motion = { from: this.position, to, started: now, duration: this.stepMs - 30 };
     this.position = to;
-    this.characters.set(this.self.charIndex, { ...this.self, ...to, heading });
     this.tracker.place(this.self.charIndex, to.x, to.y, heading);
     this.pending = { expected: to, since: now };
     this.lastWalk = now;
@@ -614,8 +592,6 @@ export class Session {
   }
   /** HandleCharacterTranslate for the player's own character: it glides to the tile over `time` ms (the tracker does the same for everybody else). */
   private translate(packet: { charIndex: number; x: number; y: number; time: number }) {
-    const copy = this.characters.get(packet.charIndex);
-    if (copy && (packet.x >= 1 && packet.y >= 1 && packet.x <= 100 && packet.y <= 100)) this.characters.set(packet.charIndex, { ...copy, x: packet.x, y: packet.y });
     if (packet.charIndex !== this.charIndex || !this.position || packet.x < 1 || packet.y < 1 || packet.x > 100 || packet.y > 100) return;
     const from = this.position, to = { x: packet.x, y: packet.y };
     this.motion = packet.time > 0 && (from.x !== to.x || from.y !== to.y) ? { from, to, started: this.clock(), duration: packet.time, translate: true } : undefined;
@@ -632,7 +608,6 @@ export class Session {
     if (to.x < 1 || to.y < 1 || to.x > 100 || to.y > 100) return;
     this.motion = { from: this.position, to, started: this.clock(), duration: Math.max(50, this.stepMs - 30) };
     this.position = to;
-    this.characters.set(this.self.charIndex, { ...this.self, ...to, heading: heading as Heading });
     this.tracker.place(this.self.charIndex, to.x, to.y, heading as Heading);
     this.lastWalk = this.clock();
   }
