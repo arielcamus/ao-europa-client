@@ -10,8 +10,8 @@ export interface WorldMap {
   /** Per-tile trigger id (e_Trigger); 0 when none. Drives the roof rule. */
   triggers: Uint16Array;
   /**
-   * Objects stored in the map file (CargarMapa reads them into MapData.ObjGrh). The server never sends the "fixed" ones
-   * (trees, signs, deposits, decorations; ModAreas.EsObjetoFijo), so the map file is the only source for them.
+   * Objects stored in the map file (CargarMapa reads them into MapData.ObjGrh). The server never sends trees, ore deposits and decorations
+   * (its GameLogic.EsObjetoFijo, checked by ModAreas), so the map file is the only source for them; it DOES send signs (see map-objects.ts FIXED_TYPES).
    */
   objects: MapFileObject[];
   /** NPCs stored in the map file (frmMapaGrande's creature list counts them per NpcIndex). */
@@ -146,8 +146,12 @@ export function parseIni(text: string): Ini {
   let section = new Map<string, string>();
   for (const raw of text.split(/\r?\n/)) {
     const line = raw.trim();
-    if (line.startsWith('[') && line.endsWith(']')) {
-      const name = line.slice(1, -1).toLowerCase();
+    // clsIniManager.Initialize / GetPrivateProfileString: a line starting with "[" is a section if a "]" follows, and anything after that
+    // "]" is ignored (the Dats carry VB comments there: "[OBJ195]'Borrar proxima temporada", "[NPC560] 'Ogro"); without "]" it is nothing.
+    if (line.startsWith('[')) {
+      const end = line.indexOf(']', 1);
+      if (end < 0) continue;
+      const name = line.slice(1, end).trim().toLowerCase();
       section = ini.get(name) ?? new Map(); ini.set(name, section);
     } else {
       const match = /^([^;#=]+)=(.*)$/.exec(line);

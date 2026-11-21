@@ -66,7 +66,7 @@ export class WorldRenderer {
   /** Light map, particles, projectiles, auras and weather (feat/world-fx); created in init(). */
   private fx: FxRenderer | undefined;
   private readonly trees = new TreeFade();
-  /** Trees, signs, deposits and decorations come from the map file, never from the server (ModAreas.EsObjetoFijo). */
+  /** The client's fixed objects (TileEngine_Map.EsObjetoFijo: trees, signs, deposits, decorations) from the map file; a sign the server also sends wins (map-objects.ts). */
   private fixed = new Map<number, GroundObject>();
   /** The map-file object on a tile, if any (the server sees these too). */
   fixedObjectAt(x: number, y: number): GroundObject | undefined { return this.fixed.get((y - 1) * 100 + x - 1); }

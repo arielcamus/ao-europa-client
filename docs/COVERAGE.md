@@ -11,7 +11,7 @@ Scanned refs: `main`
 ## Headline
 
 - **Packets covered (merged + open branches): 512 of 513 = 99.8%.** Merged on main only: 512 = 99.8%.
-  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 283.
+  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 288.
 - **Forms covered: 58 of 86 = 67.4%** (0 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
@@ -284,7 +284,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 72 | RestOK | client Protocol.bas:HandleRestOK | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
 | 73 | ErrorMsg | client Protocol.bas:HandleErrorMessage | core | merged | `main:packages/protocol/src/packets.ts` | no |
 | 74 | Blind | client Protocol.bas:HandleBlind | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
-| 75 | Dumb | client Protocol.bas:HandleDumb | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
+| 75 | Dumb | client Protocol.bas:HandleDumb | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 76 | ShowSignal | client Protocol.bas:HandleShowSignal | chat | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 77 | ChangeNPCInventorySlot | client Protocol.bas:HandleChangeNPCInventorySlot | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 78 | UpdateHungerAndThirst | client Protocol.bas:HandleUpdateHungerAndThirst | items | merged | `main:packages/protocol/src/packets.ts` | yes |
@@ -295,7 +295,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 83 | SetInvisible | client Protocol.bas:HandleSetInvisible | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 84 | MeditateToggle | client Protocol.bas:HandleMeditateToggle | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
 | 85 | BlindNoMore | client Protocol.bas:HandleBlindNoMore | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
-| 86 | DumbNoMore | client Protocol.bas:HandleDumbNoMore | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
+| 86 | DumbNoMore | client Protocol.bas:HandleDumbNoMore | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 87 | SendSkills | client Protocol.bas:HandleSendSkills | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 88 | TrainerCreatureList | client Protocol.bas:HandleTrainerCreatureList | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 89 | GuildNews | client Protocol.bas:HandleGuildNews | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
@@ -356,7 +356,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 144 | Ubicacion | client Protocol.bas:HandleUbicacion | minimap | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 145 | ArmaMov | client Protocol.bas:HandleArmaMov | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 146 | EscudoMov | client Protocol.bas:HandleEscudoMov | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
-| 147 | ViajarForm | client Protocol.bas:HandleViajarForm | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | no |
+| 147 | ViajarForm | client Protocol.bas:HandleViajarForm | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | yes |
 | 148 | NadarToggle | client Protocol.bas:HandleNadarToggle | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 149 | ShowFundarClanForm | client Protocol.bas:HandleShowFundarClanForm | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 150 | CharUpdateHP | client Protocol.bas:HandleCharUpdateHP | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
@@ -577,8 +577,8 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 158 | AcceptRoyalCouncilMember | server Protocol.bas:HandleAcceptRoyalCouncilMember | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 159 | AcceptChaosCouncilMember | server Protocol.bas:HandleAcceptChaosCouncilMember | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 160 | ItemsInTheFloor | server Protocol.bas:HandleItemsInTheFloor | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 161 | MakeDumb | server Protocol.bas:HandleMakeDumb | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 162 | MakeDumbNoMore | server Protocol.bas:HandleMakeDumbNoMore | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 161 | MakeDumb | server Protocol.bas:HandleMakeDumb | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 162 | MakeDumbNoMore | server Protocol.bas:HandleMakeDumbNoMore | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
 | 163 | CouncilKick | server Protocol.bas:HandleCouncilKick | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 164 | SetTrigger | server Protocol.bas:HandleSetTrigger | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 165 | AskTrigger | server Protocol.bas:HandleAskTrigger | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |

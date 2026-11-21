@@ -25,3 +25,27 @@ test('the large map lists the creatures of the searched map and previews the sel
   await expect(win).toBeHidden();
   expect(failures).toEqual([]);
 });
+
+// #84 review against the pinned frmMapaGrande: Image3_Click's `If Dungeon Then Exit Sub` never fires (nothing assigns Dungeon), so the
+// references check also works on the dungeon world; cmdSearch and picMap_MouseDown only rewrite lblMapInfo(0), never Label1.
+test('the large map: references toggle on the dungeon world, Label1 kept on search', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop-chrome', 'desktop layout');
+  const failures: string[] = [];
+  page.on('pageerror', error => failures.push(error.message));
+  await page.goto('/');
+  await expect(page.locator('#classic')).toHaveAttribute('data-ui-ready', 'true');
+  await page.locator('#connect').click();
+  await expect(page.locator('#viewport')).toHaveAttribute('data-rendered', 'true');
+  await page.locator('#minimap').click();
+  const win = page.locator('#world-map-window');
+  await expect(win).toBeVisible();
+  const description = await win.locator('.wm-info').textContent();
+  await win.getByRole('button', { name: 'Mapa de mazmorras' }).click();
+  await expect(win.getByRole('button', { name: 'Mapa de mazmorras' })).toHaveAttribute('data-checked', 'true');
+  await win.getByRole('button', { name: 'Referencias del mapa' }).click();
+  await expect(win.getByRole('button', { name: 'Referencias del mapa' })).toHaveAttribute('data-checked', 'true');
+  await win.locator('input').fill('1'); await page.keyboard.press('Enter');
+  await expect(win.locator('.wm-title')).toHaveText(/ \(1\)$/);
+  await expect(win.locator('.wm-info')).toHaveText(description ?? '');
+  expect(failures).toEqual([]);
+});

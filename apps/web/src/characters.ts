@@ -12,6 +12,8 @@ import { splitName } from './character-data.js';
 export interface CharMotion { from: { x: number; y: number }; to: { x: number; y: number }; started: number; duration: number; translate?: boolean }
 export interface Character {
   charIndex: number; name: string; alias: string; clan: string;
+  /** The name as the wire carries it ("Name <Clan>", CharacterCreate / UpdateTagAndStatus): the console and combat lines cut it themselves. */
+  tag: string;
   body: number; head: number; weapon: number; shield: number; helmet: number;
   heading: Heading; x: number; y: number; status: number; privileges: number;
   npc: number; npcNumber: number; speeding: number; idle: boolean; sailing: boolean;
@@ -24,6 +26,8 @@ export interface Character {
   dontBlockTile: boolean;
   /** Quest marker over an NPC (HandleCharacterCreate / HandleUpdateNPCSimbolo): 0 none, else grh 5257 + symbol. */
   symbol: number;
+  /** CharacterCreate's life and mana (the NPC/user bars); CharUpdateHP changes the life. */
+  minHp: number; maxHp: number; minMana: number; maxMana: number;
   motion?: CharMotion | undefined;
   /** HandlePlayWaveStep took the (invisible, far) walker off MapData so its stale tile does not block; the next position puts it back. */
   offTile?: boolean;
@@ -77,13 +81,14 @@ export class CharacterTracker {
       case S.CharacterCreate: {
         const parts = splitName(packet.name);
         this.chars.set(packet.charIndex, {
-          charIndex: packet.charIndex, ...parts, body: packet.body, head: packet.head,
+          charIndex: packet.charIndex, ...parts, tag: packet.name, body: packet.body, head: packet.head,
           weapon: packet.weapon, shield: packet.shield, helmet: packet.helmet,
           heading: packet.heading as Heading, x: packet.x, y: packet.y, status: packet.status,
           privileges: packet.privileges, npc: packet.npc, npcNumber: packet.npcNumber,
           speeding: packet.speeding > 0 ? packet.speeding : 1, idle: (packet.flags & 1) !== 0, sailing: (packet.flags & 2) !== 0,
           groupIndex: packet.groupIndex, clanIndex: packet.clanIndex, symbol: packet.symbol,
           clanAlignment: packet.clanAlignment, team: packet.team, banderaIndex: packet.flag, dontBlockTile: false,
+          minHp: packet.minHp, maxHp: packet.maxHp, minMana: packet.minMana, maxMana: packet.maxMana,
         });
         this.revision++;
         break;
@@ -134,7 +139,7 @@ export class CharacterTracker {
     if (packet.clanIndex !== undefined) char.clanIndex = packet.clanIndex;
     if (packet.clanAlignment !== undefined) char.clanAlignment = packet.clanAlignment;
     const parts = splitTag(packet.tag);
-    if (parts) { char.name = parts.name; char.clan = parts.clan; char.status = packet.status; char.groupIndex = packet.groupIndex; }
+    if (parts) { char.name = parts.name; char.clan = parts.clan; char.tag = packet.tag; char.status = packet.status; char.groupIndex = packet.groupIndex; }
     this.revision++;
   }
 
@@ -178,7 +183,7 @@ export class CharacterTracker {
     return { x: motion.from.x + (motion.to.x - motion.from.x) * t, y: motion.from.y + (motion.to.y - motion.from.y) * t, moving: !motion.translate, elapsed: Math.max(0, elapsed) };
   }
 
-  /** The player's own character is drawn from the session's position, so the session mirrors every step here (the one store for "who stands where"). */
+  /** The player's own character is drawn from the session's position, so the session mirrors every step here (the one character store: Session.self reads it too). */
   place(charIndex: number, x: number, y: number, heading?: Heading) {
     const char = this.chars.get(charIndex);
     if (char) { char.x = x; char.y = y; if (heading) char.heading = heading; char.motion = undefined; }

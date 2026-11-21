@@ -77,7 +77,7 @@ export class ExtrasUI {
   get windowOpen() { return !!(this.duel?.isOpen || this.tournament?.isOpen || this.lobby?.isOpen); }
 
   // ---- frmRetos -------------------------------------------------------------------------------------------------------------------
-  openDuel(names: readonly string[] = [], own = splitName(this.session?.characters.get(this.session.charIndex ?? -1)?.name ?? '').name) {
+  openDuel(names: readonly string[] = [], own = splitName(this.session?.self?.tag ?? '').name) {
     this.duel?.close();
     const win = new VbWindow(this.parent, { id: 'duel-window', size: [291, 487], title: 'Retos', onClose: () => { this.duel = undefined; } });
     this.duel = win;
@@ -209,13 +209,13 @@ export class ExtrasUI {
    * is sent first, like the VB6 client, so the server also tells the player who it is.
    */
   interact(session: Session, tile: { x: number; y: number }, at: { x: number; y: number }, shift: boolean): boolean {
-    const near = [...session.characters.values()];
+    const near = [...session.tracker.chars.values()];
     const found = near.find(c => c.x === tile.x && c.y === tile.y && c.charIndex !== session.charIndex) ?? near.find(c => c.x === tile.x && c.y === tile.y + 1 && c.charIndex !== session.charIndex);
     if (!found) return false;
     session.leftClick(tile.x, tile.y);
-    const self = session.characters.get(session.charIndex ?? -1);
+    const self = session.self;
     const run = (line: string) => this.deps.runLine(line);
-    const target = splitName(found.name).name;
+    const target = splitName(found.tag).name;
     let items: [string, () => void][];
     if (found.npc === 2) items = this.petItems(session, run);
     else if (found.npc !== 0) return true;

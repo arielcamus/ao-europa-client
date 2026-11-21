@@ -15,7 +15,7 @@
 |---|---|---|---|
 | Packets with a codec | 512 | 513 | 1 |
 | Screens complete (all controls) | 58 | 58 | 0 (0 partial, 0 not started, 0 covered but missing controls) |
-| Behaviour items | 0 | 19 | **19 open** (14 to do, 1 in flight, 4 blocked on data or a decision) |
+| Behaviour items | 0 | 10 | **10 open** (8 to do, 1 in flight, 1 blocked on data or a decision) |
 | Playthrough steps passing end to end | 26 | 169 | 143 (48 recorded at protocol level on main, 0 in flight, 148 automatable, 21 manual) |
 
 Scope. Packets: the 8 post-pin packets are excluded (docs/COVERAGE.md "post-pin"); "codec" is a registered `[Table.Name]` entry, and the handling check is a name search in apps/web and the bridge. Screens: covered + partial + class a; classes b (account server), c (AO20 extras) and d (dead forms) are out. Playthrough: "passing" means an end-to-end run against the real server; none exists yet (WP-D).
@@ -24,7 +24,7 @@ In flight now: PR #54 (feat/prehoo-lock: pins, asset lock, pinned coverage map);
 
 ## 1. Packets
 
-**512 of 513 have a codec** (server to client 202/202, client to server 310/311); 283 have a recorded VB6 fixture.
+**512 of 513 have a codec** (server to client 202/202, client to server 310/311); 288 have a recorded VB6 fixture.
 
 ### Missing codecs
 
@@ -54,23 +54,7 @@ None.
 
 ## 3. Behaviour: open issues and reported bugs
 
-**19 items** from the open issues (#58 #44 #43 #38 #35 #34 #28 #24 #22 #17 #16 #15) and Ariel's reports. In flight: 1; blocked on data or a decision: 4.
-
-### #15
-
-- [ ] Housekeeping: #52 implemented items 1-3, close the issue; do a live pass on a forest map (draw order and tree fade)
-
-### #16
-
-- [ ] session.characters (raw CharacterCreate copies: hp, cart, self copy) is still a second store next to the tracker; chat bubbles, the door rule and the tap-to-select rule already read the tracker. Remaining readers: session.ts, combat.ts, combat-overlay.ts, extras-ui.ts (other packages' files)
-
-### #17
-
-- [ ] Record death by a hostile creature, NPCHitUser/NPCKillUser on a non-GM char and the revival after it
-
-### #22
-
-- [ ] Player on 75,32 between two roofs stays under both roofs: VB6 trigger rule keeps them opaque, needs a data or rule decision (blocked: decision)
+**10 items** from the open issues (#58 #38 #35 #34 #28 #24) and Ariel's reports. In flight: 1; blocked on data or a decision: 1.
 
 ### #24
 
@@ -93,17 +77,6 @@ None.
 ### #38
 
 - [ ] Record ObjQuestListSend (S174) with a level-appropriate char holding a quest item
-
-### #43
-
-- [ ] Real blind / dumb / stun (no spell or object in the data can cause them; see docs/DATA-PATCHES.md) (blocked: data)
-
-### #44
-
-- [ ] Travel form Playwright e2e (inject ViajarForm, pick a row, assert CompletarViaje)
-- [ ] TravelState.travel hard-codes packet id 252: use PetsTravelClientPacketId.CompletarViaje
-- [ ] Fold tools/npcs-record.mjs into tools/conformance/vb6-record.mjs
-- [ ] Record travel and trainer against the real server (needs a Transporter / Entrenador NPC; none on a non-battle server) (blocked: data: no such NPC)
 
 ### #58
 

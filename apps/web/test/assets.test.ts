@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { clipFrame, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody, tileIndex } from '../src/assets.js';
 
 // Original synthetic fixture. No upstream maps, graphics or metadata are embedded.
@@ -72,5 +74,30 @@ describe('classic local resources', () => {
     [70_001, 70_002, 70_003, 70_004].forEach((n, i) => bytes.writeInt32LE(n, 265 + i * 4));
     expect(parseHeads(bytes)[1]).toEqual([70_001, 70_002, 70_003, 70_004]);
     expect(() => parseHeads(bytes.subarray(0, -1))).toThrow('Truncated');
+  });
+});
+
+describe('parseIni section headers (clsIniManager.Initialize, GetPrivateProfileString)', () => {
+  it('starts a new section at a header followed by a VB comment, and ignores a "[" line without "]"', () => {
+    const ini = parseIni("[NPC559]\r\nName=Lobo Negro\r\n\r\n[NPC560] 'Ogro\r\nName=Ogro\r\n[OBJ195]'Borrar proxima temporada\r\nName=Tunica\r\n[broken\r\nGrhIndex=1\r\n");
+    expect(ini.get('npc559')!.get('name')).toBe('Lobo Negro');
+    expect(ini.get('npc560')!.get('name')).toBe('Ogro');
+    expect(ini.get('obj195')).toEqual(new Map([['name', 'Tunica'], ['grhindex', '1']]));
+    expect(ini.has("npc560] 'ogro")).toBe(false);
+  });
+  it('trims the name between the brackets, like UCase$(Trim$(Mid$(...)))', () => {
+    expect(parseIni('[ NPC1 ]\nName=X').get('npc1')!.get('name')).toBe('X');
+  });
+});
+
+// Every Dat the client parses with parseIni: each header line of the real file is its own section (pre-HOO obj.dat has 211 commented headers).
+const datRoot = process.env.AO_ASSETS;
+describe.skipIf(!datRoot || !existsSync(join(datRoot, 'init')))('parseIni on the real Dats', () => {
+  const files = !datRoot ? [] : ['Dat/obj.dat', 'Dat/Obj.dat', 'Dat/Hechizos.dat', 'Dat/npcs.dat', 'init/armas.dat', 'init/colores.dat', 'init/sp_localindex.dat', 'init/FXs.ini', 'init/cuerpos.dat', 'init/escudos.dat']
+    .filter((file, i, all) => existsSync(join(datRoot!, file)) && all.findIndex(f => f.toLowerCase() === file.toLowerCase()) === i);
+  it.each(files)('%s: one section per header line', file => {
+    const text = readFileSync(join(datRoot!, file), 'latin1');
+    const headers = new Set([...text.matchAll(/^[ \t]*\[([^\]\r\n]+)\]/gm)].map(m => m[1]!.trim().toLowerCase()));
+    expect([...parseIni(text).keys()].sort()).toEqual([...headers].sort());
   });
 });

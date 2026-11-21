@@ -90,7 +90,7 @@ export class WorldMapUI {
   /** HandleShowFrmMapa (an object of type map) and MiniMap_MouseDown: CalcularPosicionMAPA, then show. */
   open(session: Session) {
     this.session = session;
-    if (this.isOpen) { this.calculate(); return; }
+    if (this.isOpen) { this.calculate(true); return; }
     const win = new VbWindow(this.parent, { id: 'world-map-window', art: 'ventanamapa', size: [771, 719], title: 'Mapa del mundo', onClose: () => { this.stopPreview(); this.window = undefined; } });
     this.window = win;
     win.root.tabIndex = -1;
@@ -130,39 +130,51 @@ export class WorldMapUI {
     win.closeButton([740, 0, 31, 28]);
     this.buildCreatures(win);
     win.root.focus();
-    this.calculate();
+    this.calculate(false);
   }
 
   private paintChecks() {
     const set = (el: HTMLElement, on: boolean) => { el.style.backgroundImage = on && this.checkArt ? `url("${this.checkArt}")` : ''; el.style.backgroundSize = '100% 100%'; el.dataset.checked = String(on); };
     set(this.dungeonCheck, this.world !== 1); set(this.referencesCheck, this.references);
   }
-  private async setPicture() {
+  /**
+   * picMap.Picture = LoadInterface("mapa<world>[_referencias].bmp"); a missing file is Nothing (black). `plain` is cmdSearch's reload, which
+   * loads "mapa<world>.bmp" even while Referencias is on. The pinned data has no mapa1_referencias.bmp, only mapa_referencias.bmp: that
+   * one stands in for world 1 (the surface it draws); worlds 2 and 3 have no references picture, so they go black as in VB6.
+   */
+  private async setPicture(plain = false) {
     const token = ++this.token;
-    const stems = this.references ? [`mapa${this.world}_referencias`, 'mapa_referencias'] : [`mapa${this.world}`];
+    const references = this.references && !plain;
+    const stems = references ? [`mapa${this.world}_referencias`, ...(this.world === 1 ? ['mapa_referencias'] : [])] : [`mapa${this.world}`];
     for (const stem of stems) {
       try { const url = await loadInterface(stem); if (token === this.token && this.window) this.picture.style.backgroundImage = `url("${url}")`; return; } catch { /* next */ }
     }
+    if (token === this.token && this.window) this.picture.style.backgroundImage = '';
   }
 
-  /** frmMapaGrande.CalcularPosicionMAPA: the world of the player's map, the marker, the selection on the player's cell. */
-  private calculate() {
+  /**
+   * frmMapaGrande.CalcularPosicionMAPA, then Form_Activate. lblMapInfo names UserMap, Label1 is NameMaps(ResourceMap).desc. A map on a world
+   * picks that world, its picture and the selection square (lblAllies); a map on none leaves world, picture and square alone while the form
+   * was visible, else shows world 1. Form_Activate then clears Referencias and fills ListView1 for ResourceMap, showing its first creature.
+   */
+  private calculate(wasOpen: boolean) {
     const session = this.session; if (!session) return;
-    const map = session.map ?? 0;
+    const map = session.map ?? 0, resourceMap = session.resourceMap ?? map;
     const at = findMap(this.deps.worlds() as World[], map);
-    if (at) { this.world = at.world; this.state.cell = at.cell; } else if (!this.isOpen) this.world = 1;
+    if (at) this.world = at.world; else if (!wasOpen) this.world = 1;
     this.state.world = this.world; this.references = false;
-    this.paintChecks(); void this.setPicture();
+    this.paintChecks();
+    if (at || !wasOpen) void this.setPicture();
     this.showMap(map);
-    this.moveSelected(at?.cell ?? 0);
+    this.info.textContent = this.deps.description(resourceMap) || NO_MAP_INFO;
+    if (at) this.moveSelected(at.cell);
     this.update(session);
-    void this.loadCreatures(map, true); // Form_Activate: CargarDatosMapa, then ListView1_ItemClick on the first row
+    void this.loadCreatures(resourceMap, true);
   }
+  /** lblMapInfo(0) = MapDat.map_name & "(" & map & ")" (cmdSearch puts a space before the bracket). Label1 is not touched. */
   private showMap(map: number, spaced = false) {
     this.state.map = map;
     this.title.textContent = `(${map})`; this.title.dataset.map = String(map);
-    const desc = this.deps.description(map);
-    this.info.textContent = desc || NO_MAP_INFO;
     void this.deps.mapName(map).then(name => { if (this.state.map === map && this.title) this.title.textContent = `${name}${spaced ? ' ' : ''}(${map})`; });
   }
   private moveSelected(cell: number) {
@@ -217,7 +229,7 @@ export class WorldMapUI {
     if (!(number > 0)) { this.search.value = ''; return; }
     const at = findMap(this.deps.worlds() as World[], number);
     if (!at) return; // SearchMap False: nothing changes (the text stays)
-    if (at.world !== this.world) this.toggleDungeon(); else void this.setPicture();
+    if (at.world !== this.world) this.toggleDungeon(); else void this.setPicture(true);
     this.showMap(number, true); this.moveSelected(at.cell);
     this.search.value = '';
     void this.loadCreatures(number, false).then(() => { if (this.state.map === number) this.clearPreview(); }); // PreviewNPC_Clear
@@ -327,9 +339,8 @@ export class WorldMapUI {
     } else if (headFrame) draw(headFrame, Math.floor((PREVIEW_W - headFrame.width) / 2), Math.floor((PREVIEW_H - headFrame.height) / 2));
   }
 
-  /** Image3_Click (not in the dungeon world). */
+  /** Image3_Click. Its `If Dungeon Then Exit Sub` never fires: ModUtils declares `Dungeon` and nothing in the client assigns it. */
   toggleReferences() {
-    if (this.world === 2) return; // `If Dungeon Then Exit Sub`
     this.references = !this.references; this.paintChecks(); void this.setPicture();
   }
 }

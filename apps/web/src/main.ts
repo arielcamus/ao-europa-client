@@ -17,7 +17,7 @@ import { fetchText, parseIni, parseMap, fetchBytes } from './assets.js';
 import type { Ini } from './assets.js';
 import { loadObjectCatalog } from './object-catalog.js';
 import type { ObjectCatalog } from './object-catalog.js';
-import { npcInfo, npcRows, parseNpcSections } from './world-map-npcs.js';
+import { npcInfo, npcRows } from './world-map-npcs.js';
 import { WorldMapUI } from './world-map-ui.js';
 import { parseWorlds } from './world-map.js';
 import type { World } from './world-map.js';
@@ -75,11 +75,15 @@ let mapNames = parseIni('');
 void fetchText('init/mapsworlddata.dat').then(text => { worlds = parseWorlds(parseIni(text)); minimap.worlds = worlds; }).catch(error => report(`mapsworlddata.dat: ${String(error)}`));
 // Recursos.CargarNPCsMapData: the quest NPC markers of the per-map minimap (OUTPUT/QuestNPCsMapData.bin, ~480 KB). VB6 reads it at startup;
 // here it is fetched on the first frame in the world, so it never competes with the splash and login art on a slow link.
-let questDotsRequested = false;
-const loadQuestDots = () => {
-  if (questDotsRequested) return;
-  questDotsRequested = true;
-  void fetchBytes('OUTPUT/QuestNPCsMapData.bin').then(bytes => { minimap.questDots = parseQuestNpcDots(bytes); }).catch(() => undefined);
+// A failed fetch is reported and tried again on the next map change (not every frame).
+let questDots: 'idle' | 'loading' | 'loaded' = 'idle', questDotsFailedOn: number | undefined;
+const loadQuestDots = (map: number | undefined) => {
+  if (questDots !== 'idle' || map === questDotsFailedOn) return;
+  questDots = 'loading';
+  void fetchBytes('OUTPUT/QuestNPCsMapData.bin').then(bytes => { minimap.questDots = parseQuestNpcDots(bytes); questDots = 'loaded'; }).catch(error => {
+    console.warn(`OUTPUT/QuestNPCsMapData.bin: ${String(error)}; the minimap NPC markers are retried on the next map change`);
+    questDots = 'idle'; questDotsFailedOn = map;
+  });
 };
 void fetchText('init/namemapa.dat').then(text => { mapNames = parseIni(text); }).catch(() => undefined);
 const mapHeaderNames = new Map<number, Promise<string>>();
@@ -88,7 +92,7 @@ let npcTableCache: Ini | undefined, npcServerCache: Ini | undefined, catalogCach
 const npcTable = async () => {
   if (!npcTableCache) {
     const [local, server, catalog] = await Promise.all([
-      fetchText('init/sp_localindex.dat').then(parseNpcSections), fetchText('Dat/npcs.dat').then(parseNpcSections).catch(() => undefined), loadObjectCatalog().catch(() => undefined),
+      fetchText('init/sp_localindex.dat').then(parseIni), fetchText('Dat/npcs.dat').then(parseIni).catch(() => undefined), loadObjectCatalog().catch(() => undefined),
     ]);
     npcTableCache = local; npcServerCache = server; catalogCache = catalog;
   }
@@ -359,11 +363,11 @@ function updateUi(now: number) {
   if (!session) { hotkeysUi.update(undefined, false); return; }
   const playing = session.ready && renderer.readyMap === session.resourceMap;
   // ModSettings.LoadHotkeys: once per entry into the game, send the saved slots to the server.
-  if (playing && session.self && !hotkeysLoaded.has(session)) { hotkeysLoaded.add(session); applyOptions(); session.optionsActions.loadHotkeys(session.self.name); }
+  if (playing && session.self && !hotkeysLoaded.has(session)) { hotkeysLoaded.add(session); applyOptions(); session.optionsActions.loadHotkeys(session.self.tag); }
   hotkeysUi.update(session, playing);
   if (gameOptions.value.showFps && now - lastFps > 500) { lastFps = now; fpsLabel.textContent = `FPS: ${Math.round(renderer.app.ticker.FPS)}`; }
   minimap.options = { centered: gameOptions.value.centeredMinimap, zoom: gameOptions.value.centeredMinimapZoom };
-  if (playing) loadQuestDots();
+  if (playing) loadQuestDots(session.resourceMap);
   minimap.update(session, playing, session.world.allies);
   if (session.world.mapForm.opened !== shownMapForm.get(session)) { shownMapForm.set(session, session.world.mapForm.opened); if (session.world.mapForm.opened > 0) worldMapUi.open(session); }
   worldMapUi.update(session);
