@@ -22,6 +22,8 @@ button, input { border-radius: 0; }
 .art-button { background-repeat: no-repeat; background-position: 0 0; }
 .art-button:active { filter: brightness(.8); }
 button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1px solid #e0c982; outline-offset: -1px; }
+/* The game canvas is focusable for keyboard input but the original client draws no focus ring on the viewport. */
+#viewport canvas:focus, #viewport canvas:focus-visible { outline: none; }
 .label { display: block; text-align: center; font: bold 11px/16px Tahoma, Arial, sans-serif; white-space: nowrap; overflow: hidden; text-shadow: 1px 1px #000; pointer-events: none; }
 .character-name { font-size: 16px; line-height: 30px; color: #ffffc0; }
 /* The label box is 75 px wide (NameMapa); a longer name ("Ciudad de Ullathorpe") overflows evenly on both sides instead of being cut. */
