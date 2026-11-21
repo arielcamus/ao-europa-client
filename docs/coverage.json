@@ -18,7 +18,7 @@
   "forms": 86,
   "formsCovered": 58,
   "formsPartial": 0,
-  "fixturePackets": 289,
+  "fixturePackets": 295,
   "packetsPct": 99.8,
   "packetsMergedPct": 99.8,
   "formsPct": 67.4,
@@ -323,6 +323,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -414,6 +417,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -561,7 +567,8 @@
     "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/core-session/quit-in-safe-city-disconnects.jsonl",
     "tests/fixtures/vb6/core-session/quit-then-cancel-exit.jsonl",
-    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl"
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
    ]
   },
   {
@@ -918,6 +925,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -955,7 +965,8 @@
     "tests/fixtures/vb6/followups/pirata-viajar-form.jsonl",
     "tests/fixtures/vb6/followups/trainer-list.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
-    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
    ]
   },
   {
@@ -976,7 +987,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl"
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
    ]
   },
   {
@@ -998,7 +1010,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
-    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
    ]
   },
   {
@@ -1249,6 +1262,9 @@
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1401,6 +1417,7 @@
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -1514,6 +1531,9 @@
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1696,6 +1716,9 @@
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1808,6 +1831,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/death-by-creature.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
@@ -1914,6 +1940,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2007,6 +2036,9 @@
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2163,6 +2195,9 @@
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2279,6 +2314,9 @@
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2404,7 +2442,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
-    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl"
    ]
   },
   {
@@ -2489,6 +2528,9 @@
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2590,6 +2632,7 @@
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -2678,6 +2721,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2813,6 +2859,9 @@
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2960,6 +3009,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2990,6 +3042,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
     "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
    ]
   },
@@ -3280,6 +3333,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -3310,6 +3366,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
     "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
    ]
   },
@@ -3392,6 +3449,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -3490,8 +3550,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/skills.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
+   ]
   },
   {
    "key": "s2c:85",
@@ -3612,6 +3674,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4005,6 +4070,9 @@
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4115,6 +4183,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4370,6 +4441,9 @@
     "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4439,6 +4513,7 @@
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -4585,6 +4660,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4725,6 +4803,9 @@
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -5129,6 +5210,9 @@
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -5246,6 +5330,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -5436,6 +5523,9 @@
     "tests/fixtures/vb6/playthrough/teleport-object.jsonl",
     "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
     "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -5507,7 +5597,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
-    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
    ]
   },
   {
@@ -5745,6 +5836,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
    ]
@@ -5892,6 +5984,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -6004,6 +6099,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -6095,6 +6193,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -6490,6 +6591,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -6919,6 +7023,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -7029,6 +7136,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -7140,6 +7250,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -7250,6 +7363,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -8091,7 +8207,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
-    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
    ]
   },
   {
@@ -8116,7 +8233,8 @@
     "tests/fixtures/vb6/audio/invisible-walker-steps.jsonl",
     "tests/fixtures/vb6/core-session/quit-in-safe-city-disconnects.jsonl",
     "tests/fixtures/vb6/core-session/quit-then-cancel-exit.jsonl",
-    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl"
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
    ]
   },
   {
@@ -8160,7 +8278,8 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/far-from-banker.jsonl",
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
-    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl"
+    "tests/fixtures/vb6/bank/goliath-and-vault.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
    ]
   },
   {
@@ -8309,6 +8428,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
    ]
   },
@@ -8369,8 +8489,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/session.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl"
+   ]
   },
   {
    "key": "c2s:52",
@@ -8390,6 +8512,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
     "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
    ]
   },
@@ -8462,7 +8585,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
-    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl"
    ]
   },
   {
@@ -8500,8 +8624,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/session.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl"
+   ]
   },
   {
    "key": "c2s:58",
@@ -8519,8 +8645,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/gm.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl"
+   ]
   },
   {
    "key": "c2s:59",
@@ -8561,7 +8689,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/chat/channels.jsonl"
+    "tests/fixtures/vb6/chat/channels.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl"
    ]
   },
   {
@@ -8887,6 +9016,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -8938,7 +9070,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/chat/say.jsonl"
+    "tests/fixtures/vb6/chat/say.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
    ]
   },
   {
@@ -9140,7 +9273,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl"
+    "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
    ]
   },
   {
@@ -9162,7 +9296,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
-    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
    ]
   },
   {
@@ -9188,7 +9323,8 @@
     "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/guild/guild-leader-relations-disabled.jsonl",
-    "tests/fixtures/vb6/party/guild-without-guild.jsonl"
+    "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl"
    ]
   },
   {
@@ -9209,6 +9345,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
     "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
    ]
   },
@@ -9230,6 +9367,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
     "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
     "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
    ]
@@ -9252,6 +9390,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
     "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
    ]
   },
@@ -11756,8 +11895,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/gm.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl"
+   ]
   },
   {
    "key": "c2s:212",
@@ -12288,7 +12429,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
-    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
+    "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl"
    ]
   },
   {
@@ -12370,7 +12512,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl"
    ]
   },
   {
@@ -12448,7 +12591,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl"
    ]
   },
   {
@@ -12768,6 +12912,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl"
    ]
@@ -13636,8 +13781,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/extras.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl"
+   ]
   },
   {
    "key": "c2s:304",
@@ -13738,6 +13885,9 @@
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
     "tests/fixtures/vb6/playthrough/door-open-close.jsonl",
     "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/est-request-stats.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/info-requests-lobby-closes.jsonl",
+    "tests/fixtures/vb6/prehoo-sweep/toggles-meditate-group-quit.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",

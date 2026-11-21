@@ -11,7 +11,7 @@ Scanned refs: `main`
 ## Headline
 
 - **Packets covered (merged + open branches): 512 of 513 = 99.8%.** Merged on main only: 512 = 99.8%.
-  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 289.
+  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 295.
 - **Forms covered: 58 of 86 = 67.4%** (0 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
@@ -293,7 +293,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 81 | AddForumMsg | client Protocol.bas:HandleAddForumMessage | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 82 | ShowForumForm | client Protocol.bas:HandleShowForumForm | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 83 | SetInvisible | client Protocol.bas:HandleSetInvisible | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
-| 84 | MeditateToggle | client Protocol.bas:HandleMeditateToggle | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
+| 84 | MeditateToggle | client Protocol.bas:HandleMeditateToggle | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 85 | BlindNoMore | client Protocol.bas:HandleBlindNoMore | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 86 | DumbNoMore | client Protocol.bas:HandleDumbNoMore | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 87 | SendSkills | client Protocol.bas:HandleSendSkills | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
@@ -467,14 +467,14 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 48 | Meditate | server Protocol.bas:HandleMeditate | skills | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
 | 49 | Resucitate | server Protocol.bas:HandleResucitate | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 50 | Heal | server Protocol.bas:HandleHeal | combat | merged | `main:packages/protocol/src/packets/combat.ts` | no |
-| 51 | Help | server Protocol.bas:HandleHelp | chat | merged | `main:packages/protocol/src/packets/session.ts` | no |
+| 51 | Help | server Protocol.bas:HandleHelp | chat | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 52 | RequestStats | server Protocol.bas:HandleRequestStats | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 53 | CommerceStart | server Protocol.bas:HandleCommerceStart | items | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 54 | BankStart | server Protocol.bas:HandleBankStart | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 55 | Information | server Protocol.bas:HandleInformation | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
 | 56 | Reward | server Protocol.bas:HandleReward | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 57 | RequestMOTD | server Protocol.bas:HandleRequestMOTD | chat | merged | `main:packages/protocol/src/packets/session.ts` | no |
-| 58 | UpTime | server Protocol.bas:HandleUpTime | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 57 | RequestMOTD | server Protocol.bas:HandleRequestMOTD | chat | merged | `main:packages/protocol/src/packets/session.ts` | yes |
+| 58 | UpTime | server Protocol.bas:HandleUpTime | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
 | 59 | GuildMessage | server Protocol.bas:HandleGuildMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 60 | GuildOnline | server Protocol.bas:HandleGuildOnline | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 61 | CouncilMessage | server Protocol.bas:HandleCouncilMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
@@ -627,7 +627,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 208 | GlobalOnOff | server Protocol.bas:HandleGlobalOnOff | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 209 | UseKey | server Protocol.bas:HandleUseKey | items | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
 | 210 | DonateGold | server Protocol.bas:HandleDonateGold | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 211 | Promedio | server Protocol.bas:HandlePromedio | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 211 | Promedio | server Protocol.bas:HandlePromedio | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
 | 212 | GiveItem | server Protocol.bas:HandleGiveItem | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 213 | OfertaInicial | server Protocol.bas:HandleOfertaInicial | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 214 | OfertaDeSubasta | server Protocol.bas:HandleOfertaDeSubasta | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
@@ -719,7 +719,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 300 | SetHotkeySlot | server Protocol.bas:HandleSetHotkeySlot | items | merged | `main:packages/protocol/src/packets/options.ts` | yes |
 | 301 | UseHKeySlot | server Protocol.bas:HandleUseHKeySlot | items | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
 | 302 | AntiCheatMessage | server Protocol.bas:HandleAntiCheatMessage | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
-| 303 | RequestLobbyList | (none in dispatcher) | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 303 | RequestLobbyList | (none in dispatcher) | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 304 | CreateAccount | server Protocol.bas:HandleCreateAccount | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 305 | LoginAccount | server Protocol.bas:HandleLoginAccount | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 306 | DeleteCharacter | server Protocol.bas:HandleDeleteCharacter | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
