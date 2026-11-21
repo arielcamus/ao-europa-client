@@ -11,6 +11,15 @@ button { cursor: pointer; }
 #classic-fit { position: relative; flex: none; }
 #classic { position: absolute; width: 1024px; height: 768px; overflow: hidden; transform: scale(var(--classic-scale)); transform-origin: top left; background: #000; }
 [data-vb], .bar { position: absolute; }
+/* frmMain is the in-world form: hidden until the player is in the world (the transparent Ajustes hotspot stays reachable from the connect screens). */
+#hud { position: absolute; inset: 0; }
+#classic:not(.in-world) #hud { visibility: hidden; }
+#classic:not(.in-world) #hud #settings { visibility: visible; }
+/* The dev status line ("CLASSIC · UNVERIFIED · Disconnected", scope note) is for ?debug only. */
+#classic:not(.debug) #dev-status, #classic:not(.debug) .dev-status { display: none; }
+/* Frmcarga shows over a black screen while the client resources load; nothing else is drawn until the connect screen is ready. */
+#boot-cover { position: absolute; inset: 0; z-index: 40; background: #000; }
+#classic[data-boot="ready"] #boot-cover { display: none; }
 .main-art, .panel-art { position: absolute; top: 0; left: 0; pointer-events: none; user-select: none; }
 .main-art { width: 1024px; height: 768px; }
 .panel-art { width: 100%; height: 100%; }
@@ -31,7 +40,8 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1
 .coordinate { font-size: 10px; }
 #console { overflow: auto; scrollbar-width: thin; font: 13px/17px Calibri, Arial, sans-serif; color: #c8bebe; } /* RecTxt is 85 px tall: five whole lines, so the oldest visible line is never cut by the header. */
 #console strong { color: #fff3aa; font-weight: normal; }
-#error { color: #ff8c7b; }
+/* Outside the HUD so a refusal is readable on the connect screens too (frmMain is hidden there). */
+#error { position: absolute; left: 262px; width: 500px; top: 744px; z-index: 60; text-align: center; font: bold 12px/14px Tahoma, Arial, sans-serif; color: #ff8c7b; text-shadow: 1px 1px #000; pointer-events: none; }
 #messages > div { white-space: pre-wrap; overflow-wrap: anywhere; }
 #chat { width: 100%; height: 100%; padding: 1px 2px; border: 0; background: #202020; color: #808080; font: bold 13px Tahoma, Arial, sans-serif; }
 #chat-form.guild #chat { background: #400000; }

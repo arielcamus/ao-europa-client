@@ -4,17 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
+    <link rel="preload" as="image" href="/ao-assets/interface/es_VentanaCargando.bmp" fetchpriority="high" />
     <title>Argentum Online · Cliente clásico</title>
   </head>
   <body>
     <div id="classic-fit">
-      <main id="classic" aria-label="Argentum Online">
+      <main id="classic" aria-label="Argentum Online" data-boot="loading">
+        <div id="hud">
         <img class="main-art" data-interface="ventanaprincipal" alt="" draggable="false" />
         <div id="console" data-vb="RecTxt" role="log" aria-label="Mensajes del servidor" aria-live="polite">
-          <div><strong id="mode">Argentum Online</strong> · <span id="connection">Disconnected</span></div>
-          <div id="scope-note"></div>
+          <div id="dev-status"><strong id="mode">Argentum Online</strong> · <span id="connection">Disconnected</span></div>
+          <div id="scope-note" class="dev-status"></div>
           <div id="messages"></div>
-          <div id="error" role="alert" hidden></div>
         </div>
         <button id="chat-open" data-vb="Image3" class="hotspot" aria-label="Abrir chat" title="Chat (Enter)"></button>
         <form id="chat-form" data-vb="SendTxt" hidden>
@@ -73,7 +74,10 @@
           <span id="gold" data-vb="GldLbl" class="label">—</span>
           <div id="menu-actions" hidden></div>
         </section>
-        <form id="login" aria-label="Conectar">
+        </div>
+        <div id="error" role="alert" hidden></div>
+        <div id="boot-cover" aria-hidden="true"></div>
+        <form id="login" aria-label="Conectar" hidden>
           <img class="panel-art" data-interface="ventanaconectar" alt="" />
           <input id="email" data-vb="NameTxt" aria-label="Cuenta" autocomplete="username" required />
           <input id="password" data-vb="PasswordTxt" aria-label="Contraseña" type="password" autocomplete="current-password" required />
