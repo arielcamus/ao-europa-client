@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { ClientPacketId as C, decodeServerPacket, CraftingClientPacketId as CC, CraftingServerPacketId as CS, ExtractionSkill, ServerPacketId as S, SpellClientPacketId as SC, SpellServerPacketId as SS, FrameDecoder, decodeClientPacket, encodeServerFrame } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
@@ -110,6 +110,31 @@ describe('building', () => {
   });
 });
 
+describe('work macro and movement', () => {
+  it('a step cancels a running macro first: FlagTrabajar, the stop message, then Walk (MoveTo -> ResetearUserMacro)', () => {
+    const h = harness(); h.session.crafting.buildSmith(388, 3);
+    h.advance(1000); expect(h.session.walk(2)).toBe(true);
+    const sent = h.clientPackets().slice(-3).map(p => p.id);
+    expect(sent).toEqual([CC.FlagTrabajar, C.Walk, C.RequestPositionUpdate]);
+    expect(h.session.crafting.macro.active).toBe(false);
+    expect(h.session.ui.messages.at(-1)?.text).toBe(MSG_STOP_WORK);
+  });
+  it('the server-driven work macro (MacroTrabajoToggle on) is cancelled by a step too', () => {
+    const h = harness(); h.recv({ id: CS.MacroTrabajoToggle, active: true });
+    h.advance(1000); h.session.walk(2);
+    expect(h.clientPackets().filter(p => p.id === CC.FlagTrabajar)).toHaveLength(1);
+  });
+  it('a step with no macro sends no FlagTrabajar', () => {
+    const h = harness(); h.advance(1000); h.session.walk(2);
+    expect(h.clientPackets().some(p => p.id === CC.FlagTrabajar)).toBe(false);
+  });
+  it('BuildWork 0 (a VB6 Timer with Interval 0) never sends', () => {
+    const h = harness(); h.recv({ ...f.Intervals, buildWork: 0 }); h.session.crafting.buildSmith(388, 3);
+    const before = h.clientPackets().length; h.advance(100000); h.session.crafting.tick();
+    expect(h.clientPackets().slice(before)).toEqual([]); expect(h.session.crafting.macro.remaining).toBe(3);
+  });
+});
+
 describe('work clicks (WorkRequestTarget -> StartAutomatedAction)', () => {
   it.each([[ExtractionSkill.Talar], [ExtractionSkill.Mineria], [ExtractionSkill.Pescar], [ExtractionSkill.Smelting]])('skill %i asks the server for an automated action with no counter', skill => {
     const h = harness(); h.recv({ id: SS.WorkRequestTarget, skill, area: false, radius: 0 });
@@ -139,7 +164,10 @@ describe('the generic crafting station (frmCrafteo)', () => {
     h.recv({ id: CS.CraftingItem, slot: 1, object: 0 }, { id: CS.CraftingCatalyst, object: 0, amount: 0, percent: 0 }, { id: CS.CraftingResult, object: 0 });
     expect([[...state.craftItems], state.catalyst, state.result]).toEqual([[[3, 101]], undefined, undefined]);
     h.recv({ id: CS.OpenCrafting, type: 1 }); expect([state.craftItems.size, state.result]).toEqual([0, undefined]);
-    expect(() => h.recv({ id: CS.CraftingItem, slot: MAX_CRAFT_SLOTS + 1, object: 1 })).toThrow(/crafting slot/);
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const revision = state.revision;
+    for (const slot of [0, MAX_CRAFT_SLOTS + 1]) h.recv({ id: CS.CraftingItem, slot, object: 1 }); // logged and ignored, the session survives
+    expect(warn).toHaveBeenCalledTimes(2); expect([state.craftItems.size, state.revision]).toEqual([0, revision]); warn.mockRestore();
   });
   it('sends the station packets with the VB6 field order and closes locally', () => {
     const h = harness(), before = h.clientPackets().length, c = h.session.crafting;
@@ -179,5 +207,35 @@ describe('client conformance against the VB6 recording tests/fixtures/vb6/crafti
     }
     expect(states).toEqual([false, true, false]);
     expect(h.since(before).filter(p => p.id === CC.FlagTrabajar)).toHaveLength(2); // one per "off"
+  });
+});
+
+describe('client conformance against the real smith / alchemy / tailor / carpenter recordings', () => {
+  const replay = (name: string) => {
+    const h = harness(), seen: (string | undefined)[] = [];
+    const lines = readFileSync(new URL(`../../../tests/fixtures/vb6/crafting/${name}.jsonl`, import.meta.url), 'utf8').trim().split('\n').map(l => JSON.parse(l) as { dir: string; hex: string });
+    for (const line of lines.filter(l => l.dir === 's2c')) {
+      const packet = decodeServerPacket(Uint8Array.from(Buffer.from(line.hex, 'hex')));
+      if ('unknown' in packet) continue;
+      try { h.session.receive(encodeServerFrame(packet)); } catch { /* login-time packets this harness has no state for */ }
+      if ([CS.ShowBlacksmithForm, CS.ShowCarpenterForm, CS.ShowAlquimiaForm, CS.ShowSastreForm].includes(packet.id as never)) seen.push(h.session.craftingState.open);
+    }
+    return { h, seen };
+  };
+  it('the lists and the four forms land in state as the server sent them', () => {
+    const { h, seen } = replay('smith-alchemy-tailor-build'), state = h.session.craftingState;
+    expect([state.smithWeapons.length, state.smithDefenses.length, state.smithRunes.length, state.alchemy.length, state.tailor.length]).toEqual([33, 37, 4, 7, 33]);
+    expect(state.smithWeapons.slice(0, 3)).toEqual([3980, 165, 365]);
+    expect(seen).toEqual(['smith', 'alchemy', 'tailor']);
+  });
+  it('the carpenter list (Byte count) and form', () => {
+    const { h, seen } = replay('smith-refused-carpenter-build');
+    expect([h.session.craftingState.carpenter.length, seen]).toEqual([31, ['smith', 'carpenter']]);
+    expect(h.session.craftingState.carpenter.slice(0, 2)).toEqual([163, 479]);
+  });
+  it('a carpenter build recording turns the macro on, and the server ending it sends FlagTrabajar from the client', () => {
+    const { h } = replay('carpenter-craft-walk-south');
+    expect(h.session.crafting.macro.active).toBe(false);
+    expect(h.clientPackets().filter(p => p.id === CC.FlagTrabajar)).toHaveLength(1);
   });
 });

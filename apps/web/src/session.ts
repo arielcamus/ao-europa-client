@@ -270,6 +270,8 @@ export class Session {
     this.pending = { expected: to, since: now };
     this.lastWalk = now;
     this.lastQuery = now;
+    // MoveTo: a legal step ends the work macro first (ResetearUserMacro: FlagTrabajar + "Has dejado de trabajar...").
+    if (this.crafting.macro.active) this.crafting.reset();
     this.send({ id: C.Walk, heading, counter: this.next('walk') });
     // TCP order ensures the position probe follows this walk. Silence never counts as success.
     this.send({ id: C.RequestPositionUpdate });

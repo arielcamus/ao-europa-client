@@ -74,7 +74,8 @@ export class CraftingState {
         this.craftingType = packet.type; this.craftItems.clear(); this.catalyst = undefined; this.catalystPercent = 0; this.result = undefined;
         this.open = 'crafting'; break;
       case CS.CraftingItem:
-        if (packet.slot < 1 || packet.slot > MAX_CRAFT_SLOTS) throw new Error('Invalid crafting slot');
+        // The VB6 handler indexes a fixed array and would raise; a stray slot is logged and dropped instead of closing the session.
+        if (packet.slot < 1 || packet.slot > MAX_CRAFT_SLOTS) { console.warn(`CraftingItem: slot ${packet.slot} outside 1..${MAX_CRAFT_SLOTS} ignored`); return; }
         if (packet.object !== 0) this.craftItems.set(packet.slot, packet.object); else this.craftItems.delete(packet.slot);
         break;
       case CS.CraftingCatalyst:
@@ -135,7 +136,8 @@ export class CraftingController {
   /** frmMain.MacroLadder_Timer, called from the UI loop. */
   tick() {
     const macro = this.macro;
-    if (!macro.active) return;
+    // A Timer with Interval 0 is disabled in VB6: BuildWork 0 (not yet received) never sends.
+    if (!macro.active || macro.intervalMs <= 0) return;
     const now = this.deps.now();
     if (now - macro.lastTick < macro.intervalMs) return;
     macro.lastTick = now;
