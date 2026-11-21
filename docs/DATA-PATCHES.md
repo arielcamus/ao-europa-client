@@ -214,11 +214,11 @@ then one restart (in-game `/RMSG` 60 s warning, `/GRABAR`, `Stop-Process` of `se
 
 | File | Lines | Before | After | Why |
 | --- | --- | --- | --- | --- |
-| `Dat/Ciudades.Dat` `[Renacimiento]` | 146-148 | `X=48`, `Y=62`, `MAPA=517` | `X=58`, `Y=44`, `MAPA=1` | `QuitarNewbieObj` (InvUsuario.bas 196) warps EVERY character that reaches level 13 to this point, wherever it is. Map 517 "Alta Mar" is open sea: a GM landing on (48,62) could not take a single step in any direction. (1,58,44) is one tile from the Ullathorpe spawn, inside its 3x3 legal block (section 7). Not the spawn tile itself: `WarpUserChar` does no legal-position search, so a new character and a graduate would stack |
+| `Dat/Ciudades.Dat` `[Renacimiento]` | 146-148 | `X=48`, `Y=62`, `MAPA=517` | `X=58`, `Y=44`, `MAPA=1` | `QuitarNewbieObj` (InvUsuario.bas 196) warps EVERY character that reaches level 13 to this point, wherever it is. Map 517 "Alta Mar" is open sea: a GM landing on (48,62) could not take a single step in any direction. (1,58,44) is one tile from the Ullathorpe spawn, inside its 3x3 legal block (section 7). Not the spawn tile itself: `WarpUserChar` does no legal-position search, so a new character and a graduate would stack. **Since the -c server (third restart) nothing reads `[Renacimiento]`**: graduates on a newbie map go to their own home city, elsewhere they stay put (code change, SERVER-PREHOO-BUILD.md "Newbie graduation"). The line stays: harmless, and the -b rollback needs it on land |
 | `Dat/Motd.ini` | 33 | `NumLines=10` | `NumLines=11` | one more line |
 | | 43 | `Line9=* Rates de esta Temporada: EXP X4 - RECOLECCIÓN X2 - ORO X1~0~255~0~1~0` | the same text (between the two restarts it read "Rates del servidor: EXP X1 - RECOLECCIÓN X1 - ORO X1") | the line was false while the server ran at x1; it is true again now that `Configuracion.ini` matches it (Rates, below) |
 | | 44 | `Line10=* ¡Esta Temporada finalizará el día 30 de Abril!` | `Line10=* ¿Eres nuevo? Hasta el nivel 12 entrena en el Dungeon Newbie: su entrada está en tu ciudad.` | stale season line replaced by the newbie pointer |
-| | (new) 45 | - | `Line11=* Busca la Cartelera de tu ciudad y toma los encargos de Makrom. Al llegar a nivel 13 dejarás de ser Newbie y viajarás a Ullathorpe.` | where the quests are, and what happens at 13 |
+| | (new) 45 | - | `Line11=* Busca la Cartelera de tu ciudad y toma los encargos de Makrom. Al llegar a nivel 13 dejarás de ser Newbie: si estás en el Dungeon Newbie, volverás a tu ciudad.` | where the quests are, and what happens at 13 with the -c server. Between the first and third restarts it said "...y viajarás a Ullathorpe", true for the -b server |
 | `Dat/npcs.dat` `[NPC1331]` Cartelera <Quest> | 18396, 18402-18408, + 6 keys | `Desc=Parece tener varios encargos para cumplir`, `NumQuest=4` (154, 163, 164, 165) | `Desc=Encargos para aventureros. Si eres nuevo por aquí, toma los encargos de Makrom y entrena en el Dungeon Newbie, su entrada está en esta misma ciudad.`, `NumQuest=10`: 190, 191, 192, 193, 194, 4, then 154, 163, 164, 165 (`en_desc` translated likewise) | Makrom's chain on the board of every city that has one (Ullathorpe 60,56; Nix 66,69; Banderbill 51,31; Arghal 56,34; also Arkhein and Morgrim) |
 | `Dat/npcs.dat` `[NPC502]` Serpiente | 3193 | `DropQuest1=9-2492-1-1` | `DropQuest1=4-2492-1-1` | quest 4 ("Veneno mortal", L1: 10 snakes + 10 `Fluido de serpiente`) could never finish: the fluid drops only for a player holding quest 9, which is an empty section. The newbie report called quest 4 doable; it was not |
 | `Mapas/Mapa64.csm` (Lindos) | NPC block | 10 NPCs | 11: `NPC 1331` at (52,57) | Lindos had no Cartelera. Same NPC definition and body (4124) as the other cities; (52,57) is 2 tiles NE of the Lindos spawn (64:50,59), not blocked, no trigger, exit, object or NPC, off the walk to the dungeon. Header `NumeroNPCs` 10 -> 11 and 6 bytes inserted before the tile-exit block; blocks, layers, objects and exits unchanged (checked by re-parsing) |
@@ -246,7 +246,7 @@ out of sync with the server Dat (proposal: regenerate it from the pinned Dat, se
 | File | Before | After |
 | --- | --- | --- |
 | `Dat/Ciudades.Dat` (VM only) | `8ced6ca346a8a46fe52314296b188e989936c50c597114a8e1982835f6ee7ca2` | `2d5d27147c0cf9c54838475e94618fca34dc97a95c543120d48cc487adadf3d0` |
-| `Dat/Motd.ini` | `01b55ceedba73c015b03d631367233d9820e1c38915ca928c13ca4579fa4bc3a` | `df7e3479a07bed843bfd648df710592569fecd578cc092cab6aac0421f5e23ed` (first restart: `1b48b22a...`, X1 rates) |
+| `Dat/Motd.ini` | `01b55ceedba73c015b03d631367233d9820e1c38915ca928c13ca4579fa4bc3a` | `55d5bac4c99b72fb813f521ff9b51a48b9daed5bfe2b7ae9385d74dadbd077a8` (first restart: `1b48b22a...`, X1 rates; second: `df7e3479...`, old Line11) |
 | `Configuracion.ini` (VM only, server root) | `585b5994aacc369838e644ada77399aa0813bdb367a019503d9e48563172a200` | `1060ea77aa05d375000594a986ed6642fbbff59eeb72d892a07598a3dc66e13a` |
 | `Dat/npcs.dat` | `68ad6d0810bca761e300ed70ac05d66658a4d086e60bc2a8e4d7672237156940` | `8fd35c84496578954f2906e614dc3b1970a22935f21f3036a05ea58168ba1e26` |
 | `Dat/Quests.DAT` | `4e7881a0a993488cedb52a4b05af023c5abef94c2afca855c521ca5cf7a9a4a3` | `455c5753acf2ea0540da3dae36ed73d9dd8640e9a27971dd3f4b56166e0b87c4` |
@@ -263,8 +263,10 @@ The client-consumed ones are listed in `tools/provenance/sources.lock.json` `pat
   the Cartelera (Lindos: the new one at 52,57), got `NPCDESC*1331` and a quest list of 190 (available), 191, 192, 193, 194 (level-locked),
   4 (available), 154, 163, 164, 165; accepted 190 (Msg1264), and walked through the city's door into the Newbie Dungeon: Ullathorpe
   1:(74,22) -> 168, Nix 34:(59,78) -> 168, Banderbill 59:(60,42) -> 168, Lindos 64 -> 62:(63,41) -> 168, Arghal 151:(46,40) -> 264.
-- Graduation: a level-1 test character standing in map 168 was set to level 12 (`/MOD <name> LEVEL 12`) and given experience
-  (`/MOD <name> EXP 200000`): Msg671 "Has dejado de ser Newbie", then it stood at 1:(58,44) and walked in all 4 directions.
+- Graduation with the -b server (first and second restarts): a level-1 test character standing in map 168 was set to level 12 (`/MOD <name> LEVEL 12`) and given experience
+  (`/MOD <name> EXP 200000`): Msg671 "Has dejado de ser Newbie", then it stood at 1:(58,44) and walked in all 4 directions. With the
+  -c server (third restart, 20:20) a graduate in the Newbie Dungeon lands in its own home city and one elsewhere stays put
+  (SERVER-PREHOO-BUILD.md, "Newbie graduation").
 - No server error log after the restart (`C:\ao\server-9ccd\Logs\Errores` empty).
 
 ### Rates (second restart, 2026-11-21 19:37)

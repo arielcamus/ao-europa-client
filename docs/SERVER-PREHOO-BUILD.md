@@ -5,7 +5,7 @@ Decision (Ariel, 2026-11-21 10:20): the base becomes the original VB6 server reb
 (Recursos `2bfa51e`). Post-pin content that can be drawn comes back later as documented patches. This page covers the prep;
 the twinBASIC compile and the swap are manual steps.
 
-**Status: live since 2026-11-21 11:40 CET** (swap approved by Ariel at 11:32; Forgat spawn patch and restart 11:45). The live
+**Live executable since 2026-11-21 20:18 CET: `C:\ao\server-9ccd\server-9ccd-c.exe`** (home-city build -b plus the newbie graduation rule, see [Newbie graduation](#newbie-graduation-goes-home-and-only-from-a-newbie-map-build--c); -b is the rollback). History: **Status: live since 2026-11-21 11:40 CET** (swap approved by Ariel at 11:32; Forgat spawn patch and restart 11:45). The live
 server on port 7667 is `C:\ao\server-9ccd\server.exe` (a copy of `server-9ccd.exe`, sha256 `77093c2d...4fc56220`). Load time from
 start to the 7667 listener: ~3 to 4.5 min (11:35:54 to 11:40:15, then 11:45:03 to 11:47:53). The previous caac3133 server is untouched in `C:\ao\server`.
 
@@ -79,6 +79,7 @@ reproduces the live Codigo byte for byte. Each was then carried to 9ccd7fad (`gi
 | 9 | **Upstream bug fix**, `castle-whitelist-only-when-founded`: `ModCastle.CheckCastleEntryWhiteList` returns True when no founded castle owns the trigger. Triggers 21..40 are also on ordinary building interiors, so without a founded castle nobody could enter those buildings (DATA-PATCHES.md section 3). | clean |
 | 10 | **Upstream bug fix**, new: `Protocol.HandleLoginNewChar` (the `#ElseIf PYMMO = 0` version) | see below |
 | 11 | **Post-pin backport**, upstream `07009f8a` (#1748, 2026-08-13, not HOO): new characters start in the city they pick | see [Home city choice](#home-city-choice-post-pin-backport-of-07009f8a) |
+| 12 | **Rule restored** (pre-`35a94b15`): a character reaching level 13 is sent home only from a newbie map (build -c) | see [Newbie graduation](#newbie-graduation-goes-home-and-only-from-a-newbie-map-build--c) |
 
 ### Home city choice (post-pin backport of 07009f8a)
 
@@ -148,6 +149,57 @@ The 8 test characters (accounts `hc*@local.test`) exist only in `C:\ao\server-9c
 the two `.bas` files into `C:\ao\server-9ccd`, point `start-server.ps1` at `C:\ao\server-9ccd\server-9ccd-b.exe` (the live DB,
 `Server.ini` and logs stay where they are), start, poll 7667 (~3-5 min). Rollback: `C:\ao\tmp\ao-homecity-rollback.ps1 <TS>`.
 No DB change: the schema is untouched and existing characters keep their saved position and home (Forgat included).
+
+### Newbie graduation goes home, and only from a newbie map (build -c)
+
+**Why.** Ariel, 2026-11-21 19:45 (option (c) of the newbie-content report, after DATA-PATCHES section 8). At 9ccd7fad
+`InvUsuario.QuitarNewbieObj` (called by `CheckUserLevel` when a character passes level 12, `LimiteNewbie`) removes the `Newbie=1`
+items from inventory and bank and then warps the character to `[Renacimiento]` of `Ciudades.Dat` **wherever it is**. That has been
+unconditional since upstream `35a94b15` (2024-06-12, "Envío a Isla de la Fortuna sin importar el mapa"); before it, the warp ran
+only `If MapInfo(UserList(UserIndex).pos.map).Newbie`. The pinned `[Renacimiento]` was map 517, open sea (DATA-PATCHES section 8).
+
+**Change** ([docs/patches/2026-11-21-server-9ccd-newbie-graduation.patch](patches/2026-11-21-server-9ccd-newbie-graduation.patch),
+`Codigo/InvUsuario.bas` lines 194-196 of the home-city source): the old condition is back, and the destination is the character's own
+home city instead of `[Renacimiento]`, placed the way the rest of the server does it for a crowded spawn:
+
+```vb
+    If MapInfo(UserList(UserIndex).pos.Map).Newbie Then
+        Dim HomeCity As e_City
+        HomeCity = UserList(UserIndex).Hogar
+        If Not IsValidCity(HomeCity) Then HomeCity = e_City.cUllathorpe
+        Call WarpToLegalPos(UserIndex, Cities(HomeCity).Map, CByte(Cities(HomeCity).x), CByte(Cities(HomeCity).y), True)
+    End If
+```
+
+`Cities()` is the spawn tile of each `Ciudades.Dat` city (`MAPA/X/Y`, the same table `HomeArrival` uses); `WarpToLegalPos` searches
+outward from it for a legal tile. The item removal and Msg671 "Has dejado de ser Newbie." are unchanged. `[Renacimiento]` is no longer
+read by anything at runtime with this build (its only use was this line); its data fix (1:58,44) stays, harmless, and makes the -b
+rollback land on land.
+
+**Build (2026-11-21 19:36-19:39 VM time).** Same procedure as -b: `C:\ao\server-9ccd-c` = robocopy of `C:\ao\server-9ccd-b` without
+`Logs`, `Database.db*`, the exe and the `.twinproj`, then the patched `Codigo\InvUsuario.bas` (sha256 `c797f98c...b69b12f07`). twinBASIC
+(the open IDE, driven through the QEMU QMP socket): Open Project `C:\ao\server-9ccd-c\Server.VBP`, Option Explicit unticked, saved as
+`Argentum20Server-9ccd-c.twinproj`, win32, Conditional Compilation Args as imported (`DEBUGGING = 1 : UNLOCK_CPU = 1 : UNIT_TEST = 0 :
+PYMMO = 0 : ...`), Build Output Path `C:\ao\server-9ccd-c\server-9ccd-c.exe`, Build Stack Reserve Size 67108864, File > Build:
+0 errors, 224 warnings (as before). Output 14,382,592 bytes, sha256 `969f4013222b3373c807f53d79a71595d8e2c146c9c3491b79a4cdb904950913`,
+PE stack reserve 67108864, LAA on. No side-by-side 7697 run this time (one-file change; -b is the rollback).
+
+**Swap.** `C:\ao\start-server.ps1` now runs `C:\ao\server-9ccd\server-9ccd-c.exe` (backup `start-server.ps1.bak-20261121-newbie-c`);
+`server-9ccd-b.exe` stays next to it. `Codigo\InvUsuario.bas` and `Dat\Motd.ini` in the live dir were replaced (backups
+`*.bak-20261121-newbie-c`). Restart with the protocol (`/RMSG` 60 s, `/GRABAR`, stop, start script).
+
+**Verified live (2026-11-21, after the third restart, 20:18 to 20:20 CET; ~1.5 min to the listener, no error log).** Two level-1 test
+characters set to level 12 by GM (`/MOD <name> LEVEL 12`, then `/MOD <name> EXP 200000`):
+- `Nbargh` (home Arghal) standing in the Newbie Dungeon (map 264, 47,49): Msg671, then at **151:61,43**, the Arghal spawn, and walked
+  in all 4 directions.
+- `Nblenador` (home Ullathorpe) standing in Ullathorpe itself (map 1, 51,43, not a newbie map): Msg671 and **stayed at 1:51,43**.
+- Both lost every `Newbie=1` item (beginner weapons, armour, shield, helmet, the "(P)" potions, food and water); only the Jourmut
+  ticket (3791, not a newbie item) stayed.
+- A fresh character gets the new MOTD Line11.
+
+**Rollback to -b.** Stop the server, `Copy-Item C:\ao\start-server.ps1.bak-20261121-newbie-c C:\ao\start-server.ps1`,
+`Copy-Item C:\ao\server-9ccd\Codigo\InvUsuario.bas.bak-20261121-newbie-c C:\ao\server-9ccd\Codigo\InvUsuario.bas`, run
+`powershell -ExecutionPolicy Bypass -File C:\ao\start-server.ps1`. With -b every graduate goes to `[Renacimiento]` (1:58,44) again.
 
 ### Upstream bug fix: HandleLoginNewChar used the connection id as a user index
 

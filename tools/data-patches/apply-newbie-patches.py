@@ -25,7 +25,7 @@ MOTD = {
     'MOTD': {
         'Line9': RATES_LINE,
         'Line10': '* ¿Eres nuevo? Hasta el nivel 12 entrena en el Dungeon Newbie: su entrada está en tu ciudad.~255~200~0~1~0',
-        'Line11': '* Busca la Cartelera de tu ciudad y toma los encargos de Makrom. Al llegar a nivel 13 dejarás de ser Newbie y viajarás a Ullathorpe.~255~200~0~0~0',
+        'Line11': '* Busca la Cartelera de tu ciudad y toma los encargos de Makrom. Al llegar a nivel 13 dejarás de ser Newbie: si estás en el Dungeon Newbie, volverás a tu ciudad.~255~200~0~0~0',
     },
 }
 
