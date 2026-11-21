@@ -3,7 +3,8 @@
 // Usage: AO_EMAIL=... AO_PASSWORD=... AO_CHAR=... node tools/real-server/vb6-create-account.mjs
 import net from 'node:net';
 const [host, port] = [process.env.AO_HOST ?? '127.0.0.1', Number(process.env.AO_PORT ?? 7667)];
-const email = process.env.AO_EMAIL ?? 'aotest@local.test', password = process.env.AO_PASSWORD ?? 'aotestpw1', name = process.env.AO_CHAR ?? 'Aotest';
+const need = key => process.env[key] ?? (() => { throw new Error(`Set ${key}`); })(); // no defaults: never fall back to a shared test account
+const email = need('AO_EMAIL'), password = need('AO_PASSWORD'), name = need('AO_CHAR');
 const varint = n => { const o = []; do { let b = n & 127; n >>>= 7; if (n) b |= 128; o.push(b); } while (n); return o; };
 const str = s => { const b = [...Buffer.from(s, 'utf8')]; return [...varint(b.length), ...b]; };
 const frame = (id, body) => { const len = body.length + 2; return Buffer.from([len & 255, len >> 8, id & 255, id >> 8, ...body]); };
