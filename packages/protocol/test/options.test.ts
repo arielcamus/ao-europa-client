@@ -32,6 +32,15 @@ describe('options packets recorded from the VB6 server', () => {
     // WriteUseHKeySlot (keys.ts): id Int16, slot Int8
     expect(hex(encodeClientPacket({ id: KC.UseHKeySlot, slot: 4 }))).toBe('2d0104');
   });
+  it('the recorded hotkey and transfer session: every wp11 frame round-trips and the server did not disconnect us', () => {
+    const lines = load('options/hotkeys-and-transfer.jsonl');
+    const mine = lines.filter(l => l.dir === 'c2s' && [300, 301, 224].includes(l.id));
+    expect(mine.map(l => l.id)).toEqual([300, 300, 301, 301, 224]);
+    for (const line of mine) expect(hex(encodeClientPacket(decodeClientPacket(bytes(line.hex)) as never)), line.name).toBe(line.hex);
+    expect(decodeClientPacket(bytes(mine[1]!.hex))).toEqual({ id: 300, slot: 1, index: -1, lastKnownSlot: -1, type: 3 });
+    expect(lines.some(l => l.dir === 's2c' && l.id === 7)).toBe(false);
+    expect(lines.filter(l => l.dir === 's2c' && l.id === OS.SendClientToggles)).toHaveLength(1);
+  });
   it('rejects trailing bytes (a frame holds exactly one packet)', () => {
     expect(() => decodeClientPacket(bytes('e000e803000006416f7465737400'))).toThrow();
   });
