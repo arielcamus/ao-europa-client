@@ -51,7 +51,7 @@ export function path(m: WorldMap, from: [number, number], to: [number, number], 
 }
 
 /** obj.dat: ObjType, Llave and Name per object index (e_OBJType: 6 doors, 9 keys, 19 teleport, 31 ships, 36 passage ticket, 44 saddles). */
-export interface ObjFact { type: number; name: string; llave: number; clave: number }
+export interface ObjFact { type: number; name: string; llave: number; clave: number; radio: number }
 let objCache: Map<number, ObjFact> | undefined;
 export function objects(): Map<number, ObjFact> {
   if (objCache) return objCache;
@@ -59,10 +59,10 @@ export function objects(): Map<number, ObjFact> {
   const out = new Map<number, ObjFact>(); let cur: ObjFact | undefined;
   for (const raw of readFileSync(file, 'latin1').split(/\r?\n/)) {
     const line = raw.trim(), h = /^\[OBJ(\d+)\]/i.exec(line);
-    if (h) { cur = { type: 0, name: '', llave: 0, clave: 0 }; out.set(Number(h[1]), cur); continue; }
+    if (h) { cur = { type: 0, name: '', llave: 0, clave: 0, radio: 0 }; out.set(Number(h[1]), cur); continue; }
     const kv = /^([A-Za-z]+)=(.*)$/.exec(line); if (!kv || !cur) continue;
     const k = kv[1]!.toLowerCase(), val = kv[2]!.trim();
-    if (k === 'objtype') cur.type = Number(val); else if (k === 'name') cur.name = val; else if (k === 'llave') cur.llave = Number(val); else if (k === 'clave') cur.clave = Number(val);
+    if (k === 'objtype') cur.type = Number(val); else if (k === 'name') cur.name = val; else if (k === 'llave') cur.llave = Number(val); else if (k === 'clave') cur.clave = Number(val); else if (k === 'radio') cur.radio = Number(val);
   }
   return objCache = out;
 }

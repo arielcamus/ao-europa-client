@@ -1,18 +1,18 @@
 {
- "generated": "2026-11-21T12:08:06.635Z",
+ "generated": "2026-11-21T12:18:37.053Z",
  "server": "127.0.0.1:7667",
  "account": "fresh",
- "character": "Pthluuaci",
+ "character": "Ptteizkxg",
  "creation": {
   "attempts": 1,
   "ok": true,
   "errors": [],
   "reused": false
  },
- "wallClockSeconds": 9,
+ "wallClockSeconds": 72,
  "totals": {
-  "pass": 23,
-  "fail": 5,
+  "pass": 26,
+  "fail": 2,
   "blocked": 15
  },
  "results": [
@@ -98,141 +98,163 @@
   {
    "id": "MOV-01",
    "outcome": "pass",
-   "detail": "Intervals.walk ms (IntervaloCaminar = 210) = 210; heading 2 delta = [1,0]; heading 3 delta = [0,1]; heading 4 delta = [-1,0]; heading 1 delta = [0,-1]; self 5429 at 60,57; recent moves ; wire tail: >RequestPositionUpdate <PosUpdate >Walk >RequestPositionUpdate <PosUpdate >Walk >RequestPositionUpdate <PosUpdate; 4/4 headings moved the character exactly one tile (others hit a blocked tile); fixture walk-four-headings",
-   "ms": 3833
+   "detail": "Intervals.walk ms (IntervaloCaminar = 210) = 210; heading 2 delta = [1,0]; heading 3 delta = [0,1]; heading 4 delta = [-1,0]; heading 1 delta = [0,-1]; self 5428 at 60,57; recent moves ; wire tail: <PosUpdate >Walk <UpdateSta >RequestPositionUpdate <PosUpdate >Walk >RequestPositionUpdate <PosUpdate; 4/4 headings moved the character exactly one tile (others hit a blocked tile); fixture walk-four-headings",
+   "ms": 3835,
+   "at": "2026-11-21T12:12:49.201Z"
   },
   {
    "id": "MOV-02",
    "outcome": "pass",
    "detail": "a blocked tile answered with PosUpdate (old position) after 40 steps; moved one tile off the wall; second character at 751:60,57; first at 751:23,57; the step into the second character's tile (step 37 of 37) was refused, all earlier steps moved = 37; fixture walk-into-wall-and-player; NPC half not driven: spawning a creature next to the player needs /ACC + a cleanup by the spawned index only (brief rule); covered by tests/fixtures/vb6/movement walk-into-creature",
-   "ms": 30459
+   "ms": 30292,
+   "at": "2026-11-21T12:13:19.493Z"
   },
   {
    "id": "MOV-03",
    "outcome": "pass",
    "detail": "position unchanged by a heading change = [59,57]; the GM next door received CharacterChange for the turn; broadcast heading = 1",
-   "ms": 2705
+   "ms": 2707,
+   "at": "2026-11-21T12:13:22.200Z"
   },
   {
    "id": "MOV-04",
    "outcome": "pass",
    "detail": "stepping on exit tile 751:88,57 sent ChangeMap; destination map (tile exit -> 753:14,57) = 753; arrived at 14,57 (exit says 14,57; ClosestLegalPos may shift it)",
-   "ms": 15821
+   "ms": 15922,
+   "at": "2026-11-21T12:15:06.335Z"
   },
   {
    "id": "MOV-05",
    "outcome": "blocked",
    "detail": "needs the ids of a Newbie / MaxLevel map from the server map files (MapInfo) and a level-13 character; the harness has no map-info reader yet. Route: GM /MOD level 13 on the own character, /TELEP to that map, expect the refusal locale message and no warp",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T12:13:22.200Z"
   },
   {
    "id": "MOV-06",
    "outcome": "blocked",
    "detail": "same missing map-info data as MOV-05 (a map with MaxLevel and Salida)",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T12:13:22.200Z"
   },
   {
    "id": "MOV-07",
-   "outcome": "fail",
-   "detail": "the teleport moved the character away (moved=true); the tile exit says 391:50,50: false [ok so far: stepped onto the otTeleport tile 24:76,29 (obj 19) from 24,76,30; now 24:76,29; saw LocaleMsg,PosUpdate]",
-   "ms": 10299
+   "outcome": "pass",
+   "detail": "stepped onto the otTeleport tile 24:76,29 (obj 19) from 24,76,30; now 391:53,53; saw RemoveCharDialog,RemoveDialogs,CharacterRemove,ChangeMap,AreaChanged,CharacterCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,CharacterCreate,ObjectCreate,CharacterCreate,CharacterCreate,CharacterCreate,UserCharIndexInServer,PlayWave,CreateFX,CreateFX,PlayWave,TextOverChar,UpdateHP,NPCKillUser,UpdateTagAndStatus,PlayWave,RemoveCharDialog,UpdateHP,UpdateSta,ObjectCreate,ChangeInventorySlot,ObjectCreate,ChangeInventorySlot,ObjectCreate,ChangeInventorySlot,SpeedToChar,VelocidadToggle,LocaleMsg,AreaChanged,ObjectCreate,CharacterCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,ObjectCreate,CharacterCreate,CharacterCreate,CharacterCreate,LocaleMsg,ConsoleMsg,PosUpdate,UserOnline; the teleport moved the character away (moved=true); the til",
+   "ms": 34085,
+   "at": "2026-11-21T12:18:01.428Z"
   },
   {
    "id": "MOV-08",
-   "outcome": "fail",
-   "detail": "LeftClick on door 3580 at 71,55 answered (nothing) (Toggles open/closed: ObjectCreate + BlockPosition): false [ok so far: LeftClick alone gave no door packets; trying DoubleClick]",
-   "ms": 60505
+   "outcome": "pass",
+   "detail": "at 751:70,56 door 71,55; rx [[\"ConsoleMsg\",{\"id\":37,\"message\":\"O*3580*\",\"font\":3}],[\"BlockPosition\",{\"id\":53,\"x\":71,\"y\":55,\"sides\":0}],[\"BlockPosition\",{\"id\":53,\"x\":70,\"y\":55,\"sides\":0}],[\"BlockPosition\",{\"id\":53,\"x\":71,\"y\":56,\"sides\":0}],[\"BlockPosition\",{\"id\":53,\"x\":70,\"y\":56,\"sides\":0}],[\"ObjectCreate\",{\"id\":50,\"x\":71,\"y\":55,\"objIndex\":3579,\"amount\":1,\"elementalTags\":0}],[\"PlayWave\",{\"id\":55,\"wave\":5,\"x\":71,\"y\":55,\"cancelLast\":0,\"localize\":0}],[\"UserOnline\",{\"id\":112,\"count\":2}]]; LeftClick on door 3580 at 71,55 answered BlockPosition,BlockPosition,BlockPosition,BlockPosition,ObjectCreate (Toggles open/closed: ObjectCreate + BlockPosition); a second click toggles it back; fixture door-open-close",
+   "ms": 6335,
+   "at": "2026-11-21T12:18:07.763Z"
   },
   {
    "id": "MOV-09",
    "outcome": "blocked",
    "detail": "needs a locked door + its key object from the map files; recorded in tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T12:13:22.200Z"
   },
   {
    "id": "MOV-10",
    "outcome": "blocked",
    "detail": "needs a dock tile and a boat object id plus Navegacion skill and level 25 via GM /MOD; map data not parsed yet",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T12:13:22.200Z"
   },
   {
    "id": "MOV-11",
    "outcome": "pass",
    "detail": "walking into water at 88,77 without a boat was refused (stayed at 14,76)",
-   "ms": 6778,
-   "at": "2026-11-21T12:08:06.634Z"
+   "ms": 5958,
+   "at": "2026-11-21T12:15:57.201Z"
   },
   {
    "id": "MOV-13",
    "outcome": "blocked",
    "detail": "needs a Transportista/Pirata NPC; checked in the next milestone against the pinned npcs.dat (see report note)",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T12:13:22.200Z"
   },
   {
    "id": "MOV-14",
    "outcome": "pass",
    "detail": "UseItem answered: ShowFrmMapa | ; the server answered the ticket use",
-   "ms": 1501
+   "ms": 1502,
+   "at": "2026-11-21T12:13:23.702Z"
   },
   {
    "id": "MOV-15",
    "outcome": "pass",
-   "detail": "Work(Ocultarse) answered with SetInvisible,LocaleMsg,LocaleMsg,TextOverChar,LocaleMsg,UpdateExp,SetInvisible,LocaleMsg; hide answered (success sets invisible, failure prints a locale message)",
-   "ms": 2003
+   "detail": "Work(Ocultarse) answered with LocaleMsg,UserOnline; hide answered (success sets invisible, failure prints a locale message)",
+   "ms": 2000,
+   "at": "2026-11-21T12:13:25.702Z"
   },
   {
    "id": "MOV-16",
    "outcome": "pass",
    "detail": "MeditateToggle with a meditation FX",
-   "ms": 8028
+   "ms": 9042,
+   "at": "2026-11-21T12:13:34.745Z"
   },
   {
    "id": "MOV-17",
    "outcome": "pass",
-   "detail": "30 UpdateMana ticks in 70 s of meditation; mana 5 -> 150; median gap between mana ticks 435 ms (the doc says ~400 ms after an initial ~840 ms); first tick gain 5 of max 150 (doc: 3.5% = 5); median ms between meditation mana ticks (IntervaloMeditar = 10 game ticks of 40 ms) = 435",
-   "ms": 75721
+   "detail": "30 UpdateMana ticks in 70 s of meditation; mana 5 -> 150; median gap between mana ticks 425 ms (the doc says ~400 ms after an initial ~840 ms); first tick gain 5 of max 150 (doc: 3.5% = 5); median ms between meditation mana ticks (IntervaloMeditar = 10 game ticks of 40 ms) = 425",
+   "ms": 75668,
+   "at": "2026-11-21T12:14:50.413Z"
   },
   {
    "id": "MOV-18",
    "outcome": "blocked",
    "detail": "needs a FOGATA (obj 63) from MOV-19",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T12:14:50.413Z"
   },
   {
    "id": "MOV-19",
    "outcome": "blocked",
    "detail": "needs /CI 58 3 on the floor + Work on it; pending",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T12:14:50.413Z"
   },
   {
    "id": "MOV-20",
    "outcome": "blocked",
    "detail": "needs Magia 87+ via DB UPDATE on a logged-out char; pending",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T12:14:50.413Z"
   },
   {
    "id": "MOV-21",
    "outcome": "blocked",
    "detail": "needs a saddle object id; pending",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T12:14:50.413Z"
   },
   {
    "id": "MOV-22",
    "outcome": "blocked",
    "detail": "needs a dead character on a NEWBIE map; pending (DTH-01 first)",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T12:14:50.413Z"
   },
   {
    "id": "MOV-23",
    "outcome": "blocked",
    "detail": "needs a Seguro map id; the safe-zone refusal is recorded in tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T12:14:50.413Z"
   },
   {
    "id": "MOV-25",
    "outcome": "blocked",
    "detail": "needs GM kill (DTH-01) first; pending",
-   "ms": 0
+   "ms": 0,
+   "at": "2026-11-21T12:14:50.413Z"
   },
   {
    "id": "PRG-16",
@@ -268,9 +290,10 @@
   },
   {
    "id": "DTH-01",
-   "outcome": "fail",
-   "detail": "the creature (, char 5430) killed the 1 HP character: false [ok so far: placed on map 2 (an unsafe field map) with 1 HP = 2]",
-   "ms": 93231
+   "outcome": "pass",
+   "detail": "placed on map 2 (an unsafe field map) with 1 HP = 2; the creature (, char 5430) killed the 1 HP character; after death: last own CharacterChange body 829 (ghost body 829), hp 0; UserDie: body becomes the ghost 829 = 829; fixture death-by-creature; reverted: is_dead=0, min_hp=20, back on 751",
+   "ms": 29288,
+   "at": "2026-11-21T12:18:37.051Z"
   },
   {
    "id": "OTH-06",
