@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { ClientPacketId as C, ServerPacketId as S, Heading, StatusClientPacketId as SC, StatusServerPacketId as SS, encodeServerFrame, decodeClientPacket, FrameDecoder } from '@ao/protocol';
+import { SessionServerPacketId, ClientPacketId as C, ServerPacketId as S, Heading, StatusClientPacketId as SC, StatusServerPacketId as SS, encodeServerFrame, decodeClientPacket, FrameDecoder } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
 import { Session } from '../src/session.js';
 import { INVISIBLE_ALPHA, STATUS_TEXT } from '../src/status.js';
 
-function harness() {
+function harness(beforeLogged: ServerPacket[] = []) {
   let now = 0;
   const sent: Uint8Array[] = [];
   const session = new Session({ email: 'test', password: 'secret' }, bytes => sent.push(bytes), () => now);
   const recv = (...packets: ServerPacket[]) => { for (const packet of packets) session.receive(encodeServerFrame(packet)); };
-  recv(f.Connected, f.AccountCharacterList, f.Intervals, f.ChangeMap, { ...f.CharacterCreate, speeding: 1 }, f.UserCharIndexInServer, f.Logged);
+  recv(f.Connected, f.AccountCharacterList, f.Intervals, f.ChangeMap, { ...f.CharacterCreate, speeding: 1 }, f.UserCharIndexInServer, ...beforeLogged, f.Logged);
   const out = () => { const d = new FrameDecoder(); return sent.flatMap(b => d.push(b).map(decodeClientPacket)); };
   return { session, recv, sent, out, advance: (ms: number) => { now += ms; }, last: () => session.ui.messages.at(-1) };
 }
@@ -40,13 +40,22 @@ describe('combat status (VB6 Protocol.bas handlers)', () => {
   });
   it('Dumb sends another heading when the roll is below 50, and keeps it otherwise', () => {
     const h = harness(); h.recv({ id: SS.Dumb });
-    console.log('DBG', h.session.ready, h.session.position, h.session.status.canMove(), h.session.walkInterval);
     h.session.random = () => 0.1; // roll 11 < 50: a different heading, never the pressed one
     expect(h.session.walk(Heading.East)).toBe(true);
     expect(h.out().find(p => p.id === C.Walk)).not.toMatchObject({ heading: Heading.East });
     const k = harness(); k.recv({ id: SS.Dumb }); k.session.random = () => 0.9;
     expect(k.session.walk(Heading.East)).toBe(true); expect(k.out().find(p => p.id === C.Walk)).toMatchObject({ heading: Heading.East });
     k.recv({ id: SS.DumbNoMore }); expect(k.session.status.dumb).toBe(false);
+  });
+  it('going back to the account screen resets paralysed/immobilised/stopped/stun (ModLogin.LoadCharacterSelectionScreen); Logged does not', () => {
+    const h = harness(); const s = h.session.status;
+    h.recv({ id: SS.ParalizeOK }, { id: SS.InmovilizadoOK }, { id: SS.Stopped, stopped: true }, { id: SS.StunStart, duration: 30_000 });
+    expect(s.canMove()).toBe(false);
+    h.recv({ id: SessionServerPacketId.MostrarCuenta });
+    expect([s.paralyzed, s.immobilized, s.stopped, s.stunned]).toEqual([false, false, false, false]);
+    // A paralysed login: ParalizeOK arrives before Logged and must survive it (the packet is a toggle).
+    const k = harness([{ id: SS.ParalizeOK }]);
+    expect(k.session.status.paralyzed).toBe(true);
   });
   it('SetInvisible: drawn at alpha 100/255 for the viewer itself, hidden for others', () => {
     const h = harness(); const s = h.session.status;

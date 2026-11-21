@@ -78,6 +78,14 @@ describe('spell session behaviour', () => {
     h.recv({ id: SS.WorkRequestTarget, skill: 1, area: false, radius: 0 }); h.advance(10); h.session.spells.click(1, 1);
     expect(h.session.ui.messages.filter(m => m.text === MSG_TOO_FAST)).toHaveLength(1);
   });
+  it('CreateFX with fx 0 clears that character\'s FX and a CharacterRemove drops its FX (HandleCreateFX/SetCharacterFx)', () => {
+    const h = harness();
+    h.recv({ id: SS.CreateFX, charIndex: 40, fx: 15, loops: -1, x: 0, y: 0 }, { id: SS.CreateFX, charIndex: 41, fx: 16, loops: -1, x: 0, y: 0 });
+    h.recv({ id: SS.CreateFX, charIndex: 40, fx: 0, loops: 0, x: 0, y: 0 });
+    expect(h.session.spells.effects.map(e => e.charIndex)).toEqual([41]);
+    h.recv({ id: NS.CharacterRemove, charIndex: 41, vanish: false, warp: false });
+    expect(h.session.spells.effects).toEqual([]);
+  });
   it('records spell effects, cools down and prints locale and token console text', () => {
     spellTables.spells = hechizos;
     const h = harness(); h.session.ui.chat.locale = chatLocale;
