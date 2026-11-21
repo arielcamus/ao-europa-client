@@ -8,7 +8,7 @@ import { Application, Container, Rectangle, Sprite, Text, Texture } from 'pixi.j
 import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody, tileIndex, assetUrl } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
 import type { Session } from './session.js';
-import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, roofTriggers, TreeFade, fixedObjects, nearRoof, objectDraws, objectGraphicsFromIni, treeCoversPlayer, TREE_GRH_INDICES, layer4TreeCoversPlayer } from './map-objects.js';
+import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, roofTriggers, TreeFade, fixedObjects, nearRoof, objectDraws, objectGraphicsFromIni, treeCoversPlayer, TREE_GRH_INDICES, layer4TreeCoversPlayer, rowSlot } from './map-objects.js';
 import { loadObjectIni } from './object-catalog.js';
 import type { GroundObject, ObjectGraphic } from './map-objects.js';
 import { CharacterSprites } from './character-render.js';
@@ -28,10 +28,15 @@ class SpritePool {
   private used = 0;
   constructor(readonly container: Container) {}
   reset() { this.used = 0; }
-  draw(texture: Texture, x: number, y: number, alpha = 1, tint = 0xffffff) {
+  /**
+   * `slot` orders sprites in a sortable container (the row pass): sprites sort by slot, then by draw order this frame.
+   * The draw index breaks ties so the order never depends on last frame's sort.
+   */
+  draw(texture: Texture, x: number, y: number, alpha = 1, tint = 0xffffff, slot?: number) {
     let sprite = this.sprites[this.used++];
     if (!sprite) { sprite = new Sprite(); this.sprites.push(sprite); this.container.addChild(sprite); }
     sprite.texture = texture; sprite.position.set(Math.round(x), Math.round(y)); sprite.alpha = alpha; sprite.tint = tint; sprite.visible = true;
+    if (slot !== undefined) sprite.zIndex = slot * 65_536 + this.used;
   }
   finish() { for (let i = this.used; i < this.sprites.length; i++) this.sprites[i]!.visible = false; }
 }
@@ -100,6 +105,8 @@ export class WorldRenderer {
     for (let i = 0; i < 9; i++) {
       const container = new Container(); this.world.addChild(container); this.pools.push(new SpritePool(container));
     }
+    // Pool 4 is the row pass: characters, big objects and the row layer, interleaved per map row (rowSlot). Pools 3 and 5 stay empty.
+    this.pools[4]!.container.sortableChildren = true;
     this.world.addChild(this.labelLayer);
     this.fx = new FxRenderer({ animation: id => this.animation(id), texture: frame => this.texture(frame), hasGraphic: id => this.graphics.has(id) });
     this.roofPool = new RoofMeshPool(this.pools[6]!.container);
@@ -238,11 +245,11 @@ export class WorldRenderer {
   }
   /** The viewport of the frame being drawn, in world pixels (draw() asks whether a sprite reaches into it). */
   private view = { x: 0, y: 0, width: 0, height: 0 };
-  private draw(pool: SpritePool, animation: Animation, x: number, y: number, time: number, centered = true, alpha = 1, tint = 0xffffff) {
+  private draw(pool: SpritePool, animation: Animation, x: number, y: number, time: number, centered = true, alpha = 1, tint = 0xffffff, slot?: number) {
     const frame = animation.frames[Math.floor(time / animation.frameMs) % animation.frames.length]!;
     const left = x + (centered ? Math.floor((32 - frame.width) / 2) : 0), top = y + (centered ? 32 - frame.height : 0), v = this.view;
     const visible = left < v.x + v.width && left + frame.width > v.x && top < v.y + v.height && top + frame.height > v.y;
-    pool.draw(this.texture(frame, visible), left, top, alpha, tint);
+    pool.draw(this.texture(frame, visible), left, top, alpha, tint, slot);
   }
   /** Map tile under a pointer, using the same camera as render(); undefined outside the viewport. */
   tileAt(session: Session, clientX: number, clientY: number, now: number): { x: number; y: number } | undefined {
@@ -315,18 +322,19 @@ export class WorldRenderer {
       for (const draw of objectDraws(object, this.objectGraphics)) if (draw.pass === 'ground') this.draw(pool, this.animation(draw.grh), x * 32, y * 32, now, true);
     });
     each((x, y, tile) => {
-      // VB6 finishes characters in a row, then draws that row's big objects and layer 4. Split around the self row.
-      const pool = this.pools[y < session.position!.y ? 3 : 5]!;
+      // RenderScreen "Layer 3 & chars": for each row y, the characters standing on row y, then that row's big objects and layer
+      // Graphic(3). So an object one row south of a character (an altar in front of a priest) covers the character's lower body.
+      const pool = this.pools[4]!, slot = rowSlot(y, 'objects');
       const object = session.mapObjects.objectAt(x, y) ?? this.fixed.get(tile);
       for (const draw of objectDraws(object, this.objectGraphics)) {
         if (draw.pass !== 'row') continue;
         // Trees fade when they cover the player.
         const alpha = draw.type === ObjType.Tree ? this.trees.step(tile, treeCoversPlayer(session.position!, x, y), dt) : 1;
-        this.draw(pool, this.animation(draw.grh), x * 32, y * 32, now, true, alpha);
+        this.draw(pool, this.animation(draw.grh), x * 32, y * 32, now, true, alpha, undefined, slot);
       }
       const id = this.map!.layers[3]![tile]!;
       // Row-pass layer with FLAG_ARBOL (pinned Graphic(3) holding a tree Grh, TREE_GRH_INDICES) fades like the object trees, over a wider area (RenderScreen: |dx| <= 3, |dy| < 12).
-      if (id) this.draw(pool, this.animation(id), x * 32, y * 32, now, true, TREE_GRH_INDICES.has(id) ? this.trees4.step(tile, layer4TreeCoversPlayer(session.position!, x, y), dt) : 1);
+      if (id) this.draw(pool, this.animation(id), x * 32, y * 32, now, true, TREE_GRH_INDICES.has(id) ? this.trees4.step(tile, layer4TreeCoversPlayer(session.position!, x, y), dt) : 1, undefined, slot);
     });
     each((x, y, tile) => {
       const id = this.map!.layers[4]![tile]!;
@@ -405,15 +413,17 @@ export class WorldRenderer {
     const placed = chars.map(char => {
       if (char.charIndex === session.charIndex) {
         const moving = !!session.motion && !session.motion.translate && now < session.motion.started + session.motion.duration;
-        return { char, heading: session.self!.heading as number, x: selfPosition.x, y: selfPosition.y, moving, elapsed: moving ? Math.max(0, now - session.motion!.started) : 0 };
+        return { char, row: session.position?.y ?? Math.round(selfPosition.y), heading: session.self!.heading as number, x: selfPosition.x, y: selfPosition.y, moving, elapsed: moving ? Math.max(0, now - session.motion!.started) : 0 };
       }
       const view = tracker.visualPosition(char, now);
-      return { char, heading: char.heading as number, ...view };
+      return { char, row: char.y, heading: char.heading as number, ...view };
     }).filter(({ x, y }) => x * 32 > cameraX - 96 && x * 32 < cameraX + width + 96 && y * 32 > cameraY - 96 && y * 32 < cameraY + height + 96)
       .sort((a, b) => a.y - b.y || a.x - b.x);
     const pool = this.pools[4]!;
-    for (const { char, heading, x, y, moving, elapsed } of placed) {
+    for (const { char, row, heading, x, y, moving, elapsed } of placed) {
       const px = x * 32, py = y * 32;
+      // RenderScreen draws a character in the row of its MapData tile (the destination while it walks), before that row's objects.
+      const slot = rowSlot(row, 'characters');
       // SetInvisible: an invisible character is drawn at alpha 100/255 for those who may see it (itself) and not at all for the rest.
       const alpha = session.status.alphaOf(char.charIndex, session.charIndex, char.charIndex === session.charIndex);
       if (alpha === undefined) continue;
@@ -425,11 +435,11 @@ export class WorldRenderer {
           const sinceSwing = now - swingStart, length = layer.animation.frames.length * layer.animation.frameMs;
           if (sinceSwing >= 0 && sinceSwing < length) time = sinceSwing;
         }
-        this.draw(pool, layer.animation, px + layer.x, py + layer.y, time, true, alpha);
+        this.draw(pool, layer.animation, px + layer.x, py + layer.y, time, true, alpha, undefined, slot);
       }
       // Quest marker (engine.bas Char_Render, .simbolo): grh 5257 + symbol, 48 px above the head, bobbing 8 px; drawn even with names hidden.
       const marker = char.npc && char.symbol && sprites.body(char.body) ? sprites.headOffset(char.body) : undefined;
-      if (char.symbol && marker) this.draw(pool, this.animation(5257 + char.symbol), px + 6 + marker.x, py + marker.y - 48 - 8 * Math.sin((now % 31415) * 0.002) ** 2, now, false);
+      if (char.symbol && marker) this.draw(pool, this.animation(5257 + char.symbol), px + 6 + marker.x, py + marker.y - 48 - 8 * Math.sin((now % 31415) * 0.002) ** 2, now, false, 1, undefined, slot);
       // A blind player sees no names (engine.bas Char_Render: UserCiego -> MostrarNombre = False).
       if (!this.showNames || session.status.blind) { /* HideNames */ } else if (char.npc) {
         // NPC names appear only under the cursor, in (0,129,195).
@@ -449,7 +459,7 @@ export class WorldRenderer {
         if (title) this.label(title, tagColor, px + 16, py + 43);
         const flag = char.team > 0 ? FLAG_GRH[char.banderaIndex] : undefined;
         const body = flag ? sprites.body(char.body) : undefined;
-        if (flag && body && this.graphics.has(flag)) this.draw(pool, this.animation(flag), px + 1 + body.bodyX, py - 45 + body.bodyY, now, true);
+        if (flag && body && this.graphics.has(flag)) this.draw(pool, this.animation(flag), px + 1 + body.bodyX, py - 45 + body.bodyY, now, true, 1, undefined, slot);
       }
       // Overhead speech is drawn once, by ChatBubbles from ChatState (chat #7); the tracker's dialog only feeds the NPC window.
     }

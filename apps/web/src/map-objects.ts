@@ -188,6 +188,11 @@ export const TREE_GRH_INDICES: ReadonlySet<number> = new Set([
 /** RenderScreen row-pass layer (pinned Graphic(3)) with FLAG_ARBOL: wider than the object rule, |dx| <= 3 and |dy| < 12, with the tree south of the player. */
 export const layer4TreeCoversPlayer = (player: { x: number; y: number }, x: number, y: number) =>
   Math.abs(player.x - x) <= 3 && Math.abs(player.y - y) < 12 && player.y < y;
+/**
+ * Sort key of the row pass (pinned TileEngine_RenderScreen.bas "Layer 3 & chars"): for each row y, the characters standing on row y
+ * (Char_Render, x order), then that row's big objects and Graphic(3). An object one row south of a character covers its lower body.
+ */
+export const rowSlot = (row: number, phase: 'characters' | 'objects') => row * 2 + (phase === 'objects' ? 1 : 0);
 export class TreeFade {
   private alpha = new Map<number, number>();
   step(key: number, covers: boolean, dtMs: number): number {
