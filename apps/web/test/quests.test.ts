@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { FrameDecoder, NpcsServerPacketId as NS, QuestClientPacketId as QC, QuestServerPacketId as QS, QuestState, decodeClientPacket, encodeServerFrame } from '@ao/protocol';
 import type { ObjQuest, OfferedQuest, QuestDetails, ServerPacket } from '@ao/protocol';
@@ -108,6 +109,18 @@ describe('quest state', () => {
     h.session.quests.closeOffers(); expect(h.session.quests.offersOpen).toBe(false);
     h.recv({ id: QS.QuestListSend, quests: [4] });
     h.session.quests.closeList(); expect(h.session.quests).toMatchObject({ listOpen: false, details: undefined });
+  });
+  it('the recorded ObjQuestListSend (UseItem on Obj 3305 "Nota de Rescate", QuestId 123) opens the one-quest offer', () => {
+    const h = harness();
+    const line = readFileSync(new URL('../../../tests/fixtures/vb6/quests/obj-quest-item.jsonl', import.meta.url), 'utf8').trim().split('\n')
+      .map(text => JSON.parse(text) as { dir: string; id: number; hex: string }).find(entry => entry.dir === 's2c' && entry.id === QS.ObjQuestListSend)!;
+    const body = Uint8Array.from(Buffer.from(line.hex, 'hex'));
+    h.session.receive(Uint8Array.from([body.length & 255, body.length >> 8, ...body])); // the raw recorded frame: Int16 length (id + body), then the bytes
+    // Quests.DAT [QUEST123]: RequiredLevel 16, five required objects, RewardGLD 1450 and RewardEXP 15750 x ExpMult 4 on this server.
+    expect(h.session.quests.offers).toHaveLength(1);
+    expect(h.session.quests.offers[0]).toMatchObject({ questIndex: 123, requiredLevel: 16, rewardGold: 1450, rewardExp: 63000 });
+    expect(h.session.quests.offers[0]!.objs).toHaveLength(5);
+    expect(h.session.quests.offersOpen).toBe(true);
   });
   it('UpdateNPCSimbolo sets the marker over the NPC and CharacterCreate seeds it', () => {
     const h = harness();

@@ -11,7 +11,7 @@ Scanned refs: `main`
 ## Headline
 
 - **Packets covered (merged + open branches): 512 of 513 = 99.8%.** Merged on main only: 512 = 99.8%.
-  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 288.
+  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 289.
 - **Forms covered: 58 of 86 = 67.4%** (0 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
@@ -383,7 +383,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 171 | CraftingResult | client Protocol.bas:HandleCraftingResult | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 172 | GuardNotice | (none in dispatcher) | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 173 | AnswerReset | client Protocol.bas:HandleAnswerReset | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
-| 174 | ObjQuestListSend | client Protocol.bas:HandleObjQuestListSend | quests | merged | `main:packages/protocol/src/packets/quests.ts` | no |
+| 174 | ObjQuestListSend | client Protocol.bas:HandleObjQuestListSend | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
 | 175 | UpdateBankGld | client Protocol.bas:HandleUpdateBankGld | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 176 | PelearConPezEspecial | client Protocol.bas:HandlePelearConPezEspecial | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 177 | Privilegios | client Protocol.bas:HandlePrivilegios | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |

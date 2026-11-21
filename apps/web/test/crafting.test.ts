@@ -102,12 +102,25 @@ describe('building', () => {
     expect(h.since(before)).toEqual([{ id: CC.FlagTrabajar }]);
     expect(h.session.crafting.macro.active).toBe(false);
   });
-  it('a station form shown while the work macro key is on re-sends the last build instead of opening', () => {
-    const h = harness(); h.session.crafting.macroEnabled = true; h.session.crafting.buildSmith(387, 1);
+  it('a station form shown after a build opens again: frmMain.macrotrabajo is never enabled in the pinned client, so nothing is re-sent', () => {
+    const h = harness(); h.session.crafting.buildSmith(387, 1); h.session.crafting.buildAlchemy(5, 1);
     const before = h.clientPackets().length;
     h.recv({ id: CS.BlacksmithWeapons, objects: [387] }, { id: CS.ShowBlacksmithForm });
-    expect(h.session.craftingState.open).toBeUndefined();
-    expect(h.since(before)).toEqual([{ id: CC.CraftBlacksmith, object: 387 }]);
+    expect(h.session.craftingState.open).toBe('smith');
+    h.recv({ id: CS.AlquimistaObj, objects: [5] }, { id: CS.ShowAlquimiaForm });
+    expect(h.session.craftingState.open).toBe('alchemy');
+    expect(h.since(before)).toEqual([]);
+  });
+  it('a tailor build with no row selected sends object 0 like FrmSastre (SastreRopas(0).Index); smith and alchemy refuse it locally', () => {
+    const h = harness(), before = h.clientPackets().length;
+    expect(h.session.crafting.buildTailor(0, 1)).toBe(true);
+    expect(h.session.crafting.buildAlchemy(0, 1)).toBe(false);
+    expect(h.since(before)).toEqual([{ id: CC.CraftSastre, object: 0 }]);
+  });
+  it('the tailor clothes macro prints the empty line of its misspelt language key; hats print the real message', () => {
+    const h = harness();
+    h.session.crafting.buildTailor(6, 3, ''); expect(h.session.ui.messages.at(-1)?.text).toBe('');
+    h.session.crafting.reset(); h.session.crafting.buildTailor(7, 3); expect(h.session.ui.messages.at(-1)?.text).toBe(MSG_BEGIN_WORK);
   });
 });
 

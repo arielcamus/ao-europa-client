@@ -20,3 +20,12 @@
 .cf-cost { color: #ff0; }
 .cf-button { position: absolute; font: 11px Tahoma, Arial, sans-serif; color: #000; background: #e1e1e1; border: 1px solid #adadad; cursor: default; }
 .cf-button:active { background: #cce4f7; border-color: #005499; }
+
+/* frmAlqui / FrmSastre: List2 is Enabled = False (grey text, no selection); the quantity TextBox is BackColor black. */
+.craft-list-disabled { color: #6d6d6d; pointer-events: none; }
+.craft-quantity-black { background: #000; }
+/* The +/- images of frmAlqui only change with their own bitmap; the generic hotspot hover tint is not in the form. */
+.craft-window .hotspot:hover, .craft-window .hotspot:active { background-color: transparent; }
+.craft-window .art-button:active { filter: none; }
+/* MsgBox (vbExclamation + vbOKOnly) over the crafting forms. */
+.craft-msgbox .craft-msgbox-title { background: #0a246a; color: #fff; font-weight: bold; padding: 2px 5px; box-sizing: border-box; }
