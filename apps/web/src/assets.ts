@@ -243,6 +243,49 @@ export async function fetchBytes(path: string): Promise<Uint8Array> {
   if (!response.ok) throw new Error(`Local asset unavailable: ${path} (${response.status}). Set AO_ASSETS to your Recursos directory.`);
   return new Uint8Array(await response.arrayBuffer());
 }
+/**
+ * The ONE decoder for game text files (Dat/*.dat, init/*.ini, *localindex.dat, locale messages).
+ * The pinned data files are windows-1252 (VB6 ANSI), except a few the pinned client ships as UTF-8 (init/sp_localindex.dat,
+ * en_localindex.dat, ambientacion.ini...), and some are MIXED: SP_LocalMsg.dat is windows-1252 with ten UTF-8 lines ("mÃºsica"
+ * is the bytes of "música" read as windows-1252). So each LINE is decoded on its own: strict UTF-8 first, windows-1252 when
+ * that fails. A windows-1252 accent is followed by ASCII, never by a continuation byte, so it is never valid UTF-8 and is
+ * never misread; a UTF-8 line is never turned into mojibake. A line that was UTF-8 encoded twice in the source data
+ * (sp_localindex.dat MSG105: "InteractÃºa") is repaired the same way. A leading BOM is dropped.
+ */
+const utf8 = new TextDecoder('utf-8', { fatal: true });
+const cp1252 = new TextDecoder('windows-1252');
+/** "Ã" + "º": a UTF-8 pair that was itself UTF-8 encoded again. */
+const DOUBLE_ENCODED = /[\u00c2-\u00df][\u0080-\u00bf]/g;
+/** Length of the well-formed UTF-8 multi-byte sequence starting at `i`, or 0. */
+function utf8Length(bytes: Uint8Array, i: number): number {
+  const lead = bytes[i]!, size = lead >= 0xc2 && lead <= 0xdf ? 2 : lead >= 0xe0 && lead <= 0xef ? 3 : lead >= 0xf0 && lead <= 0xf4 ? 4 : 0;
+  if (!size || i + size > bytes.length) return 0;
+  try { utf8.decode(bytes.subarray(i, i + size)); return size; } catch { return 0; }
+}
+export function decodeGameLine(line: Uint8Array): string {
+  try {
+    const text = utf8.decode(line);
+    return text.replace(DOUBLE_ENCODED, pair => { try { return utf8.decode(Uint8Array.from(pair, c => c.charCodeAt(0))); } catch { return pair; } });
+  } catch { /* not UTF-8 as a whole: windows-1252, keeping any well-formed UTF-8 sequence inside it */ }
+  let out = '', plain = 0;
+  const flush = (end: number) => { if (end > plain) out += cp1252.decode(line.subarray(plain, end)); };
+  for (let i = 0; i < line.length;) {
+    const size = line[i]! >= 0xc2 ? utf8Length(line, i) : 0;
+    if (!size) { i++; continue; }
+    flush(i); out += utf8.decode(line.subarray(i, i + size)); i += size; plain = i;
+  }
+  flush(line.length);
+  return out;
+}
+export function decodeGameText(bytes: Uint8Array): string {
+  const lines: string[] = [];
+  for (let start = 0; start <= bytes.length;) {
+    let end = bytes.indexOf(0x0a, start); if (end < 0) end = bytes.length;
+    lines.push(decodeGameLine(bytes.subarray(start, end)));
+    start = end + 1;
+  }
+  return lines.join('\n');
+}
 export async function fetchText(path: string): Promise<string> {
-  return new TextDecoder('windows-1252').decode(await fetchBytes(path));
+  return decodeGameText(await fetchBytes(path));
 }

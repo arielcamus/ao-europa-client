@@ -88,3 +88,24 @@ describe('recorded VB6 sessions', () => {
     expect(decoder.push(frame.subarray(3)).map(hex)).toEqual(['2b00fa090100']);
   });
 });
+
+describe('String8 carries accents and ñ ¿ ¡ as UTF-8 (the Aurora COM writer converts the BSTR to CP_UTF8)', () => {
+  const text = 'Ámora <Pescadora de Forgat>: ¿Qué quieres, niño? ¡Vigía!';
+  const speech = { id: NS.ChatOverHead, chat: text, charIndex: 5, color: 0xff00ff, isSpell: false, x: 10, y: 12, minChatTime: 100, maxChatTime: 300 };
+  it('ChatOverHead puts accented text on the wire as UTF-8 and reads it back', () => {
+    const body = encodeServerPacket(speech as never);
+    expect(hex(body)).toContain('c3816d6f7261'); // "Ámora"
+    expect(hex(body)).toContain('c2bf'); // ¿
+    expect(hex(body)).toContain('c3b1'); // ñ
+    expect(decodeServerPacket(body)).toMatchObject({ id: NS.ChatOverHead, chat: text });
+  });
+  it('decodes accented text from UTF-8 bytes written by hand (not produced by our own writer)', () => {
+    // id 35 (Int16), then "¿Qué?" = 7 UTF-8 bytes, charIndex 1, color 0, isSpell 0, x 0, y 0, min 0, max 0
+    const body = bytes('2300' + '07' + 'c2bf5175c3a93f' + '0100' + '00000000' + '00' + '00' + '00' + '0000' + '0000');
+    expect(decodeServerPacket(body)).toMatchObject({ id: NS.ChatOverHead, chat: '¿Qué?' });
+  });
+  it('raw windows-1252 bytes in a String8 are rejected, as PROTOCOL.md documents (the live server never sends them)', () => {
+    const body = bytes('2300' + '01' + 'e9' + '0100' + '00000000' + '00' + '00' + '00' + '0000' + '0000');
+    expect(() => decodeServerPacket(body)).toThrow(/Invalid UTF-8/);
+  });
+});

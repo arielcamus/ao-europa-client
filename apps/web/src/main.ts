@@ -74,12 +74,10 @@ void fetchText('init/namemapa.dat').then(text => { mapNames = parseIni(text); })
 const mapHeaderNames = new Map<number, Promise<string>>();
 // NpcData / ObjData as frmMapaGrande reads them (Dat/npcs.dat, Dat/Obj.dat), loaded the first time the large map opens.
 let npcTableCache: Ini | undefined, npcServerCache: Ini | undefined, catalogCache: ObjectCatalog | undefined;
-/** The client's localindex is UTF-8 (names like "Vigía"); the server files are Windows-1252. */
-const decodeText = (bytes: Uint8Array) => { try { return new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { return new TextDecoder('windows-1252').decode(bytes); } };
 const npcTable = async () => {
   if (!npcTableCache) {
     const [local, server, catalog] = await Promise.all([
-      fetchBytes('init/sp_localindex.dat').then(bytes => parseNpcSections(decodeText(bytes))), fetchText('Dat/npcs.dat').then(parseNpcSections).catch(() => undefined), loadObjectCatalog().catch(() => undefined),
+      fetchText('init/sp_localindex.dat').then(parseNpcSections), fetchText('Dat/npcs.dat').then(parseNpcSections).catch(() => undefined), loadObjectCatalog().catch(() => undefined),
     ]);
     npcTableCache = local; npcServerCache = server; catalogCache = catalog;
   }
