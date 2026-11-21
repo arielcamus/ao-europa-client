@@ -17,6 +17,7 @@ import type { Rgb } from './character-data.js';
 import { spellTables } from './spells.js';
 import type { ActiveFx } from './spells.js';
 import { FxRenderer } from './fx-render.js';
+import { RoofMeshPool } from './roof-mesh.js';
 import { parseParticles } from './fx-particles.js';
 import { fxTables, parseProjectiles } from './fx-world.js';
 import type { FrameInfo } from './fx-world.js';
@@ -55,6 +56,8 @@ export class WorldRenderer {
   private epoch = 0;
   private metadata: Promise<void> | undefined;
   private pools: SpritePool[] = [];
+  /** Layer-5 roofs as per-corner-coloured quads (RenderScreen passes the tile's four light_value colours). */
+  private roofPool: RoofMeshPool | undefined;
   private observer: ResizeObserver | undefined;
   private readonly world = new Container();
   private objectGraphics = new Map<number, ObjectGraphic>();
@@ -97,6 +100,7 @@ export class WorldRenderer {
     }
     this.world.addChild(this.labelLayer);
     this.fx = new FxRenderer({ animation: id => this.animation(id), texture: frame => this.texture(frame), hasGraphic: id => this.graphics.has(id) });
+    this.roofPool = new RoofMeshPool(this.pools[6]!.container);
     this.fx.attach(this.world, this.app.stage, this.pools[6]!.container);
     this.observer = new ResizeObserver(() => this.app.renderer.resize(this.host.clientWidth, this.host.clientHeight));
     this.observer.observe(this.host);
@@ -129,7 +133,7 @@ export class WorldRenderer {
     const epoch = ++this.epoch;
     this.readyMap = undefined; this.map = undefined; this.fixed = new Map(); this.trees.clear();
     this.pools.forEach(pool => { pool.reset(); pool.finish(); });
-    this.fx?.clear();
+    this.fx?.clear(); this.roofPool?.clear();
     // Keep texture memory bounded to the current map. Late loads are discarded.
     for (const texture of this.textures.values()) if (texture !== Texture.EMPTY) texture.destroy();
     for (const source of this.sources.values()) source.destroy(true);
@@ -262,7 +266,7 @@ export class WorldRenderer {
     this.world.position.set(-Math.round(cameraX * zoom), -Math.round(cameraY * zoom));
     const dt = this.lastRender ? Math.min(100, now - this.lastRender) : 16; this.lastRender = now;
     this.roofs.update(this.roofTrig[(session.position!.y - 1) * 100 + session.position!.x - 1] ?? 0, dt);
-    this.pools.forEach(pool => pool.reset());
+    this.pools.forEach(pool => pool.reset()); this.roofPool!.begin();
     const minX = Math.max(1, Math.floor(cameraX / 32) - 10), maxX = Math.min(100, Math.ceil((cameraX + width) / 32) + 10);
     const minY = Math.max(1, Math.floor(cameraY / 32) - 2), maxY = Math.min(100, Math.ceil((cameraY + height) / 32) + 10);
     // RenderScreen order: layer 1, then layers 2 and 3 as WHOLE passes (RenderWalkableMapLayers), then ONE pass of traps and ground
@@ -298,9 +302,13 @@ export class WorldRenderer {
       if (!id) return;
       // Live VB6 roof rule: one alpha per roof trigger, 3x3 NearRoof, the player's own roof fades out.
       const trigger = nearRoof(this.roofTrig, x, y);
-      // Roofs sit above the light map and the particles, so they take their tile's light as a tint (RenderScreen draws them with light_value).
-      this.draw(this.pools[6]!, this.animation(id), x * 32, y * 32, now, true, trigger ? this.roofs.alphaOf(trigger) : 1, this.fx!.roofTint(session.world, x, y));
+      // Roofs sit above the light map and the particles. RenderScreen draws them with the tile's FOUR vertex colours
+      // (Copy_RGBAList_WithAlpha(TempColor, .light_value, RoofsLight(Trigger)) -> clsBatch.Draw, one colour per corner), not their mean.
+      const animation = this.animation(id), frame = animation.frames[Math.floor(now / animation.frameMs) % animation.frames.length]!;
+      this.roofPool!.add(this.texture(frame), x * 32 + Math.floor((32 - frame.width) / 2), y * 32 + 32 - frame.height,
+        this.fx!.roofCorners(session.world, x, y), trigger ? this.roofs.alphaOf(trigger) : 1);
     });
+    this.roofPool!.end();
     this.camera = { x: cameraX, y: cameraY };
     this.drawCharacters(session, position, now, cameraX, cameraY, width, height);
     this.drawEffects(session, now, position);

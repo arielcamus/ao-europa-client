@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  DEFAULT_AUDIO_SETTINGS, STEP_SOUNDS, Terrain, ambientWave, effectiveVolume, gainOf, inHearingArea, mapMusicId, musicFile, panAt, panByDistance,
+  DEFAULT_AUDIO_SETTINGS, STEP_SOUNDS, Terrain, ambientWave, readField, vbVal, effectiveVolume, gainOf, inHearingArea, mapMusicId, musicFile, panAt, panByDistance,
   parseZones, sanitizeSettings, stepWave, terrainOf, volumeByDistance, waveFile,
 } from '../src/audio-rules.js';
 
@@ -78,12 +78,18 @@ describe('server waves, ambient and music selection', () => {
     expect(waveFile(123, 1, 'en', false)).toBe('en_123');
     expect(waveFile(123, 0, 'en', false)).toBe('123');
   });
-  it('reads the ambient as "night-day"', () => {
-    expect(ambientWave('12-34', false)).toBe(34);
+  it('reads the ambient as PlayAmbientAudio does: ReadField over val(ambient), so the first number plays day and night', () => {
+    expect(ambientWave('12-34', false)).toBe(12);
     expect(ambientWave('12-34', true)).toBe(12);
     expect(ambientWave('0-0', false)).toBe(0);
+    expect(ambientWave('0-34', true)).toBe(0);
     expect(ambientWave('', false)).toBe(0);
-    expect(ambientWave('7', false)).toBe(0);
+    expect(ambientWave('514', false)).toBe(514);
+    expect(ambientWave('514', true)).toBe(514);
+    expect(readField(2, '514', '-')).toBe('514'); // no separator: ReadField returns the whole text for any field
+    expect(readField(2, '1-2-3', '-')).toBe('2');
+    expect(readField(3, '1-2-3', '-')).toBe('3');
+    expect(vbVal('  17-4')).toBe(17); expect(vbVal('abc')).toBe(0);
   });
   it('picks the zone under the player, else the map header, and names the ogg ost_<id>', () => {
     const zones = parseZones('[Config]\nCantidad=2\n\n[Zona1]\nMapa=172\nMusica=3\nX1=1\nX2=50\nY1=1\nY2=100\n\n[Zona2]\nMapa=172\nMusica=0\nX1=60\nX2=70\nY1=10\nY2=20\n');

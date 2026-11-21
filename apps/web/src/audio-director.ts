@@ -121,7 +121,7 @@ export class AudioDirector {
     this.ambient(audio.ambient);
   }
   private ambient(ambient: string) {
-    // PlayAmbientAudio: EsNoche picks field 1, otherwise field 2. It runs at SwitchMap and when the rain ends only, so a day/night flip while
+    // PlayAmbientAudio (EsNoche picks the field of val(ambient), see ambientWave: the first number either way). It runs at SwitchMap and when the rain ends only, so a day/night flip while
     // standing on the map does not restart the ambient (the VB6 client does not either).
     const wave = ambientWave(ambient, this.world.night);
     if (wave) void this.engine.playAmbient(wave); else this.engine.stopAmbient();
