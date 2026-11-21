@@ -4,7 +4,7 @@
  * and Carteles.bas. Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no
  * warranty. See NOTICE. Artwork is read only from the local mount.
  */
-import type { LocaleData } from './character-data.js';
+import type { ChatLocale } from './chat-locale.js';
 import type { WorldRenderer } from './renderer.js';
 import { fetchText, parseIni } from './assets.js';
 import { grhCanvas } from './grh-canvas.js';
@@ -56,13 +56,13 @@ export class NpcDialog {
   }
 
   /** The locale (NPC names and descriptions) may still be loading when the description arrives: wait for it, at most 10 s. */
-  async showWhenReady(npcNumber: number, locale: () => LocaleData | undefined) {
-    for (let waited = 0; !locale() && waited < 10_000; waited += 250) await new Promise(resolve => window.setTimeout(resolve, 250));
+  async showWhenReady(npcNumber: number, locale: () => ChatLocale | undefined) {
+    for (let waited = 0; !locale()?.ready && waited < 10_000; waited += 250) await new Promise(resolve => window.setTimeout(resolve, 250));
     await this.show(npcNumber, locale());
   }
 
-  async show(npcNumber: number, locale: LocaleData | undefined) {
-    const npc = locale?.npcs.get(npcNumber);
+  async show(npcNumber: number, locale: ChatLocale | undefined) {
+    const npc = locale?.npc(npcNumber);
     if (!npc?.desc) return;
     const generation = ++this.generation;
     const portrait = await this.face(npcNumber).catch(() => undefined) ?? await this.portrait(npc.body, npc.head).catch(() => undefined);

@@ -4,7 +4,6 @@
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty. See NOTICE.
  * Strings are the Spanish entries of Languages/1.json, which the client ships with.
  */
-import type { LocaleData } from './character-data.js';
 
 export const MSG_YOU_SEE_CHARACTER = 1105;
 export const MSG_NPC_PET = 1621;
@@ -53,15 +52,4 @@ export function lookAtFields(id: number, fields: string[], npcName: (npcNumber: 
   if (id === MSG_YOU_SEE_CHARACTER) return [describeUser(fields[0] ?? ''), ...fields.slice(1)];
   if (id === MSG_NPC || id === MSG_NPC_PET) return npcInfo(fields, npcName, id === MSG_NPC_PET);
   return fields;
-}
-
-/** Locale_Parse_ServerMessage for the ids this feature handles; other ids use the plain template. */
-export function localeText(id: number, params: string, locale: LocaleData): string {
-  const template = locale.messages.get(id) ?? '';
-  if (!params) return template;
-  const fields = lookAtFields(id, params.split(SEPARATOR), npcNumber => locale.npcs.get(npcNumber)?.name);
-  let text = template;
-  // Replace from the end so ¬1 never clobbers ¬10, as the VB6 loop does.
-  for (let i = fields.length - 1; i >= 0; i--) text = text.split(`${SEPARATOR}${i + 1}`).join(fields[i]!);
-  return text;
 }

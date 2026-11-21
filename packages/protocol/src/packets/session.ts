@@ -15,15 +15,15 @@ export const SessionServerPacketId = {
 } as const;
 export const SessionClientPacketId = {
   ChangeHeading: 6, Help: 51, RequestMOTD: 57, LoginNewChar: 74, NavigateToggle: 183, Home: 264,
-  CreateAccount: 304, DeleteCharacter: 306,
+  CreateAccount: 304, DeleteCharacter: 306, CancelarExit: 247,
 } as const;
 
 export interface SessionCodec<T> { read(reader: Reader): T; write(writer: Writer, value: T): void }
 const empty: SessionCodec<Record<never, never>> = { read: () => ({}), write: () => {} };
 const codec = <T>(read: (r: Reader) => T, write: (w: Writer, v: T) => void): SessionCodec<T> => ({ read, write });
 
-/** e_CharValue of the server (UpdateCharValue): only the first is handled by the VB6 client. */
-export const CharValueType = { DontBlockTile: 0 } as const;
+/** e_CharValue (Declares.bas, server and client alike: eDontBlockTile = 1); the only value the VB6 client handles. */
+export const CharValueType = { DontBlockTile: 1 } as const;
 
 export const sessionServerCodecs = {
   /** WriteNavigateToggle: HandleNavigateToggle `UserNavegando = ReadBool`. */
@@ -94,6 +94,8 @@ export const sessionClientCodecs = {
     (w, v) => { w.writeString(v.name); w.writeInt(v.race); w.writeInt(v.gender); w.writeInt(v.characterClass); w.writeInt(v.head); w.writeInt(v.home); }),
   [SessionClientPacketId.NavigateToggle]: empty,
   [SessionClientPacketId.Home]: empty,
+  /** WriteCancelarExit: no payload (UserSaliendo = False on the client); the server's CancelExit answers LocaleMsg 578 "/salir cancelado". */
+  [SessionClientPacketId.CancelarExit]: empty,
   /** WriteCreateAccount (PYMMO=0): String8 email then String8 password; the server answers with an (empty) AccountCharacterList. */
   [SessionClientPacketId.CreateAccount]: codec(r => ({ email: r.readString(), password: r.readString() }), (w, v) => { w.writeString(v.email); w.writeString(v.password); }),
   /** WriteDeleteCharacter is an empty body in PYMMO=0 on the client AND the server (HandleDeleteCharacter does nothing). */

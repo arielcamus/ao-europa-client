@@ -80,6 +80,24 @@ export function playerNameColor(colors: Map<string, Rgb>, status: number, privil
   return colorPj(colors, ({ 0: 50, 1: 49, 2: 6, 3: 7 } as Record<number, number>)[status] ?? 50);
 }
 export const NPC_NAME_COLOR: Rgb = { r: 0, g: 129, b: 195 };
+/** engine.bas InitializeTeamColors, index 1..10 (an event team's name and `<Equipo N>` tag colour). */
+export const TEAM_COLORS: readonly Rgb[] = [
+  { r: 255, g: 255, b: 255 }, { r: 153, g: 217, b: 234 }, { r: 234, g: 133, b: 133 }, { r: 235, g: 87, b: 70 }, { r: 191, g: 173, b: 10 },
+  { r: 82, g: 173, b: 2 }, { r: 100, g: 45, b: 145 }, { r: 156, g: 33, b: 127 }, { r: 140, g: 27, b: 42 }, { r: 27, g: 136, b: 140 }, { r: 145, g: 75, b: 35 },
+];
+/** engine.bas Char_Render, banderaIndex with a team: the Grh of the carried flag. */
+export const FLAG_GRH: Readonly<Record<number, number>> = { 1: 58712, 2: 60298 };
+/**
+ * GetClanTagColor (engine.bas) for a guild's alignment (eClanType: 0 neutral, 1 real, 2 caos, 3 ciudadana, 4 criminal): neutral is white
+ * (COLOR_CLAN_NEUTRAL = 255), the others ColoresPJ 21 / 24 / 20 / 23. undefined for an unknown alignment (the name colour is used).
+ */
+export function clanTagColor(colors: Map<string, Rgb>, alignment: number): Rgb | undefined {
+  if (alignment === 0) return { r: 255, g: 255, b: 255 };
+  const index = ({ 1: 21, 2: 24, 3: 20, 4: 23 } as Record<number, number>)[alignment];
+  return index === undefined ? undefined : colorPj(colors, index);
+}
+/** Char_Render: the tag of a member of the player's own guild (NameColorClan). */
+export const OWN_CLAN_COLOR: Rgb = { r: 255, g: 255, b: 0 };
 
 /** The name as the header shows it: an empty alias `{}` or clan `<>` renders nothing, as in VB6. */
 export const displayName = (raw: string) => raw.replace(/\s*\{\s*\}/g, '').replace(/\s*<\s*>/g, '').trim();
@@ -99,22 +117,3 @@ export function privilegeTitle(priv: number): string | undefined {
   return ({ 1: '<Game Design>', 2: '<Game Master>', 3: '<Administrador>', 4: '<Administrador>' } as Record<number, string>)[priv];
 }
 export const privilegeIndex = (privileges: number) => privileges === 0 ? 0 : Math.round(Math.log2(privileges));
-
-export interface LocaleData { messages: Map<number, string>; npcs: Map<number, { name: string; desc: string; body: number; head: number }> }
-/** sp_localindex.dat: [SP_MSG] MsgN=text and [NPCn] NAME/DESC/BODY/HEAD (CargarIndicesOBJ). */
-export function parseLocale(source: Ini): LocaleData {
-  const messages = new Map<number, string>();
-  for (const [key, text] of source.get('sp_msg') ?? []) {
-    const match = /^msg(\d+)$/.exec(key);
-    if (match) messages.set(Number(match[1]), text);
-  }
-  const npcs = new Map<number, { name: string; desc: string; body: number; head: number }>();
-  for (const [section, fields] of source) {
-    const match = /^npc(\d+)$/.exec(section);
-    if (match) npcs.set(Number(match[1]), {
-      name: fields.get('name') ?? '', desc: fields.get('desc') ?? '',
-      body: Number(fields.get('body') ?? 0), head: Number(fields.get('head') ?? 0),
-    });
-  }
-  return { messages, npcs };
-}

@@ -4,7 +4,7 @@
  * See ../../../LICENSE and ../../../NOTICE.
  */
 import { ClientPacketId as C, CombatClientPacketId as CC, ServerPacketId as S, Heading, FrameDecoder, decodeServerPacket, encodeClientFrame } from '@ao/protocol';
-import { StatusClientPacketId } from '@ao/protocol';
+import { StatusClientPacketId, KeysClientPacketId } from '@ao/protocol';
 import { DoorClientPacketId, DoorServerPacketId as DoorServer, KeysServerPacketId as KS } from '@ao/protocol';
 import { SessionServerPacketId as SS, SessionClientPacketId as SCP } from '@ao/protocol';
 import type { AccountCharacter, CharacterCreate, ClientPacket, ServerPacket } from '@ao/protocol';
@@ -12,7 +12,7 @@ import { ClassicState } from './ui-state.js';
 import { MapObjects } from './map-objects.js';
 import { PacketCounters, SEQUENCED_CLIENT_PACKETS } from './packet-counters.js';
 import type { PacketFamily } from './packet-counters.js';
-import { CharacterTracker, characterChange } from './characters.js';
+import { CharacterTracker, characterChange, splitTag } from './characters.js';
 import { NpcsServerPacketId as NS } from '@ao/protocol';
 import { CombatState } from './combat.js';
 import { SpellState } from './spells.js';
@@ -38,7 +38,9 @@ import { GmState } from './gm-state.js';
 
 export interface Position { x: number; y: number }
 const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
-export interface Motion { from: Position; to: Position; started: number; duration: number }
+const KS_QUIT = KeysClientPacketId.Quit;
+/** `translate`: a CharacterTranslate glide, drawn without the walking animation or footsteps. */
+export interface Motion { from: Position; to: Position; started: number; duration: number; translate?: boolean }
 export type Phase = 'connecting' | 'account' | 'login' | 'playing' | 'closed';
 /**
  * Something the server wants the player to read outside the console: ShowMessageBox (a locale id the UI resolves, shown by
@@ -123,6 +125,12 @@ export class Session {
   readonly movement = { sailing: false, riding: false, swimming: false, rubberSuit: false };
   /** InviCounter and DrogaCounter (Contadores) in seconds; 0 when off. */
   timers = { invisibility: 0, effect: 0 };
+  /** UserSaliendo: /SALIR or the exit button was sent (WriteQuit) and the countdown may be running; Escape then sends CancelarExit. */
+  leaving = false;
+  /** The open sign (InitCartel: cartel, Leyenda, GrhCartel); only one at a time, a ShowSignal meanwhile is ignored. The UI draws it at `signAnchor` (clicX, clicY). */
+  sign: { text: string; grh: number } | undefined;
+  /** frmMain's last click in viewport pixels (clicX, clicY), set by the UI. */
+  signAnchor = { x: 0, y: 0 };
   /** Last FlashScreen the server sent (EfectoEnPantalla): the UI tints the viewport until it has passed. */
   flash: { color: number; duration: number; ignore: boolean; at: number } | undefined;
   /** Floating texts (TextOverTile / TextCharDrop) waiting to be drawn by the bubbles layer. */
@@ -194,7 +202,15 @@ export class Session {
       }
       this.issued.set(family, counter);
     }
+    if (packet.id === KS_QUIT) this.leaving = true; // WriteQuit: UserSaliendo = True
     this.write(encodeClientFrame(packet));
+  }
+  /** Esc while UserSaliendo (ModGameplayUI.HandleKeyUp): WriteCancelarExit clears the flag; the server answers LocaleMsg 578 if a countdown was running. */
+  cancelExit(): boolean {
+    if (!this.leaving || !this.ready) return false;
+    this.leaving = false;
+    this.send({ id: SCP.CancelarExit });
+    return true;
   }
   private readonly issued = new Map<string, number>();
   receive(bytes: Uint8Array): void {
@@ -277,6 +293,7 @@ export class Session {
           break;
         case S.Logged:
           if (this.phase !== 'login') throw new Error('Unexpected Logged');
+          this.leaving = false;
           this.phase = 'playing'; this.loggedAt = this.clock(); this.lastQuery = this.clock();
           this.skills.resting = false; // HandleLogged: UserDescansar = False
           break;
@@ -318,6 +335,8 @@ export class Session {
         case S.Disconnect:
           // HandleDisconnect (PYMMO=0) ends in General_Set_Connect: the login screen, not an error.
           if (!this.interactive) throw new Error('The server disconnected this character');
+          this.leaving = false; // HandleDisconnect resets UserSaliendo, and the skills window state with the other globals
+          this.skills.reset();
           this.onDisconnect?.();
           break;
         case SS.ShowMessageBox: this.notify({ kind: 'box', messageId: packet.messageId, extra: packet.extra }); break;
@@ -332,6 +351,17 @@ export class Session {
         case SS.TextOverTile: this.addFloatingText({ text: packet.text, x: packet.x, y: packet.y, color: packet.color, duration: packet.duration, offsetY: packet.offsetY, animated: packet.animated }); break;
         case SS.TextCharDrop: this.addFloatingText({ text: packet.text, charIndex: packet.charIndex, color: packet.color, duration: packet.duration, offsetY: 0, animated: packet.animated }); break;
         case SS.ForceCharMove: this.forceMove(packet.heading); break;
+        case SS.CharacterTranslate: this.translate(packet); break;
+        case SS.UpdateTagAndStatus: {
+          const copy = this.characters.get(packet.charIndex);
+          if (!copy) break;
+          const parts = splitTag(packet.tag);
+          this.characters.set(packet.charIndex, { ...copy, clanIndex: packet.clanIndex, clanAlignment: packet.clanAlignment, ...(parts ? { name: packet.tag, status: packet.status, groupIndex: packet.groupIndex } : {}) });
+          break;
+        }
+        case SS.UpdateFlag: { const copy = this.characters.get(packet.charIndex); if (copy) this.characters.set(packet.charIndex, { ...copy, flag: packet.flag }); break; }
+        // HandleShowSignal: ObjData(objIndex).Texto in the sign window (InitCartel); the UI shows it.
+        case SS.ShowSignal: if (!this.sign) this.sign = { text: this.catalog?.get(packet.objIndex)?.text ?? '', grh: packet.grh }; break;
         case SS.AnswerReset: this.resetRequested = true; break;
       }
       this.onPacket?.(packet);
@@ -369,10 +399,11 @@ export class Session {
     if (this.position && (x !== this.position.x || y !== this.position.y)) this.motion = undefined;
     this.pending = undefined;
     this.position = { x, y };
-    if (this.self) this.characters.set(this.self.charIndex, { ...this.self, x, y });
+    if (this.self) { this.characters.set(this.self.charIndex, { ...this.self, x, y }); this.tracker.place(this.self.charIndex, x, y); }
   }
   walk(heading: Heading): boolean {
     const now = this.clock();
+    this.sign = undefined; // General.MoveTo: If cartel Then cartel = False, whether or not the step is legal
     // pausa (HandlePauseToggle) stops keyboard movement, map clicks and item use.
     if (!this.ready || this.world.paused || this.pending || now - this.lastWalk < this.stepMs || !this.position || !this.self) return false;
     // MoveTo: a resting character does not walk; the first try only asks the server to stand up (UserAvisado).
@@ -392,6 +423,7 @@ export class Session {
     this.motion = { from: this.position, to, started: now, duration: this.stepMs - 30 };
     this.position = to;
     this.characters.set(this.self.charIndex, { ...this.self, ...to, heading });
+    this.tracker.place(this.self.charIndex, to.x, to.y, heading);
     this.pending = { expected: to, since: now };
     this.lastWalk = now;
     this.lastQuery = now;
@@ -526,6 +558,16 @@ export class Session {
     this.floatingTexts.push({ ...text, at: this.clock() });
     if (this.floatingTexts.length > 50) this.floatingTexts.shift();
   }
+  /** HandleCharacterTranslate for the player's own character: it glides to the tile over `time` ms (the tracker does the same for everybody else). */
+  private translate(packet: { charIndex: number; x: number; y: number; time: number }) {
+    const copy = this.characters.get(packet.charIndex);
+    if (copy && (packet.x >= 1 && packet.y >= 1 && packet.x <= 100 && packet.y <= 100)) this.characters.set(packet.charIndex, { ...copy, x: packet.x, y: packet.y });
+    if (packet.charIndex !== this.charIndex || !this.position || packet.x < 1 || packet.y < 1 || packet.x > 100 || packet.y > 100) return;
+    const from = this.position, to = { x: packet.x, y: packet.y };
+    this.motion = packet.time > 0 && (from.x !== to.x || from.y !== to.y) ? { from, to, started: this.clock(), duration: packet.time, translate: true } : undefined;
+    this.position = to;
+    this.tracker.place(packet.charIndex, to.x, to.y);
+  }
   /** HandleForceCharMove: the server pushes the player one tile (Char_Move_by_Head + MoveScreen). */
   private forceMove(heading: number) {
     if (!this.position || !this.self || heading < 1 || heading > 4) return;
@@ -537,6 +579,7 @@ export class Session {
     this.motion = { from: this.position, to, started: this.clock(), duration: Math.max(50, this.stepMs - 30) };
     this.position = to;
     this.characters.set(this.self.charIndex, { ...this.self, ...to, heading: heading as Heading });
+    this.tracker.place(this.self.charIndex, to.x, to.y, heading as Heading);
     this.lastWalk = this.clock();
   }
   /** frmConnect render_MouseUp / frmConnect Jugar: LoginExistingChar for a character of the account list (LoginCharacter). */

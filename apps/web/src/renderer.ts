@@ -11,8 +11,8 @@ import type { Session } from './session.js';
 import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, roofTriggers, TreeFade, fixedObjects, nearRoof, objectDraws, parseObjectGraphics, treeCoversPlayer } from './map-objects.js';
 import type { GroundObject, ObjectGraphic } from './map-objects.js';
 import { CharacterSprites } from './character-render.js';
-import { NPC_NAME_COLOR, colorPj, parseColors, parseLocale, playerNameColor, privilegeTitle } from './character-data.js';
-import type { LocaleData, Rgb } from './character-data.js';
+import { FLAG_GRH, NPC_NAME_COLOR, OWN_CLAN_COLOR, TEAM_COLORS, clanTagColor, colorPj, parseColors, playerNameColor, privilegeTitle } from './character-data.js';
+import type { Rgb } from './character-data.js';
 import { spellTables } from './spells.js';
 import type { ActiveFx } from './spells.js';
 import { FxRenderer } from './fx-render.js';
@@ -71,8 +71,6 @@ export class WorldRenderer {
   private labelsUsed = 0;
   private sprites: CharacterSprites | undefined;
   private colors = new Map<string, Rgb>();
-  /** Spanish locale + NPC names (sp_localindex.dat); set once the metadata has loaded. */
-  locale: LocaleData | undefined;
   /** Tile under the mouse: NPC names are only drawn there, as in Char_Render (TX, TY). */
   hoverTile: { x: number; y: number } | undefined;
   /** The HideNames key (binding 7, VB6 `Nombres`): names and titles over characters on or off. */
@@ -110,16 +108,14 @@ export class WorldRenderer {
       fetchText('Dat/Obj.dat').catch(() => ''),
       optional(fetchText('init/armas.dat'), 'armas.dat'), optional(fetchText('init/escudos.dat'), 'escudos.dat'),
       optional(fetchBytes('init/cascos.ind'), 'cascos.ind'), optional(fetchText('init/colores.dat'), 'colores.dat'),
-      optional(fetchText('init/sp_localindex.dat'), 'sp_localindex.dat'),
       optional(fetchBytes('init/particles.ind'), 'particles.ind'), optional(fetchText('init/ProjectileDef.dat'), 'ProjectileDef.dat'),
-    ]).then(([graphics, bodies, molds, heads, objects, weapons, shields, helmets, colors, locale, particles, projectiles]) => {
+    ]).then(([graphics, bodies, molds, heads, objects, weapons, shields, helmets, colors, particles, projectiles]) => {
       if (particles) fxTables.streams = parseParticles(particles);
       if (projectiles) fxTables.projectiles = parseProjectiles(parseIni(projectiles));
       this.objectGraphics = parseObjectGraphics(objects);
       this.graphics = parseGraphics(graphics); this.bodies = parseIni(bodies);
       this.molds = parseIni(molds); this.heads = parseHeads(heads);
       this.colors = colors ? parseColors(colors) : new Map();
-      this.locale = locale ? parseLocale(parseIni(locale)) : undefined;
       this.sprites = new CharacterSprites({
         graphics: this.graphics, bodies: this.bodies, molds: this.molds, heads: this.heads,
         helmets: helmets ? parseHeads(helmets) : [], weapons: weapons ? parseIni(weapons) : new Map(),
@@ -337,11 +333,10 @@ export class WorldRenderer {
     const sprites = this.sprites; this.labelsUsed = 0;
     if (!sprites) { this.labels.forEach(label => { label.visible = false; }); return; }
     const tracker = session.tracker;
-    tracker.expireDialogs(now);
     const chars = [...tracker.chars.values()]; // self included: its CharacterCreate passes through the tracker too
     const placed = chars.map(char => {
       if (char.charIndex === session.charIndex) {
-        const moving = !!session.motion && now < session.motion.started + session.motion.duration;
+        const moving = !!session.motion && !session.motion.translate && now < session.motion.started + session.motion.duration;
         return { char, heading: session.self!.heading as number, x: selfPosition.x, y: selfPosition.y, moving, elapsed: moving ? Math.max(0, now - session.motion!.started) : 0 };
       }
       const view = tracker.visualPosition(char, now);
@@ -369,10 +364,17 @@ export class WorldRenderer {
         }
       } else if (char.name) {
         const self = session.self;
-        const color = playerNameColor(this.colors, char.status, char.privileges, char.groupIndex > 0 && self !== undefined && self.groupIndex === char.groupIndex);
+        // Team > 0 (an event): TeamColors name, "<Equipo N>" tag and the carried flag (banderaIndex, UpdateFlag).
+        const color = char.team > 0 ? TEAM_COLORS[Math.min(char.team, 10)]! : playerNameColor(this.colors, char.status, char.privileges, char.groupIndex > 0 && self !== undefined && self.groupIndex === char.groupIndex);
         this.label(char.name, color, px + 16, py + 31);
-        const title = privilegeTitle(Math.round(char.privileges ? Math.log2(char.privileges) : 0)) ?? char.clan;
-        if (title) this.label(title, color, px + 16, py + 43);
+        const title = char.team > 0 ? `<Equipo ${char.team}>` : privilegeTitle(Math.round(char.privileges ? Math.log2(char.privileges) : 0)) ?? char.clan;
+        // The tag: yellow for the player's own guild, else the colour of the guild's alignment (GetClanTagColor), else the name colour.
+        const ownGuild = char.clanIndex > 0 && self !== undefined && self.clanIndex === char.clanIndex && char.charIndex !== session.charIndex && char.team <= 0;
+        const tagColor = ownGuild ? OWN_CLAN_COLOR : char.clanIndex > 0 && char.team <= 0 ? clanTagColor(this.colors, char.clanAlignment) ?? color : color;
+        if (title) this.label(title, tagColor, px + 16, py + 43);
+        const flag = char.team > 0 ? FLAG_GRH[char.banderaIndex] : undefined;
+        const body = flag ? sprites.body(char.body) : undefined;
+        if (flag && body && this.graphics.has(flag)) this.draw(pool, this.animation(flag), px + 1 + body.bodyX, py - 45 + body.bodyY, now, true);
       }
       // Overhead speech is drawn once, by ChatBubbles from ChatState (chat #7); the tracker's dialog only feeds the NPC window.
     }

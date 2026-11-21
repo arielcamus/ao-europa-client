@@ -9,6 +9,7 @@ import { doorClickTile } from './map-objects.js';
 import { NpcDialog } from './npc-dialog.js';
 import { ChatBox } from './chat-box.js';
 import { ChatBubbles } from './chat-bubbles.js';
+import { SignOverlay } from './sign-ui.js';
 import { sharedLocale } from './chat-locale.js';
 import { CombatOverlay } from './combat-overlay.js';
 import { fetchText } from './assets.js';
@@ -78,6 +79,7 @@ element('classic').append(skillsButton);
 skillsButton.onclick = () => { try { session?.requestSkills(); } catch (error) { close(String(error)); } };
 ui.bindMenu('Estadísticas', () => { try { session?.requestStats(); } catch (error) { close(String(error)); } });
 const bubbles = new ChatBubbles(element('chat-bubbles'));
+const signOverlay = new SignOverlay(viewport, renderer);
 const chatBox = new ChatBox(chatForm, chat, element('messages'), () => renderer.app.canvas.focus(), error => close(String(error)));
 const combatOverlay = new CombatOverlay(viewport, renderer);
 const itemsUi = new ItemsUI(ui, element('classic'), report);
@@ -191,7 +193,6 @@ async function boot() {
     try {
       if (session && session.phase !== 'closed') {
         session.tick();
-        if (!session.tracker.locale && renderer.locale) session.tracker.locale = renderer.locale;
         const heading = touchHeading ?? [...keys.values()].at(-1);
         if (heading && !transacting() && renderer.readyMap === session.resourceMap) session.walk(heading);
         if (session.ready && session.resourceMap !== requestedMap) {
@@ -203,6 +204,7 @@ async function boot() {
       }
       renderer.render(session, now);
       bubbles.update(session, now);
+      signOverlay.update(session);
       questWindows.update(session);
       combatOverlay.update(session, now);
       audio.tick();
@@ -282,7 +284,7 @@ function connectSession(email: string, secret: string, create = false) {
   // HandleDisconnect ends in General_Set_Connect (the login screen); HandleCerrarleCliente is CloseClient.
   session.onDisconnect = () => { if (session === owner) close(); };
   session.onCloseClient = () => { if (session === owner) { close('El servidor cerró el cliente.'); showMessage(element('classic'), 'El servidor cerró el cliente.'); } };
-  session.tracker.onNpcDescription = ({ npcNumber }) => { if (session === owner) void npcDialog.showWhenReady(npcNumber, () => renderer.locale); };
+  session.tracker.onNpcDescription = ({ npcNumber }) => { if (session === owner) void npcDialog.showWhenReady(npcNumber, () => sharedLocale); };
   chatBox.attach(session);
   session.ui.chat.copyToConsole = gameOptions.value.copyDialogToConsole;
   audio.attach(session);
@@ -387,6 +389,8 @@ function gameKey(action: KeyAction) {
   }
 }
 window.addEventListener('keydown', event => {
+  // HandleKeyUp: Esc while UserSaliendo sends CancelarExit instead of HandleEsc (the windows keep their own Esc via the window stack).
+  if (event.key === 'Escape' && session?.cancelExit()) return;
   if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); itemsUi.closeDialogs(); bankUi.closeDialogs(); tradeUi.closeDialogs(); craftingUi.closeAll(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
   // IsDialogOpen: while the vault, Goliath or a trade window is up the game keys (attack, use, drop...) do nothing. The options and key windows are modal too.
   if (transacting() || optionsUi.visible) return;
@@ -432,7 +436,7 @@ function doorAt(event: PointerEvent | MouseEvent) {
   if (!session?.ready) return undefined;
   const tile = renderer.tileAt(session, event.clientX, event.clientY, performance.now());
   if (!tile) return undefined;
-  const occupied = (x: number, y: number) => [...session!.characters.values()].some(c => c.x === x && c.y === y);
+  const occupied = (x: number, y: number) => session!.tracker.at(x, y) !== undefined;
   return doorClickTile(session.mapObjects, objIndex => renderer.isDoor(objIndex), tile, occupied, (x, y) => renderer.fixedObjectAt(x, y));
 }
 // frmMain renderer MouseDown, left button: look at the tile (WriteLeftClick). The server answers
@@ -445,6 +449,8 @@ viewport.addEventListener('pointerdown', event => {
   bankUi.closeOnWorldClick(); // frmMain.renderer_MouseDown unloads frmBancoObj and frmGoliath
   partyUi.closeWindow(); guildUi.closeOnMapClick(); travelUi.closeOnWorldClick(); // ... and FrmGrupo and frmGuildList
   if (!event.isPrimary || !session?.ready) return;
+  // frmMain MouseUp: clicX/clicY anchor the next sign; a world click removes the open one (ModGameplayUI: If cartel Then cartel = False).
+  signOverlay.anchor(session, event.clientX, event.clientY, viewport.getBoundingClientRect()); session.sign = undefined;
   // While the server asked for a target (UsingSkill <> 0) any click or tap is a WorkLeftClick (ModGameplayUI), never a LeftClick.
   if (session.spells.targeting) {
     event.preventDefault(); clearInput();
