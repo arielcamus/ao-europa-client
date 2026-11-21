@@ -57,9 +57,9 @@
   "active": [
    {
     "path": "Dat/Motd.ini",
-    "sha256": "1b48b22a84b7cef83870a25486e7eae2604fd4e496abcb279067d88a352c537a",
+    "sha256": "df7e3479a07bed843bfd648df710592569fecd578cc092cab6aac0421f5e23ed",
     "doc": "docs/DATA-PATCHES.md#8",
-    "reason": "real rates (X1) instead of the stale X4 season lines; two Newbie Dungeon pointer lines"
+    "reason": "rates line set to the current EXP X4, RECOLECCIÓN X2, ORO X1 (Ariel, 21 Nov); the stale end-of-season line replaced by two Newbie Dungeon pointer lines"
    },
    {
     "path": "Dat/npcs.dat",

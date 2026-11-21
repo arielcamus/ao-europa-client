@@ -4,23 +4,26 @@
 Pre-HOO data only (Recursos 2bfa51e Dat + the 9ccd server). Idempotent: every edit SETS a key to a value, the map edit
 only inserts the NPC when it is not there yet.
 
-  apply-newbie-patches.py --dat <server Dat dir> [--maps <Mapas dir>] [--client-init <client init dir>] [--check]
+  apply-newbie-patches.py --dat <server Dat dir> [--maps <Mapas dir>] [--client-init <client init dir>] [--config <Configuracion.ini>] [--check]
 
 --dat          Ciudades.Dat, Motd.ini, npcs.dat, Quests.DAT (windows-1252, CRLF, as the server reads them)
 --maps         Mapa64.csm gets one Cartelera <Quest> (NPC 1331) at (52,57), Lindos
 --client-init  sp_localindex.dat (UTF-8, LF): the text the client shows for NPC 1331 and the patched quests
+--config       the server's Configuracion.ini: [CONFIGURACIONES] ExpMult=4, RecoleccionMult=2, OroMult=1
 --check        report what would change, write nothing
 """
 import argparse, os, re, struct, sys
 
-RATES_NOTE = 'EXP X1 - RECOLECCIÓN X1 - ORO X1'  # Configuracion.ini [CONFIGURACIONES] ExpMult=1, RecoleccionMult=1, OroMult=1
+# Ariel 2026-11-21 19:20: EXP x4, RECOLECCIÓN x2, ORO x1 (DropMult unchanged). --config sets Configuracion.ini to match the MOTD line.
+RATES = {'ExpMult': '4', 'RecoleccionMult': '2', 'OroMult': '1'}
+RATES_LINE = '* Rates de esta Temporada: EXP X4 - RECOLECCIÓN X2 - ORO X1~0~255~0~1~0'
 
 CIUDADES = {'Renacimiento': {'X': '58', 'Y': '44', 'MAPA': '1'}}  # was 517 (Alta Mar), 48, 62
 
 MOTD = {
     'INIT': {'NumLines': '11'},
     'MOTD': {
-        'Line9': '* Rates del servidor: ' + RATES_NOTE + '~0~255~0~1~0',
+        'Line9': RATES_LINE,
         'Line10': '* ¿Eres nuevo? Hasta el nivel 12 entrena en el Dungeon Newbie: su entrada está en tu ciudad.~255~200~0~1~0',
         'Line11': '* Busca la Cartelera de tu ciudad y toma los encargos de Makrom. Al llegar a nivel 13 dejarás de ser Newbie y viajarás a Ullathorpe.~255~200~0~0~0',
     },
@@ -139,7 +142,7 @@ def patch_csm_npc(path, mx, x, y, npc, check=False):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--dat', required=True); ap.add_argument('--maps'); ap.add_argument('--client-init')
+    ap = argparse.ArgumentParser(); ap.add_argument('--dat', required=True); ap.add_argument('--maps'); ap.add_argument('--client-init'); ap.add_argument('--config')
     ap.add_argument('--check', action='store_true'); a = ap.parse_args()
     d = lambda f: os.path.join(a.dat, f)
     log = []
@@ -147,6 +150,8 @@ def main():
     log += patch_ini(d('Motd.ini'), [(rf'^\[{s}\]', v) for s, v in MOTD.items()], check=a.check)
     log += patch_ini(d('npcs.dat'), [(rf'^\[NPC{n}\]', v) for n, v in NPCS.items()], check=a.check)
     log += patch_ini(d('Quests.DAT'), [(rf'^\[QUEST{q}\]', v) for q, v in QUESTS.items()], check=a.check)
+    if a.config:
+        log += patch_ini(a.config, [(r'^\[CONFIGURACIONES\]', RATES)], check=a.check)
     if a.maps:
         m, x, y, n = LINDOS_CARTELERA
         log += patch_csm_npc(os.path.join(a.maps, f'Mapa{m}.csm'), m, x, y, n, check=a.check)
