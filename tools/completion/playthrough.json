@@ -193,8 +193,8 @@
     {
      "id": "MOV-07",
      "step": "Use a teleport object",
-     "expected": "otTeleport tile: destination = TileExit +- random(Radio). Transport-network teleports pick the exit by GetExitTransport. TRANSFER_ONLY_DEAD tiles only move dead players. AUTORESU trigger tile revives/heals (ResucitarOCurar).",
-     "source": "GameLogic.bas:DoTileEvents",
+     "expected": "otTeleport tile: destination = TileExit +- random(Radio). Transport-network teleports pick the exit by GetExitTransport. TRANSFER_ONLY_DEAD tiles only move dead players. AUTORESU trigger tile revives/heals (ResucitarOCurar). The destination map must pass CheckMapRestrictions first (GameLogic.bas:213: MapInfo(dest).MinLevel, Newbie, NoPKs, SoloClanes...): a level-1 character stepping on a teleport to map 391 (MinLevel 20) stays put and gets MSG 1108.",
+     "source": "GameLogic.bas:DoTileEvents; GameLogic.bas:CheckMapRestrictions",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, /CI a teleport object or walk onto a map one",
      "status": "untested"
@@ -202,8 +202,8 @@
     {
      "id": "MOV-08",
      "step": "Open and close a door (left click / double click)",
-     "expected": "HandleDoorAction: needs Distance<=2 tiles to the door (else too-far message). Toggles IndexAbierta/IndexCerrada, unblocks/blocks the tile, broadcasts ObjectCreate. A door with Llave=1 refuses with MSG_PUERTA_CERRADA_LLAVE (or the switch message for duct hatches).",
-     "source": "WorldActions.bas:HandleDoorAction",
+     "expected": "HandleDoorAction: needs Distance<=2 tiles to the door (else too-far message). Toggles IndexAbierta/IndexCerrada, unblocks/blocks the tile, broadcasts ObjectCreate. A door with Llave=1 refuses with MSG_PUERTA_CERRADA_LLAVE (or the switch message for duct hatches). Doors answer LeftClick only: Protocol.bas:HandleDoubleClick reads x,y and exits (\"World interactions are handled on left click\"); HandleLeftClick -> HandleWorldAction -> TryHandleObjectWorldAction -> HandleDoorAction.",
+     "source": "WorldActions.bas:HandleDoorAction; Protocol.bas:HandleLeftClick, HandleDoubleClick",
      "mode": "auto",
      "how": "recorded: tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl; items-2/use-key-locked-door.jsonl",
      "status": "recorded"
@@ -769,8 +769,8 @@
     {
      "id": "DTH-01",
      "step": "Die to a creature on an ordinary field map",
-     "expected": "UserDie: MinHp = 0, MinSta = 0, Muerto = 1, poison/fire/paralysis/dumb flags cleared, pets handled (HandleUserPetsOnDeath), all equipment unequipped, body becomes ghost 829 (head 0), VecesQueMoriste + 1 unless in a fight-zone trigger; if potion attributes active they revert. Exp and level are NOT reduced. No exp penalty exists in the code.",
-     "source": "Modulo_UsUaRiOs.bas:UserDie (lines 1744-1860)",
+     "expected": "UserDie: MinHp = 0, MinSta = 0, Muerto = 1, poison/fire/paralysis/dumb flags cleared, pets handled (HandleUserPetsOnDeath), all equipment unequipped, body becomes ghost 829 (head 0), VecesQueMoriste + 1 unless in a fight-zone trigger; if potion attributes active they revert. Exp and level are NOT reduced. No exp penalty exists in the code. The killer: a hostile NPC with Movement=2 runs PerseguirUsuarioCercano (AI_NPC.bas), which filters targets only by level delta, invisibility and GM status (EsObjetivoValido); newbies are NOT protected from NPCs. A GM standing next to the spawn is not a valid target.",
+     "source": "Modulo_UsUaRiOs.bas:UserDie (lines 1744-1860); AI_NPC.bas:PerseguirUsuarioCercano, EsObjetivoValido",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, GM sets HP low and lets a creature kill the char",
      "status": "untested"

@@ -2,7 +2,7 @@
 import { step } from '../harness.js';
 import type { ClientPacket } from '@ao/protocol';
 import { DoorClientPacketId as D } from '@ao/protocol';
-import { walkTo, relocate, loadMap, objects, HEAD } from './util.js';
+import { walkTo, relocate, dbUpdateOwn, loadMap, objects, HEAD } from './util.js';
 import { walkable, isWater } from '../maps.js';
 
 /** nearest tile (BFS order from `from`) satisfying `ok`, reachable over walkable tiles */
@@ -37,11 +37,17 @@ step('MOV-07', async c => {
   const t = tp!, exitTo = f.exits.find(e => e.x === t.x && e.y === t.y)!, neighbours = Object.entries(HEAD).filter(([, [dx, dy]]) => walkable(f.map, t.x - dx, t.y - dy));
   if (!neighbours.length) c.blocked(`teleport object at 24:${t.x},${t.y} has no walkable neighbour`);
   const [h, [dx, dy]] = neighbours[0]!;
-  await relocate(c, 24, t.x - dx, t.y - dy);
+  // VB6 GameLogic.bas:CheckMapRestrictions refuses a non-GM below MapInfo(dest).MinLevel (MSG 1108 "Necesitas ser al menos nivel N"); 391 needs 20. Level 20 through the DB (own char), reverted at the end.
+  await dbUpdateOwn(c, `level=20, pos_map=24, pos_x=${t.x - dx}, pos_y=${t.y - dy}`);
   const p = c.player, m = p.mark(), before = [p.map, p.x, p.y];
   const r = await p.step(Number(h), 300); await p.sleep(1500);
   c.note(`stepped onto the otTeleport tile 24:${t.x},${t.y} (obj ${t.objIndex}) from ${before}; now ${p.map}:${p.x},${p.y}; saw ${p.since(m).map(x => x.name).filter(n => !/CharacterMove|CharacterChange/.test(n)).join(',')}`);
-  c.ok(p.map !== 24 || Math.abs(p.x - t.x) + Math.abs(p.y - t.y) > 3, `the teleport moved the character away (moved=${r.moved}); the tile exit says ${exitTo.map}:${exitTo.dx},${exitTo.dy}`);
+  c.ok(p.map !== 24 || Math.abs(p.x - t.x) + Math.abs(p.y - t.y) > 3, `the teleport moved the character away (moved=${r.moved}); the tile exit says ${exitTo.map}:${exitTo.dx},${exitTo.dy} +-${objs.get(t.objIndex)?.radio ?? '?'}`);
+  const rad = objs.get(t.objIndex)?.radio ?? 0;
+  c.eq(p.map, exitTo.map, 'arrived on the TileExit map');
+  c.ok(Math.abs(p.x - exitTo.dx) <= rad + 3 && Math.abs(p.y - exitTo.dy) <= rad + 3, `landed within Radio ${rad} of the exit (+3 for ClosestLegalPos)`);
+  c.fixture('teleport-object', p, m);
+  await dbUpdateOwn(c, 'level=1, is_dead=0, pos_map=751, pos_x=60, pos_y=57');
 });
 
 step('MOV-08', async c => {
@@ -55,8 +61,8 @@ step('MOV-08', async c => {
   if (!spot) c.blocked(`no walkable tile next to door ${d.objIndex} at ${d.x},${d.y}`);
   await walkTo(c, spot![0], spot![1]);
   const m = p.mark(); p.send({ id: D.LeftClick, x: d.x, y: d.y, counter: 0 } as ClientPacket); await p.sleep(1500);
-  let created = p.since(m).filter(r => r.name === 'ObjectCreate' || r.name === 'ObjectDelete' || r.name === 'BlockPosition').map(r => r.name);
-  if (!created.length) { c.note('LeftClick alone gave no door packets; trying DoubleClick'); const m3 = p.mark(); p.send({ id: D.DoubleClick, x: d.x, y: d.y, counter: 0 } as ClientPacket); await p.sleep(1500); created = p.since(m3).filter(r => r.name === 'ObjectCreate' || r.name === 'ObjectDelete' || r.name === 'BlockPosition').map(r => r.name); }
+  // Protocol.bas:HandleDoubleClick is a no-op in the pinned server ("World interactions are handled on left click"): doors answer LeftClick only.
+  const created = p.since(m).filter(r => r.name === 'ObjectCreate' || r.name === 'ObjectDelete' || r.name === 'BlockPosition').map(r => r.name);
   c.ok(created.length > 0, `LeftClick on door ${d.objIndex} at ${d.x},${d.y} answered ${created.join(',') || '(nothing)'} (Toggles open/closed: ObjectCreate + BlockPosition)`);
   const m2 = p.mark(); p.send({ id: D.LeftClick, x: d.x, y: d.y, counter: 0 } as ClientPacket); await p.sleep(1500);
   c.ok(p.since(m2).some(r => r.name === 'ObjectCreate'), 'a second click toggles it back');

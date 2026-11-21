@@ -16,7 +16,7 @@
 | Packets with a codec | 512 | 513 | 1 |
 | Screens complete (all controls) | 58 | 58 | 0 (0 partial, 0 not started, 0 covered but missing controls) |
 | Behaviour items | 0 | 19 | **19 open** (14 to do, 1 in flight, 4 blocked on data or a decision) |
-| Playthrough steps passing end to end | 23 | 169 | 146 (48 recorded at protocol level on main, 0 in flight, 148 automatable, 21 manual) |
+| Playthrough steps passing end to end | 26 | 169 | 143 (48 recorded at protocol level on main, 0 in flight, 148 automatable, 21 manual) |
 
 Scope. Packets: the 8 post-pin packets are excluded (docs/COVERAGE.md "post-pin"); "codec" is a registered `[Table.Name]` entry, and the handling check is a name search in apps/web and the bridge. Screens: covered + partial + class a; classes b (account server), c (AO20 extras) and d (dead forms) are out. Playthrough: "passing" means an end-to-end run against the real server; none exists yet (WP-D).
 
@@ -116,7 +116,7 @@ None.
 
 ## 4. End-to-end playthrough
 
-Full list with expected results and VB6 sources: [PLAYTHROUGH.md](PLAYTHROUGH.md). **169 steps, 23 passing**, 5 failing, 11 blocked, 48 recorded, 0 in flight, 148 automatable, 21 manual.
+Full list with expected results and VB6 sources: [PLAYTHROUGH.md](PLAYTHROUGH.md). **169 steps, 26 passing**, 2 failing, 11 blocked, 48 recorded, 0 in flight, 148 automatable, 21 manual.
 
 | Category | Steps | Recorded | In flight | Auto | Manual |
 |---|---|---|---|---|---|
