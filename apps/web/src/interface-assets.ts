@@ -1,5 +1,5 @@
 import { assetUrl } from './assets.js';
-import { captionedUrl, captionsFor } from './ui-captions.js';
+import { CAPTIONS, captionedUrl, captionsFor, renderCaptioned, verifyCaptions } from './ui-captions.js';
 // Original BMP files remain untouched. Some true-color BI_RGB headers declare
 // important palette colors; WebKit rejects these, although there is no palette.
 // Normalize only unused palette metadata in a browser-local copy. Pixel bytes,
@@ -88,6 +88,29 @@ async function withCaptions(name: string, original: string, url: string): Promis
     if (!captioned) return url;
     urls.set(original, captioned); return captioned;
   } catch { return url; } // the original picture, letters and all
+}
+
+// `?captiondebug`: the caption table and its check against the original bitmaps (e2e/ui-captions.spec.ts).
+if (typeof location !== 'undefined' && new URLSearchParams(location.search).has('captiondebug')) {
+  (globalThis as { __aoCaptions?: unknown }).__aoCaptions = {
+    names: Object.keys(CAPTIONS),
+    texts: (name: string) => (CAPTIONS[name] ?? []).map(spec => spec.text),
+    async check(file: string) {
+      const url = await fetchInterface(interfaceUrl(file)).catch(() => fetchInterface(interfaceUrl(file, false))).catch(() => undefined); if (!url) return undefined;
+      const image = new Image(); image.src = url; await image.decode();
+      await document.fonts.load('700 12px Cinzel');
+      return verifyCaptions(image, captionsFor(file)!);
+    },
+    /** Original and captioned copy, `scale` times larger, as data URLs (the review sheet). */
+    async preview(file: string, scale = 3) {
+      const url = await fetchInterface(interfaceUrl(file)).catch(() => fetchInterface(interfaceUrl(file, false))).catch(() => undefined); if (!url) return undefined;
+      const image = new Image(); image.src = url; await image.decode();
+      await document.fonts.load('700 12px Cinzel');
+      const before = document.createElement('canvas'); before.width = image.naturalWidth * scale; before.height = image.naturalHeight * scale;
+      const g = before.getContext('2d')!; g.imageSmoothingEnabled = false; g.drawImage(image, 0, 0, before.width, before.height);
+      return { before: before.toDataURL(), after: renderCaptioned(image, captionsFor(file)!, scale).toDataURL() };
+    },
+  };
 }
 
 if (typeof window !== 'undefined') window.addEventListener('pagehide', () => {
