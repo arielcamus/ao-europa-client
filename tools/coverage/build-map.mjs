@@ -201,7 +201,7 @@ export function computeCoverage({ refs = discoverRefs() } = {}) {
     let status = 'not started', covered = false, partial = false;
     if (full.length) { covered = true; status = pickMain(full) ? 'merged' : `on ${refsOf(full).join(', ')}`; }
     else if (part.length) { partial = true; status = (pickMain(part) ? 'merged (partial)' : `on ${refsOf(part).join(', ')} (partial)`); if (pickMain(part) && refsOf(part).length) status += ` + ${refsOf(part).join(', ')}`; }
-    return { name: f.name, purpose: f.purpose, group: f.group, package: GROUP_PACKAGE[f.group], lines: Number(lineCounts[f.name] || 0), status, covered, partial, evidence: evs };
+    return { name: f.name, purpose: f.purpose, group: f.group, package: GROUP_PACKAGE[f.group], lines: Number(lineCounts[f.name] || 0), status, covered, partial, evidence: evs, missing: f.missing || null, partialNote: (evs.find((e) => e.partial && e.note) || {}).note || null };
   });
 
   // groups
@@ -258,9 +258,24 @@ export function renderMarkdown(c) {
   L.push('', `Ids only: ${c.duplicates.map((d) => d.id).join(', ')}.`, '');
   if (c.problems.length) { L.push('## Problems found by the scan', ''); for (const p of c.problems) L.push(`- ${p}`); L.push(''); }
   L.push('## (b) VB6 forms', '');
-  L.push('| Form | Purpose | Group | Status | Package |', '|---|---|---|---|---|');
+  L.push('Status is evidence-based: `covered` means every file listed in `tools/coverage/forms.json` for the form exists on the scanned ref; `partial` says what is missing; `not started` carries a class (a player-facing, b account server / not in PYMMO=0, c AO20 premium or online extra, d never opened by the classic client).', '');
+  L.push('| Form | Purpose | Group | Status | Implementation / what is missing |', '|---|---|---|---|---|');
   const order = new Map(GROUPS.map(([id], i) => [id, i]));
-  for (const f of [...c.forms].sort((a, b) => order.get(a.group) - order.get(b.group) || a.name.localeCompare(b.name))) L.push(`| ${f.name} | ${f.purpose} | ${f.group} | ${f.status} | ${f.package} |`);
+  const sortedForms = [...c.forms].sort((a, b) => order.get(a.group) - order.get(b.group) || a.name.localeCompare(b.name));
+  for (const f of sortedForms) {
+    const files = [...new Set(f.evidence.filter((e) => e.ok).map((e) => e.path.replace('apps/web/', '')))].join(', ');
+    const note = f.missing ? `(${f.missing.class}) ${f.missing.note}` : f.partial && f.partialNote ? `${files}: ${f.partialNote}` : files;
+    L.push(`| ${f.name} | ${f.purpose} | ${f.group} | ${f.status} | ${note} |`);
+  }
+  const missing = sortedForms.filter((f) => f.missing);
+  const classes = [['a', 'Player-facing and worth building'], ['b', 'Needs a login/account server, not used with PYMMO=0'], ['c', 'AO20 premium / online extras (shop, marketplace, battlegrounds, transfer)'], ['d', 'Never opened by the classic client code (dead forms, nothing to build)']];
+  const partials = sortedForms.filter((f) => f.partial && !f.covered);
+  L.push('', '### Genuinely missing screens', '', `${missing.length + partials.filter((f) => f.name !== 'frmMain').length} forms have no complete screen yet.`, '');
+  for (const [k, title] of classes) {
+    const fs = missing.filter((f) => f.missing.class === k);
+    L.push(`**(${k}) ${title}** (${fs.length})`, '', ...fs.map((f) => `- ${f.name}: ${f.missing.note}`), '');
+  }
+  L.push(`**Partial** (${partials.length})`, '', ...partials.map((f) => `- ${f.name}: ${f.partialNote}`), '');
   L.push('', '## (a) VB6 packets', '');
   for (const [dir, title] of [['s2c', 'Server to client'], ['c2s', 'Client to server']]) {
     L.push(`### ${title}`, '', '| Id | Name | VB6 handler | Group | Status | Codec file(s) | Fixture |', '|---|---|---|---|---|---|---|');

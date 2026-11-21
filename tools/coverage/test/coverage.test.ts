@@ -67,4 +67,17 @@ describe('feature coverage map', () => {
   it('lists a duplicate only when two or more branches carry the codec', () => {
     for (const d of cov.duplicates as { branches: string[] }[]) expect(d.branches.length).toBeGreaterThan(1);
   });
+
+  it('every form marked covered or partial points to files that exist, and every other form says why it is missing', () => {
+    interface Form { name: string; covered: boolean; partial: boolean; evidence: { path: string; ok: boolean }[]; missing: { class: string; note: string } | null }
+    for (const f of cov.forms as Form[]) {
+      if (f.covered || f.partial) {
+        expect(f.evidence.length, `${f.name} has no evidence`).toBeGreaterThan(0);
+        for (const e of f.evidence) expect(existsSync(join(ROOT, e.path)), `${f.name} -> ${e.path} does not exist`).toBe(true);
+      } else {
+        expect(f.missing, `${f.name} is neither covered nor classified as missing`).not.toBeNull();
+        expect(['a', 'b', 'c', 'd']).toContain(f.missing!.class);
+      }
+    }
+  });
 });

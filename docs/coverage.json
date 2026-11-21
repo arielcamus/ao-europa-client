@@ -16,13 +16,13 @@
   "s2cCovered": 191,
   "c2sCovered": 275,
   "forms": 86,
-  "formsCovered": 4,
-  "formsPartial": 5,
+  "formsCovered": 47,
+  "formsPartial": 4,
   "fixturePackets": 239,
   "packetsPct": 89.1,
   "packetsMergedPct": 89.1,
-  "formsPct": 4.7,
-  "formsStartedPct": 10.5
+  "formsPct": 54.7,
+  "formsStartedPct": 59.3
  },
  "groups": [
   {
@@ -33,9 +33,9 @@
    "packetsMerged": 68,
    "packetsPct": 100,
    "forms": 21,
-   "formsCovered": 0,
-   "formsPartial": 2,
-   "formsPct": 0
+   "formsCovered": 10,
+   "formsPartial": 1,
+   "formsPct": 47.6
   },
   {
    "id": "chat",
@@ -81,9 +81,9 @@
    "packetsMerged": 27,
    "packetsPct": 100,
    "forms": 4,
-   "formsCovered": 2,
+   "formsCovered": 4,
    "formsPartial": 0,
-   "formsPct": 50
+   "formsPct": 100
   },
   {
    "id": "npcs",
@@ -93,9 +93,9 @@
    "packetsMerged": 7,
    "packetsPct": 100,
    "forms": 2,
-   "formsCovered": 0,
+   "formsCovered": 2,
    "formsPartial": 0,
-   "formsPct": 0
+   "formsPct": 100
   },
   {
    "id": "bank",
@@ -105,9 +105,9 @@
    "packetsMerged": 16,
    "packetsPct": 100,
    "forms": 3,
-   "formsCovered": 0,
+   "formsCovered": 2,
    "formsPartial": 0,
-   "formsPct": 0
+   "formsPct": 66.7
   },
   {
    "id": "trade",
@@ -117,9 +117,9 @@
    "packetsMerged": 8,
    "packetsPct": 100,
    "forms": 2,
-   "formsCovered": 0,
+   "formsCovered": 2,
    "formsPartial": 0,
-   "formsPct": 0
+   "formsPct": 100
   },
   {
    "id": "party",
@@ -129,9 +129,9 @@
    "packetsMerged": 9,
    "packetsPct": 100,
    "forms": 2,
-   "formsCovered": 0,
+   "formsCovered": 2,
    "formsPartial": 0,
-   "formsPct": 0
+   "formsPct": 100
   },
   {
    "id": "guild",
@@ -141,9 +141,9 @@
    "packetsMerged": 41,
    "packetsPct": 100,
    "forms": 11,
-   "formsCovered": 0,
+   "formsCovered": 11,
    "formsPartial": 0,
-   "formsPct": 0
+   "formsPct": 100
   },
   {
    "id": "quests",
@@ -153,9 +153,9 @@
    "packetsMerged": 10,
    "packetsPct": 100,
    "forms": 2,
-   "formsCovered": 0,
+   "formsCovered": 2,
    "formsPartial": 0,
-   "formsPct": 0
+   "formsPct": 100
   },
   {
    "id": "skills",
@@ -165,9 +165,9 @@
    "packetsMerged": 19,
    "packetsPct": 100,
    "forms": 3,
-   "formsCovered": 0,
+   "formsCovered": 2,
    "formsPartial": 0,
-   "formsPct": 0
+   "formsPct": 66.7
   },
   {
    "id": "crafting",
@@ -201,9 +201,9 @@
    "packetsMerged": 1,
    "packetsPct": 50,
    "forms": 4,
-   "formsCovered": 0,
+   "formsCovered": 3,
    "formsPartial": 0,
-   "formsPct": 0
+   "formsPct": 75
   },
   {
    "id": "minimap",
@@ -237,9 +237,9 @@
    "packetsMerged": 142,
    "packetsPct": 100,
    "forms": 13,
-   "formsCovered": 0,
+   "formsCovered": 5,
    "formsPartial": 0,
-   "formsPct": 0
+   "formsPct": 38.5
   }
  ],
  "packets": [
@@ -13070,45 +13070,68 @@
      "ref": "main",
      "path": "apps/web/src/classic-layout.ts",
      "partial": true,
-     "note": "Layout shell on main; chat console on feat/chat, inventory on feat/items, spell list on feat/spells",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/chat-box.ts",
      "partial": true,
-     "note": "chat console and input",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/items-ui.ts",
      "partial": true,
-     "note": "inventory panel, equipment labels",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/spells.ts",
      "partial": true,
-     "note": "spell list and casting",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/look-at.ts",
      "partial": true,
-     "note": "click to look at tile",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/map-objects.ts",
      "partial": true,
-     "note": "doors and roofs in viewport",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
+     "ok": true
+    },
+    {
+     "ref": "main",
+     "path": "apps/web/src/hotkeys-ui.ts",
+     "partial": true,
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
+     "ok": true
+    },
+    {
+     "ref": "main",
+     "path": "apps/web/src/inventory-extras.ts",
+     "partial": true,
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
+     "ok": true
+    },
+    {
+     "ref": "main",
+     "path": "apps/web/src/minimap.ts",
+     "partial": true,
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
      "ok": true
     }
-   ]
+   ],
+   "missing": null,
+   "partialNote": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not"
   },
   {
    "name": "frmConnect",
@@ -13116,18 +13139,18 @@
    "group": "core",
    "package": "wp01",
    "lines": 1078,
-   "status": "merged (partial)",
-   "covered": false,
-   "partial": true,
+   "status": "merged",
+   "covered": true,
+   "partial": false,
    "evidence": [
     {
      "ref": "main",
-     "path": "apps/web/index.html",
-     "partial": true,
-     "note": "Single login form; no account creation or character list screen",
+     "path": "apps/web/src/connect-ui.ts",
      "ok": true
     }
-   ]
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "FrmCuenta",
@@ -13135,10 +13158,18 @@
    "group": "core",
    "package": "wp01",
    "lines": 71,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/connect-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmOldPersonaje",
@@ -13149,7 +13180,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "b",
+    "note": "Character picking with a password keypad; the PYMMO=0 server uses the account screen (FrmCuenta) instead"
+   },
+   "partialNote": null
   },
   {
    "name": "frmCrearCuenta",
@@ -13157,10 +13193,18 @@
    "group": "core",
    "package": "wp01",
    "lines": 498,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/session-windows.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmNewAccount",
@@ -13168,10 +13212,18 @@
    "group": "core",
    "package": "wp01",
    "lines": 343,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/session-windows.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmCrearPersonaje",
@@ -13179,10 +13231,18 @@
    "group": "core",
    "package": "wp01",
    "lines": 917,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/connect-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmDeleteChar",
@@ -13193,7 +13253,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "b",
+    "note": "DeleteCharacter needs the account server; PYMMO=0 does nothing, the client says so (connect-text.ts deleteUnsupported)"
+   },
+   "partialNote": null
   },
   {
    "name": "frmPasswd",
@@ -13204,7 +13269,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "b",
+    "note": "Change password: account server"
+   },
+   "partialNote": null
   },
   {
    "name": "frmNewPassword",
@@ -13215,7 +13285,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "b",
+    "note": "Set new password: account server"
+   },
+   "partialNote": null
   },
   {
    "name": "FrmRecuperar",
@@ -13226,7 +13301,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "b",
+    "note": "Recover account: account server"
+   },
+   "partialNote": null
   },
   {
    "name": "frmPasswordReset",
@@ -13237,7 +13317,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "b",
+    "note": "Password reset code: account server"
+   },
+   "partialNote": null
   },
   {
    "name": "Frmcarga",
@@ -13245,10 +13330,18 @@
    "group": "core",
    "package": "wp01",
    "lines": 46,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/session-windows.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmCargando",
@@ -13259,7 +13352,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "d",
+    "note": "Never opened by the classic client code (dead form)"
+   },
+   "partialNote": null
   },
   {
    "name": "frmConnecting",
@@ -13267,10 +13365,18 @@
    "group": "core",
    "package": "wp01",
    "lines": 77,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/session-windows.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmPres",
@@ -13281,7 +13387,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "d",
+    "note": "Never opened by the classic client code (splash, dead form)"
+   },
+   "partialNote": null
   },
   {
    "name": "frmCerrar",
@@ -13289,10 +13400,18 @@
    "group": "core",
    "package": "wp01",
    "lines": 107,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/session-windows.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmMensaje",
@@ -13300,10 +13419,18 @@
    "group": "core",
    "package": "wp01",
    "lines": 379,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/session-windows.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "FrmPregunta",
@@ -13311,10 +13438,18 @@
    "group": "party",
    "package": "wp07",
    "lines": 67,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/trade-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmtip",
@@ -13325,7 +13460,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "d",
+    "note": "Never opened by the classic client code (dead form)"
+   },
+   "partialNote": null
   },
   {
    "name": "FrmLogear",
@@ -13333,10 +13473,18 @@
    "group": "core",
    "package": "wp01",
    "lines": 372,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/main.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmKeypad",
@@ -13347,7 +13495,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "b",
+    "note": "On-screen password keypad, only opened from frmOldPersonaje"
+   },
+   "partialNote": null
   },
   {
    "name": "frmMensajePapiro",
@@ -13355,10 +13508,18 @@
    "group": "items",
    "package": "wp04",
    "lines": 298,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/papiro-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmCantidad",
@@ -13373,11 +13534,11 @@
     {
      "ref": "main",
      "path": "apps/web/src/items-ui.ts",
-     "partial": false,
-     "note": "",
      "ok": true
     }
-   ]
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmComerciar",
@@ -13392,11 +13553,11 @@
     {
      "ref": "main",
      "path": "apps/web/src/items-ui.ts",
-     "partial": false,
-     "note": "",
      "ok": true
     }
-   ]
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "FrmKeyInv",
@@ -13404,10 +13565,18 @@
    "group": "items",
    "package": "wp04",
    "lines": 226,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/keyring-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmSkins",
@@ -13418,7 +13587,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "c",
+    "note": "AO20 item skins window (ChangeSkinSlot)"
+   },
+   "partialNote": null
   },
   {
    "name": "frmBancoObj",
@@ -13426,10 +13600,18 @@
    "group": "bank",
    "package": "wp06",
    "lines": 483,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/bank-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmGoliath",
@@ -13437,10 +13619,18 @@
    "group": "bank",
    "package": "wp06",
    "lines": 472,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/bank-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmBancoCuenta",
@@ -13451,7 +13641,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "b",
+    "note": "Account-wide vault; its only opener is a hidden label on frmMain and needs the account server"
+   },
+   "partialNote": null
   },
   {
    "name": "frmComerciarUsu",
@@ -13459,10 +13654,18 @@
    "group": "trade",
    "package": "wp06",
    "lines": 656,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/trade-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmUserRequest",
@@ -13470,10 +13673,18 @@
    "group": "trade",
    "package": "wp06",
    "lines": 132,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/trade-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "FrmGrupo",
@@ -13481,10 +13692,18 @@
    "group": "party",
    "package": "wp07",
    "lines": 198,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/party-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmGuildAdm",
@@ -13492,10 +13711,18 @@
    "group": "guild",
    "package": "wp07",
    "lines": 229,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/guild-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmGuildBrief",
@@ -13503,10 +13730,18 @@
    "group": "guild",
    "package": "wp07",
    "lines": 275,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/guild-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmGuildDetails",
@@ -13514,10 +13749,18 @@
    "group": "guild",
    "package": "wp07",
    "lines": 270,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/guild-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmGuildFoundation",
@@ -13525,10 +13768,18 @@
    "group": "guild",
    "package": "wp07",
    "lines": 191,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/guild-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmGuildLeader",
@@ -13536,10 +13787,18 @@
    "group": "guild",
    "package": "wp07",
    "lines": 454,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/guild-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmGuildNews",
@@ -13547,10 +13806,18 @@
    "group": "guild",
    "package": "wp07",
    "lines": 329,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/guild-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmGuildURL",
@@ -13558,10 +13825,18 @@
    "group": "guild",
    "package": "wp07",
    "lines": 101,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/guild-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmCommet",
@@ -13569,10 +13844,18 @@
    "group": "guild",
    "package": "wp07",
    "lines": 167,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/guild-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmPeaceProp",
@@ -13580,10 +13863,18 @@
    "group": "guild",
    "package": "wp07",
    "lines": 252,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/guild-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmSolicitud",
@@ -13591,10 +13882,18 @@
    "group": "guild",
    "package": "wp07",
    "lines": 175,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/guild-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmCharInfo",
@@ -13602,10 +13901,18 @@
    "group": "guild",
    "package": "wp07",
    "lines": 361,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/guild-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmEligeAlineacion",
@@ -13616,7 +13923,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "d",
+    "note": "Never opened by the classic client code (dead form)"
+   },
+   "partialNote": null
   },
   {
    "name": "FrmQuest",
@@ -13624,10 +13936,18 @@
    "group": "quests",
    "package": "wp08",
    "lines": 537,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/quest-window.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmQuestInfo",
@@ -13635,10 +13955,18 @@
    "group": "quests",
    "package": "wp08",
    "lines": 703,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/quest-window.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmSkills3",
@@ -13649,7 +13977,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "d",
+    "note": "Never opened by the classic client code; the skill help texts it held live in the skill window (game-text.ts)"
+   },
+   "partialNote": null
   },
   {
    "name": "FrmEstadisticas",
@@ -13657,10 +13990,18 @@
    "group": "skills",
    "package": "wp09",
    "lines": 1309,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/skills-window.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmStatistics",
@@ -13668,10 +14009,18 @@
    "group": "skills",
    "package": "wp09",
    "lines": 572,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/skills-window.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmEntrenador",
@@ -13679,10 +14028,18 @@
    "group": "npcs",
    "package": "wp05",
    "lines": 170,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/skills-window.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "FrmViajes",
@@ -13690,10 +14047,18 @@
    "group": "npcs",
    "package": "wp05",
    "lines": 150,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/travel-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmHerrero",
@@ -13710,7 +14075,9 @@
      "path": "apps/web/src/crafting-ui.ts",
      "ok": true
     }
-   ]
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmCarp",
@@ -13727,7 +14094,9 @@
      "path": "apps/web/src/crafting-ui.ts",
      "ok": true
     }
-   ]
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmAlqui",
@@ -13743,10 +14112,12 @@
      "ref": "main",
      "path": "apps/web/src/crafting.ts",
      "partial": true,
-     "note": "state and sends only, no window yet",
+     "note": "crafting state and packets only; no alchemy window yet",
      "ok": true
     }
-   ]
+   ],
+   "missing": null,
+   "partialNote": "crafting state and packets only; no alchemy window yet"
   },
   {
    "name": "FrmSastre",
@@ -13762,10 +14133,12 @@
      "ref": "main",
      "path": "apps/web/src/crafting.ts",
      "partial": true,
-     "note": "state and sends only, no window yet",
+     "note": "crafting state and packets only; no tailor window yet",
      "ok": true
     }
-   ]
+   ],
+   "missing": null,
+   "partialNote": "crafting state and packets only; no tailor window yet"
   },
   {
    "name": "frmCrafteo",
@@ -13781,10 +14154,12 @@
      "ref": "main",
      "path": "apps/web/src/crafting.ts",
      "partial": true,
-     "note": "state and sends only, no window yet",
+     "note": "crafting state and packets only; no catalyst crafting window yet",
      "ok": true
     }
-   ]
+   ],
+   "missing": null,
+   "partialNote": "crafting state and packets only; no catalyst crafting window yet"
   },
   {
    "name": "frmOpciones",
@@ -13792,10 +14167,18 @@
    "group": "options",
    "package": "wp11",
    "lines": 1730,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/options-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmMasOpciones",
@@ -13806,7 +14189,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "b",
+    "note": "Only opened from the account recovery and account creation forms"
+   },
+   "partialNote": null
   },
   {
    "name": "frmCustomKeys",
@@ -13814,10 +14202,18 @@
    "group": "options",
    "package": "wp11",
    "lines": 1597,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/keys-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmBindKey",
@@ -13825,10 +14221,18 @@
    "group": "options",
    "package": "wp11",
    "lines": 185,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/keys-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmMapaGrande",
@@ -13839,7 +14243,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "a",
+    "note": "Large world map (ShowFrmMapa): world agent"
+   },
+   "partialNote": null
   },
   {
    "name": "frmCollectibleCard",
@@ -13850,7 +14259,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "c",
+    "note": "AO20 collectible card viewer, local to the AO20 client"
+   },
+   "partialNote": null
   },
   {
    "name": "frmCreateBattleground",
@@ -13861,7 +14275,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "c",
+    "note": "AO20 battleground creation (LobbyCommand)"
+   },
+   "partialNote": null
   },
   {
    "name": "frmLobbyBattleground",
@@ -13872,7 +14291,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "c",
+    "note": "AO20 battleground lobby (ReportLobbyList, LobbyCommand)"
+   },
+   "partialNote": null
   },
   {
    "name": "frmRetos",
@@ -13883,7 +14307,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "a",
+    "note": "Duels (Duel / AcceptDuel / CancelDuel / QuitDuel packets)"
+   },
+   "partialNote": null
   },
   {
    "name": "frmShop",
@@ -13894,7 +14323,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "d",
+    "note": "Dead form: the premium shop the server opens is frmShopAO20, which is not in the classic source"
+   },
+   "partialNote": null
   },
   {
    "name": "frmShopPjsAO20",
@@ -13905,7 +14339,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "c",
+    "note": "AO20 character marketplace (ShopPjsInit, PublicarPersonajeMAO)"
+   },
+   "partialNote": null
   },
   {
    "name": "frmTransferChar",
@@ -13916,7 +14355,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "b",
+    "note": "Character transfer between accounts: account server"
+   },
+   "partialNote": null
   },
   {
    "name": "frmTransferChar2FA",
@@ -13927,7 +14371,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "b",
+    "note": "Character transfer two-factor step: account server"
+   },
+   "partialNote": null
   },
   {
    "name": "frmPatchNotes",
@@ -13938,7 +14387,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "b",
+    "note": "Patch notes sent by the login server at login"
+   },
+   "partialNote": null
   },
   {
    "name": "frmNoticia",
@@ -13949,7 +14403,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "d",
+    "note": "Never opened by the classic client code (dead form)"
+   },
+   "partialNote": null
   },
   {
    "name": "frmForo",
@@ -13960,7 +14419,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "d",
+    "note": "Never opened by the classic client code (dead form)"
+   },
+   "partialNote": null
   },
   {
    "name": "FrmTorneo",
@@ -13971,7 +14435,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "a",
+    "note": "GM tournament organiser (CrearTorneo, ComenzarTorneo, CancelarTorneo), GM only"
+   },
+   "partialNote": null
   },
   {
    "name": "frmCambiaMotd",
@@ -13979,10 +14448,18 @@
    "group": "gm",
    "package": "wp12",
    "lines": 277,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/gm-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmDebug",
@@ -13993,7 +14470,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "d",
+    "note": "Developer debug window, opened only from a hidden frmConnect control"
+   },
+   "partialNote": null
   },
   {
    "name": "FrmGmAyuda",
@@ -14001,10 +14483,18 @@
    "group": "gm",
    "package": "wp12",
    "lines": 379,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/gm-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmMessageTxt",
@@ -14015,7 +14505,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "d",
+    "note": "Never opened by the classic client code (dead form)"
+   },
+   "partialNote": null
   },
   {
    "name": "frmMSG",
@@ -14026,7 +14521,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "d",
+    "note": "Never opened by the classic client code (dead form)"
+   },
+   "partialNote": null
   },
   {
    "name": "FrmObjetos",
@@ -14034,10 +14534,18 @@
    "group": "gm",
    "package": "wp12",
    "lines": 357,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/gm-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmPanelGm",
@@ -14045,10 +14553,18 @@
    "group": "gm",
    "package": "wp12",
    "lines": 3552,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/gm-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "frmProcesses",
@@ -14059,7 +14575,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "d",
+    "note": "Never opened by the classic client code (anti-cheat leftover)"
+   },
+   "partialNote": null
   },
   {
    "name": "frmSpawnList",
@@ -14067,10 +14588,18 @@
    "group": "gm",
    "package": "wp12",
    "lines": 196,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": []
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/gm-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
+   "partialNote": null
   },
   {
    "name": "MenuGM",
@@ -14081,7 +14610,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "a",
+    "note": "Right-click GM menu (ban, jail, summon...), GM only"
+   },
+   "partialNote": null
   },
   {
    "name": "MenuNPC",
@@ -14092,7 +14626,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "a",
+    "note": "Right-click pet menu: release, release all, follow"
+   },
+   "partialNote": null
   },
   {
    "name": "MenuUser",
@@ -14103,7 +14642,12 @@
    "status": "not started",
    "covered": false,
    "partial": false,
-   "evidence": []
+   "evidence": [],
+   "missing": {
+    "class": "a",
+    "note": "Right-click player menu: report, challenge, whisper, invite to party, trade"
+   },
+   "partialNote": null
   }
  ],
  "duplicates": [],
@@ -14117,25 +14661,15 @@
    "packetNames": [],
    "forms": [
     "frmMain",
-    "frmConnect",
-    "FrmCuenta",
     "frmOldPersonaje",
-    "frmCrearCuenta",
-    "frmNewAccount",
-    "frmCrearPersonaje",
     "frmDeleteChar",
     "frmPasswd",
     "frmNewPassword",
     "FrmRecuperar",
     "frmPasswordReset",
-    "Frmcarga",
     "frmCargando",
-    "frmConnecting",
     "frmPres",
-    "frmCerrar",
-    "frmMensaje",
     "frmtip",
-    "FrmLogear",
     "frmKeypad"
    ]
   },
@@ -14169,10 +14703,7 @@
    "scope": "Inventory moves, key ring, gamble, gold actions, amount prompts, skins",
    "packetIds": [],
    "packetNames": [],
-   "forms": [
-    "frmMensajePapiro",
-    "FrmKeyInv"
-   ]
+   "forms": []
   },
   {
    "id": "wp05",
@@ -14180,10 +14711,7 @@
    "scope": "Pet commands, trainer list, NPC symbols, travel form, NPC context menus",
    "packetIds": [],
    "packetNames": [],
-   "forms": [
-    "frmEntrenador",
-    "FrmViajes"
-   ]
+   "forms": []
   },
   {
    "id": "wp06",
@@ -14192,11 +14720,7 @@
    "packetIds": [],
    "packetNames": [],
    "forms": [
-    "frmBancoObj",
-    "frmGoliath",
-    "frmBancoCuenta",
-    "frmComerciarUsu",
-    "frmUserRequest"
+    "frmBancoCuenta"
    ]
   },
   {
@@ -14205,21 +14729,7 @@
    "scope": "Group frame/invites, every guild form, proposals, news, elections",
    "packetIds": [],
    "packetNames": [],
-   "forms": [
-    "FrmPregunta",
-    "FrmGrupo",
-    "frmGuildAdm",
-    "frmGuildBrief",
-    "frmGuildDetails",
-    "frmGuildFoundation",
-    "frmGuildLeader",
-    "frmGuildNews",
-    "frmGuildURL",
-    "frmCommet",
-    "frmPeaceProp",
-    "frmSolicitud",
-    "frmCharInfo"
-   ]
+   "forms": []
   },
   {
    "id": "wp08",
@@ -14227,10 +14737,7 @@
    "scope": "Quest list/details/abandon, NPC quest markers",
    "packetIds": [],
    "packetNames": [],
-   "forms": [
-    "FrmQuest",
-    "frmQuestInfo"
-   ]
+   "forms": []
   },
   {
    "id": "wp09",
@@ -14239,9 +14746,7 @@
    "packetIds": [],
    "packetNames": [],
    "forms": [
-    "frmSkills3",
-    "FrmEstadisticas",
-    "frmStatistics"
+    "frmSkills3"
    ]
   },
   {
@@ -14377,10 +14882,7 @@
    "forms": [
     "frmSkins",
     "frmEligeAlineacion",
-    "frmOpciones",
     "frmMasOpciones",
-    "frmCustomKeys",
-    "frmBindKey",
     "frmCollectibleCard",
     "frmCreateBattleground",
     "frmLobbyBattleground",
@@ -14402,15 +14904,10 @@
    "packetNames": [],
    "forms": [
     "FrmTorneo",
-    "frmCambiaMotd",
     "frmDebug",
-    "FrmGmAyuda",
     "frmMessageTxt",
     "frmMSG",
-    "FrmObjetos",
-    "frmPanelGm",
     "frmProcesses",
-    "frmSpawnList",
     "MenuGM",
     "MenuNPC",
     "MenuUser"

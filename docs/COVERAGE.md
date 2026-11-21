@@ -12,30 +12,30 @@ Scanned refs: `main`
 
 - **Packets covered (merged + open branches): 466 of 523 = 89.1%.** Merged on main only: 466 = 89.1%.
   - Server to client: 191 of 207. Client to server: 275 of 316. Packets with a recorded VB6 fixture: 239.
-- **Forms covered: 4 of 86 = 4.7%** (5 more partially, 10.5% started).
+- **Forms covered: 47 of 86 = 54.7%** (4 more partially, 59.3% started).
 
 ## (c) Feature groups, ordered by player value
 
 | # | Group | Packets covered | % | Merged | Forms covered | % | Partial forms |
 |---|---|---|---|---|---|---|---|
-| 1 | Core movement / world / session | 68/68 | 100% | 68 | 0/21 | 0% | 2 |
+| 1 | Core movement / world / session | 68/68 | 100% | 68 | 10/21 | 47.6% | 1 |
 | 2 | Chat | 28/28 | 100% | 28 | 0/0 | n/a | 0 |
 | 3 | Combat | 41/41 | 100% | 41 | 0/0 | n/a | 0 |
 | 4 | Spells | 8/8 | 100% | 8 | 0/0 | n/a | 0 |
-| 5 | Items / commerce (NPC shop, inventory) | 27/27 | 100% | 27 | 2/4 | 50% | 0 |
-| 6 | NPCs | 7/7 | 100% | 7 | 0/2 | 0% | 0 |
-| 7 | Bank | 16/16 | 100% | 16 | 0/3 | 0% | 0 |
-| 8 | Trade (player to player) | 8/8 | 100% | 8 | 0/2 | 0% | 0 |
-| 9 | Party | 9/9 | 100% | 9 | 0/2 | 0% | 0 |
-| 10 | Guild / clan | 41/41 | 100% | 41 | 0/11 | 0% | 0 |
-| 11 | Quests | 10/10 | 100% | 10 | 0/2 | 0% | 0 |
-| 12 | Skills / training / stats | 19/19 | 100% | 19 | 0/3 | 0% | 0 |
+| 5 | Items / commerce (NPC shop, inventory) | 27/27 | 100% | 27 | 4/4 | 100% | 0 |
+| 6 | NPCs | 7/7 | 100% | 7 | 2/2 | 100% | 0 |
+| 7 | Bank | 16/16 | 100% | 16 | 2/3 | 66.7% | 0 |
+| 8 | Trade (player to player) | 8/8 | 100% | 8 | 2/2 | 100% | 0 |
+| 9 | Party | 9/9 | 100% | 9 | 2/2 | 100% | 0 |
+| 10 | Guild / clan | 41/41 | 100% | 41 | 11/11 | 100% | 0 |
+| 11 | Quests | 10/10 | 100% | 10 | 2/2 | 100% | 0 |
+| 12 | Skills / training / stats | 19/19 | 100% | 19 | 2/3 | 66.7% | 0 |
 | 13 | Crafting (smith / carpenter / alchemy / tailor) | 25/25 | 100% | 25 | 2/5 | 40% | 3 |
 | 14 | Fishing / mining / lumber (work skills) | 10/10 | 100% | 10 | 0/0 | n/a | 0 |
-| 15 | Options / keybinds | 1/2 | 50% | 1 | 0/4 | 0% | 0 |
+| 15 | Options / keybinds | 1/2 | 50% | 1 | 3/4 | 75% | 0 |
 | 16 | Minimap / world map | 0/2 | 0% | 0 | 0/1 | 0% | 0 |
 | 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 6/60 | 10% | 6 | 0/13 | 0% | 0 |
-| 18 | GM / admin (lowest) | 142/142 | 100% | 142 | 0/13 | 0% | 0 |
+| 18 | GM / admin (lowest) | 142/142 | 100% | 142 | 5/13 | 38.5% | 0 |
 
 ## DUPLICATES
 
@@ -48,94 +48,155 @@ Ids only: .
 
 ## (b) VB6 forms
 
-| Form | Purpose | Group | Status | Package |
+Status is evidence-based: `covered` means every file listed in `tools/coverage/forms.json` for the form exists on the scanned ref; `partial` says what is missing; `not started` carries a class (a player-facing, b account server / not in PYMMO=0, c AO20 premium or online extra, d never opened by the classic client).
+
+| Form | Purpose | Group | Status | Implementation / what is missing |
 |---|---|---|---|---|
-| Frmcarga | Loading splash | core | not started | wp01 |
-| frmCargando | Loading screen with progress | core | not started | wp01 |
-| frmCerrar | Exit confirmation | core | not started | wp01 |
-| frmConnect | Login screen (account email and password, character list entry) | core | merged (partial) | wp01 |
-| frmConnecting | Connecting status | core | not started | wp01 |
-| frmCrearCuenta | Create account | core | not started | wp01 |
-| frmCrearPersonaje | Create character (race, class, gender, head, city) | core | not started | wp01 |
-| FrmCuenta | Account home / character selection | core | not started | wp01 |
-| frmDeleteChar | Delete character confirmation | core | not started | wp01 |
-| frmKeypad | On-screen keypad for character password | core | not started | wp01 |
-| FrmLogear | Server/port connection dialog | core | not started | wp01 |
-| frmMain | Main game window: viewport, HUD bars, inventory/spell panels, chat console and input | core | merged (partial) | wp01 |
-| frmMensaje | Generic message box | core | not started | wp01 |
-| frmNewAccount | New account details | core | not started | wp01 |
-| frmNewPassword | Set new password | core | not started | wp01 |
-| frmOldPersonaje | Pick an existing character to log in with | core | not started | wp01 |
-| frmPasswd | Change password | core | not started | wp01 |
-| frmPasswordReset | Password reset code request | core | not started | wp01 |
-| frmPres | Presentation splash | core | not started | wp01 |
-| FrmRecuperar | Recover account | core | not started | wp01 |
-| frmtip | Tip of the day | core | not started | wp01 |
-| frmCantidad | Amount prompt (drop, deposit, gold, sell) | items | merged | wp04 |
-| frmComerciar | NPC shop window (buy/sell) | items | merged | wp04 |
-| FrmKeyInv | Key ring inventory | items | not started | wp04 |
-| frmMensajePapiro | Parchment / papyrus message viewer | items | not started | wp04 |
-| frmEntrenador | Trainer: choose creature | npcs | not started | wp05 |
-| FrmViajes | Travel destinations via NPC | npcs | not started | wp05 |
-| frmBancoCuenta | Account-wide vault | bank | not started | wp06 |
-| frmBancoObj | Bank vault (items and gold) | bank | not started | wp06 |
-| frmGoliath | Bank gold deposit/withdraw (Goliath) | bank | not started | wp06 |
-| frmComerciarUsu | Player-to-player trade window | trade | not started | wp06 |
-| frmUserRequest | Incoming request prompt (trade and similar) | trade | not started | wp06 |
-| FrmGrupo | Party window | party | not started | wp07 |
-| FrmPregunta | Generic yes/no question prompt (group invites, confirmations) | party | not started | wp07 |
-| frmCharInfo | Character info / guild applicant info | guild | not started | wp07 |
-| frmCommet | Peace / alliance offer text | guild | not started | wp07 |
-| frmGuildAdm | Registered guilds list | guild | not started | wp07 |
-| frmGuildBrief | Guild brief / details of another guild | guild | not started | wp07 |
-| frmGuildDetails | Guild founding details | guild | not started | wp07 |
-| frmGuildFoundation | Found a guild | guild | not started | wp07 |
-| frmGuildLeader | Guild leader panel (members, proposals, news) | guild | not started | wp07 |
-| frmGuildNews | Guild news | guild | not started | wp07 |
-| frmGuildURL | Guild website | guild | not started | wp07 |
-| frmPeaceProp | Peace proposals list | guild | not started | wp07 |
-| frmSolicitud | Guild membership application | guild | not started | wp07 |
-| FrmQuest | Quest log | quests | not started | wp08 |
-| frmQuestInfo | Quest details / NPC quest offer | quests | not started | wp08 |
-| FrmEstadisticas | Character statistics and attributes | skills | not started | wp09 |
-| frmSkills3 | Skill allocation | skills | not started | wp09 |
-| frmStatistics | Mini statistics | skills | not started | wp09 |
-| frmAlqui | Alchemy crafting | crafting | merged (partial) | wp10 |
-| frmCarp | Carpenter crafting | crafting | merged | wp10 |
-| frmCrafteo | Generic crafting window with catalyst | crafting | merged (partial) | wp10 |
-| frmHerrero | Blacksmith crafting | crafting | merged | wp10 |
-| FrmSastre | Tailor crafting | crafting | merged (partial) | wp10 |
-| frmBindKey | Bind a key to an action | options | not started | wp11 |
-| frmCustomKeys | Custom key bindings | options | not started | wp11 |
-| frmMasOpciones | More options | options | not started | wp11 |
-| frmOpciones | Options (sound, light, display) | options | not started | wp11 |
-| frmMapaGrande | Large world map | minimap | not started | wp02 |
-| frmCollectibleCard | Collectible card viewer | extras | not started | wp11 |
-| frmCreateBattleground | Create battleground | extras | not started | wp11 |
-| frmEligeAlineacion | Faction alignment choice | extras | not started | wp11 |
-| frmForo | Forum message list | extras | not started | wp11 |
-| frmLobbyBattleground | Battleground lobby | extras | not started | wp11 |
-| frmNoticia | News at login | extras | not started | wp11 |
-| frmPatchNotes | Patch notes | extras | not started | wp11 |
-| frmRetos | Challenges / duels | extras | not started | wp11 |
-| frmShop | Premium shop | extras | not started | wp11 |
-| frmShopPjsAO20 | Character marketplace | extras | not started | wp11 |
-| frmSkins | Item skins / appearance | extras | not started | wp11 |
-| frmTransferChar | Character transfer | extras | not started | wp11 |
-| frmTransferChar2FA | Character transfer two-factor step | extras | not started | wp11 |
-| frmCambiaMotd | Edit message of the day | gm | not started | wp12 |
-| frmDebug | Debug tools | gm | not started | wp12 |
-| FrmGmAyuda | Message to administrators | gm | not started | wp12 |
-| frmMessageTxt | Predefined GM messages | gm | not started | wp12 |
-| frmMSG | GM messages list | gm | not started | wp12 |
-| FrmObjetos | Create object | gm | not started | wp12 |
-| frmPanelGm | GM panel | gm | not started | wp12 |
-| frmProcesses | User processes list (anti-cheat) | gm | not started | wp12 |
-| frmSpawnList | Spawn NPC list | gm | not started | wp12 |
-| FrmTorneo | Tournament organiser | gm | not started | wp12 |
-| MenuGM | GM context menu | gm | not started | wp12 |
-| MenuNPC | NPC context menu | gm | not started | wp12 |
-| MenuUser | Player context menu | gm | not started | wp12 |
+| Frmcarga | Loading splash | core | merged | src/session-windows.ts |
+| frmCargando | Loading screen with progress | core | not started | (d) Never opened by the classic client code (dead form) |
+| frmCerrar | Exit confirmation | core | merged | src/session-windows.ts |
+| frmConnect | Login screen (account email and password, character list entry) | core | merged | src/connect-ui.ts |
+| frmConnecting | Connecting status | core | merged | src/session-windows.ts |
+| frmCrearCuenta | Create account | core | merged | src/session-windows.ts |
+| frmCrearPersonaje | Create character (race, class, gender, head, city) | core | merged | src/connect-ui.ts |
+| FrmCuenta | Account home / character selection | core | merged | src/connect-ui.ts |
+| frmDeleteChar | Delete character confirmation | core | not started | (b) DeleteCharacter needs the account server; PYMMO=0 does nothing, the client says so (connect-text.ts deleteUnsupported) |
+| frmKeypad | On-screen keypad for character password | core | not started | (b) On-screen password keypad, only opened from frmOldPersonaje |
+| FrmLogear | Server/port connection dialog | core | merged | src/main.ts |
+| frmMain | Main game window: viewport, HUD bars, inventory/spell panels, chat console and input | core | merged (partial) | src/classic-layout.ts, src/chat-box.ts, src/items-ui.ts, src/spells.ts, src/look-at.ts, src/map-objects.ts, src/hotkeys-ui.ts, src/inventory-extras.ts, src/minimap.ts: viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not |
+| frmMensaje | Generic message box | core | merged | src/session-windows.ts |
+| frmNewAccount | New account details | core | merged | src/session-windows.ts |
+| frmNewPassword | Set new password | core | not started | (b) Set new password: account server |
+| frmOldPersonaje | Pick an existing character to log in with | core | not started | (b) Character picking with a password keypad; the PYMMO=0 server uses the account screen (FrmCuenta) instead |
+| frmPasswd | Change password | core | not started | (b) Change password: account server |
+| frmPasswordReset | Password reset code request | core | not started | (b) Password reset code: account server |
+| frmPres | Presentation splash | core | not started | (d) Never opened by the classic client code (splash, dead form) |
+| FrmRecuperar | Recover account | core | not started | (b) Recover account: account server |
+| frmtip | Tip of the day | core | not started | (d) Never opened by the classic client code (dead form) |
+| frmCantidad | Amount prompt (drop, deposit, gold, sell) | items | merged | src/items-ui.ts |
+| frmComerciar | NPC shop window (buy/sell) | items | merged | src/items-ui.ts |
+| FrmKeyInv | Key ring inventory | items | merged | src/keyring-ui.ts |
+| frmMensajePapiro | Parchment / papyrus message viewer | items | merged | src/papiro-ui.ts |
+| frmEntrenador | Trainer: choose creature | npcs | merged | src/skills-window.ts |
+| FrmViajes | Travel destinations via NPC | npcs | merged | src/travel-ui.ts |
+| frmBancoCuenta | Account-wide vault | bank | not started | (b) Account-wide vault; its only opener is a hidden label on frmMain and needs the account server |
+| frmBancoObj | Bank vault (items and gold) | bank | merged | src/bank-ui.ts |
+| frmGoliath | Bank gold deposit/withdraw (Goliath) | bank | merged | src/bank-ui.ts |
+| frmComerciarUsu | Player-to-player trade window | trade | merged | src/trade-ui.ts |
+| frmUserRequest | Incoming request prompt (trade and similar) | trade | merged | src/trade-ui.ts |
+| FrmGrupo | Party window | party | merged | src/party-ui.ts |
+| FrmPregunta | Generic yes/no question prompt (group invites, confirmations) | party | merged | src/trade-ui.ts |
+| frmCharInfo | Character info / guild applicant info | guild | merged | src/guild-ui.ts |
+| frmCommet | Peace / alliance offer text | guild | merged | src/guild-ui.ts |
+| frmGuildAdm | Registered guilds list | guild | merged | src/guild-ui.ts |
+| frmGuildBrief | Guild brief / details of another guild | guild | merged | src/guild-ui.ts |
+| frmGuildDetails | Guild founding details | guild | merged | src/guild-ui.ts |
+| frmGuildFoundation | Found a guild | guild | merged | src/guild-ui.ts |
+| frmGuildLeader | Guild leader panel (members, proposals, news) | guild | merged | src/guild-ui.ts |
+| frmGuildNews | Guild news | guild | merged | src/guild-ui.ts |
+| frmGuildURL | Guild website | guild | merged | src/guild-ui.ts |
+| frmPeaceProp | Peace proposals list | guild | merged | src/guild-ui.ts |
+| frmSolicitud | Guild membership application | guild | merged | src/guild-ui.ts |
+| FrmQuest | Quest log | quests | merged | src/quest-window.ts |
+| frmQuestInfo | Quest details / NPC quest offer | quests | merged | src/quest-window.ts |
+| FrmEstadisticas | Character statistics and attributes | skills | merged | src/skills-window.ts |
+| frmSkills3 | Skill allocation | skills | not started | (d) Never opened by the classic client code; the skill help texts it held live in the skill window (game-text.ts) |
+| frmStatistics | Mini statistics | skills | merged | src/skills-window.ts |
+| frmAlqui | Alchemy crafting | crafting | merged (partial) | src/crafting.ts: crafting state and packets only; no alchemy window yet |
+| frmCarp | Carpenter crafting | crafting | merged | src/crafting-ui.ts |
+| frmCrafteo | Generic crafting window with catalyst | crafting | merged (partial) | src/crafting.ts: crafting state and packets only; no catalyst crafting window yet |
+| frmHerrero | Blacksmith crafting | crafting | merged | src/crafting-ui.ts |
+| FrmSastre | Tailor crafting | crafting | merged (partial) | src/crafting.ts: crafting state and packets only; no tailor window yet |
+| frmBindKey | Bind a key to an action | options | merged | src/keys-ui.ts |
+| frmCustomKeys | Custom key bindings | options | merged | src/keys-ui.ts |
+| frmMasOpciones | More options | options | not started | (b) Only opened from the account recovery and account creation forms |
+| frmOpciones | Options (sound, light, display) | options | merged | src/options-ui.ts |
+| frmMapaGrande | Large world map | minimap | not started | (a) Large world map (ShowFrmMapa): world agent |
+| frmCollectibleCard | Collectible card viewer | extras | not started | (c) AO20 collectible card viewer, local to the AO20 client |
+| frmCreateBattleground | Create battleground | extras | not started | (c) AO20 battleground creation (LobbyCommand) |
+| frmEligeAlineacion | Faction alignment choice | extras | not started | (d) Never opened by the classic client code (dead form) |
+| frmForo | Forum message list | extras | not started | (d) Never opened by the classic client code (dead form) |
+| frmLobbyBattleground | Battleground lobby | extras | not started | (c) AO20 battleground lobby (ReportLobbyList, LobbyCommand) |
+| frmNoticia | News at login | extras | not started | (d) Never opened by the classic client code (dead form) |
+| frmPatchNotes | Patch notes | extras | not started | (b) Patch notes sent by the login server at login |
+| frmRetos | Challenges / duels | extras | not started | (a) Duels (Duel / AcceptDuel / CancelDuel / QuitDuel packets) |
+| frmShop | Premium shop | extras | not started | (d) Dead form: the premium shop the server opens is frmShopAO20, which is not in the classic source |
+| frmShopPjsAO20 | Character marketplace | extras | not started | (c) AO20 character marketplace (ShopPjsInit, PublicarPersonajeMAO) |
+| frmSkins | Item skins / appearance | extras | not started | (c) AO20 item skins window (ChangeSkinSlot) |
+| frmTransferChar | Character transfer | extras | not started | (b) Character transfer between accounts: account server |
+| frmTransferChar2FA | Character transfer two-factor step | extras | not started | (b) Character transfer two-factor step: account server |
+| frmCambiaMotd | Edit message of the day | gm | merged | src/gm-ui.ts |
+| frmDebug | Debug tools | gm | not started | (d) Developer debug window, opened only from a hidden frmConnect control |
+| FrmGmAyuda | Message to administrators | gm | merged | src/gm-ui.ts |
+| frmMessageTxt | Predefined GM messages | gm | not started | (d) Never opened by the classic client code (dead form) |
+| frmMSG | GM messages list | gm | not started | (d) Never opened by the classic client code (dead form) |
+| FrmObjetos | Create object | gm | merged | src/gm-ui.ts |
+| frmPanelGm | GM panel | gm | merged | src/gm-ui.ts |
+| frmProcesses | User processes list (anti-cheat) | gm | not started | (d) Never opened by the classic client code (anti-cheat leftover) |
+| frmSpawnList | Spawn NPC list | gm | merged | src/gm-ui.ts |
+| FrmTorneo | Tournament organiser | gm | not started | (a) GM tournament organiser (CrearTorneo, ComenzarTorneo, CancelarTorneo), GM only |
+| MenuGM | GM context menu | gm | not started | (a) Right-click GM menu (ban, jail, summon...), GM only |
+| MenuNPC | NPC context menu | gm | not started | (a) Right-click pet menu: release, release all, follow |
+| MenuUser | Player context menu | gm | not started | (a) Right-click player menu: report, challenge, whisper, invite to party, trade |
+
+### Genuinely missing screens
+
+38 forms have no complete screen yet.
+
+**(a) Player-facing and worth building** (6)
+
+- frmMapaGrande: Large world map (ShowFrmMapa): world agent
+- frmRetos: Duels (Duel / AcceptDuel / CancelDuel / QuitDuel packets)
+- FrmTorneo: GM tournament organiser (CrearTorneo, ComenzarTorneo, CancelarTorneo), GM only
+- MenuGM: Right-click GM menu (ban, jail, summon...), GM only
+- MenuNPC: Right-click pet menu: release, release all, follow
+- MenuUser: Right-click player menu: report, challenge, whisper, invite to party, trade
+
+**(b) Needs a login/account server, not used with PYMMO=0** (12)
+
+- frmDeleteChar: DeleteCharacter needs the account server; PYMMO=0 does nothing, the client says so (connect-text.ts deleteUnsupported)
+- frmKeypad: On-screen password keypad, only opened from frmOldPersonaje
+- frmNewPassword: Set new password: account server
+- frmOldPersonaje: Character picking with a password keypad; the PYMMO=0 server uses the account screen (FrmCuenta) instead
+- frmPasswd: Change password: account server
+- frmPasswordReset: Password reset code: account server
+- FrmRecuperar: Recover account: account server
+- frmBancoCuenta: Account-wide vault; its only opener is a hidden label on frmMain and needs the account server
+- frmMasOpciones: Only opened from the account recovery and account creation forms
+- frmPatchNotes: Patch notes sent by the login server at login
+- frmTransferChar: Character transfer between accounts: account server
+- frmTransferChar2FA: Character transfer two-factor step: account server
+
+**(c) AO20 premium / online extras (shop, marketplace, battlegrounds, transfer)** (5)
+
+- frmCollectibleCard: AO20 collectible card viewer, local to the AO20 client
+- frmCreateBattleground: AO20 battleground creation (LobbyCommand)
+- frmLobbyBattleground: AO20 battleground lobby (ReportLobbyList, LobbyCommand)
+- frmShopPjsAO20: AO20 character marketplace (ShopPjsInit, PublicarPersonajeMAO)
+- frmSkins: AO20 item skins window (ChangeSkinSlot)
+
+**(d) Never opened by the classic client code (dead forms, nothing to build)** (12)
+
+- frmCargando: Never opened by the classic client code (dead form)
+- frmPres: Never opened by the classic client code (splash, dead form)
+- frmtip: Never opened by the classic client code (dead form)
+- frmSkills3: Never opened by the classic client code; the skill help texts it held live in the skill window (game-text.ts)
+- frmEligeAlineacion: Never opened by the classic client code (dead form)
+- frmForo: Never opened by the classic client code (dead form)
+- frmNoticia: Never opened by the classic client code (dead form)
+- frmShop: Dead form: the premium shop the server opens is frmShopAO20, which is not in the classic source
+- frmDebug: Developer debug window, opened only from a hidden frmConnect control
+- frmMessageTxt: Never opened by the classic client code (dead form)
+- frmMSG: Never opened by the classic client code (dead form)
+- frmProcesses: Never opened by the classic client code (anti-cheat leftover)
+
+**Partial** (4)
+
+- frmMain: viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not
+- frmAlqui: crafting state and packets only; no alchemy window yet
+- frmCrafteo: crafting state and packets only; no catalyst crafting window yet
+- FrmSastre: crafting state and packets only; no tailor window yet
+
 
 ## (a) VB6 packets
 
@@ -681,7 +742,7 @@ Disjoint by construction: every uncovered packet and form belongs to exactly one
 Account create/select/delete, character create, loading screens, HUD stat updates, remaining chat packets.
 
 - Packets (0): none left
-- Forms (21): frmMain, frmConnect, FrmCuenta, frmOldPersonaje, frmCrearCuenta, frmNewAccount, frmCrearPersonaje, frmDeleteChar, frmPasswd, frmNewPassword, FrmRecuperar, frmPasswordReset, Frmcarga, frmCargando, frmConnecting, frmPres, frmCerrar, frmMensaje, frmtip, FrmLogear, frmKeypad
+- Forms (11): frmMain, frmOldPersonaje, frmDeleteChar, frmPasswd, frmNewPassword, FrmRecuperar, frmPasswordReset, frmCargando, frmPres, frmtip, frmKeypad
 
 ### wp02: World FX, environment and minimap
 
@@ -702,42 +763,42 @@ Attack, hit/miss messages, safe modes, stun/paralysis, spell info, hotkeys, macr
 Inventory moves, key ring, gamble, gold actions, amount prompts, skins.
 
 - Packets (0): none left
-- Forms (2): frmMensajePapiro, FrmKeyInv
+- Forms (0): none left
 
 ### wp05: NPCs, pets, trainers and travel
 
 Pet commands, trainer list, NPC symbols, travel form, NPC context menus.
 
 - Packets (0): none left
-- Forms (2): frmEntrenador, FrmViajes
+- Forms (0): none left
 
 ### wp06: Bank and player trade
 
 Bank vaults (item + gold + account), user-to-user trade window and chat.
 
 - Packets (0): none left
-- Forms (5): frmBancoObj, frmGoliath, frmBancoCuenta, frmComerciarUsu, frmUserRequest
+- Forms (1): frmBancoCuenta
 
 ### wp07: Party and guild/clan
 
 Group frame/invites, every guild form, proposals, news, elections.
 
 - Packets (0): none left
-- Forms (13): FrmPregunta, FrmGrupo, frmGuildAdm, frmGuildBrief, frmGuildDetails, frmGuildFoundation, frmGuildLeader, frmGuildNews, frmGuildURL, frmCommet, frmPeaceProp, frmSolicitud, frmCharInfo
+- Forms (0): none left
 
 ### wp08: Quests
 
 Quest list/details/abandon, NPC quest markers.
 
 - Packets (0): none left
-- Forms (2): FrmQuest, frmQuestInfo
+- Forms (0): none left
 
 ### wp09: Skills, training and stats
 
 Skill allocation, level up, attributes, statistics forms, rest/meditate.
 
 - Packets (0): none left
-- Forms (3): frmSkills3, FrmEstadisticas, frmStatistics
+- Forms (1): frmSkills3
 
 ### wp10: Crafting and work skills
 
@@ -751,12 +812,12 @@ Smith, carpenter, alchemy, tailor, crafting window, fishing, mining, lumber.
 Options forms, custom keys, hotkeys, events, battlegrounds, duels, premium shop, remort.
 
 - Packets (55): S165 InvasionInfo, S178 ShopInit, S179 UpdateShopClienteCredits, S183 NotificarClienteSeguido, S189 ShopPjsInit, S196 AntiCheatMessage, S197 AntiCheatStartSession, S198 ReportLobbyList, S200 ChangeSkinSlot, S203 RemortState, S204 RemortResult, S205 HooTargetedSpellCastResult, S206 HooHouseDoorActionResult, S207 AutoCombatState, C64 ChangeDescription, C67 Gamble, C68 MapPriceEntrance, C69 LeaveFaction, C185 Participar, C213 OfertaInicial, C214 OfertaDeSubasta, C216 CuentaRegresiva, C218 Duel, C219 AcceptDuel, C220 CancelDuel, C221 QuitDuel, C227 Casarse, C239 MacroPossent, C240 SubastaInfo, C244 EventoInfo, C245 CrearEvento, C248 CrearTorneo, C249 ComenzarTorneo, C250 CancelarTorneo, C251 BusquedaTesoro, C267 FinEvento, C272 CreateEvent, C274 LogMacroClickHechizo, C290 BuyShopItem, C291 StartEvent, C292 CancelarEvento, C294 PublicarPersonajeMAO, C295 EventoFaccionario, C297 LobbyCommand, C298 FeatureToggle, C302 AntiCheatMessage, C303 RequestLobbyList, C307 ChangeSkinSlot, C310 AntiMacroMessage, C311 ModifyCastleWhiteList, C312 HooClientCapabilities, C313 RequestRemort, C314 HooTargetedSpellCast, C315 HooHouseDoorAction, C316 ToggleAutoCombat
-- Forms (17): frmSkins, frmEligeAlineacion, frmOpciones, frmMasOpciones, frmCustomKeys, frmBindKey, frmCollectibleCard, frmCreateBattleground, frmLobbyBattleground, frmRetos, frmShop, frmShopPjsAO20, frmTransferChar, frmTransferChar2FA, frmPatchNotes, frmNoticia, frmForo
+- Forms (14): frmSkins, frmEligeAlineacion, frmMasOpciones, frmCollectibleCard, frmCreateBattleground, frmLobbyBattleground, frmRetos, frmShop, frmShopPjsAO20, frmTransferChar, frmTransferChar2FA, frmPatchNotes, frmNoticia, frmForo
 
 ### wp12: GM / admin (last)
 
 All GM commands, GM panel, SOS, MOTD edit, debug.
 
 - Packets (0): none left
-- Forms (13): FrmTorneo, frmCambiaMotd, frmDebug, FrmGmAyuda, frmMessageTxt, frmMSG, FrmObjetos, frmPanelGm, frmProcesses, frmSpawnList, MenuGM, MenuNPC, MenuUser
+- Forms (8): FrmTorneo, frmDebug, frmMessageTxt, frmMSG, frmProcesses, MenuGM, MenuNPC, MenuUser
 
