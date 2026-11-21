@@ -76,7 +76,8 @@ test('playthrough', async ({ page, baseURL }) => {
   };
   registerAll();
   let results;
-  try { results = await runSteps(env, only, log); }
+  const meta = () => ({ account: creation.reused ? 'reused' : creation.ok ? 'fresh' : 'fallback', character: charName, creation, wallClockSeconds: Math.round((Date.now() - t0) / 1000) });
+  try { results = await runSteps(env, only, log, so_far => writeReport(so_far, meta(), 'tools/completion/playthrough-report.json')); }
   finally { env.player.close(); gm.close(); }
   writeReport(results, { account: creation.reused ? 'reused' : creation.ok ? 'fresh' : 'fallback', character: charName, creation, wallClockSeconds: Math.round((Date.now() - t0) / 1000) }, 'tools/completion/playthrough-report.json');
   log(`done: ${results.filter(r => r.outcome === 'pass').length} pass, ${results.filter(r => r.outcome === 'fail').length} fail, ${results.filter(r => r.outcome === 'blocked').length} blocked`);

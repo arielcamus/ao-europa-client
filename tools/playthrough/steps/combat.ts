@@ -71,14 +71,17 @@ step('CMB-01', async c => {
       const before = w.mark(), sta0 = w.stats!.stamina; attack(w); await w.sleep(1350); swings++;
       const r = w.since(before), dmg = r.filter(x => x.name === 'TextOverChar' && (x.packet as any).charIndex === mine.charIndex);
       const hp = r.filter(x => x.name === 'CharUpdateHP' && (x.packet as any).charIndex === mine.charIndex).map(x => (x.packet as any).hp as number);
-      if (hp.length) { hits++; const d = lastHp - hp[hp.length - 1]!; lastHp = hp[hp.length - 1]!; if (d > 0) (c.shared.melee as any).damages.push(d); /* the dummy refills itself now and then: a rise is not a hit's damage */ (c.shared.melee as any).texts.push(dmg.map(x => (x.packet as any).text).join('|')); }
+      // damage per hit = the number the server floats over the creature (PrepareMessageTextOverChar), one per hit. HP deltas are only a cross-check:
+      // the dummy refills itself now and then, and two hits can share one sampling window.
+      if (hp.length) { hits++; lastHp = hp[hp.length - 1]!; (c.shared.melee as any).texts.push(dmg.map(x => (x.packet as any).text).join('|')); }
+      for (const x of dmg) { const v = num((x.packet as any).text); if (v > 0) (c.shared.melee as any).damages.push(v); }
       const sta = r.filter(x => x.name === 'UpdateSta').map(x => (x.packet as any).stamina as number); if (sta.length) spent.push(sta0 - Math.min(...sta));
     }
     c.ok(swings >= 6, `${swings} swings before stamina fell under 10 (each costs 1..10)`);
     c.ok(hits >= 1 && hits <= swings - 1 || swings < 8, `${hits} hits in ${swings} swings (50% expected; every hit or no hit would mean a clamp bug)`);
     c.ok(spent.length > 0 && spent.every(d => d >= 0 && d <= 10 + 2), `per-swing stamina cost ${spent.join(',')} (1..10, regen can add back 1-2)`);
     c.ok(w.stats!.stamina < startSta, `stamina ${startSta} -> ${w.stats!.stamina}`);
-    c.note(`damage (CharUpdateHP deltas) ${(c.shared.melee as any).damages.join(',')}; floating texts ${(c.shared.melee as any).texts.join(',')}`);
+    c.note(`damage (floating numbers) ${(c.shared.melee as any).damages.join(',')}; last dummy HP ${lastHp}; floating texts ${(c.shared.melee as any).texts.join(',')}`);
     // an attack with MinSta < 10 is refused (message 93), nothing swings
     const mm = w.mark(); await w.sleep(1300); attack(w); await w.sleep(1200);
     if (w.stats!.stamina < 10) c.ok(localeIds(w, mm).includes(Msg.tired) && series(w, mm, 'ArmaMov').length === 0, 'stamina under 10: message 93 and no swing');

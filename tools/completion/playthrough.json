@@ -148,7 +148,7 @@
     {
      "id": "NWB-02",
      "step": "Take Makrom's first quest at the city's Cartelera",
-     "expected": "Clicking the Cartelera (NPC 1331, NpcType Quest) within 5 tiles: EnviarQuest sends NpcQuestListSend with 190, 191, 192, 193, 194, 4, 154, 163, 164, 165 (DATA-PATCHES 8); 190 'Primeros Pasos' is available at level 1 (state 0), 191-194 are not (RequiredLevel 3/5/6/9 or RequiredQuest). QuestAccept(slot) answers Msg1264 and the log holds 190 with four kill counters at 0: Hormiga 508 x2, Murciélago 506 x7, Serpiente 502 x10, Gallo 501 x8.",
+     "expected": "Clicking the Cartelera (NPC 1331, NpcType Quest) within 5 tiles: EnviarQuest sends NpcQuestListSend with 190, 191, 192, 193, 194, 4, 154, 163, 164, 165 (DATA-PATCHES 8); 190 'Primeros Pasos' is available at level 1 (state 0), 191-194 are not (RequiredLevel 3/5/6/9 or RequiredQuest). QuestAccept(slot) answers Msg1264 and the log holds 190 with four kill counters at 0: Hormiga 508 x2, Murciélago 506 x7, Serpiente 502 x10, Gallo 501 x8. Server quirk: HandleLeftClick also takes a USER standing one tile BELOW the clicked tile (tall-sprite offset), so clicking an NPC from the tile right below it hits yourself and does nothing; the same holds for doors.",
      "source": "ModQuest.bas:EnviarQuest, CanUserAcceptQuest; Protocol.bas:HandleQuestAccept; Dat/Quests.DAT [QUEST190]; Dat/npcs.dat [NPC1331]",
      "mode": "auto",
      "how": "tools/playthrough/steps/newbie.ts (pnpm playthrough), one fresh warrior created in Ullathorpe; fixtures tests/fixtures/vb6/playthrough/newbie-*.jsonl",
@@ -859,7 +859,7 @@
      "expected": "Only if map DropItems is on and trigger is not ZONAPELEA, for normal users: TirarTodosLosItems drops EVERY slot (including equipped items, full stack amounts) onto free tiles near the corpse, except items where ItemSeCae() is False: NoSeCae=1, keys, ships, saddles, Intirable, Destruye, Instransferible (those stay in the inventory). Items flagged Newbie stay in a newbie's (ELV<=12) inventory (the starter kit survives). Pirates level >=37 on a galeon keep each item with 33% chance. Elemental-tag amulets (EfectoMagico 12) protect a % of ore/wood/fish stacks.",
      "source": "InvUsuario.bas:TirarTodosLosItems, ItemSeCae, PirataCaeItem, DropAmmount; Modulo_UsUaRiOs.bas:UserDie",
      "mode": "auto",
-     "how": "one bridge session on a throwaway account, /CI items incl. a newbie-flag item and a NoSeCae one, kill the char, read ObjectCreate packets",
+     "how": "tools/playthrough/steps/newbie.ts on the newbie character (pnpm playthrough): a level-1/2 newbie with 5 Manzana Roja and 1000 x ELV + 600 gold dies to a GM-spawned Gallo on map 2 (DropItems on); apples and the 600 fall, newbie items and 1000 x ELV gold stay",
      "status": "untested"
     },
     {
@@ -868,7 +868,7 @@
      "expected": "Gold above OroPorNivelBilletera * ELV (1000 per level in Example.Configuracion.ini) is dropped as gold piles (TirarOro; max GetMaxInvOBJ per pile); the first 1000*ELV gold stays on the char. At level 1 you keep 1000 gold, at 20 you keep 20000. GMs never drop. Sacrifice pendant (PENDIENTE) consumes 1 pendant INSTEAD of dropping anything.",
      "source": "InvUsuario.bas:TirarTodosLosItems, TirarOro; Modulo_UsUaRiOs.bas:UserDie; Example.Configuracion.ini OroPorNivelBilletera",
      "mode": "auto",
-     "how": "one bridge session on a throwaway account, DB UPDATE gold 5000 at level 1, die, see 4000 drop",
+     "how": "tools/playthrough/steps/newbie.ts on the newbie character (pnpm playthrough): a level-1/2 newbie with 5 Manzana Roja and 1000 x ELV + 600 gold dies to a GM-spawned Gallo on map 2 (DropItems on); apples and the 600 fall, newbie items and 1000 x ELV gold stay",
      "status": "untested"
     },
     {
@@ -1045,7 +1045,7 @@
      "expected": "CODE CONTRADICTS THE BELIEF IN ONE POINT: each level adds ModClase.LevelSkillPoints to .Stats.SkillPts = 5 for every class (Trabajador 6; Balance.dat [MODSKILLPOINTS]), but they are FREE POINTS the player spends (ModifySkills) via frmSkills, NOT automatically added to skills. A new character starts with 10 free points. A level-up sends WriteLevelUp(SkillPts) and a 'has ganado N skillpoints' message. Max free points from creation to 47: 10 + 46*5 = 240 (286 for Trabajador).",
      "source": "Modulo_UsUaRiOs.bas:CheckUserLevel (Pts += ModClase.LevelSkillPoints; .Stats.SkillPts += Pts); Balance.dat [MODSKILLPOINTS]; TCP.bas:ConnectNewUser (.Stats.SkillPts = 10)",
      "mode": "auto",
-     "how": "recorded (assignment packet): tests/fixtures/vb6/skills/spend-skill-point.jsonl, stats-skills-rest-requests.jsonl; the per-level +5 grant itself is untested",
+     "how": "tools/playthrough/steps/newbie.ts on the newbie character (pnpm playthrough): the level-up from the quest-190 reward (LevelUp skillPoints 10 + 5), then ModifySkills 4 Armas + 3 Tacticas and a relog (free pool 15 -> 8)",
      "status": "recorded"
     },
     {
@@ -1054,7 +1054,7 @@
      "expected": "Client sends 24 signed bytes; any negative value or a total above SkillPts => security log, SkillPts=0 and the socket is closed. Otherwise SkillPts -= each value, skill += value, and any skill above 100 is capped with the excess returned to SkillPts (MAXSKILLPOINTS = 100). No per-level cap on assigned points and no minimum, any of the 24 skills may be raised directly (Magia, Robar, Tacticas, Armas, Meditar, Apunalar, Ocultarse, Supervivencia, Comerciar, Defensa, Liderazgo, Proyectiles, Wrestling, Navegacion, Equitacion, Resistencia, Talar, Pescar, Mineria, Herreria, Carpinteria, Alquimia, Sastreria, Domar).",
      "source": "Protocol.bas:HandleModifySkills; Declares.bas:NUMSKILLS=24, MAXSKILLPOINTS",
      "mode": "auto",
-     "how": "recorded: tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+     "how": "tools/playthrough/steps/newbie.ts on the newbie character (pnpm playthrough): the level-up from the quest-190 reward (LevelUp skillPoints 10 + 5), then ModifySkills 4 Armas + 3 Tacticas and a relog (free pool 15 -> 8)",
      "status": "recorded"
     },
     {
@@ -1354,7 +1354,7 @@
      "expected": "BankDepositGold / BankExtractGold: banker target within 10 tiles, alive, 0 < amount <= your gold (or bank balance); replies 'Tenes N monedas de oro en tu cuenta' (msg 1418) and WriteUpdateBankGld; insufficient: msg 1419 / 1395.",
      "source": "Protocol.bas:HandleBankDepositGold, HandleBankExtractGold",
      "mode": "auto",
-     "how": "recorded: tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+     "how": "tools/playthrough/steps/newbie.ts on the newbie character (pnpm playthrough): Ullathorpe bank hall (door 77,55 opened with a click from the side, banker Krix 77,47), deposit then withdraw the quest gold",
      "status": "recorded"
     },
     {
@@ -1486,10 +1486,10 @@
     {
      "id": "ECO-20",
      "step": "Say / whisper / yell",
-     "expected": "Talk goes to the area (not shown when dead except to ghosts); Whisper to a nearby named player; Yell is louder. Muted players (Silenciado) are refused with MSG_ADMINS_MUTED_YOU. Chat is throttled (Talk packet Limit 300 ms; per-message timeChat = 1 + ceil((3000 + 60*len)/1000) s bubble).",
+     "expected": "Talk goes to the area (not shown when dead except to ghosts); Whisper to a nearby named player; Yell is louder. Muted players (Silenciado) are refused with MSG_ADMINS_MUTED_YOU. Chat is throttled (Talk packet Limit 300 ms; per-message timeChat = 1 + ceil((3000 + 60*len)/1000) s bubble). Whisper: HandleWhisper first does 'If CompararPrivilegios(sender, target) < 0 Then Exit Sub', so a player's whisper to a GM is dropped with no message to either side; a GM's whisper to a player arrives as ConsoleCharText (and over the sender's head only for GMs, ToSuperioresArea).",
      "source": "Protocol.bas:HandleTalk, HandleWhisper, HandleYell; PacketRatePolicy.ini [Talk]",
      "mode": "auto",
-     "how": "recorded: tests/fixtures/vb6/chat/say.jsonl, whisper.jsonl, yell.jsonl, channels.jsonl",
+     "how": "tools/playthrough/steps/newbie.ts on the newbie character (pnpm playthrough): talk heard by a character 2 tiles away (ChatOverHead over the speaker), player->GM whisper silently dropped, GM->player whisper delivered",
      "status": "recorded"
     },
     {

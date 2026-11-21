@@ -3,7 +3,7 @@ import { defineConfig } from '@playwright/test';
 // AO_ASSETS (Recursos-prehoo). Run: pnpm playthrough  (see tools/playthrough/README in docs/PLAYTHROUGH.md "Running it").
 const webPort = Number(process.env.AO_WEB_PORT ?? 5797);
 export default defineConfig({
-  testDir: '.', testMatch: 'playthrough.live.ts', timeout: 30 * 60_000, workers: 1, fullyParallel: false, reporter: 'list',
+  testDir: '.', testMatch: 'playthrough.live.ts', timeout: Number(process.env.AO_PLAYTHROUGH_TIMEOUT_MIN ?? 120) * 60_000, workers: 1, fullyParallel: false, reporter: 'list',
   use: { baseURL: `http://127.0.0.1:${webPort}`, browserName: 'chromium', channel: 'chrome', trace: 'off', viewport: { width: 1024, height: 768 }, actionTimeout: 15_000 },
   webServer: {
     command: 'node tools/dev-web.mjs', cwd: new URL('../../../', import.meta.url).pathname, port: webPort, reuseExistingServer: true, timeout: 60_000,

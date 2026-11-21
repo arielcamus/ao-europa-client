@@ -336,7 +336,9 @@ step('ECO-05', async c => {
   const banker = charNamed(s, /Krix|Banquer/i); c.ok(!!banker, `the banker is on screen (${banker?.name} at ${banker?.x},${banker?.y})`);
   await approach(s, banker!.x, banker!.y, 3);
   const m = s.mark(); s.send({ id: DOOR.LeftClick, x: banker!.x, y: banker!.y, counter: 0 } as ClientPacket); await s.sleep(1500);
-  c.ok(s.since(m).some(r => r.name === 'BankInit'), 'clicking the banker opened the vault (BankInit)');
+  // IniciarBanco = WriteGoliathInit: a click on the banker opens frmGoliath (gold in/out); its Bóveda button (BankStart) opens the item vault (BankInit)
+  c.ok(s.since(m).some(r => r.name === 'Goliath'), `clicking the banker opened frmGoliath (Goliath) (got ${[...new Set(s.since(m).map(r => r.name))].filter(x => !/Move|Hunger/.test(x)).join(',')})`);
+  { const v = s.mark(); s.send({ id: BK.BankStart } as unknown as ClientPacket); await s.sleep(1500); c.ok(s.since(v).some(r => r.name === 'BankInit'), 'the Bóveda button (BankStart) opened the vault (BankInit)'); }
   const put = gold - (gold % 10 || 0) - 10, d = s.mark(); s.send({ id: BK.BankDepositGold, amount: put } as unknown as ClientPacket); await s.sleep(1500);
   const bank = s.since(d).filter(r => r.name === 'UpdateBankGld').pop()?.packet as any;
   c.eq(s.stats!.gold, gold - put, `deposited ${put}: gold ${gold} -> ${gold - put}`);
@@ -405,7 +407,8 @@ step('NWB-07', async c => {
   c.eq(s.stats!.level, 13, 'one kill crossed level 13');
   c.ok(s.localeSince(m).some(l => l.id === 671), 'Msg671 "Has dejado de ser Newbie"');
   await s.sleep(2000);
-  c.eq([s.map, s.x, s.y], [CITY.map, CITY.x, CITY.y], `graduating inside a newbie map sent the character home (${CITY.name} spawn)`);
+  c.eq(s.map, CITY.map, `graduating inside a newbie map sent the character home (${CITY.name})`);
+  c.near(Math.abs(s.x - CITY.x) + Math.abs(s.y - CITY.y), 0, 2, `landed at ${s.x},${s.y}: the ${CITY.name} spawn ${CITY.x},${CITY.y} or the closest free tile (the -c patch uses WarpToLegalPos)`);
   await s.sleep(1000); const after = sql(`select item_id from inventory_item where user_id=${id} and item_id>0;`);
   const gone = newbie.filter(o => !slotOf(s, o)); c.ok(gone.length > 0, `QuitarNewbieObj removed the newbie items (${gone.join(',')}); left: ${[...s.inventory.values()].map(i => i.object).join(',') || 'nothing'}; DB after the save: ${after.replace(/\s+/g, ',') || 'nothing'}`);
   c.fixture('newbie-graduation', s, m);
