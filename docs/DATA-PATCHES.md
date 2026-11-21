@@ -29,3 +29,19 @@ Placing a character for such a test: the server holds `Database.db` open, so do 
 Undo: the same update with the original position (Aotesta: map 1, 58, 43). The CLI lives in `C:\ao\sqlite-cli` on the VM.
 
 Backups of the interim patch: `mapa1.csm.orig-before-castle-triggers` (the pristine file) and `mapa1.csm.orig-before-castle-triggers-2`. Undo of the whole document: copy each `*.orig-*` backup over its file and restart.
+
+# Client data patches (local assets only, never committed)
+
+## 4. `init/*_localindex.dat` regenerated from the server Dat (quest text for quests 256..427)
+The snapshot's `init/sp_localindex.dat` had `NUMQUESTS=255` and `[QUEST1..255]`, while the server's `Dat/Quests.DAT` has 427, so every newer quest (for example Makrom's 407,
+"Una nueva aventura") showed as "Misión N" with no description in the quest forms. Regenerated 2026-11-21 in `~/Projects/ao-reference/Recursos` with the project's own tool:
+`python3 tools/generar_localindex.py` (reads `Dat/{obj,npcs,quests,hechizos}.dat`, `init/NameMapa.dat` and the per-language `LocalMsg.dat`/`sugerencias.ini`, writes
+`init/{sp,en,pt,fr,it}_localindex.dat`). Result: `NUMQUESTS=427` in `sp_localindex.dat`; `pt_`, `fr_` and `it_localindex.dat` are new files (the tool creates all five languages).
+Because it rebuilds from the current `Dat/obj.dat`, the object patches of section 1 and 2 are included. Backup of the previous files (and of `FXs.ini` / `fxs.ind`) in
+`~/Projects/ao-reference/Recursos-backup-20261121/`; undo = copy them back over `init/`. The client mount only serves `sp_localindex.dat`; the page reads it at start-up, so reload.
+
+## 5. FX 153 (meditation aura) cannot be restored
+The server sends the meditation effect as `MeditateToggle` fx = 153 for levels 1..12 (155 for 13..17, 157 for 18..24, 154/156/... for criminals; `FileIO.bas` defaults and
+`Dat/Meditaciones.dat`). `init/FXs.ini` and `init/fxs.ind` have `NumFxs=150` in every copy on this Mac (the Recursos tree, `argentum-server*/resources/raw`, `argentum-elixir`), so FX 151 and above
+have no animation definition anywhere and the aura is not drawn (the client renders nothing for an unknown FX, like the VB6 client). `generar_localindex.py` does not produce FXs.ini, and inventing
+an `Animacion=` for 153 would be made-up data, so it is left alone. A complete `FXs.ini` from a full client install would fix it.
