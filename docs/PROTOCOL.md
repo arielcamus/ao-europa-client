@@ -199,13 +199,27 @@ handlers and writers; packet ids did not move. **Eight server-to-client packets 
 channel byte), CharacterCreate (trailing clanAlignment), UpdateTagAndStatus (trailing clanIndex + clanAlignment), FYA (trailing base strength and
 agility), GuildNews and GuildLeaderInfo (exp and exp-needed Int16 to Int32), QuestDetails (trailing talkTo + deliverMap).
 
-- **Decoding is version-tolerant** and needs no setting: trailing fields are read only when bytes remain (a frame holds exactly one packet), and
-  the guild exp pair is Int16 when 4 bytes remain, Int32 when 8 do. The client therefore works on the live server and on the pinned one.
+- **Decoding follows the profile too** (changed 21 Nov after Ariel's `/EST` disconnect). On `live` it is version-tolerant: trailing fields are
+  read only when bytes remain, and the guild exp pair is Int16 when 4 bytes remain, Int32 when 8 do. On `prehoo` exactly the pinned layout is read
+  and a HOO-era field never is (`hooTail`), because **a pinned-server frame can hold more than one packet**: 138 call sites write
+  `WriteConsoleMsg(UserIndex, PrepareMessageLocaleMsg(...))`. `PrepareMessageLocaleMsg` is a Function that writes into the shared Writer and returns
+  Empty, so `WriteConsoleMsg` then appends an empty ConsoleMsg and sends both as one message: `8d00 <id> <text> <font> 25 00 00 <font>`. The
+  tolerant LocaleMsg read took `0x25` as the channel and left 3 bytes, and the session closed (`SendUserStatsTxt`, i.e. `/EST`, sends three).
   Fields the pinned server never sends stay absent (`channel`, `strengthBase`, `agilityBase`, `clanIndex`, `clanAlignment` on UpdateTagAndStatus)
   rather than defaulting to 0, so they do not overwrite known state; FYA colours the stats by the pinned client's fixed 25 / 35 thresholds then.
-- **Encoding follows `setWireProfile('prehoo' | 'live')`** (default `live` until the server swap; env `AO_WIRE_PROFILE` for the stand-in and mock
-  servers). It only matters to code that writes server packets: the stand-in server, the mock servers and the tests. Not to be confused with
-  `AO_SERVER_PROFILE` (`classic` / `elixir-classic`, which server family `dev-web` fronts).
+- **Bytes after the packet are logged, never fatal** (`decodeServerFrame`, `Session.receive`). The pinned client's `HandleIncomingData` runs the
+  handler, then logs "Server message ID: N unhandled or too many bytes; K extra bytes found" and drains the rest; a read past the end raises
+  inside the handler and its error handler logs it. Neither disconnects, so the web session logs (`Session.decodeProblems`, `console.warn`) and
+  skips instead: the drained empty ConsoleMsg prints nothing, exactly as in the VB6 client. `decodeServerPacket` stays strict for tests and tools.
+- **The web client runs `prehoo`**: `tools/dev-web.mjs` serves `wireProfile` in `/ao-config.json` (default `prehoo`, `AO_WIRE_PROFILE=live` for
+  a HOO-era server) and sets the same profile for its stand-in, so both ends agree. The library default stays `live` (HOO-era fixtures and mocks).
+- **Encoding follows `setWireProfile('prehoo' | 'live')`** (env `AO_WIRE_PROFILE` for the stand-in and mock servers). It only matters to code
+  that writes server packets: the stand-in server, the mock servers and the tests. Not to be confused with `AO_SERVER_PROFILE` (`classic` /
+  `elixir-classic`, which server family `dev-web` fronts).
+- **Writer sweep** (`packages/protocol/test/prehoo-writers.test.ts`, data from `tools/protocol/prehoo-writers.mjs`): every one of the pin's 205
+  server writers is checked against our codec under `prehoo`: the 160 straight-line ones byte for byte from their VB6 primitive sequence, the
+  others with one hand-built frame per branch. Two writers our codecs do not accept, both pinned-server oddities: `WriteMeditateToggle` (bare id,
+  never called) and `PrepareMessageShowMessageBox` (String8 without the Int16 message id; one GM broadcast caller; the pinned client misreads it too).
 - Client-to-server packets are identical at the pin. `AbandonarGrupo` is a pinned-server quirk, not a layout change: its handler reads one extra
   Int16 that no client sends (removed by server #1791); the Aurora reader returns 0 on underflow, so it still works and we send the bare id.
 - Maps: the pinned `Recursos-prehoo` maps are legacy four-layer `.csm` files (no `W5L2` signature); `parseMap` already reads both formats

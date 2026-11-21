@@ -10,7 +10,7 @@
  * text so a packet round-trips byte for byte.
  */
 import { Reader, Writer } from '../binary.js';
-import { isPreHoo } from '../profile.js';
+import { hooTail, isPreHoo } from '../profile.js';
 
 export enum GuildServerPacketId {
   GuildList = 56,
@@ -103,14 +103,14 @@ const guildConfig: GuildCodec<{
 
 /**
  * exp and exp-needed ended both packets: Int16 pair on the pinned server (WriteGuildNews / WriteGuildLeaderInfo at 9ccd7fad), Int32 pair on
- * the HOO-era one. Nothing follows them, so the bytes left (4 or 8) tell the two apart; the writer follows the server profile.
+ * the HOO-era one. On 'prehoo' they are always the Int16 pair; on 'live' the bytes left (4 or 8) tell the two apart (hooTail).
  */
 function withExp<S extends Record<string, GuildCodec<unknown>>>(head: S): GuildCodec<{ [K in keyof S]: S[K] extends GuildCodec<infer T> ? T : never } & { exp: number; expNeeded: number }> {
   const base = struct(head);
   return {
     read(reader) {
       const value = base.read(reader) as Record<string, unknown>;
-      const wide = reader.remaining >= 8;
+      const wide = hooTail(reader, 8);
       value['exp'] = wide ? reader.readInt32() : reader.readInt16();
       value['expNeeded'] = wide ? reader.readInt32() : reader.readInt16();
       return value as never;

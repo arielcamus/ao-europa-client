@@ -1,0 +1,3777 @@
+{
+ "pin": "9ccd7fad",
+ "generatedBy": "tools/protocol/prehoo-writers.mjs",
+ "writers": [
+  {
+   "fn": "WriteAccountCharacterList",
+   "packets": [
+    {
+     "name": "AccountCharacterList",
+     "id": 199
+    }
+   ],
+   "seq": [
+    "Int",
+    "Int",
+    "String8",
+    "Int",
+    "Int",
+    "Int",
+    "Int",
+    "Int",
+    "Int",
+    "Int",
+    "Int",
+    "Int",
+    "Int",
+    "Int",
+    "Int"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt(count)",
+    "For i = 1 To count",
+    "With Personajes(i)",
+    "Call Writer.WriteInt(.id)",
+    "Call Writer.WriteString8(.nombre)",
+    "Call Writer.WriteInt(.cuerpo)",
+    "Call Writer.WriteInt(.Cabeza)",
+    "Call Writer.WriteInt(.clase)",
+    "Call Writer.WriteInt(.Mapa)",
+    "Call Writer.WriteInt(.PosX)",
+    "Call Writer.WriteInt(.PosY)",
+    "Call Writer.WriteInt(.nivel)",
+    "Call Writer.WriteInt(.Status)",
+    "Call Writer.WriteInt(.Casco)",
+    "Call Writer.WriteInt(.Escudo)",
+    "Call Writer.WriteInt(.Arma)",
+    "Call Writer.WriteInt(.BackPack)",
+    "End With",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "PrepareConnected",
+   "packets": [
+    {
+     "name": "Connected",
+     "id": 1
+    }
+   ],
+   "seq": [
+    "SafeArrayInt8"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = LBound(values) To UBound(values)",
+    "Next i",
+    "Writer.WriteSafeArrayInt8 values"
+   ]
+  },
+  {
+   "fn": "WriteLoggedMessage",
+   "packets": [
+    {
+     "name": "logged",
+     "id": 2
+    }
+   ],
+   "seq": [
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteRemoveAllDialogs",
+   "packets": [
+    {
+     "name": "RemoveDialogs",
+     "id": 3
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteNavigateToggle",
+   "packets": [
+    {
+     "name": "NavigateToggle",
+     "id": 5
+    }
+   ],
+   "seq": [
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteNadarToggle",
+   "packets": [
+    {
+     "name": "NadarToggle",
+     "id": 148
+    }
+   ],
+   "seq": [
+    "Bool",
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteEquiteToggle",
+   "packets": [
+    {
+     "name": "EquiteToggle",
+     "id": 6
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteVelocidadToggle",
+   "packets": [
+    {
+     "name": "VelocidadToggle",
+     "id": 134
+    }
+   ],
+   "seq": [
+    "Real32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteMacroTrabajoToggle",
+   "packets": [
+    {
+     "name": "MacroTrabajoToggle",
+     "id": 135
+    }
+   ],
+   "seq": [
+    "Bool"
+   ],
+   "straight": false,
+   "lines": [
+    "If Not Activar Then",
+    "Else",
+    "End If",
+    "Call Writer.WriteBool(Activar)"
+   ]
+  },
+  {
+   "fn": "WriteDisconnect",
+   "packets": [
+    {
+     "name": "Disconnect",
+     "id": 7
+    }
+   ],
+   "seq": [
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteCommerceEnd",
+   "packets": [
+    {
+     "name": "CommerceEnd",
+     "id": 8
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteBankEnd",
+   "packets": [
+    {
+     "name": "BankEnd",
+     "id": 9
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteCommerceInit",
+   "packets": [
+    {
+     "name": "CommerceInit",
+     "id": 10
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteBankInit",
+   "packets": [
+    {
+     "name": "BankInit",
+     "id": 11
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteUserCommerceInit",
+   "packets": [
+    {
+     "name": "UserCommerceInit",
+     "id": 12
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteUserCommerceEnd",
+   "packets": [
+    {
+     "name": "UserCommerceEnd",
+     "id": 13
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowBlacksmithForm",
+   "packets": [
+    {
+     "name": "ShowBlacksmithForm",
+     "id": 14
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowCarpenterForm",
+   "packets": [
+    {
+     "name": "ShowCarpenterForm",
+     "id": 15
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowAlquimiaForm",
+   "packets": [
+    {
+     "name": "ShowAlquimiaForm",
+     "id": 131
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowSastreForm",
+   "packets": [
+    {
+     "name": "ShowSastreForm",
+     "id": 133
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteNPCKillUser",
+   "packets": [
+    {
+     "name": "NPCKillUser",
+     "id": 16
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "Write_BlockedWithShieldUser",
+   "packets": [
+    {
+     "name": "BlockedWithShieldUser",
+     "id": 17
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "Write_BlockedWithShieldOther",
+   "packets": [
+    {
+     "name": "BlockedWithShieldOther",
+     "id": 18
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteSafeModeOn",
+   "packets": [
+    {
+     "name": "SafeModeOn",
+     "id": 20
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteSafeModeOff",
+   "packets": [
+    {
+     "name": "SafeModeOff",
+     "id": 21
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WritePartySafeOn",
+   "packets": [
+    {
+     "name": "PartySafeOn",
+     "id": 22
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WritePartySafeOff",
+   "packets": [
+    {
+     "name": "PartySafeOff",
+     "id": 23
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteClanSeguro",
+   "packets": [
+    {
+     "name": "ClanSeguro",
+     "id": 157
+    }
+   ],
+   "seq": [
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteSeguroResu",
+   "packets": [
+    {
+     "name": "SeguroResu",
+     "id": 162
+    }
+   ],
+   "seq": [
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteLegionarySecure",
+   "packets": [
+    {
+     "name": "LegionarySecure",
+     "id": 163
+    }
+   ],
+   "seq": [
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteCantUseWhileMeditating",
+   "packets": [
+    {
+     "name": "CantUseWhileMeditating",
+     "id": 24
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteUpdateSta",
+   "packets": [
+    {
+     "name": "UpdateSta",
+     "id": 25
+    }
+   ],
+   "seq": [
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteUpdateMana",
+   "packets": [
+    {
+     "name": "UpdateMana",
+     "id": 26
+    }
+   ],
+   "seq": [
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteUpdateHP",
+   "packets": [
+    {
+     "name": "UpdateHP",
+     "id": 27
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteUpdateGold",
+   "packets": [
+    {
+     "name": "UpdateGold",
+     "id": 28
+    }
+   ],
+   "seq": [
+    "Int32",
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteUpdateExp",
+   "packets": [
+    {
+     "name": "UpdateExp",
+     "id": 29
+    }
+   ],
+   "seq": [
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteChangeMap",
+   "packets": [
+    {
+     "name": "ChangeMap",
+     "id": 30
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WritePosUpdate",
+   "packets": [
+    {
+     "name": "PosUpdate",
+     "id": 31
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WritePosUpdateCharIndex",
+   "packets": [
+    {
+     "name": "PosUpdateUserChar",
+     "id": 186
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WritePosUpdateChar",
+   "packets": [
+    {
+     "name": "PosUpdateChar",
+     "id": 187
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteNPCHitUser",
+   "packets": [
+    {
+     "name": "NPCHitUser",
+     "id": 32
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteUserHittedByUser",
+   "packets": [
+    {
+     "name": "UserHittedByUser",
+     "id": 33
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteUserHittedUser",
+   "packets": [
+    {
+     "name": "UserHittedUser",
+     "id": 34
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowMessageBox",
+   "packets": [
+    {
+     "name": "ShowMessageBox",
+     "id": 40
+    }
+   ],
+   "seq": [
+    "Int16",
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareShowMessageBox",
+   "packets": [
+    {
+     "name": "ShowMessageBox",
+     "id": 40
+    }
+   ],
+   "seq": [
+    "Int16",
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteMostrarCuenta",
+   "packets": [
+    {
+     "name": "MostrarCuenta",
+     "id": 41
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteUserIndexInServer",
+   "packets": [
+    {
+     "name": "UserIndexInServer",
+     "id": 46
+    }
+   ],
+   "seq": [
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteUserCharIndexInServer",
+   "packets": [
+    {
+     "name": "UserCharIndexInServer",
+     "id": 47
+    }
+   ],
+   "seq": [
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "Write_BlockPosition",
+   "packets": [
+    {
+     "name": "BlockPosition",
+     "id": 53
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WritePlayWaveStep",
+   "packets": [
+    {
+     "name": "PlayWaveStep",
+     "id": 188
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int32",
+    "Int32",
+    "Int8",
+    "Int16",
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteGuildList",
+   "packets": [
+    {
+     "name": "guildList",
+     "id": 56
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = LBound(guildList()) To UBound(guildList())",
+    "Next i",
+    "If Len(Tmp) Then Tmp = Left$(Tmp, Len(Tmp) - 1)",
+    "Call Writer.WriteString8(Tmp)"
+   ]
+  },
+  {
+   "fn": "WriteAreaChanged",
+   "packets": [
+    {
+     "name": "AreaChanged",
+     "id": 57
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteUpdateUserStats",
+   "packets": [
+    {
+     "name": "UpdateUserStats",
+     "id": 61
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16",
+    "Int32",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int32",
+    "Int32",
+    "Int8",
+    "Int32",
+    "Int32",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteUpdateUserKey",
+   "packets": [
+    {
+     "name": "UpdateUserKey",
+     "id": 159
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteUpdateDM",
+   "packets": [
+    {
+     "name": "UpdateDM",
+     "id": 161
+    }
+   ],
+   "seq": [
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "With UserList(UserIndex).invent",
+    "If .EquippedWeaponObjIndex > 0 Then",
+    "End If",
+    "If .EquippedRingAccesoryObjIndex > 0 Then",
+    "End If",
+    "Call Writer.WriteInt16(Valor)",
+    "End With"
+   ]
+  },
+  {
+   "fn": "WriteUpdateRM",
+   "packets": [
+    {
+     "name": "UpdateRM",
+     "id": 160
+    }
+   ],
+   "seq": [
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "With UserList(UserIndex).invent",
+    "If .EquippedArmorObjIndex > 0 Then",
+    "End If",
+    "If .EquippedRingAccesoryObjIndex > 0 Then",
+    "End If",
+    "If .EquippedShieldObjIndex > 0 Then",
+    "End If",
+    "If .EquippedHelmetObjIndex > 0 Then",
+    "End If",
+    "Call Writer.WriteInt16(Valor)",
+    "End With"
+   ]
+  },
+  {
+   "fn": "WriteWorkRequestTarget",
+   "packets": [
+    {
+     "name": "WorkRequestTarget",
+     "id": 62
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Bool",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteInventoryUnlockSlots",
+   "packets": [
+    {
+     "name": "InventoryUnlockSlots",
+     "id": 64
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int8"
+   ],
+   "straight": false,
+   "lines": [
+    "With UserList(UserIndex)",
+    "If .Stats.tipoUsuario <> tNormal Then",
+    "Select Case .Stats.tipoUsuario",
+    "Case tLeyenda, tNoble, tEmperador",
+    "Call Writer.WriteInt8(3)",
+    "Case tHeroe",
+    "Call Writer.WriteInt8(2)",
+    "Case tAventurero",
+    "Call Writer.WriteInt8(1)",
+    "End Select",
+    "End If",
+    "End With"
+   ]
+  },
+  {
+   "fn": "WriteIntervals",
+   "packets": [
+    {
+     "name": "Intervals",
+     "id": 158
+    }
+   ],
+   "seq": [
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32"
+   ],
+   "straight": false,
+   "lines": [
+    "With UserList(UserIndex)",
+    "Call Writer.WriteInt32(IntervaloUserPuedeAtacar)",
+    "Call Writer.WriteInt32(IntervaloFlechasCazadores)",
+    "Call Writer.WriteInt32(IntervaloUserPuedeCastear)",
+    "Call Writer.WriteInt32(IntervaloTrabajarExtraer)",
+    "Call Writer.WriteInt32(IntervaloTrabajarConstruir)",
+    "Call Writer.WriteInt32(IntervaloCaminar)",
+    "Call Writer.WriteInt32(IntervaloTirar)",
+    "Call Writer.WriteInt32(IntervaloUserPuedeUsarU)",
+    "Call Writer.WriteInt32(IntervaloUserPuedeUsarClic)",
+    "Call Writer.WriteInt32(IntervaloGolpeMagia)",
+    "Call Writer.WriteInt32(IntervaloMagiaGolpe)",
+    "Call Writer.WriteInt32(IntervaloGolpeUsar)",
+    "Call Writer.WriteInt32(IntervaloUserPuedeOcultarse)",
+    "Call Writer.WriteInt32(IntervaloTalk)",
+    "Call Writer.WriteInt32(IntervaloLeftClick)",
+    "Call Writer.WriteInt32(IntervaloMeditar)",
+    "End With"
+   ]
+  },
+  {
+   "fn": "WriteChangeInventorySlot",
+   "packets": [
+    {
+     "name": "ChangeInventorySlot",
+     "id": 63
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int16",
+    "Int16",
+    "Bool",
+    "Real32",
+    "Int8",
+    "Int32",
+    "Bool",
+    "Bool"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt8(Slot)",
+    "If ObjIndex > 0 Then",
+    "End If",
+    "Call Writer.WriteInt16(ObjIndex)",
+    "Call Writer.WriteInt16(UserList(UserIndex).invent.Object(Slot).amount)",
+    "Call Writer.WriteBool(UserList(UserIndex).invent.Object(Slot).Equipped)",
+    "Call Writer.WriteReal32(SalePrice(ObjIndex, UserIndex))",
+    "Call Writer.WriteInt8(PodraUsarlo)",
+    "Call Writer.WriteInt32(UserList(UserIndex).invent.Object(Slot).ElementalTags Or NaturalElementalTags)",
+    "If ObjIndex > 0 Then",
+    "Call Writer.WriteBool(IsSet(ObjData(ObjIndex).ObjFlags, e_ObjFlags.e_Bindable))",
+    "Else",
+    "Call Writer.WriteBool(False)",
+    "End If"
+   ]
+  },
+  {
+   "fn": "WriteChangeBankSlot",
+   "packets": [
+    {
+     "name": "ChangeBankSlot",
+     "id": 65
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int16",
+    "Int32",
+    "Int16",
+    "Int32",
+    "Int8"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt8(Slot)",
+    "If ObjIndex > 0 Then",
+    "Else",
+    "End If",
+    "Call Writer.WriteInt16(ObjIndex)",
+    "Call Writer.WriteInt32(UserList(UserIndex).BancoInvent.Object(Slot).ElementalTags Or NaturalElementalTags)",
+    "Call Writer.WriteInt16(UserList(UserIndex).BancoInvent.Object(Slot).amount)",
+    "Call Writer.WriteInt32(Valor)",
+    "Call Writer.WriteInt8(PodraUsarlo)"
+   ]
+  },
+  {
+   "fn": "WriteChangeSpellSlot",
+   "packets": [
+    {
+     "name": "ChangeSpellSlot",
+     "id": 66
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int16",
+    "Int16",
+    "Bool",
+    "Int16",
+    "Bool"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt8(Slot)",
+    "Call Writer.WriteInt16(UserList(UserIndex).Stats.UserHechizos(Slot))",
+    "If UserList(UserIndex).Stats.UserHechizos(Slot) > 0 Then",
+    "Call Writer.WriteInt16(UserList(UserIndex).Stats.UserHechizos(Slot))",
+    "Call Writer.WriteBool(IsSet(Hechizos(UserList(UserIndex).Stats.UserHechizos(Slot)).SpellRequirementMask, e_SpellRequirementMask.eIsBindable))",
+    "Else",
+    "Call Writer.WriteInt16(-1)",
+    "Call Writer.WriteBool(False)",
+    "End If"
+   ]
+  },
+  {
+   "fn": "WriteAttributes",
+   "packets": [
+    {
+     "name": "Atributes",
+     "id": 67
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteBlacksmithWeapons",
+   "packets": [
+    {
+     "name": "BlacksmithWeapons",
+     "id": 68
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = 1 To UBound(ArmasHerrero())",
+    "If ObjData(ArmasHerrero(i)).SkHerreria <= UserList(UserIndex).Stats.UserSkills(e_Skill.Herreria) Then",
+    "End If",
+    "Next i",
+    "Call Writer.WriteInt16(count)",
+    "For i = 1 To count",
+    "Call Writer.WriteInt16(ArmasHerrero(validIndexes(i)))",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "WriteBlacksmithArmors",
+   "packets": [
+    {
+     "name": "BlacksmithArmors",
+     "id": 69
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = 1 To UBound(ArmadurasHerrero())",
+    "If ObjData(ArmadurasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(e_Skill.Herreria) / ModHerreria(UserList(UserIndex).clase), 0) Then",
+    "End If",
+    "Next i",
+    "Call Writer.WriteInt16(count)",
+    "For i = 1 To count",
+    "Call Writer.WriteInt16(ArmadurasHerrero(validIndexes(i)))",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "WriteBlacksmithElementalRunes",
+   "packets": [
+    {
+     "name": "BlacksmithExtraObjects",
+     "id": 70
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = 1 To UBound(BlackSmithElementalRunes())",
+    "If ObjData(BlackSmithElementalRunes(i)).SkHerreria <= UserList(UserIndex).Stats.UserSkills(e_Skill.Herreria) Then",
+    "End If",
+    "Next i",
+    "Call Writer.WriteInt16(count)",
+    "For i = 1 To count",
+    "Call Writer.WriteInt16(BlackSmithElementalRunes(validIndexes(i)))",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "WriteCarpenterObjects",
+   "packets": [
+    {
+     "name": "CarpenterObjects",
+     "id": 71
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = 1 To UBound(ObjCarpintero())",
+    "If ObjData(ObjCarpintero(i)).SkCarpinteria <= UserList(UserIndex).Stats.UserSkills(e_Skill.Carpinteria) Then",
+    "If i = 1 Then Debug.Print UserList(UserIndex).Stats.UserSkills(e_Skill.Carpinteria) \\ ModCarpinteria(UserList(UserIndex).clase)",
+    "End If",
+    "Next i",
+    "Call Writer.WriteInt8(count)",
+    "For i = 1 To count",
+    "Call Writer.WriteInt16(ObjCarpintero(validIndexes(i)))",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "WriteAlquimistaObjects",
+   "packets": [
+    {
+     "name": "AlquimistaObj",
+     "id": 130
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = 1 To UBound(ObjAlquimista())",
+    "If ObjData(ObjAlquimista(i)).SkPociones <= UserList(UserIndex).Stats.UserSkills(e_Skill.Alquimia) \\ ModAlquimia(UserList(UserIndex).clase) Then",
+    "End If",
+    "Next i",
+    "Call Writer.WriteInt16(count)",
+    "For i = 1 To count",
+    "Call Writer.WriteInt16(ObjAlquimista(validIndexes(i)))",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "WriteSastreObjects",
+   "packets": [
+    {
+     "name": "SastreObj",
+     "id": 132
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = 1 To UBound(ObjSastre())",
+    "If ObjData(ObjSastre(i)).SkSastreria <= UserList(UserIndex).Stats.UserSkills(e_Skill.Sastreria) Then",
+    "End If",
+    "Next i",
+    "Call Writer.WriteInt16(count)",
+    "For i = 1 To count",
+    "Call Writer.WriteInt16(ObjSastre(validIndexes(i)))",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "WriteRestOK",
+   "packets": [
+    {
+     "name": "RestOK",
+     "id": 72
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteBlind",
+   "packets": [
+    {
+     "name": "Blind",
+     "id": 74
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteDumb",
+   "packets": [
+    {
+     "name": "Dumb",
+     "id": 75
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowSignal",
+   "packets": [
+    {
+     "name": "ShowSignal",
+     "id": 76
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteChangeNPCInventorySlot",
+   "packets": [
+    {
+     "name": "ChangeNPCInventorySlot",
+     "id": 77
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int16",
+    "Int16",
+    "Real32",
+    "Int32",
+    "Int8"
+   ],
+   "straight": false,
+   "lines": [
+    "If obj.ObjIndex >= LBound(ObjData()) And obj.ObjIndex <= UBound(ObjData()) Then",
+    "End If",
+    "Call Writer.WriteInt8(Slot)",
+    "Call Writer.WriteInt16(obj.ObjIndex)",
+    "Call Writer.WriteInt16(obj.amount)",
+    "Call Writer.WriteReal32(price)",
+    "Call Writer.WriteInt32(obj.ElementalTags)",
+    "Call Writer.WriteInt8(PodraUsarlo)"
+   ]
+  },
+  {
+   "fn": "WriteUpdateHungerAndThirst",
+   "packets": [
+    {
+     "name": "UpdateHungerAndThirst",
+     "id": 78
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteLight",
+   "packets": [
+    {
+     "name": "Light",
+     "id": 118
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteFlashScreen",
+   "packets": [
+    {
+     "name": "FlashScreen",
+     "id": 129
+    }
+   ],
+   "seq": [
+    "Int32",
+    "Int32",
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteFYA",
+   "packets": [
+    {
+     "name": "FYA",
+     "id": 102
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteCerrarleCliente",
+   "packets": [
+    {
+     "name": "CerrarleCliente",
+     "id": 103
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteContadores",
+   "packets": [
+    {
+     "name": "Contadores",
+     "id": 104
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowPapiro",
+   "packets": [
+    {
+     "name": "ShowPapiro",
+     "id": 105
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteUpdateCdType",
+   "packets": [
+    {
+     "name": "UpdateCooldownType",
+     "id": 106
+    }
+   ],
+   "seq": [
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WritePrivilegios",
+   "packets": [
+    {
+     "name": "Privilegios",
+     "id": 177
+    }
+   ],
+   "seq": [
+    "Bool",
+    "Bool"
+   ],
+   "straight": false,
+   "lines": [
+    "If UserList(UserIndex).flags.Privilegios And (e_PlayerType.Admin Or e_PlayerType.Dios Or e_PlayerType.SemiDios Or e_PlayerType.Consejero) Then",
+    "Call Writer.WriteBool(True)",
+    "Else",
+    "Call Writer.WriteBool(False)",
+    "End If"
+   ]
+  },
+  {
+   "fn": "WriteBindKeys",
+   "packets": [
+    {
+     "name": "BindKeys",
+     "id": 136
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteGetInventarioHechizos",
+   "packets": [
+    {
+     "name": "GetInventarioHechizos",
+     "id": 184
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteNofiticarClienteCasteo",
+   "packets": [
+    {
+     "name": "NotificarClienteCasteo",
+     "id": 185
+    }
+   ],
+   "seq": [
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteMiniStats",
+   "packets": [
+    {
+     "name": "MiniStats",
+     "id": 79
+    }
+   ],
+   "seq": [
+    "Int32",
+    "Int32",
+    "Int8",
+    "Int32",
+    "Int8",
+    "Int32",
+    "Int32",
+    "Int8",
+    "Int32",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteLevelUp",
+   "packets": [
+    {
+     "name": "LevelUp",
+     "id": 80
+    }
+   ],
+   "seq": [
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteAddForumMsg",
+   "packets": [
+    {
+     "name": "AddForumMsg",
+     "id": 81
+    }
+   ],
+   "seq": [
+    "String8",
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowForumForm",
+   "packets": [
+    {
+     "name": "ShowForumForm",
+     "id": 82
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteMeditateToggle",
+   "packets": [
+    {
+     "name": "MeditateToggle",
+     "id": 84
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteBlindNoMore",
+   "packets": [
+    {
+     "name": "BlindNoMore",
+     "id": 85
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteDumbNoMore",
+   "packets": [
+    {
+     "name": "DumbNoMore",
+     "id": 86
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteSendSkills",
+   "packets": [
+    {
+     "name": "SendSkills",
+     "id": 87
+    }
+   ],
+   "seq": [
+    "Int8"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = 1 To NUMSKILLS",
+    "Call Writer.WriteInt8(UserList(UserIndex).Stats.UserSkills(i))",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "WriteTrainerCreatureList",
+   "packets": [
+    {
+     "name": "TrainerCreatureList",
+     "id": 88
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = 1 To NpcList(NpcIndex).NroCriaturas",
+    "Next i",
+    "If LenB(str) > 0 Then str = Left$(str, Len(str) - 1)",
+    "Call Writer.WriteString8(str)"
+   ]
+  },
+  {
+   "fn": "WriteGuildNews",
+   "packets": [
+    {
+     "name": "guildNews",
+     "id": 89
+    }
+   ],
+   "seq": [
+    "String8",
+    "String8",
+    "String8",
+    "Int8",
+    "Int16",
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteString8(guildNews)",
+    "For i = LBound(guildList()) To UBound(guildList())",
+    "Next i",
+    "If Len(Tmp) Then Tmp = Left$(Tmp, Len(Tmp) - 1)",
+    "Call Writer.WriteString8(Tmp)",
+    "For i = LBound(MemberList()) To UBound(MemberList())",
+    "Next i",
+    "If Len(Tmp) Then Tmp = Left$(Tmp, Len(Tmp) - 1)",
+    "Call Writer.WriteString8(Tmp)",
+    "Call Writer.WriteInt8(ClanNivel)",
+    "Call Writer.WriteInt16(ExpAcu)",
+    "Call Writer.WriteInt16(ExpNe)"
+   ]
+  },
+  {
+   "fn": "WriteOfferDetails",
+   "packets": [
+    {
+     "name": "OfferDetails",
+     "id": 90
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteAlianceProposalsList",
+   "packets": [
+    {
+     "name": "AlianceProposalsList",
+     "id": 91
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = LBound(guilds()) To UBound(guilds())",
+    "Next i",
+    "If Len(Tmp) Then Tmp = Left$(Tmp, Len(Tmp) - 1)",
+    "Call Writer.WriteString8(Tmp)"
+   ]
+  },
+  {
+   "fn": "WritePeaceProposalsList",
+   "packets": [
+    {
+     "name": "PeaceProposalsList",
+     "id": 92
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = LBound(guilds()) To UBound(guilds())",
+    "Next i",
+    "If Len(Tmp) Then Tmp = Left$(Tmp, Len(Tmp) - 1)",
+    "Call Writer.WriteString8(Tmp)"
+   ]
+  },
+  {
+   "fn": "WriteCharacterInfo",
+   "packets": [
+    {
+     "name": "CharacterInfo",
+     "id": 93
+    }
+   ],
+   "seq": [
+    "Int8",
+    "String8",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int32",
+    "Int32",
+    "String8",
+    "String8",
+    "String8",
+    "Bool",
+    "Bool",
+    "Int32",
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteGuildLeaderInfo",
+   "packets": [
+    {
+     "name": "GuildLeaderInfo",
+     "id": 94
+    }
+   ],
+   "seq": [
+    "String8",
+    "String8",
+    "String8",
+    "String8",
+    "Int8",
+    "Int16",
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = LBound(guildList()) To UBound(guildList())",
+    "Next i",
+    "If Len(Tmp) Then Tmp = Left$(Tmp, Len(Tmp) - 1)",
+    "Call Writer.WriteString8(Tmp)",
+    "For i = LBound(MemberList()) To UBound(MemberList())",
+    "Next i",
+    "If Len(Tmp) Then Tmp = Left$(Tmp, Len(Tmp) - 1)",
+    "Call Writer.WriteString8(Tmp)",
+    "Call Writer.WriteString8(guildNews)",
+    "For i = LBound(joinRequests()) To UBound(joinRequests())",
+    "Next i",
+    "If Len(Tmp) Then Tmp = Left$(Tmp, Len(Tmp) - 1)",
+    "Call Writer.WriteString8(Tmp)",
+    "Call Writer.WriteInt8(NivelDeClan)",
+    "Call Writer.WriteInt16(ExpActual)",
+    "Call Writer.WriteInt16(ExpNecesaria)"
+   ]
+  },
+  {
+   "fn": "WriteGuildDetails",
+   "packets": [
+    {
+     "name": "GuildDetails",
+     "id": 95
+    }
+   ],
+   "seq": [
+    "String8",
+    "String8",
+    "String8",
+    "String8",
+    "Int16",
+    "String8",
+    "String8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowGuildFundationForm",
+   "packets": [
+    {
+     "name": "ShowGuildFundationForm",
+     "id": 96
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteParalizeOK",
+   "packets": [
+    {
+     "name": "ParalizeOK",
+     "id": 97
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteStunStart",
+   "packets": [
+    {
+     "name": "StunStart",
+     "id": 98
+    }
+   ],
+   "seq": [
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteInmovilizaOK",
+   "packets": [
+    {
+     "name": "InmovilizadoOK",
+     "id": 139
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteStopped",
+   "packets": [
+    {
+     "name": "Stopped",
+     "id": 164
+    }
+   ],
+   "seq": [
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowUserRequest",
+   "packets": [
+    {
+     "name": "ShowUserRequest",
+     "id": 99
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteChangeUserTradeSlot",
+   "packets": [
+    {
+     "name": "ChangeUserTradeSlot",
+     "id": 100
+    }
+   ],
+   "seq": [
+    "Bool",
+    "Int32",
+    "Int16",
+    "String8",
+    "String8",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteBool(miOferta)",
+    "Call Writer.WriteInt32(gold)",
+    "For i = 1 To UBound(itemsAenviar)",
+    "Call Writer.WriteInt16(itemsAenviar(i).ObjIndex)",
+    "If itemsAenviar(i).ObjIndex = 0 Then",
+    "Call Writer.WriteString8(\"\")",
+    "Else",
+    "Call Writer.WriteString8(ObjData(itemsAenviar(i).ObjIndex).name)",
+    "End If",
+    "If itemsAenviar(i).ObjIndex = 0 Then",
+    "Call Writer.WriteInt32(0)",
+    "Else",
+    "Call Writer.WriteInt32(ObjData(itemsAenviar(i).ObjIndex).GrhIndex)",
+    "End If",
+    "Call Writer.WriteInt32(itemsAenviar(i).amount)",
+    "Call Writer.WriteInt32(itemsAenviar(i).ElementalTags)",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "WriteSpawnList",
+   "packets": [
+    {
+     "name": "SpawnListt",
+     "id": 107
+    }
+   ],
+   "seq": [
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowSOSForm",
+   "packets": [
+    {
+     "name": "ShowSOSForm",
+     "id": 108
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = 1 To Ayuda.Longitud",
+    "Next i",
+    "If LenB(Tmp) <> 0 Then Tmp = Left$(Tmp, Len(Tmp) - 1)",
+    "Call Writer.WriteString8(Tmp)"
+   ]
+  },
+  {
+   "fn": "WriteShowMOTDEditionForm",
+   "packets": [
+    {
+     "name": "ShowMOTDEditionForm",
+     "id": 109
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowGMPanelForm",
+   "packets": [
+    {
+     "name": "ShowGMPanelForm",
+     "id": 110
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowFundarClanForm",
+   "packets": [
+    {
+     "name": "ShowFundarClanForm",
+     "id": 149
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteUserNameList",
+   "packets": [
+    {
+     "name": "UserNameList",
+     "id": 111
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": false,
+   "lines": [
+    "For i = 1 To cant",
+    "Next i",
+    "If Len(Tmp) Then Tmp = Left$(Tmp, Len(Tmp) - 1)",
+    "Call Writer.WriteString8(Tmp)"
+   ]
+  },
+  {
+   "fn": "WriteGoliathInit",
+   "packets": [
+    {
+     "name": "Goliath",
+     "id": 124
+    }
+   ],
+   "seq": [
+    "Int32",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WritePelearConPezEspecial",
+   "packets": [
+    {
+     "name": "PelearConPezEspecial",
+     "id": 176
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteUpdateBankGld",
+   "packets": [
+    {
+     "name": "UpdateBankGld",
+     "id": 175
+    }
+   ],
+   "seq": [
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowFrmLogear",
+   "packets": [
+    {
+     "name": "ShowFrmLogear",
+     "id": 137
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteShowFrmMapa",
+   "packets": [
+    {
+     "name": "ShowFrmMapa",
+     "id": 138
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WritePreguntaBox",
+   "packets": [
+    {
+     "name": "ShowPregunta",
+     "id": 142
+    }
+   ],
+   "seq": [
+    "Int16",
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteDatosGrupo",
+   "packets": [
+    {
+     "name": "DatosGrupo",
+     "id": 143
+    }
+   ],
+   "seq": [
+    "Bool",
+    "Int8",
+    "String8",
+    "String8",
+    "String8",
+    "String8"
+   ],
+   "straight": false,
+   "lines": [
+    "With UserList(UserIndex)",
+    "Call Writer.WriteBool(.Grupo.EnGrupo)",
+    "If .Grupo.EnGrupo = True Then",
+    "Call Writer.WriteInt8(UserList(.Grupo.Lider.ArrayIndex).Grupo.CantidadMiembros)",
+    "If .Grupo.Lider.ArrayIndex = UserIndex Then",
+    "For i = 1 To UserList(.Grupo.Lider.ArrayIndex).Grupo.CantidadMiembros",
+    "If i = 1 Then",
+    "Call Writer.WriteString8(GetUserDisplayName(.Grupo.Miembros(i).ArrayIndex) & \"(LÃ­der)\")",
+    "Else",
+    "Call Writer.WriteString8(GetUserDisplayName(.Grupo.Miembros(i).ArrayIndex))",
+    "End If",
+    "Next i",
+    "Else",
+    "For i = 1 To UserList(.Grupo.Lider.ArrayIndex).Grupo.CantidadMiembros",
+    "If i = 1 Then",
+    "Call Writer.WriteString8(GetUserDisplayName(UserList(.Grupo.Lider.ArrayIndex).Grupo.Miembros(i).ArrayIndex) & \"(LÃ­der)\")",
+    "Else",
+    "Call Writer.WriteString8(GetUserDisplayName(UserList(.Grupo.Lider.ArrayIndex).Grupo.Miembros(i).ArrayIndex))",
+    "End If",
+    "Next i",
+    "End If",
+    "End If",
+    "End With"
+   ]
+  },
+  {
+   "fn": "WriteUbicacion",
+   "packets": [
+    {
+     "name": "ubicacion",
+     "id": 144
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int16",
+    "Int8",
+    "Int8",
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt8(Miembro)",
+    "If GPS > 0 Then",
+    "Call Writer.WriteInt8(UserList(GPS).pos.x)",
+    "Call Writer.WriteInt8(UserList(GPS).pos.y)",
+    "Call Writer.WriteInt16(UserList(GPS).pos.Map)",
+    "Else",
+    "Call Writer.WriteInt8(0)",
+    "Call Writer.WriteInt8(0)",
+    "Call Writer.WriteInt16(0)",
+    "End If"
+   ]
+  },
+  {
+   "fn": "WriteViajarForm",
+   "packets": [
+    {
+     "name": "ViajarForm",
+     "id": 147
+    }
+   ],
+   "seq": [
+    "Int8",
+    "String8",
+    "Int8"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt8(destinos)",
+    "For i = 1 To destinos",
+    "Call Writer.WriteString8(NpcList(NpcIndex).TransportCityNames(i) & \"-\" & NpcList(NpcIndex).TransportCityPrice(i))",
+    "Next i",
+    "Call Writer.WriteInt8(NpcList(NpcIndex).Interface)"
+   ]
+  },
+  {
+   "fn": "WriteQuestDetails",
+   "packets": [
+    {
+     "name": "QuestDetails",
+     "id": 153
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int16",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int8",
+    "Int32",
+    "Int32",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt16(QuestIndex)",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredLevel)",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).LimitLevel)",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredClassesCount)",
+    "If QuestList(QuestIndex).RequiredClassesCount > 0 Then",
+    "For i = 1 To QuestList(QuestIndex).RequiredClassesCount",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredClass(i))",
+    "Next i",
+    "End If",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredQuest)",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredNPCs)",
+    "If QuestList(QuestIndex).RequiredNPCs Then",
+    "For i = 1 To QuestList(QuestIndex).RequiredNPCs",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredNPC(i).amount)",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredNPC(i).NpcIndex)",
+    "If QuestSlot Then",
+    "Call Writer.WriteInt16(UserList(UserIndex).QuestStats.Quests(QuestSlot).NPCsKilled(i))",
+    "End If",
+    "Next i",
+    "End If",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredOBJs)",
+    "If QuestList(QuestIndex).RequiredOBJs Then",
+    "For i = 1 To QuestList(QuestIndex).RequiredOBJs",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredOBJ(i).amount)",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredOBJ(i).ObjIndex)",
+    "Call Writer.WriteInt16(get_object_amount_from_inventory(UserIndex, QuestList(QuestIndex).RequiredOBJ(i).ObjIndex))",
+    "Next i",
+    "End If",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredSpellCount)",
+    "If QuestList(QuestIndex).RequiredSpellCount > 0 Then",
+    "For i = 1 To QuestList(QuestIndex).RequiredSpellCount",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredSpellList(i))",
+    "If TieneHechizo(QuestList(QuestIndex).RequiredSpellList(i), UserIndex) Then",
+    "Call Writer.WriteInt16(1)",
+    "Else",
+    "Call Writer.WriteInt16(0)",
+    "End If",
+    "Next i",
+    "End If",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredSkill.SkillType)",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredSkill.RequiredValue)",
+    "Call Writer.WriteInt32((QuestList(QuestIndex).RewardGLD * SvrConfig.GetValue(\"GoldMult\")))",
+    "Call Writer.WriteInt32((QuestList(QuestIndex).RewardEXP * SvrConfig.GetValue(\"ExpMult\")))",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RewardOBJs)",
+    "If QuestList(QuestIndex).RewardOBJs Then",
+    "For i = 1 To QuestList(QuestIndex).RewardOBJs",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RewardOBJ(i).amount)",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RewardOBJ(i).ObjIndex)",
+    "Next i",
+    "End If",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RewardSpellCount)",
+    "For i = 1 To QuestList(QuestIndex).RewardSpellCount",
+    "Writer.WriteInt16 (QuestList(QuestIndex).RewardSpellList(i))",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "WriteQuestListSend",
+   "packets": [
+    {
+     "name": "QuestListSend",
+     "id": 154
+    }
+   ],
+   "seq": [
+    "Int8",
+    "String8"
+   ],
+   "straight": false,
+   "lines": [
+    "With UserList(UserIndex)",
+    "For i = 1 To MAXUSERQUESTS",
+    "If .QuestStats.Quests(i).QuestIndex Then",
+    "End If",
+    "Next i",
+    "Call Writer.WriteInt8(tmpByte)",
+    "If tmpByte Then",
+    "Call Writer.WriteString8(Left$(tmpStr, Len(tmpStr) - 1))",
+    "End If",
+    "End With"
+   ]
+  },
+  {
+   "fn": "WriteNpcQuestListSend",
+   "packets": [
+    {
+     "name": "NpcQuestListSend",
+     "id": 155
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int16",
+    "Int8",
+    "Int16",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int16",
+    "Int8",
+    "Int8",
+    "Int32",
+    "Int32",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int16",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8"
+   ],
+   "straight": false,
+   "lines": [
+    "If UserIndex < 1 Or UserIndex > LastUser Then Exit Sub",
+    "If NpcIndex < 1 Then Exit Sub",
+    "If NpcList(NpcIndex).NumQuest > 0 Then",
+    "For j = 1 To NpcList(NpcIndex).NumQuest",
+    "If IsQuestIndexValid(QuestIndex) Then",
+    "End If",
+    "Next j",
+    "End If",
+    "Call Writer.WriteInt8(validQuestCount)",
+    "For j = 1 To validQuestCount",
+    "Call Writer.WriteInt16(QuestIndex)",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredLevel)",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredQuest)",
+    "Call GetSafeRequiredClasses(QuestIndex, safeClasses, safeClassesCount)",
+    "Call Writer.WriteInt8(safeClassesCount)",
+    "If safeClassesCount > 0 Then",
+    "For i = 1 To safeClassesCount",
+    "Call Writer.WriteInt8(safeClasses(i))",
+    "Next i",
+    "End If",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).LimitLevel)",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredNPCs)",
+    "If QuestList(QuestIndex).RequiredNPCs > 0 Then",
+    "For i = 1 To QuestList(QuestIndex).RequiredNPCs",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredNPC(i).amount)",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredNPC(i).NpcIndex)",
+    "Next i",
+    "End If",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredOBJs)",
+    "If QuestList(QuestIndex).RequiredOBJs > 0 Then",
+    "For i = 1 To QuestList(QuestIndex).RequiredOBJs",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredOBJ(i).amount)",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredOBJ(i).ObjIndex)",
+    "Next i",
+    "End If",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredSpellCount)",
+    "If QuestList(QuestIndex).RequiredSpellCount > 0 Then",
+    "For i = 1 To QuestList(QuestIndex).RequiredSpellCount",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredSpellList(i))",
+    "Next i",
+    "End If",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredSkill.SkillType)",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredSkill.RequiredValue)",
+    "Call Writer.WriteInt32(QuestList(QuestIndex).RewardGLD * SvrConfig.GetValue(\"GoldMult\"))",
+    "Call Writer.WriteInt32(QuestList(QuestIndex).RewardEXP * SvrConfig.GetValue(\"ExpMult\"))",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RewardOBJs)",
+    "If QuestList(QuestIndex).RewardOBJs > 0 Then",
+    "For i = 1 To QuestList(QuestIndex).RewardOBJs",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RewardOBJ(i).amount)",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RewardOBJ(i).ObjIndex)",
+    "Next i",
+    "End If",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RewardSpellCount)",
+    "If QuestList(QuestIndex).RewardSpellCount > 0 Then",
+    "For i = 1 To QuestList(QuestIndex).RewardSpellCount",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RewardSpellList(i))",
+    "Next i",
+    "End If",
+    "If TieneQuest(UserIndex, QuestIndex) Then",
+    "Call Writer.WriteInt8(1)",
+    "ElseIf UserDoneQuest(UserIndex, QuestIndex) Then",
+    "Call Writer.WriteInt8(2)",
+    "Else",
+    "If QuestList(QuestIndex).RequiredQuest > 0 Then",
+    "If Not UserDoneQuest(UserIndex, QuestList(QuestIndex).RequiredQuest) Then",
+    "End If",
+    "End If",
+    "If QuestList(QuestIndex).RequiredLevel > 0 Then",
+    "If UserList(UserIndex).Stats.ELV < QuestList(QuestIndex).RequiredLevel Then",
+    "End If",
+    "End If",
+    "If QuestList(QuestIndex).LimitLevel > 0 Then",
+    "If UserList(UserIndex).Stats.ELV > QuestList(QuestIndex).LimitLevel Then",
+    "End If",
+    "End If",
+    "If globalQuestIndex > 0 Then",
+    "If Not GlobalQuestInfo(globalQuestIndex).IsActive Then",
+    "End If",
+    "If GlobalQuestInfo(globalQuestIndex).IsBossAlive Then",
+    "End If",
+    "If QuestList(QuestIndex).GlobalQuestThresholdNeeded > GlobalQuestInfo(globalQuestIndex).GatheringGlobalCounter Then",
+    "End If",
+    "End If",
+    "If PuedeHacerla Then",
+    "Call Writer.WriteInt8(0)",
+    "Else",
+    "Call Writer.WriteInt8(3)",
+    "End If",
+    "End If",
+    "Next j"
+   ]
+  },
+  {
+   "fn": "WriteCommerceRecieveChatMessage",
+   "packets": [
+    {
+     "name": "CommerceRecieveChatMessage",
+     "id": 166
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteInvasionInfo",
+   "packets": [
+    {
+     "name": "InvasionInfo",
+     "id": 165
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteOpenCrafting",
+   "packets": [
+    {
+     "name": "OpenCrafting",
+     "id": 168
+    }
+   ],
+   "seq": [
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteCraftingItem",
+   "packets": [
+    {
+     "name": "CraftingItem",
+     "id": 169
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteCraftingCatalyst",
+   "packets": [
+    {
+     "name": "CraftingCatalyst",
+     "id": 170
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteCraftingResult",
+   "packets": [
+    {
+     "name": "CraftingResult",
+     "id": 171
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8",
+    "Int32"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt16(Result)",
+    "If Result <> 0 Then",
+    "Call Writer.WriteInt8(Porcentaje)",
+    "Call Writer.WriteInt32(precio)",
+    "End If"
+   ]
+  },
+  {
+   "fn": "WriteUpdateNPCSimbolo",
+   "packets": [
+    {
+     "name": "UpdateNPCSimbolo",
+     "id": 156
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteGuardNotice",
+   "packets": [
+    {
+     "name": "GuardNotice",
+     "id": 172
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageCharSwing",
+   "packets": [
+    {
+     "name": "CharSwing",
+     "id": 19
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Bool",
+    "Bool",
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageSetInvisible",
+   "packets": [
+    {
+     "name": "SetInvisible",
+     "id": 83
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Bool",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareLocaleChatOverHead",
+   "packets": [
+    {
+     "name": "LocaleChatOverHead",
+     "id": 36
+    }
+   ],
+   "seq": [
+    "Int16",
+    "String8",
+    "Int16",
+    "Int32",
+    "Bool",
+    "Int8",
+    "Int8",
+    "Int16",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageChatOverHead",
+   "packets": [
+    {
+     "name": "ChatOverHead",
+     "id": 35
+    }
+   ],
+   "seq": [
+    "String8",
+    "Int16",
+    "Int32",
+    "Bool",
+    "Int8",
+    "Int8",
+    "Int16",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageTextOverChar",
+   "packets": [
+    {
+     "name": "TextOverChar",
+     "id": 125
+    }
+   ],
+   "seq": [
+    "String8",
+    "Int16",
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageTextCharDrop",
+   "packets": [
+    {
+     "name": "TextCharDrop",
+     "id": 127
+    }
+   ],
+   "seq": [
+    "String8",
+    "Int16",
+    "Int32",
+    "Int16",
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageTextOverTile",
+   "packets": [
+    {
+     "name": "TextOverTile",
+     "id": 126
+    }
+   ],
+   "seq": [
+    "String8",
+    "Int16",
+    "Int16",
+    "Int32",
+    "Int16",
+    "Int16",
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareConsoleCharText",
+   "packets": [
+    {
+     "name": "ConsoleCharText",
+     "id": 128
+    }
+   ],
+   "seq": [
+    "String8",
+    "Int32",
+    "String8",
+    "Int16",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageConsoleMsg",
+   "packets": [
+    {
+     "name": "ConsoleMsg",
+     "id": 37
+    }
+   ],
+   "seq": [
+    "String8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareFactionMessageConsole",
+   "packets": [
+    {
+     "name": "ConsoleFactionMessage",
+     "id": 38
+    }
+   ],
+   "seq": [
+    "String8",
+    "Int8",
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageLocaleMsg",
+   "packets": [
+    {
+     "name": "LocaleMsg",
+     "id": 141
+    }
+   ],
+   "seq": [
+    "Int16",
+    "String8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageCharAtaca",
+   "packets": [
+    {
+     "name": "CharAtaca",
+     "id": 182
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16",
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageCreateFX",
+   "packets": [
+    {
+     "name": "CreateFX",
+     "id": 60
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageMeditateToggle",
+   "packets": [
+    {
+     "name": "MeditateToggle",
+     "id": 84
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageParticleFX",
+   "packets": [
+    {
+     "name": "ParticleFX",
+     "id": 113
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16",
+    "Int32",
+    "Bool",
+    "Int32",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageParticleFXWithDestino",
+   "packets": [
+    {
+     "name": "ParticleFXWithDestino",
+     "id": 115
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int32",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageParticleFXWithDestinoXY",
+   "packets": [
+    {
+     "name": "ParticleFXWithDestinoXY",
+     "id": 116
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int32",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageAuraToChar",
+   "packets": [
+    {
+     "name": "AuraToChar",
+     "id": 119
+    }
+   ],
+   "seq": [
+    "Int16",
+    "String8",
+    "Bool",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageSpeedingACT",
+   "packets": [
+    {
+     "name": "SpeedToChar",
+     "id": 120
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Real32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageParticleFXToFloor",
+   "packets": [
+    {
+     "name": "ParticleFXToFloor",
+     "id": 114
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int16",
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageLightFXToFloor",
+   "packets": [
+    {
+     "name": "LightToFloor",
+     "id": 121
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int32",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessagePlayWave",
+   "packets": [
+    {
+     "name": "PlayWave",
+     "id": 55
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageUbicacionLlamada",
+   "packets": [
+    {
+     "name": "PosLLamadaDeClan",
+     "id": 152
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageCharUpdateHP",
+   "packets": [
+    {
+     "name": "CharUpdateHP",
+     "id": 150
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int32",
+    "Int32",
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageCharUpdateMAN",
+   "packets": [
+    {
+     "name": "CharUpdateMAN",
+     "id": 151
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int32",
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageNpcUpdateHP",
+   "packets": [
+    {
+     "name": "CharUpdateHP",
+     "id": 150
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int32",
+    "Int32",
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageArmaMov",
+   "packets": [
+    {
+     "name": "ArmaMov",
+     "id": 145
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareCreateProjectile",
+   "packets": [
+    {
+     "name": "CreateProjectile",
+     "id": 191
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageEscudoMov",
+   "packets": [
+    {
+     "name": "EscudoMov",
+     "id": 146
+    }
+   ],
+   "seq": [
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageFlashScreen",
+   "packets": [
+    {
+     "name": "FlashScreen",
+     "id": 129
+    }
+   ],
+   "seq": [
+    "Int32",
+    "Int32",
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageGuildChat",
+   "packets": [
+    {
+     "name": "GuildChat",
+     "id": 39
+    }
+   ],
+   "seq": [
+    "Int8",
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageShowMessageBox",
+   "packets": [
+    {
+     "name": "ShowMessageBox",
+     "id": 40
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessagePlayMidi",
+   "packets": [
+    {
+     "name": "PlayMIDI",
+     "id": 54
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageOnlineUser",
+   "packets": [
+    {
+     "name": "UserOnline",
+     "id": 112
+    }
+   ],
+   "seq": [
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessagePauseToggle",
+   "packets": [
+    {
+     "name": "PauseToggle",
+     "id": 58
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageRainToggle",
+   "packets": [
+    {
+     "name": "RainToggle",
+     "id": 59
+    }
+   ],
+   "seq": [
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageHora",
+   "packets": [
+    {
+     "name": "hora",
+     "id": 117
+    }
+   ],
+   "seq": [
+    "Int32",
+    "Int32"
+   ],
+   "straight": false,
+   "lines": [
+    "If dayLen <= 0 Then dayLen = 1",
+    "Call Writer.WriteInt32(t)",
+    "Call Writer.WriteInt32(d)"
+   ]
+  },
+  {
+   "fn": "PrepareMessageObjectDelete",
+   "packets": [
+    {
+     "name": "ObjectDelete",
+     "id": 52
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessage_BlockPosition",
+   "packets": [
+    {
+     "name": "BlockPosition",
+     "id": 53
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareTrapUpdate",
+   "packets": [
+    {
+     "name": "UpdateTrap",
+     "id": 192
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareUpdateGroupInfo",
+   "packets": [
+    {
+     "name": "UpdateGroupInfo",
+     "id": 193
+    }
+   ],
+   "seq": [
+    "Int8"
+   ],
+   "straight": false,
+   "lines": [
+    "If Not UserList(UserIndex).Grupo.EnGrupo Then",
+    "Writer.WriteInt8 (0)"
+   ]
+  },
+  {
+   "fn": "PrepareMessageObjectCreate",
+   "packets": [
+    {
+     "name": "ObjectCreate",
+     "id": 50
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageFxPiso",
+   "packets": [
+    {
+     "name": "fxpiso",
+     "id": 51
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageCharacterRemove",
+   "packets": [
+    {
+     "name": "CharacterRemove",
+     "id": 43
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Bool",
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageRemoveCharDialog",
+   "packets": [
+    {
+     "name": "RemoveCharDialog",
+     "id": 4
+    }
+   ],
+   "seq": [
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageCharacterCreate",
+   "packets": [
+    {
+     "name": "CharacterCreate",
+     "id": 42
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "String8",
+    "Int8",
+    "Int8",
+    "Int8",
+    "String8",
+    "String8",
+    "String8",
+    "String8",
+    "String8",
+    "String8",
+    "String8",
+    "Real32",
+    "Int8",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt16(charindex)",
+    "Call Writer.WriteInt16(body)",
+    "Call Writer.WriteInt16(head)",
+    "Call Writer.WriteInt8(Heading)",
+    "Call Writer.WriteInt8(x)",
+    "Call Writer.WriteInt8(y)",
+    "Call Writer.WriteInt16(weapon)",
+    "Call Writer.WriteInt16(shield)",
+    "Call Writer.WriteInt16(helmet)",
+    "Call Writer.WriteInt16(Cart)",
+    "Call Writer.WriteInt16(BackPack)",
+    "Call Writer.WriteInt16(FX)",
+    "Call Writer.WriteInt16(FXLoops)",
+    "Call Writer.WriteString8(name)",
+    "Call Writer.WriteInt8(Status)",
+    "Call Writer.WriteInt8(privileges)",
+    "Call Writer.WriteInt8(ParticulaFx)",
+    "Call Writer.WriteString8(Head_Aura)",
+    "Call Writer.WriteString8(Arma_Aura)",
+    "Call Writer.WriteString8(Body_Aura)",
+    "Call Writer.WriteString8(DM_Aura)",
+    "Call Writer.WriteString8(RM_Aura)",
+    "Call Writer.WriteString8(Otra_Aura)",
+    "Call Writer.WriteString8(Escudo_Aura)",
+    "Call Writer.WriteReal32(speeding)",
+    "Call Writer.WriteInt8(EsNPC)",
+    "Call Writer.WriteInt8(appear)",
+    "Call Writer.WriteInt16(group_index)",
+    "Call Writer.WriteInt16(clan_index)",
+    "Call Writer.WriteInt8(clan_nivel)",
+    "Call Writer.WriteInt32(UserMinHp)",
+    "Call Writer.WriteInt32(UserMaxHp)",
+    "Call Writer.WriteInt32(UserMinMAN)",
+    "Call Writer.WriteInt32(UserMaxMAN)",
+    "Call Writer.WriteInt8(Simbolo)",
+    "If Idle Then flags = flags Or &O1",
+    "If Navegando Then flags = flags Or &O2",
+    "Call Writer.WriteInt8(flags)",
+    "Call Writer.WriteInt8(tipoUsuario)",
+    "Call Writer.WriteInt8(TeamCaptura)",
+    "Call Writer.WriteInt8(TieneBandera)",
+    "Call Writer.WriteInt16(NpcNum)"
+   ]
+  },
+  {
+   "fn": "PrepareMessageCharacterChange",
+   "packets": [
+    {
+     "name": "CharacterChange",
+     "id": 49
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt16(charindex)",
+    "If Idle Then flags = flags Or &O1",
+    "If Navegando Then flags = flags Or &O2",
+    "Call Writer.WriteInt8(flags)",
+    "Call Writer.WriteInt16(body)",
+    "Call Writer.WriteInt16(head)",
+    "Call Writer.WriteInt8(Heading)",
+    "Call Writer.WriteInt16(weapon)",
+    "Call Writer.WriteInt16(shield)",
+    "Call Writer.WriteInt16(helmet)",
+    "Call Writer.WriteInt16(Cart)",
+    "Call Writer.WriteInt16(BackPack)",
+    "Call Writer.WriteInt16(FX)",
+    "Call Writer.WriteInt16(FXLoops)"
+   ]
+  },
+  {
+   "fn": "PrepareMessageUpdateFlag",
+   "packets": [
+    {
+     "name": "UpdateFlag",
+     "id": 181
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageCharacterMove",
+   "packets": [
+    {
+     "name": "CharacterMove",
+     "id": 44
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareCharacterTranslate",
+   "packets": [
+    {
+     "name": "CharacterTranslate",
+     "id": 45
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8",
+    "Int8",
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageForceCharMove",
+   "packets": [
+    {
+     "name": "ForceCharMove",
+     "id": 48
+    }
+   ],
+   "seq": [
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageUpdateTagAndStatus",
+   "packets": [
+    {
+     "name": "UpdateTagAndStatus",
+     "id": 101
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8",
+    "String8",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageErrorMsg",
+   "packets": [
+    {
+     "name": "ErrorMsg",
+     "id": 73
+    }
+   ],
+   "seq": [
+    "String8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageBarFx",
+   "packets": [
+    {
+     "name": "BarFx",
+     "id": 140
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16",
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageNieblandoToggle",
+   "packets": [
+    {
+     "name": "NieblaToggle",
+     "id": 123
+    }
+   ],
+   "seq": [
+    "Int8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageNevarToggle",
+   "packets": [
+    {
+     "name": "NieveToggle",
+     "id": 122
+    }
+   ],
+   "seq": [
+    "Bool"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareMessageDoAnimation",
+   "packets": [
+    {
+     "name": "DoAnimation",
+     "id": 167
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteShopInit",
+   "packets": [
+    {
+     "name": "ShopInit",
+     "id": 178
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int32",
+    "Int32",
+    "Int32",
+    "String8"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt16(cant_obj_shop)",
+    "Call LoadPatronCreditsFromDB(UserIndex)",
+    "Call Writer.WriteInt32(UserList(UserIndex).Stats.Creditos)",
+    "For i = 1 To cant_obj_shop",
+    "Call Writer.WriteInt32(ObjShop(i).ObjNum)",
+    "Call Writer.WriteInt32(ObjShop(i).Valor)",
+    "Call Writer.WriteString8(ObjShop(i).name)",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "WriteShopPjsInit",
+   "packets": [
+    {
+     "name": "ShopPjsInit",
+     "id": 189
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "writeUpdateShopClienteCredits",
+   "packets": [
+    {
+     "name": "UpdateShopClienteCredits",
+     "id": 179
+    }
+   ],
+   "seq": [
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteSendSkillCdUpdate",
+   "packets": [
+    {
+     "name": "SendSkillCdUpdate",
+     "id": 180
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int32",
+    "Int32",
+    "Int32",
+    "Int8",
+    "Int16"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteObjQuestSend",
+   "packets": [
+    {
+     "name": "ObjQuestListSend",
+     "id": 174
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int8",
+    "Int16",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int16",
+    "Int8",
+    "Int8",
+    "Int32",
+    "Int32",
+    "Int8",
+    "Int16",
+    "Int16",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt16(QuestIndex)",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredLevel)",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredQuest)",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredNPCs)",
+    "If QuestList(QuestIndex).RequiredNPCs Then",
+    "For i = 1 To QuestList(QuestIndex).RequiredNPCs",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredNPC(i).amount)",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredNPC(i).NpcIndex)",
+    "Next i",
+    "End If",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredOBJs)",
+    "If QuestList(QuestIndex).RequiredOBJs Then",
+    "For i = 1 To QuestList(QuestIndex).RequiredOBJs",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredOBJ(i).amount)",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredOBJ(i).ObjIndex)",
+    "Next i",
+    "End If",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredSpellCount)",
+    "If QuestList(QuestIndex).RequiredSpellCount > 0 Then",
+    "For i = 1 To QuestList(QuestIndex).RequiredSpellCount",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RequiredSpellList(i))",
+    "Next i",
+    "End If",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredSkill.SkillType)",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RequiredSkill.RequiredValue)",
+    "Call Writer.WriteInt32(QuestList(QuestIndex).RewardGLD * SvrConfig.GetValue(\"GoldMult\"))",
+    "Call Writer.WriteInt32(QuestList(QuestIndex).RewardEXP * SvrConfig.GetValue(\"ExpMult\"))",
+    "Call Writer.WriteInt8(QuestList(QuestIndex).RewardOBJs)",
+    "If QuestList(QuestIndex).RewardOBJs Then",
+    "For i = 1 To QuestList(QuestIndex).RewardOBJs",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RewardOBJ(i).amount)",
+    "Call Writer.WriteInt16(QuestList(QuestIndex).RewardOBJ(i).ObjIndex)",
+    "Next i",
+    "End If",
+    "If TieneQuest(UserIndex, QuestIndex) Then",
+    "Call Writer.WriteInt8(1)",
+    "Else",
+    "If UserDoneQuest(UserIndex, QuestIndex) Then",
+    "Call Writer.WriteInt8(2)",
+    "Else",
+    "If QuestList(QuestIndex).RequiredQuest > 0 Then",
+    "If Not UserDoneQuest(UserIndex, QuestList(QuestIndex).RequiredQuest) Then",
+    "End If",
+    "End If",
+    "If UserList(UserIndex).Stats.ELV < QuestList(QuestIndex).RequiredLevel Then",
+    "End If",
+    "If PuedeHacerla Then",
+    "Call Writer.WriteInt8(0)",
+    "Else",
+    "Call Writer.WriteInt8(3)",
+    "End If",
+    "End If",
+    "End If"
+   ]
+  },
+  {
+   "fn": "PrepareUpdateCharValue",
+   "packets": [
+    {
+     "name": "UpdateCharValue",
+     "id": 194
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16",
+    "Int32"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "PrepareActiveToggles",
+   "packets": [
+    {
+     "name": "SendClientToggles",
+     "id": 195
+    }
+   ],
+   "seq": [
+    "Int16",
+    "String8"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt16(ActiveToggleCount)",
+    "For i = 0 To ActiveToggleCount - 1",
+    "Call Writer.WriteString8(ActiveToggles(i))",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "WriteAntiCheatMessage",
+   "packets": [
+    {
+     "name": "AntiCheatMessage",
+     "id": 196
+    }
+   ],
+   "seq": [
+    "SafeArrayInt8"
+   ],
+   "straight": true
+  },
+  {
+   "fn": "WriteAntiCheatStartSeassion",
+   "packets": [
+    {
+     "name": "AntiCheatStartSession",
+     "id": 197
+    }
+   ],
+   "seq": [],
+   "straight": true
+  },
+  {
+   "fn": "WriteUpdateLobbyList",
+   "packets": [
+    {
+     "name": "ReportLobbyList",
+     "id": 198
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16",
+    "String8",
+    "String8",
+    "String8",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int16",
+    "Int32",
+    "Int8"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt16(OpenLobbyCount)",
+    "For i = 0 To OpenLobbyCount - 1",
+    "Call Writer.WriteInt16(IdList(i))",
+    "With LobbyList(IdList(i))",
+    "Call Writer.WriteString8(.Description)",
+    "If .Scenario Is Nothing Then",
+    "Call Writer.WriteString8(\"\")",
+    "Else",
+    "Call Writer.WriteString8(.Scenario.GetScenarioName())",
+    "End If",
+    "Call Writer.WriteInt16(.MinLevel)",
+    "Call Writer.WriteInt16(.MaxLevel)",
+    "Call Writer.WriteInt16(.MinPlayers)",
+    "Call Writer.WriteInt16(.MaxPlayers)",
+    "Call Writer.WriteInt16(.RegisteredPlayers)",
+    "Call Writer.WriteInt16(.TeamSize)",
+    "Call Writer.WriteInt16(.TeamType)",
+    "Call Writer.WriteInt32(.InscriptionPrice)",
+    "Call Writer.WriteInt8(IIf(Len(.Password) > 0, 1, 0))",
+    "End With",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "WriteChangeSkinSlot",
+   "packets": [
+    {
+     "name": "ChangeSkinSlot",
+     "id": 200
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int16",
+    "Bool",
+    "Int32",
+    "Int8",
+    "String8",
+    "Int32",
+    "Int16",
+    "String8"
+   ],
+   "straight": false,
+   "lines": [
+    "With UserList(UserIndex)",
+    "Call Writer.WriteInt8(Slot)",
+    "Call Writer.WriteInt16(.Invent_Skins.Object(Slot).ObjIndex)",
+    "Call Writer.WriteBool(.Invent_Skins.Object(Slot).Equipped)",
+    "If .Invent_Skins.Object(Slot).ObjIndex > 0 And Not .Invent_Skins.Object(Slot).Deleted Then",
+    "Call Writer.WriteInt32(ObjData(.Invent_Skins.Object(Slot).ObjIndex).GrhIndex)",
+    "Call Writer.WriteInt8(ObjData(.Invent_Skins.Object(Slot).ObjIndex).OBJType)",
+    "Call Writer.WriteString8(ObjData(.Invent_Skins.Object(Slot).ObjIndex).name)",
+    "Else",
+    "Call Writer.WriteInt32(0)",
+    "Call Writer.WriteInt16(0)",
+    "Call Writer.WriteString8(vbNullString)",
+    "End If",
+    "End With"
+   ]
+  },
+  {
+   "fn": "WriteGuildConfig",
+   "packets": [
+    {
+     "name": "GuildConfig",
+     "id": 201
+    }
+   ],
+   "seq": [
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8",
+    "Int8"
+   ],
+   "straight": false,
+   "lines": [
+    "Call Writer.WriteInt8(RequiredGuildLevelCallSupport)",
+    "Call Writer.WriteInt8(RequiredGuildLevelSeeInvisible)",
+    "Call Writer.WriteInt8(RequiredGuildLevelSafe)",
+    "Call Writer.WriteInt8(RequiredGuildLevelShowHPBar)",
+    "Call Writer.WriteInt8(MAX_LEVEL_GUILD)",
+    "For i = 1 To MAX_LEVEL_GUILD",
+    "Call Writer.WriteInt8(MembersByLevel(i))",
+    "Next i"
+   ]
+  },
+  {
+   "fn": "WriteShowPickUpObj",
+   "packets": [
+    {
+     "name": "ShowPickUpObj",
+     "id": 202
+    }
+   ],
+   "seq": [
+    "Int16",
+    "Int16"
+   ],
+   "straight": true
+  }
+ ]
+}

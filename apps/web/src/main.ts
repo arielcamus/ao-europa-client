@@ -1,6 +1,6 @@
 // AGPL-3.0-or-later. See ../../../LICENSE.
 import './style.css';
-import { Heading } from '@ao/protocol';
+import { Heading, parseWireProfile, setWireProfile } from '@ao/protocol';
 import { Session } from './session.js';
 import { WorldRenderer } from './renderer.js';
 import { applyClassicLayout } from './classic-layout.js';
@@ -287,8 +287,10 @@ function close(message = 'Disconnected', byPlayer = false) {
 async function boot() {
   const response = await fetch('/ao-config.json');
   if (!response.ok) throw new Error('Start this client with pnpm dev or pnpm dev:standin.');
-  const config: { mode: string; serverProfile?: string; wsPath: string } = await response.json();
+  const config: { mode: string; serverProfile?: string; wireProfile?: string; wsPath: string } = await response.json();
   if (!['standin', 'classic'].includes(config.mode) || config.wsPath !== '/bridge') throw new Error('Invalid local server configuration');
+  // The VB6 server is the pinned pre-HOO build (9ccd7fad): decode its exact layouts (packages/protocol/src/profile.ts). dev-web.mjs serves it.
+  setWireProfile(parseWireProfile(config.wireProfile ?? 'prehoo'));
   if (config.serverProfile && !['classic', 'elixir-classic'].includes(config.serverProfile)) throw new Error('Invalid server profile');
   wsPath = config.wsPath;
   const community = config.mode === 'classic' && config.serverProfile === 'elixir-classic';

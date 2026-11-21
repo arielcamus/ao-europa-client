@@ -3,7 +3,7 @@
  * Copyright (C) 2023-2026 Noland Studios. AGPL-3.0-or-later; no warranty.
  * See ../../../LICENSE and ../../../NOTICE.
  */
-import { ClientPacketId as C, CombatClientPacketId as CC, ServerPacketId as S, Heading, FrameDecoder, decodeServerPacket, encodeClientFrame } from '@ao/protocol';
+import { ClientPacketId as C, CombatClientPacketId as CC, ServerPacketId as S, Heading, FrameDecoder, decodeServerFrame, encodeClientFrame } from '@ao/protocol';
 import { StatusClientPacketId, KeysClientPacketId } from '@ao/protocol';
 import { DoorClientPacketId, DoorServerPacketId as DoorServer, KeysServerPacketId as KS } from '@ao/protocol';
 import { SessionServerPacketId as SS, SessionClientPacketId as SCP, GmServerPacketId as GmServer } from '@ao/protocol';
@@ -162,6 +162,10 @@ export class Session {
   confirmedWalks = 0;
   correctedWalks = 0;
   unknownFrames = 0;
+  /** Frames whose packet left bytes unread, and frames a codec could not read: logged and survived, never a disconnect (see receive). */
+  readonly decodeProblems: { id: number; problem: string }[] = [];
+  /** Where a decode problem is reported (the pinned client's RegistrarError writes it to its error log). */
+  logDecodeProblem: (message: string) => void = message => { console.warn(message); };
   walkInterval: number | undefined;
   connectedAt: number;
   loggedAt: number | undefined;
@@ -227,11 +231,23 @@ export class Session {
     return true;
   }
   private readonly issued = new Map<string, number>();
+  private decodeProblem(body: Uint8Array, problem: string, trailing?: Uint8Array): void {
+    const id = body.length >= 2 ? body[0]! | (body[1]! << 8) : -1;
+    if (this.decodeProblems.length < 50) this.decodeProblems.push({ id, problem });
+    const hex = (bytes: Uint8Array) => Array.from(bytes.subarray(0, 64), b => b.toString(16).padStart(2, '0')).join('');
+    this.logDecodeProblem(`[protocol] ${problem}${trailing ? ` (extra ${hex(trailing)})` : ''}; frame ${hex(body)}`);
+  }
   receive(bytes: Uint8Array): void {
     if (this.phase === 'closed') return;
     for (const body of this.decoder.push(bytes)) {
-      const packet = decodeServerPacket(body);
+      // client-classic 619e69d HandleIncomingData: a handler that reads too few bytes, or a packet with no handler, is logged
+      // ("Server message ID: N unhandled or too many bytes; K extra bytes found") and the rest of the message is drained; a read past the end
+      // raises inside the handler, whose error handler logs it. Neither closes the connection, so one wrong codec never kicks the player.
+      let frame: ReturnType<typeof decodeServerFrame>;
+      try { frame = decodeServerFrame(body); } catch (error) { this.decodeProblem(body, error instanceof Error ? error.message : String(error)); continue; }
+      const { packet, trailing } = frame;
       if ('unknown' in packet) { this.unknownFrames++; continue; }
+      if (trailing.length) this.decodeProblem(body, `Server message ID: ${packet.id} too many bytes; ${trailing.length} extra bytes found`, trailing);
       this.ui.receive(packet);
       this.tracker.receive(packet, this.clock());
       this.combat.receive(packet, {

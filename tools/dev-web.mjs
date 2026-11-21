@@ -2,6 +2,7 @@
 import { fileURLToPath } from 'node:url';
 import { createServer, preview } from 'vite';
 import { startBridge } from '../packages/bridge/dist/index.js';
+import { parseWireProfile, setWireProfile } from '../packages/protocol/dist/index.js';
 import { startStandin } from './standin-server/dist/index.js';
 import { distDelivery, injectAssetVersion, localAssets } from './local-assets.mjs';
 
@@ -9,6 +10,10 @@ const standinMode = process.argv.includes('--standin');
 const previewMode = process.argv.includes('--preview');
 const serverProfile = process.env.AO_SERVER_PROFILE ?? 'classic';
 if (!['classic', 'elixir-classic'].includes(serverProfile)) throw new Error('Invalid AO_SERVER_PROFILE');
+// Wire layout of the VB6 server (packages/protocol/src/profile.ts): the live one is the pinned pre-HOO build. The browser decodes with it
+// (ao-config.json) and the stand-in encodes with it, so both ends agree. AO_WIRE_PROFILE=live for a HOO-era server.
+const wireProfile = parseWireProfile(process.env.AO_WIRE_PROFILE ?? 'prehoo');
+setWireProfile(wireProfile);
 const cleanup = [];
 let stopping = false;
 async function stop() {
@@ -27,7 +32,7 @@ try {
     server.middlewares.use((request, response, next) => {
       if (request.url === '/ao-config.json') {
         response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
-        response.end(JSON.stringify({ mode: standinMode ? 'standin' : 'classic', serverProfile, wsPath: '/bridge', assetVersion: assets.version }));
+        response.end(JSON.stringify({ mode: standinMode ? 'standin' : 'classic', serverProfile, wireProfile, wsPath: '/bridge', assetVersion: assets.version }));
       } else next();
     });
     server.middlewares.use(assets);
