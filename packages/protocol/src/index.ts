@@ -22,3 +22,4 @@ export * from './packets/pets-travel.js';
 export * from './packets/keyring.js';
 export * from './packets/gm.js';
 export * from './packets/session.js';
+export * from './packets/extras.js';

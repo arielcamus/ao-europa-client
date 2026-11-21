@@ -38,6 +38,8 @@ export class GmUI {
   private seen = { panel: 0, spawn: 0, motd: 0 };
   private bar: Record<'panel' | 'object' | 'spawn' | 'invisible' | 'online', HTMLElement>;
   private panelWindow: VbWindow | undefined;
+  /** frmPanelGm menu Herramientas > Torneos y Eventos > Crear Nuevo: opens FrmTorneo (extras-ui.ts). */
+  onTournament: (() => void) | undefined;
   private userCombo: HTMLSelectElement | undefined;
   private lists: { main: VbList; queries: VbList; detail: HTMLTextAreaElement | HTMLInputElement } | undefined;
   /** Counts what each form did; the tests and the QA shots read it. */
@@ -120,6 +122,7 @@ export class GmUI {
     });
     cmd('Mapeo', t(3480, 3360, 1215, 360), () => setWidth(win.root.offsetWidth === narrow ? wide : narrow));
     cmd('Actualizar Trabajadores', t(120, 3840, 2175, 360), () => this.send({ id: G.Working }));
+    cmd('Torneos y Eventos', [8, 517, 150, 18], () => this.onTournament?.()).id = 'gm-tournament-button';
     cmd('Actualizar Usuarios', t(2400, 3840, 2295, 360), () => this.send({ id: G.RequestUserList }));
     const picker = combo(session.gm.userNames); this.userCombo = picker;
     win.add(picker, t(120, 4320, 3675, 315));
