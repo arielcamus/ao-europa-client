@@ -1,0 +1,963 @@
+diff --git a/Codigo/CharacterPersistence.bas b/Codigo/CharacterPersistence.bas
+index 325c1358..78516153 100644
+--- a/Codigo/CharacterPersistence.bas
++++ b/Codigo/CharacterPersistence.bas
+@@ -110,8 +110,8 @@ Public Function LoadCharacterBank(ByVal UserIndex As Integer) As Boolean
+         counter = 0
+         If Not RS Is Nothing Then
+             While Not RS.EOF
+-                With .BancoInvent.Object(RS!Number)
+-                    .ObjIndex = IIf(RS!item_id <= UBound(ObjData), RS!item_id, 0)
++                With .BancoInvent.Object(CLng(RS!Number))
++                    .ObjIndex = IIf(CLng(RS!item_id) <= UBound(ObjData), CLng(RS!item_id), 0)
+                     If .ObjIndex <> 0 Then
+                         If LenB(ObjData(.ObjIndex).name) Then
+                             counter = counter + 1
+@@ -169,7 +169,7 @@ Public Function LoadCharacterInventory(ByVal UserIndex As Integer) As Boolean
+                 If db_inv_slot > 0 And db_inv_slot <= max_slots_to_load Then
+                     'Make sure the slot index is within array bounds and that we don't load slots more slots than required for the current tier
+                     With .invent.Object(db_inv_slot)
+-                        .ObjIndex = IIf(RS!item_id <= UBound(ObjData), RS!item_id, 0)
++                        .ObjIndex = IIf(CLng(RS!item_id) <= UBound(ObjData), CLng(RS!item_id), 0)
+                         If .ObjIndex <> 0 Then
+                             If LenB(ObjData(.ObjIndex).name) Then
+                                 counter = counter + 1
+@@ -177,7 +177,7 @@ Public Function LoadCharacterInventory(ByVal UserIndex As Integer) As Boolean
+                                 .Equipped = False
+                                 .ElementalTags = RS!elemental_tags
+                                 If RS!is_equipped Then
+-                                    Call EquiparInvItem(UserIndex, RS!Number, True)
++                                    Call EquiparInvItem(UserIndex, CByte(RS!Number), True)
+                                 End If
+                             Else
+                                 .ObjIndex = 0
+@@ -371,7 +371,7 @@ Private Sub SetupUserSpells(ByRef User As t_User)
+     Set RS = Query("SELECT number, spell_id FROM spell WHERE user_id = ?;", User.Id)
+     If Not RS Is Nothing Then
+         While Not RS.EOF
+-            User.Stats.UserHechizos(RS!Number) = RS!spell_id
++            User.Stats.UserHechizos(CLng(RS!Number)) = CLng(SanitizeNullValue(RS!spell_id, 0))
+             RS.MoveNext
+         Wend
+     End If
+@@ -382,8 +382,8 @@ Private Sub SetupUserPets(ByRef User As t_User)
+     Set RS = Query("SELECT number, pet_id FROM pet WHERE user_id = ?;", User.Id)
+     If Not RS Is Nothing Then
+         While Not RS.EOF
+-            User.MascotasType(RS!Number) = RS!pet_id
+-            If val(RS!pet_id) <> 0 Then
++            User.MascotasType(CLng(RS!Number)) = CLng(SanitizeNullValue(RS!pet_id, 0))
++            If val(CStr(SanitizeNullValue(RS!pet_id, 0))) <> 0 Then
+                 User.NroMascotas = User.NroMascotas + 1
+             End If
+             RS.MoveNext
+@@ -398,7 +398,7 @@ Private Sub SetupUserBankInventory(ByRef User As t_User)
+     Set RS = Query("SELECT number, item_id, amount, elemental_tags FROM bank_item WHERE user_id = ?;", User.Id)
+     If Not RS Is Nothing Then
+         While Not RS.EOF
+-            With User.BancoInvent.Object(RS!Number)
++            With User.BancoInvent.Object(CLng(RS!Number))
+                 .ObjIndex = RS!item_id
+                 If .ObjIndex <> 0 Then
+                     If LenB(ObjData(.ObjIndex).name) > 0 Then
+@@ -422,8 +422,8 @@ Private Sub SetupUserSkills(ByRef User As t_User)
+     Set RS = Query("SELECT number, value FROM skillpoint WHERE user_id = ?;", User.Id)
+     If Not RS Is Nothing Then
+         While Not RS.EOF
+-            User.Stats.UserSkills(RS!Number) = RS!value
+-            User.Stats.SkillDirty(RS!Number) = False
++            User.Stats.UserSkills(CLng(RS!Number)) = CLng(SanitizeNullValue(RS!value, 0))
++            User.Stats.SkillDirty(CLng(RS!Number)) = False
+             RS.MoveNext
+         Wend
+     End If
+@@ -444,23 +444,23 @@ Private Sub SetupUserQuests(ByRef User As t_User)
+     If Not RS Is Nothing Then
+         While Not RS.EOF
+             If Not IsNull(RS!Number) Then
+-                User.QuestStats.Quests(RS!Number).QuestIndex = RS!quest_id
+-                User.QuestStats.Quests(RS!Number).Dirty = False ' Loaded from DB.
+-                If User.QuestStats.Quests(RS!Number).QuestIndex > 0 Then
+-                    If QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredNPCs Then
++                User.QuestStats.Quests(CLng(RS!Number)).QuestIndex = RS!quest_id
++                User.QuestStats.Quests(CLng(RS!Number)).Dirty = False ' Loaded from DB.
++                If User.QuestStats.Quests(CLng(RS!Number)).QuestIndex > 0 Then
++                    If QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredNPCs Then
+                         Dim NPCs() As String
+-                        NPCs = Split(RS!NPCs, "-")
+-                        ReDim User.QuestStats.Quests(RS!Number).NPCsKilled(1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredNPCs)
+-                        For LoopC = 1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredNPCs
+-                            User.QuestStats.Quests(RS!Number).NPCsKilled(LoopC) = val(NPCs(LoopC - 1))
++                        NPCs = Split(CStr(SanitizeNullValue(RS!NPCs, vbNullString)), "-")
++                        ReDim User.QuestStats.Quests(CLng(RS!Number)).NPCsKilled(1 To QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredNPCs)
++                        For LoopC = 1 To QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredNPCs
++                            User.QuestStats.Quests(CLng(RS!Number)).NPCsKilled(LoopC) = val(NPCs(LoopC - 1))
+                         Next LoopC
+                     End If
+-                    If QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredTargetNPCs Then
++                    If QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredTargetNPCs Then
+                         Dim NPCsTarget() As String
+-                        NPCsTarget = Split(RS!NPCsTarget, "-")
+-                        ReDim User.QuestStats.Quests(RS!Number).NPCsTarget(1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredTargetNPCs)
+-                        For LoopC = 1 To QuestList(User.QuestStats.Quests(RS!Number).QuestIndex).RequiredTargetNPCs
+-                            User.QuestStats.Quests(RS!Number).NPCsTarget(LoopC) = val(NPCsTarget(LoopC - 1))
++                        NPCsTarget = Split(CStr(SanitizeNullValue(RS!NPCsTarget, vbNullString)), "-")
++                        ReDim User.QuestStats.Quests(CLng(RS!Number)).NPCsTarget(1 To QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredTargetNPCs)
++                        For LoopC = 1 To QuestList(User.QuestStats.Quests(CLng(RS!Number)).QuestIndex).RequiredTargetNPCs
++                            User.QuestStats.Quests(CLng(RS!Number)).NPCsTarget(LoopC) = val(NPCsTarget(LoopC - 1))
+                         Next LoopC
+                     End If
+                 End If
+diff --git a/Codigo/DisconnectDiagnostics.bas b/Codigo/DisconnectDiagnostics.bas
+index 6fade97c..9fc8f149 100644
+--- a/Codigo/DisconnectDiagnostics.bas
++++ b/Codigo/DisconnectDiagnostics.bas
+@@ -13,7 +13,7 @@ Public Sub LogDisconnectDiag( _
+     ByVal Reason As String, _
+     Optional ByVal PacketId As Long = -1, _
+     Optional ByVal PacketName As String = vbNullString, _
+-    Optional ByVal PacketCount As Long = -1, _
++    Optional ByVal diagnosticPacketCount As Long = -1, _
+     Optional ByVal Extra As String = vbNullString)
+ 
+     On Error Resume Next
+@@ -38,7 +38,7 @@ Public Sub LogDisconnectDiag( _
+ 
+     If PacketId >= 0 Then message = message & " packetId=" & CStr(PacketId)
+     If PacketName <> vbNullString Then message = message & " packetName=" & CleanDisconnectDiagValue(PacketName)
+-    If PacketCount >= 0 Then message = message & " packetCount=" & CStr(PacketCount)
++    If diagnosticPacketCount >= 0 Then message = message & " packetCount=" & CStr(diagnosticPacketCount)
+ 
+     If UserIndex > 0 Then
+         With UserList(UserIndex)
+diff --git a/Codigo/EffectsOverTime.bas b/Codigo/EffectsOverTime.bas
+index 73a42e2a..74f2616c 100644
+--- a/Codigo/EffectsOverTime.bas
++++ b/Codigo/EffectsOverTime.bas
+@@ -308,7 +308,7 @@ Public Sub CreateEffect(ByVal SourceIndex As Integer, _
+                 Call AddEffect(NpcList(TargetIndex).EffectOverTime, BonusDamage)
+             End If
+         Case Else
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+     End Select
+     Exit Sub
+ CreateEffect_Err:
+@@ -419,7 +419,7 @@ Private Function InstantiateEOT(ByVal EffectType As e_EffectOverTimeType) As IBa
+         Case e_EffectOverTimeType.eBonusDamage
+             Set InstantiateEOT = New BonusDamageEffect
+         Case Else
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+     End Select
+ End Function
+ 
+diff --git a/Codigo/FileIO.bas b/Codigo/FileIO.bas
+index ea3273cf..76fc7454 100644
+--- a/Codigo/FileIO.bas
++++ b/Codigo/FileIO.bas
+@@ -1980,7 +1980,7 @@ Private Sub ValidateCities()
+ 
+             Call LogError(ErrorMessage)
+             Debug.Print ErrorMessage
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+         End If
+     Next CityIndex
+ End Sub
+diff --git a/Codigo/FrmStat.frm b/Codigo/FrmStat.frm
+index c104bec8..b5c494f6 100644
+--- a/Codigo/FrmStat.frm
++++ b/Codigo/FrmStat.frm
+@@ -1,5 +1,4 @@
+ VERSION 5.00
+-Object = "{6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.3#0"; "comctl32.ocx"
+ Begin VB.Form FrmStat 
+    BackColor       =   &H00C0C0C0&
+    BorderStyle     =   3  'Fixed Dialog
+@@ -17,16 +16,16 @@ Begin VB.Form FrmStat
+    ScaleWidth      =   375
+    ShowInTaskbar   =   0   'False
+    StartUpPosition =   1  'CenterOwner
+-   Begin ComctlLib.ProgressBar ProgressBar1 
++   Begin VB.PictureBox picProgress1
++      AutoRedraw      =   -1  'True
++      BackColor       =   &H00FFFFFF&
++      BorderStyle     =   1  'Fixed Single
++      ScaleMode       =   3  'Pixel
+       Height          =   255
+       Left            =   240
+       TabIndex        =   1
+       Top             =   600
+       Width           =   5175
+-      _ExtentX        =   9128
+-      _ExtentY        =   450
+-      _Version        =   327682
+-      Appearance      =   1
+    End
+    Begin VB.Label Titu 
+       AutoSize        =   -1  'True
+@@ -54,6 +53,11 @@ Attribute VB_GlobalNameSpace = False
+ Attribute VB_Creatable = False
+ Attribute VB_PredeclaredId = True
+ Attribute VB_Exposed = False
++' twinBASIC build: the comctl32 ProgressBar needs a VB6 licence, so it is replaced by a PictureBox (picProgress1) driven by clsProgressBar.
++Public ProgressBar1 As New clsProgressBar
++Private Sub Form_Initialize()
++    Set ProgressBar1.Host = picProgress1
++End Sub
+ ' Argentum 20 Game Server
+ '
+ '    Copyright (C) 2023-2026 Noland Studios LTD
+diff --git a/Codigo/LocaleDef.bas b/Codigo/LocaleDef.bas
+index de71a67b..8548d851 100644
+--- a/Codigo/LocaleDef.bas
++++ b/Codigo/LocaleDef.bas
+@@ -137,6 +137,6 @@ Public Function GetRequiredWeaponLocaleId(ByVal WeaponType As e_WeaponType) As I
+         Case e_WeaponType.eFist
+             GetRequiredWeaponLocaleId = 474
+         Case Else
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+     End Select
+ End Function
+diff --git a/Codigo/ModAutomatedActions.bas b/Codigo/ModAutomatedActions.bas
+index b1ead2c1..3b427c3a 100644
+--- a/Codigo/ModAutomatedActions.bas
++++ b/Codigo/ModAutomatedActions.bas
+@@ -49,7 +49,7 @@ Public Sub RunAutomatedActions()
+                         Case e_Skill.Smelting
+                             Call SmeltMinerals(UserIndex)
+                         Case Else
+-                            Debug.Assert False
++                            'Debug.Assert False [neutralised: IDE debugger stop]
+                     End Select
+                 End If
+             End If
+diff --git a/Codigo/ModCastle.bas b/Codigo/ModCastle.bas
+index 33c43c68..e168da1d 100644
+--- a/Codigo/ModCastle.bas
++++ b/Codigo/ModCastle.bas
+@@ -128,7 +128,7 @@ Public Sub LoadCastleWhiteLists()
+     
+     Do While Not RS.EOF
+         Dim CastleSlot As Integer
+-        CastleSlot = GetCastleSlotById(RS!castle_id)
++        CastleSlot = GetCastleSlotById(CInt(RS!castle_id))
+         Debug.Assert CastleSlot > 0
+         Dim CharacterName As String
+         CharacterName = LCase$(CStr(RS!character_name))
+@@ -194,17 +194,17 @@ Public Sub LoadCastleData()
+     Dim RS As ADODB.Recordset
+     Set RS = Query(COUNT_ALL_CASTLES)
+     If RS Is Nothing Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         Exit Sub
+     End If
+-    ReDim CastleData(1 To RS.Fields(0).value)
++    ReDim CastleData(1 To CLng(RS.Fields(0).value))
+ 
+     Dim i As Long
+     i = 1
+     Set RS = Query(SELECT_ALL_CASTLES)
+     If RS Is Nothing Or RS.RecordCount = 0 Then Exit Sub
+     If RS.RecordCount <> UBound(CastleData) Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         Exit Sub
+     End If
+ 
+@@ -224,7 +224,7 @@ Public Sub LoadCastleData()
+     
+             If Not IsNull(RS!owner_character_id) Then
+                 .owner_char_id = (RS!owner_character_id)
+-                .owner_char_name = LCase$(GetCharacterNameByUserId(RS!owner_character_id))
++                .owner_char_name = LCase$(GetCharacterNameByUserId(CLng(RS!owner_character_id)))
+             End If
+             
+             If Not IsNull(RS!foundation_date) Then
+@@ -257,7 +257,7 @@ Public Sub LoadCastleCoordinates()
+     i = 1
+     Do While Not RS.EOF
+         If i <> (RS!castle_id) Then
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+         End If
+         CastleData(i).castle_coordinates.outside.map = (RS!outside_map)
+         CastleData(i).castle_coordinates.outside.x = (RS!outside_x)
+@@ -710,6 +710,8 @@ Function CheckCastleEntryWhiteList(ByVal UserIndex As Integer, ByVal trigger As
+ 
+     Dim CastleIndex As Integer
+     If Not IsEmperorCastleCreated(UserIndex, trigger, CastleIndex) Then
++        'No founded castle owns this trigger (triggers 21-40 are also used by ordinary building interiors): nothing to enforce, let the player through.
++        CheckCastleEntryWhiteList = True
+         Exit Function
+     End If
+ 
+@@ -750,13 +752,13 @@ Public Sub ModifyCastleEntryWhiteList(ByVal UserIndex As Integer, ByVal Characte
+         Dim CastleIndex As Integer
+         If Not IsEmperorCastleCreated(UserIndex, 0, CastleIndex) Then
+             Call LogError("Couldn't find the castle for user: " & .name)
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+             Exit Sub
+         End If
+     
+         If CastleIndex <= -1 Then
+             Call LogError("Couldn't find the castle for user: " & .name)
+-            Debug.Assert False
++            'Debug.Assert False [neutralised: IDE debugger stop]
+         End If
+         
+         Select Case operation
+@@ -799,15 +801,15 @@ Public Sub SaveCastleWhiteListToDb()
+                     'if charname is no longer in the whitelist dictionary
+                     If Not .castleWhiteList.Exists(LCase$(CStr(RS!character_name))) Then
+                         'Delete char from db
+-                        Set RS2 = Query(DELETE_CHAR_IN_CASTLE_WHITELIST, RS!id)
++                        Set RS2 = Query(DELETE_CHAR_IN_CASTLE_WHITELIST, CLng(RS!id))
+                         If RS2 Is Nothing Then
+-                            Debug.Assert False
++                            'Debug.Assert False [neutralised: IDE debugger stop]
+                             Call LogInfoServidor("Error while deleting whitelisted character in db charname: " & RS!character_name & " for castle: " & RS!castle_id)
+                         End If
+                     'if he is, check if he is saved in db
+                     Else
+                         'insert if doesn't exist, ignore if he does (logic inside the query)
+-                        Set RS2 = Query(INSERT_OR_IGNORE_NEW_CHAR_IN_CASTLE_WHITELIST, RS!character_name, RS!castle_id)
++                        Set RS2 = Query(INSERT_OR_IGNORE_NEW_CHAR_IN_CASTLE_WHITELIST, CStr(RS!character_name), CLng(RS!castle_id))
+                     End If
+                     RS.MoveNext
+                 Loop
+@@ -841,7 +843,7 @@ End Sub
+ 
+ Public Sub SendCastleInfo(ByVal UserIndex As Integer, ByVal CastleSlot As Integer)
+     If CastleSlot <= 0 Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+     End If
+ 
+     With CastleData(CastleSlot)
+diff --git a/Codigo/ModGlobalQuests.bas b/Codigo/ModGlobalQuests.bas
+index 4e24fd2b..004b3602 100644
+--- a/Codigo/ModGlobalQuests.bas
++++ b/Codigo/ModGlobalQuests.bas
+@@ -84,7 +84,7 @@ Public Sub LoadGlobalQuests()
+     On Error GoTo LoadGlobalQuests_Err
+     Dim MaxGlobalQuests
+     If Not FileExist(DatPath & "GlobalQuests.dat", vbArchive) Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         Exit Sub
+     End If
+     Dim GlobalQuest As Integer
+@@ -122,13 +122,13 @@ Public Sub LoadGlobalQuests()
+                 .Name = RS!Name
+                 .ObjectIndex = RS!obj_id
+                 .GatheringThreshold = RS!threshold
+-                .StartDate = SQLiteToDate(RS!start_date)
+-                .EndDate = SQLiteToDate(RS!end_date)
++                .StartDate = SQLiteToDate(CStr(RS!start_date))
++                .EndDate = SQLiteToDate(CStr(RS!end_date))
+                 .IsActive = RS!is_active
+                 Set RS = Query(SUM_TOTAL_AMOUNT_FROM_USER_CONTRIBUTION, i)
+                 If Not IsNull(RS!total_amount) Then
+                     .GatheringGlobalCounter = RS!total_amount
+-                    .GatheringGlobalInstallments = RS!total_amount + .GatheringInitialInstallments
++                    .GatheringGlobalInstallments = CLng(RS!total_amount) + .GatheringInitialInstallments
+                 End If
+             End If
+         End With
+diff --git a/Codigo/ModPhoenix.bas b/Codigo/ModPhoenix.bas
+index c6044f75..5819618f 100644
+--- a/Codigo/ModPhoenix.bas
++++ b/Codigo/ModPhoenix.bas
+@@ -55,7 +55,7 @@ End Sub
+ Public Sub LoadPhoenixModule()
+     m_LastPhoenixSpawnAttempt = GetTickCountRaw()
+     If Not FileExist(DatPath & "PhoenixMapPool.dat", vbArchive) Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         Call LogError("Missing file PhoenixMapPool.Dat")
+         Exit Sub
+     End If
+diff --git a/Codigo/ModUnderworld.bas b/Codigo/ModUnderworld.bas
+index f7165f81..892ae027 100644
+--- a/Codigo/ModUnderworld.bas
++++ b/Codigo/ModUnderworld.bas
+@@ -74,7 +74,7 @@ Public Sub KickUsersFromUnderworld()
+     Dim HomeCityId As e_City
+     For i = 1 To UBound(UnderworldMapPool)
+         If Not MapaValido(UnderworldMapPool(i).Map) Then
+-            Debug.Assert False 'invalid map shouldn't happen
++            'Debug.Assert False [neutralised: IDE debugger stop] 'invalid map shouldn't happen
+             Exit Sub
+         End If
+         For LoopC = 1 To ConnGroups(UnderworldMapPool(i).Map).CountEntrys
+@@ -89,7 +89,7 @@ Public Sub KickUsersFromUnderworld()
+     Next i
+     
+     If Not MapaValido(UNDERWORLD_CENTER_MAP_NUMBER) Then
+-        Debug.Assert False 'invalid map shouldn't happen
++        'Debug.Assert False [neutralised: IDE debugger stop] 'invalid map shouldn't happen
+         Exit Sub
+     End If
+     
+@@ -106,7 +106,7 @@ End Sub
+ 
+ Public Sub DestroyUnderworldTp(ByRef Source As t_WorldPos, ByRef Dest As t_WorldPos)
+     If Not MapaValido(Source.Map) Or Not InMapBounds(Source.Map, Source.x, Source.y) Or Not InMapBounds(Source.Map, Source.x, Source.y - 4) Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         Exit Sub
+     End If
+     If MapData(Source.Map, Source.x, Source.y).ObjInfo.ObjIndex <> UNDERWORLD_PORTAL_OBJ_IDX Then Exit Sub
+@@ -118,7 +118,7 @@ End Sub
+ 
+ Public Sub CreateUnderworldTp(ByRef Source As t_WorldPos, ByRef Dest As t_WorldPos)
+     If Not MapaValido(Source.Map) Or Not InMapBounds(Source.Map, Source.x, Source.y) Or Not InMapBounds(Source.Map, Source.x, Source.y - 4) Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         Exit Sub
+     End If
+     If Not MapaValido(Dest.Map) Or Not InMapBounds(Dest.Map, Dest.x, Dest.y) Then Exit Sub
+@@ -168,7 +168,7 @@ Public Sub LoadUnderworldModule()
+     IsUnderworldInitialized = True
+     m_UnderworldLastSpawnTimestamp = GetTickCountRaw()
+     If Not FileExist(DatPath & "UnderworldMapPool.dat", vbArchive) Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         IsUnderworldInitialized = False
+         Call LogError("Missing file UnderworldMapPool.Dat")
+         Exit Sub
+@@ -181,18 +181,18 @@ Public Sub LoadUnderworldModule()
+     UnderworldUpperLimitOfTime = val(IniFile.GetValue("INIT", "UnderworldUpperLimitOfTime"))
+     UnderworldLowerLimitOfTime = val(IniFile.GetValue("INIT", "UnderworldLowerLimitOfTime"))
+     If MaxUnderworldMaps <= 0 Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         MaxUnderworldMaps = 0
+         IsUnderworldInitialized = False
+         Exit Sub
+     End If
+     If UnderworldUpperLimitOfTime < DAY_START Or UnderworldUpperLimitOfTime > DAY_END Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         UnderworldUpperLimitOfTime = DAY_MAX_OUT_OF_BOUNDS
+         IsUnderworldInitialized = False
+     End If
+     If UnderworldLowerLimitOfTime < DAY_START Or UnderworldLowerLimitOfTime > DAY_END Then
+-        Debug.Assert False
++        'Debug.Assert False [neutralised: IDE debugger stop]
+         UnderworldLowerLimitOfTime = DAY_MIN_OUT_OF_BOUNDS
+         IsUnderworldInitialized = False
+     End If
+diff --git a/Codigo/Modulo_UsUaRiOs.bas b/Codigo/Modulo_UsUaRiOs.bas
+index de509edd..626c15a5 100644
+--- a/Codigo/Modulo_UsUaRiOs.bas
++++ b/Codigo/Modulo_UsUaRiOs.bas
+@@ -94,7 +94,7 @@ Public Function GetNextAvailableUserSlot() As Integer
+     On Error GoTo ErrHandler
+     If (AvailableUserSlot.currentIndex = 0) Then
+         GetNextAvailableUserSlot = -1
+-        Return
++        Exit Function
+     End If
+     GetNextAvailableUserSlot = AvailableUserSlot.IndexInfo(AvailableUserSlot.currentIndex)
+     AvailableUserSlot.currentIndex = AvailableUserSlot.currentIndex - 1
+diff --git a/Codigo/Protocol.bas b/Codigo/Protocol.bas
+index e91a4049..69591c9b 100644
+--- a/Codigo/Protocol.bas
++++ b/Codigo/Protocol.bas
+@@ -1421,9 +1421,16 @@ End Sub
+ '
+ ' @param    UserIndex The index of the user sending the message.
+ 
+-Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
++Private Sub HandleLoginNewChar(ByVal ConnectionID As Long)
+ 
+         On Error GoTo ErrHandler
++        ' Upstream bug fix (ao-client SERVER-PREHOO-BUILD.md): the dispatcher passes ConnectionID, not UserIndex; map it like HandleLoginExistingChar.
++        Dim UserIndex As Integer
++        UserIndex = Mapping(ConnectionID).UserRef.ArrayIndex
++        If UserIndex < 1 Then
++            Call KickConnection(ConnectionID)
++            Exit Sub
++        End If
+ 
+         Dim name As String
+         Dim race     As e_Raza
+diff --git a/Codigo/Protocol_Writes.bas b/Codigo/Protocol_Writes.bas
+index 4977a69e..50382342 100644
+--- a/Codigo/Protocol_Writes.bas
++++ b/Codigo/Protocol_Writes.bas
+@@ -3129,10 +3129,10 @@ WriteCommerceRecieveChatMessage_Err:
+     Call TraceError(Err.Number, Err.Description, "Argentum20Server.Protocol_Writes.WriteCommerceRecieveChatMessage", Erl)
+ End Sub
+ 
+-Sub WriteInvasionInfo(ByVal UserIndex As Integer, ByVal Invasion As Integer, ByVal PorcentajeVida As Byte, ByVal PorcentajeTiempo As Byte)
++Sub WriteInvasionInfo(ByVal UserIndex As Integer, ByVal invasionId As Integer, ByVal PorcentajeVida As Byte, ByVal PorcentajeTiempo As Byte)
+     On Error GoTo WriteInvasionInfo_Err
+     Call Writer.WriteInt16(ServerPacketID.eInvasionInfo)
+-    Call Writer.WriteInt8(Invasion)
++    Call Writer.WriteInt8(invasionId)
+     Call Writer.WriteInt8(PorcentajeVida)
+     Call Writer.WriteInt8(PorcentajeTiempo)
+     Call modSendData.SendData(ToIndex, UserIndex)
+diff --git a/Codigo/TCP.bas b/Codigo/TCP.bas
+index 984849c1..5e751219 100644
+--- a/Codigo/TCP.bas
++++ b/Codigo/TCP.bas
+@@ -553,9 +553,9 @@ ConnectNewUser_Err:
+     Call TraceError(Err.Number, Err.Description, "TCP.ConnectNewUser", Erl)
+ End Function
+ 
+-Sub CloseSocket(ByVal UserIndex As Integer, Optional ByVal Reason As String = vbNullString, Optional ByVal Source As String = "TCP.CloseSocket", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal PacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
++Sub CloseSocket(ByVal UserIndex As Integer, Optional ByVal Reason As String = vbNullString, Optional ByVal Source As String = "TCP.CloseSocket", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal diagnosticPacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
+     On Error GoTo ErrHandler
+-    Call LogDisconnectDiag(Source, "CloseSocket", UserIndex, UserList(UserIndex).ConnectionDetails.ConnID, Reason, PacketId, PacketName, PacketCount, Extra)
++    Call LogDisconnectDiag(Source, "CloseSocket", UserIndex, UserList(UserIndex).ConnectionDetails.ConnID, Reason, PacketId, PacketName, diagnosticPacketCount, Extra)
+     If UserIndex = LastUser Then
+         Do Until UserList(LastUser).flags.UserLogged
+             LastUser = LastUser - 1
+@@ -563,7 +563,7 @@ Sub CloseSocket(ByVal UserIndex As Integer, Optional ByVal Reason As String = vb
+         Loop
+     End If
+     With UserList(UserIndex)
+-        If .ConnectionDetails.ConnIDValida Then Call CloseSocketSL(UserIndex, Reason, Source, PacketId, PacketName, PacketCount, Extra)
++        If .ConnectionDetails.ConnIDValida Then Call CloseSocketSL(UserIndex, Reason, Source, PacketId, PacketName, diagnosticPacketCount, Extra)
+         'mato los comercios seguros
+         If IsValidUserRef(.ComUsu.DestUsu) Then
+             If UserList(.ComUsu.DestUsu.ArrayIndex).flags.UserLogged Then
+@@ -588,11 +588,11 @@ ErrHandler:
+     Call TraceError(Err.Number, Err.Description, "TCP.CloseSocket", Erl)
+ End Sub
+ 
+-Sub CloseSocketSL(ByVal UserIndex As Integer, Optional ByVal Reason As String = vbNullString, Optional ByVal Source As String = "TCP.CloseSocketSL", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal PacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
++Sub CloseSocketSL(ByVal UserIndex As Integer, Optional ByVal Reason As String = vbNullString, Optional ByVal Source As String = "TCP.CloseSocketSL", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal diagnosticPacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
+     On Error GoTo CloseSocketSL_Err
+     If UserList(UserIndex).ConnectionDetails.ConnIDValida Then
+-        Call LogDisconnectDiag(Source, "CloseSocketSL", UserIndex, UserList(UserIndex).ConnectionDetails.ConnID, Reason, PacketId, PacketName, PacketCount, Extra)
+-        Call modNetwork.Kick(UserList(UserIndex).ConnectionDetails.ConnID, Reason, Source, PacketId, PacketName, PacketCount, Extra)
++        Call LogDisconnectDiag(Source, "CloseSocketSL", UserIndex, UserList(UserIndex).ConnectionDetails.ConnID, Reason, PacketId, PacketName, diagnosticPacketCount, Extra)
++        Call modNetwork.Kick(UserList(UserIndex).ConnectionDetails.ConnID, Reason, Source, PacketId, PacketName, diagnosticPacketCount, Extra)
+         UserList(UserIndex).ConnectionDetails.ConnIDValida = False
+     End If
+     Exit Sub
+diff --git a/Codigo/clsClan.cls b/Codigo/clsClan.cls
+index ca1862e9..fccc91c2 100644
+--- a/Codigo/clsClan.cls
++++ b/Codigo/clsClan.cls
+@@ -337,7 +337,7 @@ Public Function GetAspirantes() As String()
+         Dim i As Integer
+         i = 0
+         While Not RS.EOF
+-            list(i) = GetUserName(RS!user_id)
++            list(i) = GetUserName(CLng(RS!user_id))
+             i = i + 1
+             RS.MoveNext
+         Wend
+diff --git a/Codigo/clsIniManager.cls b/Codigo/clsIniManager.cls
+index cb919c72..306c2636 100644
+--- a/Codigo/clsIniManager.cls
++++ b/Codigo/clsIniManager.cls
+@@ -107,7 +107,7 @@ Public Sub Initialize(ByVal File As String)
+     On Error GoTo Initialize_Err
+     If Not FileExist(File) Then
+         Debug.Print "Missing file : " & File
+-        Debug.Assert False ' You must create the .Dat file
++        'Debug.Assert False [neutralised: IDE debugger stop] ' You must create the .Dat file
+         Exit Sub
+     End If
+     
+@@ -194,9 +194,11 @@ Private Sub SortChildNodes(ByRef Node As MainNode, ByVal First As Integer, ByVal
+                 max = max - 1
+             Loop
+             If Min <= max Then
+-                Temp = .values(Min)
+-                .values(Min) = .values(max)
+-                .values(max) = Temp
++                If Min <> max Then
++                    Temp = .values(Min)
++                    .values(Min) = .values(max)
++                    .values(max) = Temp
++                End If
+                 Min = Min + 1
+                 max = max - 1
+             End If
+@@ -209,6 +211,33 @@ SortChildNodes_Err:
+     Call TraceError(Err.Number, Err.Description, "clsIniManager.SortChildNodes", Erl)
+ End Sub
+ 
++''
++'twinBASIC build: a whole-UDT swap (Temp = fileData(Min) ...) crashes with ACCESS_VIOLATION in ucrtbase when MainNode holds a dynamic array
++'(self-assignment when Min = max, or an unallocated values() array). Swap member by member, skip self swaps, and only copy values() when allocated.
++Private Sub SwapMainNodes(ByVal A As Long, ByVal B As Long)
++    If A = B Then Exit Sub
++    Dim tmpName As String
++    Dim tmpNum As Integer
++    Dim tmpValues() As ChildNode
++    tmpName = fileData(A).name
++    tmpNum = fileData(A).numValues
++    If tmpNum > 0 Then tmpValues = fileData(A).values
++    fileData(A).name = fileData(B).name
++    fileData(A).numValues = fileData(B).numValues
++    If fileData(B).numValues > 0 Then
++        fileData(A).values = fileData(B).values
++    Else
++        Erase fileData(A).values
++    End If
++    fileData(B).name = tmpName
++    fileData(B).numValues = tmpNum
++    If tmpNum > 0 Then
++        fileData(B).values = tmpValues
++    Else
++        Erase fileData(B).values
++    End If
++End Sub
++
+ ''
+ 'Sorts all main nodes in the loaded INI file alphabetically by their names. Uses quicksort.
+ '
+@@ -221,7 +250,6 @@ Private Sub SortMainNodes(ByVal First As Integer, ByVal Last As Integer)
+     Dim Min  As Integer      'First item in the list
+     Dim max  As Integer      'Last item in the list
+     Dim comp As String      'Item used to compare
+-    Dim Temp As MainNode
+     Min = First
+     max = Last
+     comp = fileData((Min + max) \ 2).name
+@@ -233,9 +261,7 @@ Private Sub SortMainNodes(ByVal First As Integer, ByVal Last As Integer)
+             max = max - 1
+         Loop
+         If Min <= max Then
+-            Temp = fileData(Min)
+-            fileData(Min) = fileData(max)
+-            fileData(max) = Temp
++            Call SwapMainNodes(Min, max)
+             Min = Min + 1
+             max = max - 1
+         End If
+diff --git a/Codigo/clsProgressBar.cls b/Codigo/clsProgressBar.cls
+new file mode 100644
+index 00000000..40e08171
+--- /dev/null
++++ b/Codigo/clsProgressBar.cls
+@@ -0,0 +1,68 @@
++VERSION 1.0 CLASS
++BEGIN
++  MultiUse = -1  'True
++  Persistable = 0  'NotPersistable
++  DataBindingBehavior = 0  'vbNone
++  DataSourceBehavior  = 0  'vbNone
++  MTSTransactionMode  = 0  'NotAnMTSTransactionMode
++END
++Attribute VB_Name = "clsProgressBar"
++Attribute VB_GlobalNameSpace = False
++Attribute VB_Creatable = True
++Attribute VB_PredeclaredId = False
++Attribute VB_Exposed = False
++' Licence-free replacement for ComctlLib.ProgressBar (Min/Max/Value/Visible), drawn on a PictureBox.
++Option Explicit
++Private m_Host As Object
++Private m_Min As Double
++Private m_Max As Double
++Private m_Value As Double
++
++Public Property Set Host(ByVal pic As Object)
++    Set m_Host = pic
++    Call Redraw
++End Property
++
++Public Property Get Min() As Double
++    Min = m_Min
++End Property
++Public Property Let Min(ByVal v As Double)
++    m_Min = v
++    Call Redraw
++End Property
++
++Public Property Get Max() As Double
++    Max = m_Max
++End Property
++Public Property Let Max(ByVal v As Double)
++    m_Max = v
++    Call Redraw
++End Property
++
++Public Property Get Value() As Double
++    Value = m_Value
++End Property
++Public Property Let Value(ByVal v As Double)
++    m_Value = v
++    Call Redraw
++End Property
++
++Public Property Get Visible() As Boolean
++    If Not m_Host Is Nothing Then Visible = m_Host.Visible
++End Property
++Public Property Let Visible(ByVal v As Boolean)
++    If Not m_Host Is Nothing Then m_Host.Visible = v
++End Property
++
++Private Sub Redraw()
++    On Error Resume Next
++    If m_Host Is Nothing Then Exit Sub
++    Dim w As Double, f As Double
++    m_Host.Cls
++    If m_Max > m_Min Then f = (m_Value - m_Min) / (m_Max - m_Min)
++    If f < 0 Then f = 0
++    If f > 1 Then f = 1
++    w = m_Host.ScaleWidth * f
++    If w > 0 Then m_Host.Line (0, 0)-(w, m_Host.ScaleHeight), RGB(0, 0, 128), BF
++    m_Host.Refresh
++End Sub
+diff --git a/Codigo/frmCargando.frm b/Codigo/frmCargando.frm
+index 89fec7b4..61c15f4d 100644
+--- a/Codigo/frmCargando.frm
++++ b/Codigo/frmCargando.frm
+@@ -1,5 +1,4 @@
+ VERSION 5.00
+-Object = "{6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.3#0"; "comctl32.ocx"
+ Begin VB.Form frmCargando 
+    BackColor       =   &H00C0C0C0&
+    BorderStyle     =   0  'None
+@@ -18,17 +17,16 @@ Begin VB.Form frmCargando
+    ScaleWidth      =   438
+    ShowInTaskbar   =   0   'False
+    StartUpPosition =   2  'CenterScreen
+-   Begin ComctlLib.ProgressBar cargar 
++   Begin VB.PictureBox picCargar
++      AutoRedraw      =   -1  'True
++      BackColor       =   &H00FFFFFF&
++      BorderStyle     =   1  'Fixed Single
++      ScaleMode       =   3  'Pixel
+       Height          =   300
+       Left            =   1125
+       TabIndex        =   1
+       Top             =   2160
+       Width           =   4320
+-      _ExtentX        =   7620
+-      _ExtentY        =   529
+-      _Version        =   327682
+-      Appearance      =   0
+-      Min             =   1e-4
+    End
+    Begin VB.Label ToMapLbl 
+       Alignment       =   2  'Center
+@@ -88,6 +86,11 @@ Attribute VB_GlobalNameSpace = False
+ Attribute VB_Creatable = False
+ Attribute VB_PredeclaredId = True
+ Attribute VB_Exposed = False
++' twinBASIC build: the comctl32 ProgressBar needs a VB6 licence, so it is replaced by a PictureBox (picCargar) driven by clsProgressBar.
++Public cargar As New clsProgressBar
++Private Sub Form_Initialize()
++    Set cargar.Host = picCargar
++End Sub
+ ' Argentum 20 Game Server
+ '
+ '    Copyright (C) 2023-2026 Noland Studios LTD
+diff --git a/Codigo/frmDbControl.frm b/Codigo/frmDbControl.frm
+index 037b320d..3d9b02ca 100644
+--- a/Codigo/frmDbControl.frm
++++ b/Codigo/frmDbControl.frm
+@@ -1,5 +1,4 @@
+ VERSION 5.00
+-Object = "{6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.3#0"; "comctl32.ocx"
+ Object = "{CDE57A40-8B86-11D0-B3C6-00A0C90AEA82}#1.0#0"; "MSDATGRD.OCX"
+ Begin VB.Form frmDbControl 
+    BorderStyle     =   3  'Fixed Dialog
+@@ -33,18 +32,17 @@ Begin VB.Form frmDbControl
+       UseMaskColor    =   -1  'True
+       Width           =   2415
+    End
+-   Begin ComctlLib.ProgressBar pbarDb 
++   Begin VB.PictureBox picPbarDb
++      AutoRedraw      =   -1  'True
++      BackColor       =   &H00FFFFFF&
++      BorderStyle     =   1  'Fixed Single
++      ScaleMode       =   3  'Pixel
+       Height          =   255
+       Left            =   120
+       TabIndex        =   7
+       Top             =   7320
+       Visible         =   0   'False
+       Width           =   8415
+-      _ExtentX        =   14843
+-      _ExtentY        =   450
+-      _Version        =   327682
+-      Appearance      =   1
+-      Max             =   1000
+    End
+    Begin VB.CommandButton cmdActualizarObjetos 
+       Caption         =   "Actualizar objetos DB"
+@@ -200,6 +198,11 @@ Attribute VB_GlobalNameSpace = False
+ Attribute VB_Creatable = False
+ Attribute VB_PredeclaredId = True
+ Attribute VB_Exposed = False
++' twinBASIC build: the comctl32 ProgressBar needs a VB6 licence, so it is replaced by a PictureBox (picPbarDb) driven by clsProgressBar.
++Public pbarDb As New clsProgressBar
++Private Sub Form_Initialize()
++    Set pbarDb.Host = picPbarDb
++End Sub
+ 
+ ' Argentum 20 Game Server
+ '
+diff --git a/Codigo/modDatabase.bas b/Codigo/modDatabase.bas
+index 36a64558..f7247a7a 100644
+--- a/Codigo/modDatabase.bas
++++ b/Codigo/modDatabase.bas
+@@ -50,6 +50,7 @@ Public Sub Database_Connect_Async()
+         Call Connection_async(i).Open
+         ' SQLite enforces foreign keys per connection, so enable cascades immediately after opening each ADO connection.
+         Call Connection_async(i).Execute("PRAGMA foreign_keys = ON")
++        Call Connection_async(i).Execute("PRAGMA busy_timeout = 5000") ' wait instead of failing when another connection holds the write lock
+     Next i
+     Current_async = 1
+     Set Builder = New cStringBuilder
+@@ -75,6 +76,7 @@ Public Sub Database_Connect()
+     Call Connection.Open
+     ' SQLite enforces foreign keys per connection, so enable cascades immediately after opening the ADO connection.
+     Call Connection.Execute("PRAGMA foreign_keys = ON")
++    Call Connection.Execute("PRAGMA busy_timeout = 5000") ' wait instead of failing when an async connection holds the write lock
+     Exit Sub
+ Database_Connect_Err:
+     Call LogDatabaseError("Database Error: " & Err.Number & " - " & Err.Description & " - Database_Connect")
+@@ -123,7 +125,7 @@ Public Function Query(ByVal Text As String, ParamArray Arguments() As Variant) A
+     End If
+     Exit Function
+ Query_Err:
+-    Debug.Assert False
++    'Debug.Assert False [neutralised: IDE debugger stop]
+     DBError = Err.Description
+     Call LogDatabaseError("Database Error: " & Err.Number & " - " & Err.Description & " - " & vbCrLf & Text)
+ End Function
+@@ -167,7 +169,7 @@ Public Function Execute(ByVal Text As String, ParamArray Arguments() As Variant)
+     Execute = (Err.Number = 0)
+     Exit Function
+ Execute_Err:
+-    Debug.Assert False
++    'Debug.Assert False [neutralised: IDE debugger stop]
+     If (Err.Number <> 0) Then
+         Call LogDatabaseError("Database Error: " & Err.Number & " - " & Err.Description & " - " & vbCrLf & Text)
+     End If
+@@ -456,7 +458,7 @@ Public Function GetPersonajesCuentaDatabase(ByVal AccountID As Long, Personaje()
+         ElseIf EsAdmin(Personaje(i).nombre) Then
+             Personaje(i).Status = 7
+         End If
+-        If val(RS!is_dead) = 1 Or val(RS!is_sailing) = 1 Then
++        If val(CStr(SanitizeNullValue(RS!is_dead, 0))) = 1 Or val(CStr(SanitizeNullValue(RS!is_sailing, 0))) = 1 Then
+             Personaje(i).Cabeza = 0
+         End If
+         RS.MoveNext
+@@ -758,10 +760,10 @@ Public Sub SendCharacterInfoDatabase(ByVal UserIndex As Integer, ByVal username
+     End If
+     Dim IsLegion As Boolean
+     Dim IsArmy   As Boolean
+-    IsLegion = RS!Status = e_Facciones.concilio Or RS!Status = e_Facciones.Caos
+-    IsArmy = RS!Status = e_Facciones.consejo Or RS!Status = e_Facciones.Armada
+-    Call WriteCharacterInfo(UserIndex, username, RS!race_id, RS!class_id, RS!genre_id, RS!level, RS!gold, RS!bank_gold, GuildRequestHistory, gName, Miembro, IsArmy, IsLegion, _
+-            RS!ciudadanos_matados, RS!criminales_matados)
++    IsLegion = CLng(RS!Status) = e_Facciones.concilio Or CLng(RS!Status) = e_Facciones.Caos
++    IsArmy = CLng(RS!Status) = e_Facciones.consejo Or CLng(RS!Status) = e_Facciones.Armada
++    Call WriteCharacterInfo(UserIndex, username, CLng(RS!race_id), CLng(RS!class_id), CLng(RS!genre_id), CByte(RS!level), CLng(RS!gold), CLng(RS!bank_gold), GuildRequestHistory, gName, Miembro, IsArmy, IsLegion, _
++            CLng(RS!ciudadanos_matados), CLng(RS!criminales_matados))
+     Exit Sub
+ ErrorHandler:
+     Call LogDatabaseError("Error in SendCharacterInfoDatabase: " & username & ". " & Err.Number & " - " & Err.Description)
+diff --git a/Codigo/modFishing.bas b/Codigo/modFishing.bas
+index ff58acb9..e27aa5e3 100644
+--- a/Codigo/modFishing.bas
++++ b/Codigo/modFishing.bas
+@@ -449,7 +449,7 @@ Public Function ValidateFishingPosition(ByVal UserIndex As Integer, ByVal Target
+                     Exit Function
+                 End If
+             Case Else
+-                Debug.Assert False
++                'Debug.Assert False [neutralised: IDE debugger stop]
+                 Call TraceError(0, "Invalid fishing tool subtipo: " & ObjData(.invent.EquippedWorkingToolObjIndex).Subtipo & " (ObjIndex: " & .invent.EquippedWorkingToolObjIndex & ", UserIndex: " & UserIndex & ")", "modFishing.ValidateFishingPosition", Erl)
+                 Exit Function
+         End Select
+diff --git a/Codigo/modNetwork.bas b/Codigo/modNetwork.bas
+index 107b16ed..988fa695 100644
+--- a/Codigo/modNetwork.bas
++++ b/Codigo/modNetwork.bas
+@@ -97,7 +97,7 @@ Public Sub Flush(ByVal UserIndex As Long)
+     Call Server.Flush(UserList(UserIndex).ConnectionDetails.ConnID)
+ End Sub
+ 
+-Public Sub Kick(ByVal Connection As Long, Optional ByVal Message As String = vbNullString, Optional ByVal Source As String = "modNetwork.Kick", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal PacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
++Public Sub Kick(ByVal Connection As Long, Optional ByVal Message As String = vbNullString, Optional ByVal Source As String = "modNetwork.Kick", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal diagnosticPacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
+     On Error GoTo Kick_ErrHandler:
+     If IsFeatureEnabled("debug_connections") Then
+         If (Message <> vbNullString) Then
+@@ -109,9 +109,9 @@ Public Sub Kick(ByVal Connection As Long, Optional ByVal Message As String = vbN
+     Dim UserRef As t_UserReference
+     UserRef = Mapping(Connection).UserRef
+     If IsValidUserRef(UserRef) And UserList(UserRef.ArrayIndex).flags.UserLogged Then
+-        Call LogDisconnectDiag(Source, "Kick", UserRef.ArrayIndex, Connection, Message, PacketId, PacketName, PacketCount, Extra)
++        Call LogDisconnectDiag(Source, "Kick", UserRef.ArrayIndex, Connection, Message, PacketId, PacketName, diagnosticPacketCount, Extra)
+     Else
+-        Call LogDisconnectDiag(Source, "Kick", 0, Connection, Message, PacketId, PacketName, PacketCount, Extra)
++        Call LogDisconnectDiag(Source, "Kick", 0, Connection, Message, PacketId, PacketName, diagnosticPacketCount, Extra)
+     End If
+     If (Message <> vbNullString) Then
+         If UserRef.ArrayIndex > 0 Then
+@@ -272,14 +272,14 @@ ForcedClose_Err:
+     Call TraceError(Err.Number, Err.Description, "modNetwork.ForcedClose", Erl)
+ End Sub
+ 
+-Public Sub KickConnection(ByVal Connection As Long, Optional ByVal Reason As String = vbNullString, Optional ByVal Source As String = "modNetwork.KickConnection", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal PacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
++Public Sub KickConnection(ByVal Connection As Long, Optional ByVal Reason As String = vbNullString, Optional ByVal Source As String = "modNetwork.KickConnection", Optional ByVal PacketId As Long = -1, Optional ByVal PacketName As String = vbNullString, Optional ByVal diagnosticPacketCount As Long = -1, Optional ByVal Extra As String = vbNullString)
+     On Error GoTo ForcedClose_Err:
+     Dim UserRef As t_UserReference
+     UserRef = Mapping(Connection).UserRef
+     If IsValidUserRef(UserRef) Then
+-        Call LogDisconnectDiag(Source, "KickConnection", UserRef.ArrayIndex, Connection, Reason, PacketId, PacketName, PacketCount, Extra)
++        Call LogDisconnectDiag(Source, "KickConnection", UserRef.ArrayIndex, Connection, Reason, PacketId, PacketName, diagnosticPacketCount, Extra)
+     Else
+-        Call LogDisconnectDiag(Source, "KickConnection", 0, Connection, Reason, PacketId, PacketName, PacketCount, Extra)
++        Call LogDisconnectDiag(Source, "KickConnection", 0, Connection, Reason, PacketId, PacketName, diagnosticPacketCount, Extra)
+     End If
+     Call Server.Flush(Connection)
+     Call Server.Kick(Connection, True)
+diff --git a/ScriptsDB/20260724-01-change first castle coordinate val.sql b/ScriptsDB/20260724-01-change first castle coordinate val.sql
+index ed8a6bfa..a8d26550 100644
+--- a/ScriptsDB/20260724-01-change first castle coordinate val.sql	
++++ b/ScriptsDB/20260724-01-change first castle coordinate val.sql	
+@@ -1,4 +1,3 @@
+--- Update castle coordinates for castle_id = 1
+ UPDATE castle_coordinates 
+ SET inside_map = 758, 
+     inside_x = 50, 
+diff --git a/Server.VBP b/Server.VBP
+index c9bdf5b4..5914963b 100644
+--- a/Server.VBP
++++ b/Server.VBP
+@@ -4,8 +4,6 @@ Reference=*\G{420B2830-E718-11CF-893D-00A0C9054228}#1.0#0#..\..\Windows\SysWOW64
+ Reference=*\G{F5078F18-C551-11D3-89B9-0000F81FE221}#6.0#0#..\..\Windows\SysWOW64\msxml6.dll#Microsoft XML, v6.0
+ Reference=*\G{88D89F7C-BB59-4F13-9850-93CBD874039D}#1.5#0#Aurora.Network.dll#Aurora.Network - Aurora Engine - Network
+ Reference=*\G{E1211242-8E94-11D1-8808-00C04FC2C603}#1.0#0#DX8VB.DLL#DirectX 8 for Visual Basic Type Library
+-Object={6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.3#0; comctl32.ocx
+-Object={48E59290-9880-11CF-9754-00AA00C00908}#1.0#0; MSINET.OCX
+ Object={CDE57A40-8B86-11D0-B3C6-00A0C90AEA82}#1.0#0; MSDATGRD.OCX
+ Module=ModQuest; Codigo\ModQuest.bas
+ Module=WorldActions; Codigo\WorldActions.bas
+@@ -171,6 +169,7 @@ Class=ServerConfig; Codigo\ServerConfig.cls
+ Module=modDPlayServer; Codigo\modDPlayServer.bas
+ Class=clsNetReader; Codigo\clsNetReader.cls
+ Class=clsNetWriter; Codigo\clsNetWriter.cls
++Class=clsProgressBar; Codigo\clsProgressBar.cls
+ Module=StringUtils; Codigo\StringUtils.bas
+ Module=Consts; Codigo\Consts.bas
+ Module=modUptime; Codigo\modUptime.bas
+@@ -208,7 +207,7 @@ AutoIncrementVer=0
+ ServerSupportFiles=0
+ VersionCompanyName="Argentum20 Staff"
+ VersionProductName="Argentum20 Server"
+-CondComp="DEBUGGING = 1 : UNLOCK_CPU = 1 : UNIT_TEST = 0 : PYMMO = 0 : BATTLESERVER = 0"
++CondComp="DEBUGGING = 1 : UNLOCK_CPU = 1 : UNIT_TEST = 0 : PYMMO = 0 : BATTLESERVER = 0 : DIRECT_PLAY = 0"
+ CompilationType=0
+ OptimizationType=2
+ FavorPentiumPro(tm)=0
