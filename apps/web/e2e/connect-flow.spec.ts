@@ -61,16 +61,19 @@ test('connect flow: account screen, refused then accepted character creation, ex
   await expect(page.locator('[id^="message-"]')).toContainText('Sólo se permiten letras y espacios.');
   await page.keyboard.press('Enter');
   expect(received.filter(p => p.id === 74)).toHaveLength(0);
-  // Elfo, Mujer, then a valid name: LoginNewChar carries race 2, gender 2, class 1 (Mago), a head of the elf list, home 7. The server refuses first.
+  // Elfo, Mujer, then a valid name: LoginNewChar carries race 2, gender 2, class 1 (Mago), a head of the elf list, home 1 (Ullathorpe, index 0 of lstHogar). The server refuses first.
   await page.getByRole('button', { name: 'Raza siguiente' }).click(); await page.getByRole('button', { name: 'Genero siguiente' }).click();
   await page.locator('.cs-name').fill('Nuevo Pj');
   await page.locator('.cs-create').getByRole('button', { name: 'Crear personaje' }).click();
   await expect(page.locator('[id^="message-"]')).toContainText('Ya existe el personaje');
   await expect(page.locator('#connect-stage')).toHaveAttribute('data-screen', 'create'); // stays on the creation screen
   const first = received.find(p => p.id === 74)!;
-  const hex = first.hex; // 4a00 + String8 "Nuevo Pj" + race 02, gender 02, class 01, head varint, home 07
+  const hex = first.hex; // 4a00 + String8 "Nuevo Pj" + race 02, gender 02, class 01, head varint, home 01
   expect(hex.startsWith('4a00' + '08' + Buffer.from('Nuevo Pj').toString('hex') + '020201')).toBe(true);
-  expect(hex.endsWith('07')).toBe(true);
+  expect(hex.endsWith('01')).toBe(true);
+  // The Hogar arrows walk ListaCiudades; Nix is ListIndex 1, so the next attempt sends home 2.
+  await page.getByRole('button', { name: 'Hogar siguiente' }).click();
+  await expect(page.locator('.cs-value').filter({ hasText: 'Nix' })).toBeVisible();
   await page.keyboard.press('Enter');
   await page.locator('.cs-create').getByRole('button', { name: 'Crear personaje' }).click();
   await expect(page.locator('#viewport')).toHaveAttribute('data-rendered', 'true', { timeout: 30_000 });

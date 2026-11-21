@@ -88,8 +88,10 @@ export function raceModifiers(ini: Map<string, Map<string, string>>, race: numbe
   const value = (suffix: string) => Number(section?.get(`${key}${suffix}`) ?? 0) || 0;
   return ['fuerza', 'agilidad', 'inteligencia', 'constitucion', 'carisma'].map(value);
 }
-/** The home city id sent by WriteLoginNewChar (CHARACTER_CREATION_HOME_FORGAT) and its name. */
-export const HOME_CITY = 7, HOME_CITY_NAME = 'Forgat';
+/** ListaCiudades (General.bas at the pinned client 619e69d), in list order; ModUtils fills lstHogar with every entry and selects index 0. */
+export const HOME_CITIES = ['Ullathorpe', 'Nix', 'Banderbill', 'Lindos', 'Arghal', 'Forgat'] as const;
+/** frmCrearPersonaje: UserStats.Hogar = lstHogar.ListIndex + 1 (the id WriteLoginNewChar sends). */
+export function homeCityId(index: number): number { return index + 1; }
 
 /** What to tell the player when a character request ends with a closed socket and no word from the server (never a silent login screen). */
 export function silentLoginText(kind: 'create' | 'enter', timedOut: boolean): string {

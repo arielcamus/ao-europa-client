@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CLASS_ROTATION, TEXT, headsFor, raceModifiers, rotateClass, validateCharacterName } from '../src/connect-text.js';
+import { CLASS_ROTATION, HOME_CITIES, homeCityId, TEXT, headsFor, raceModifiers, rotateClass, validateCharacterName } from '../src/connect-text.js';
 import { ACCOUNT_RECTS, slotAt, slotOrigin } from '../src/connect-ui.js';
 import { parseIni } from '../src/assets.js';
 
@@ -67,5 +67,14 @@ describe('chat text filter is by windows-1252 byte, not code point (issue #16 it
     expect(filterChatText('hola ñandú €…')).toBe('hola ñandú €…');
     expect(filterChatText('a\u0081b🙂cúdû')).toBe('abcúd'); // U+0081 has no windows-1252 byte, û is byte 251 (> 250)
     expect(filterChatText('ā')).toBe(''); // U+0101 is not in the code page although its code point is 257
+  });
+});
+
+describe('home city list (ListaCiudades at the pinned client 619e69d)', () => {
+  it('lists the six pinned cities in order, index 0 first', () => {
+    expect([...HOME_CITIES]).toEqual(['Ullathorpe', 'Nix', 'Banderbill', 'Lindos', 'Arghal', 'Forgat']);
+  });
+  it('sends ListIndex + 1, never 0 (frmCrearPersonaje refuses Hogar = 0)', () => {
+    expect(HOME_CITIES.map((_, i) => homeCityId(i))).toEqual([1, 2, 3, 4, 5, 6]);
   });
 });
