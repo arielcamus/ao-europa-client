@@ -41,6 +41,7 @@ step('MOV-02', async c => {
   await gmGoto(c, p.map, bx + dx, by + dy);
   const r = await p.step(heading, 330);
   if (r.moved) { // the GM helper is admin-invisible and does not block: use a second NON-GM character of our own
+    await gmGoto(c, 2, 50, 50); // out of the way: the GM helper must not stand on the route
     const p2 = await second(c), f = loadMap(p.map)!;
     await p2.sleep(500);
     const me = [...p.chars.values()].find(ch => ch.name.startsWith('Pq'));
@@ -108,7 +109,19 @@ step('MOV-16', async c => {
   c.ok(!!t && (t.packet as any).fx !== 0, 'MeditateToggle with a meditation FX');
   p.say('/MEDITAR'); await p.sleep(800);
 });
-step('MOV-17', async c => c.blocked('implemented after MOV-16 passes on a mage character'));
+step('MOV-17', async c => {
+  await ensureLand(c);
+  if (c.player.stats!.characterClass !== 1) c.blocked('needs a mage');
+  await dbUpdateOwn(c, 'min_man=0'); const p = c.player;
+  const m = p.mark(); p.say('/MEDITAR');
+  await p.sleep(70_000);
+  const ticks = p.since(m).filter(r => r.name === 'UpdateMana'), t = ticks.map(r => r.t);
+  p.say('/MEDITAR');
+  c.ok(ticks.length >= 2, `${ticks.length} UpdateMana ticks in 70 s of meditation; mana ${(ticks[0]!.packet as any).mana} -> ${(ticks.at(-1)!.packet as any).mana}`);
+  const gaps = t.slice(1).map((x, i) => x - t[i]!), median = gaps.sort((a, b) => a - b)[Math.floor(gaps.length / 2)]!;
+  c.note(`median gap between mana ticks ${median} ms (the doc says ~400 ms after an initial ~840 ms); first tick gain ${(ticks[0]!.packet as any).mana} of max ${p.stats!.maxMana} (doc: 3.5% = ${Math.round(p.stats!.maxMana * 0.035)})`);
+  c.near(median, 300, 600, 'median ms between meditation mana ticks (IntervaloMeditar = 10 game ticks of 40 ms)');
+});
 step('MOV-18', async c => c.blocked('needs a FOGATA (obj 63) from MOV-19'));
 step('MOV-19', async c => c.blocked('needs /CI 58 3 on the floor + Work on it; pending'));
 step('MOV-20', async c => c.blocked('needs Magia 87+ via DB UPDATE on a logged-out char; pending'));

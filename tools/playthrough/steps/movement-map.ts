@@ -31,16 +31,17 @@ step('MOV-04', async c => {
 step('MOV-07', async c => {
   if (!c.own) c.blocked('needs the own character');
   const objs = objects(), f = loadMap(24)!;
-  const tp = f.map.objects.find(o => objs.get(o.objIndex)?.type === 19);
-  if (!tp) c.blocked('no otTeleport object on map 24');
-  const t = tp!, neighbours = Object.entries(HEAD).filter(([, [dx, dy]]) => walkable(f.map, t.x - dx, t.y - dy));
+  const exitAt = new Set(f.exits.map(e => e.y * 101 + e.x));
+  const tp = f.map.objects.find(o => objs.get(o.objIndex)?.type === 19 && exitAt.has(o.y * 101 + o.x));
+  if (!tp) c.blocked('no otTeleport object with a tile exit on map 24');
+  const t = tp!, exitTo = f.exits.find(e => e.x === t.x && e.y === t.y)!, neighbours = Object.entries(HEAD).filter(([, [dx, dy]]) => walkable(f.map, t.x - dx, t.y - dy));
   if (!neighbours.length) c.blocked(`teleport object at 24:${t.x},${t.y} has no walkable neighbour`);
   const [h, [dx, dy]] = neighbours[0]!;
   await relocate(c, 24, t.x - dx, t.y - dy);
   const p = c.player, m = p.mark(), before = [p.map, p.x, p.y];
   const r = await p.step(Number(h), 300); await p.sleep(1500);
   c.note(`stepped onto the otTeleport tile 24:${t.x},${t.y} (obj ${t.objIndex}) from ${before}; now ${p.map}:${p.x},${p.y}; saw ${p.since(m).map(x => x.name).filter(n => !/CharacterMove|CharacterChange/.test(n)).join(',')}`);
-  c.ok(p.map !== 24 || Math.abs(p.x - t.x) + Math.abs(p.y - t.y) > 3, `the teleport moved the character away (moved=${r.moved})`);
+  c.ok(p.map !== 24 || Math.abs(p.x - t.x) + Math.abs(p.y - t.y) > 3, `the teleport moved the character away (moved=${r.moved}); the tile exit says ${exitTo.map}:${exitTo.dx},${exitTo.dy}`);
 });
 
 step('MOV-08', async c => {
@@ -54,7 +55,8 @@ step('MOV-08', async c => {
   if (!spot) c.blocked(`no walkable tile next to door ${d.objIndex} at ${d.x},${d.y}`);
   await walkTo(c, spot![0], spot![1]);
   const m = p.mark(); p.send({ id: D.LeftClick, x: d.x, y: d.y, counter: 0 } as ClientPacket); await p.sleep(1500);
-  const created = p.since(m).filter(r => r.name === 'ObjectCreate' || r.name === 'ObjectDelete' || r.name === 'BlockPosition').map(r => r.name);
+  let created = p.since(m).filter(r => r.name === 'ObjectCreate' || r.name === 'ObjectDelete' || r.name === 'BlockPosition').map(r => r.name);
+  if (!created.length) { c.note('LeftClick alone gave no door packets; trying DoubleClick'); const m3 = p.mark(); p.send({ id: D.DoubleClick, x: d.x, y: d.y, counter: 0 } as ClientPacket); await p.sleep(1500); created = p.since(m3).filter(r => r.name === 'ObjectCreate' || r.name === 'ObjectDelete' || r.name === 'BlockPosition').map(r => r.name); }
   c.ok(created.length > 0, `LeftClick on door ${d.objIndex} at ${d.x},${d.y} answered ${created.join(',') || '(nothing)'} (Toggles open/closed: ObjectCreate + BlockPosition)`);
   const m2 = p.mark(); p.send({ id: D.LeftClick, x: d.x, y: d.y, counter: 0 } as ClientPacket); await p.sleep(1500);
   c.ok(p.since(m2).some(r => r.name === 'ObjectCreate'), 'a second click toggles it back');

@@ -1,25 +1,25 @@
 {
- "generated": "2026-11-21T11:08:34.230Z",
+ "generated": "2026-11-21T11:23:57.507Z",
  "server": "127.0.0.1:7667",
  "account": "fresh",
- "character": "Ptizzznqh",
+ "character": "Pteeicnua",
  "creation": {
   "attempts": 1,
   "ok": true,
   "errors": [],
   "reused": false
  },
- "wallClockSeconds": 368,
+ "wallClockSeconds": 675,
  "totals": {
-  "pass": 15,
-  "fail": 0,
-  "blocked": 27
+  "pass": 21,
+  "fail": 7,
+  "blocked": 16
  },
  "results": [
   {
    "id": "ACC-01",
    "outcome": "pass",
-   "detail": "Connected on TCP open; AccountCharacterList after LoginAccount; character count 1 <= MAX_PERSONAJES 10; list holds Ptizzznqh",
+   "detail": "Connected on TCP open; AccountCharacterList after LoginAccount; character count 1 <= MAX_PERSONAJES 10; list holds Pteeicnua",
    "ms": 6
   },
   {
@@ -56,31 +56,31 @@
    "id": "ACC-07",
    "outcome": "pass",
    "detail": "existing name -> ShowMessageBox id = 1769",
-   "ms": 4006
+   "ms": 4005
   },
   {
    "id": "ACC-08",
    "outcome": "pass",
    "detail": "Logged after LoginExistingChar; position restored from the database = {\"map\":751,\"x\":60,\"y\":57}; stats and inventory sent",
-   "ms": 3921
+   "ms": 3928
   },
   {
    "id": "ACC-10",
    "outcome": "blocked",
-   "detail": "the character stands on map 751, a Seguro=1 map: /SALIR disconnected in 9 ms (that is ACC-11's safe-map half). The countdown needs a character on an unsafe map (a fresh character spawns on 517 Forgat)",
-   "ms": 9
+   "detail": "the character stands on map 751, a Seguro=1 map: /SALIR disconnected in 7 ms (that is ACC-11's safe-map half). The countdown needs a character on an unsafe map (a fresh character spawns on 517 Forgat)",
+   "ms": 8
   },
   {
    "id": "ACC-11",
    "outcome": "pass",
-   "detail": "GM /SALIR disconnected in 14 ms, no countdown; non-GM /SALIR on map 751 disconnected in 0 ms (Seguro=1 map)",
-   "ms": 3949
+   "detail": "GM /SALIR disconnected in 12 ms, no countdown; non-GM /SALIR on map 751 disconnected in 0 ms (Seguro=1 map)",
+   "ms": 3934
   },
   {
    "id": "ACC-12",
    "outcome": "blocked",
    "detail": "ACC-12 (cancelling the /SALIR countdown) needs an unsafe map; the character stands on a Seguro=1 map (ACC-10 saw an instant /SALIR)",
-   "ms": 0
+   "ms": 1
   },
   {
    "id": "ACC-13",
@@ -104,25 +104,25 @@
    "id": "MOV-01",
    "outcome": "pass",
    "detail": "Intervals.walk ms (IntervaloCaminar = 210) = 210; heading 2 delta = [1,0]; heading 3 delta = [0,1]; heading 4 delta = [-1,0]; heading 1 delta = [0,-1]; self 5429 at 60,57; recent moves ; wire tail: >RequestPositionUpdate <PosUpdate >Walk >RequestPositionUpdate <PosUpdate >Walk >RequestPositionUpdate <PosUpdate; 4/4 headings moved the character exactly one tile (others hit a blocked tile); fixture walk-four-headings",
-   "ms": 3832
+   "ms": 3833
   },
   {
    "id": "MOV-02",
-   "outcome": "blocked",
-   "detail": "wall half PASSED (a blocked tile answers PosUpdate with the old position). Player-collision half not verifiable: the GM helper does not block (admin-invisible GMs never do, LegalWalk), and a second NON-GM character is needed; the per-IP creation budget and the creation bug prevent one",
-   "ms": 15755
+   "outcome": "fail",
+   "detail": "step 37/38 refused at 59,57 heading 2 [ok so far: a blocked tile answered with PosUpdate (old position) after 40 steps; moved one tile off the wall; second character at 751:60,57; first at 751:23,57]",
+   "ms": 28387
   },
   {
    "id": "MOV-03",
    "outcome": "pass",
-   "detail": "position unchanged by a heading change = [23,57]; the GM next door received CharacterChange for the turn; broadcast heading = 1",
+   "detail": "position unchanged by a heading change = [59,57]; the GM next door received CharacterChange for the turn; broadcast heading = 1",
    "ms": 2705
   },
   {
    "id": "MOV-04",
-   "outcome": "blocked",
-   "detail": "needs the coordinates of a map exit tile; read from the .csm map files (tile exit flags) by a map parser the harness does not have yet. Protocol-level recordings exist: tests/fixtures/vb6/buildings/*castle-trigger-bounce.jsonl",
-   "ms": 0
+   "outcome": "pass",
+   "detail": "stepping on exit tile 751:88,57 sent ChangeMap; destination map (tile exit -> 753:14,57) = 753; arrived at 14,57 (exit says 14,57; ClosestLegalPos may shift it)",
+   "ms": 15821
   },
   {
    "id": "MOV-05",
@@ -138,15 +138,15 @@
   },
   {
    "id": "MOV-07",
-   "outcome": "blocked",
-   "detail": "needs a teleport object tile (otTeleport) located through the map files; not parsed yet",
-   "ms": 0
+   "outcome": "fail",
+   "detail": "the teleport moved the character away (moved=true): false [ok so far: stepped onto the otTeleport tile 24:76,29 (obj 19) from 24,76,30; now 24:76,29; saw LocaleMsg,PosUpdate]",
+   "ms": 7384
   },
   {
    "id": "MOV-08",
-   "outcome": "blocked",
-   "detail": "door tiles come from the map files; recorded against the real server in tests/fixtures/vb6/doors and items-2 (PR #37/#47), not yet an end-to-end scenario",
-   "ms": 0
+   "outcome": "fail",
+   "detail": "LeftClick on door 3580 at 71,55 answered (nothing) (Toggles open/closed: ObjectCreate + BlockPosition): false",
+   "ms": 59033
   },
   {
    "id": "MOV-09",
@@ -162,9 +162,9 @@
   },
   {
    "id": "MOV-11",
-   "outcome": "blocked",
-   "detail": "needs a water tile coordinate from the map files",
-   "ms": 0
+   "outcome": "pass",
+   "detail": "walking into water at 88,77 without a boat was refused (stayed at 14,76)",
+   "ms": 15284
   },
   {
    "id": "MOV-13",
@@ -176,19 +176,19 @@
    "id": "MOV-14",
    "outcome": "pass",
    "detail": "UseItem answered: ShowFrmMapa | ; the server answered the ticket use",
-   "ms": 1502
+   "ms": 1501
   },
   {
    "id": "MOV-15",
-   "outcome": "blocked",
-   "detail": "new characters spawn at SEA in Forgat 517 (until fix/home-city) and the character cannot be moved to land: the GM helper cannot teleport others and the DB route failed (the server kept character 26 flagged is_logged=1 for 60 s after the socket closed, so the DB UPDATE (pos_map=1, pos_x=58, pos_y=43) was not applied)",
-   "ms": 1
+   "outcome": "pass",
+   "detail": "Work(Ocultarse) answered with SetInvisible,LocaleMsg,LocaleMsg,TextOverChar,LocaleMsg,UpdateExp,SetInvisible,LocaleMsg; hide answered (success sets invisible, failure prints a locale message)",
+   "ms": 2003
   },
   {
    "id": "MOV-16",
-   "outcome": "blocked",
-   "detail": "new characters spawn at SEA in Forgat 517 (until fix/home-city) and the character cannot be moved to land: the GM helper cannot teleport others and the DB route failed (the server kept character 26 flagged is_logged=1 for 60 s after the socket closed, so the DB UPDATE (pos_map=1, pos_x=58, pos_y=43) was not applied)",
-   "ms": 0
+   "outcome": "pass",
+   "detail": "MeditateToggle with a meditation FX",
+   "ms": 8028
   },
   {
    "id": "MOV-17",
@@ -230,7 +230,7 @@
    "id": "MOV-23",
    "outcome": "blocked",
    "detail": "needs a Seguro map id; the safe-zone refusal is recorded in tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
-   "ms": 1
+   "ms": 0
   },
   {
    "id": "MOV-25",
@@ -246,27 +246,39 @@
   },
   {
    "id": "PRG-17",
-   "outcome": "blocked",
-   "detail": "the server kept character 28 flagged is_logged=1 for 60 s after the socket closed, so the DB UPDATE (min_man=0) was not applied",
-   "ms": 81245
+   "outcome": "fail",
+   "detail": "Meditar reached the level-1 cap 3 by use: expected 3, got 1 [ok so far: ELV 1 = 1]",
+   "ms": 121651
   },
   {
    "id": "PRG-18",
-   "outcome": "blocked",
-   "detail": "the server kept character 28 flagged is_logged=1 for 60 s after the socket closed, so the DB UPDATE (level=2, exp=0, free_skillpoints=15) was not applied",
-   "ms": 81104
+   "outcome": "fail",
+   "detail": "Meditar rose again to the level-2 cap 5: expected 5, got 1 [ok so far: ELV 2 (set through the DB: the GM helper cannot /MOD others) = 2; free points 10 + 5 = 15]",
+   "ms": 126449
   },
   {
    "id": "PRG-19",
-   "outcome": "blocked",
-   "detail": "the server kept character 28 flagged is_logged=1 for 60 s after the socket closed, so the DB UPDATE (min_man=0) was not applied",
-   "ms": 82431
+   "outcome": "pass",
+   "detail": "assigned points are added to the skill = 9; skill 9 is at or above the level-3 natural cap 7; no natural gain at or above the cap = 9",
+   "ms": 47029
   },
   {
    "id": "PRG-20",
-   "outcome": "blocked",
-   "detail": "the server kept character 28 flagged is_logged=1 for 60 s after the socket closed, so the DB UPDATE (level=3, exp=1120, free_skillpoints=15) was not applied",
-   "ms": 81488
+   "outcome": "fail",
+   "detail": "a skill-up (+5 exp) crossed 1125 and CheckUserLevel sent LevelUp: false [ok so far: ELV 3 (DB) = 3]",
+   "ms": 126581
+  },
+  {
+   "id": "DTH-01",
+   "outcome": "fail",
+   "detail": "the creature (, char 5431) killed the 1 HP character: false [ok so far: placed on map 2 (an unsafe field map) with 1 HP = [2,50,50]]",
+   "ms": 83946
+  },
+  {
+   "id": "OTH-06",
+   "outcome": "pass",
+   "detail": "fixture trainer-train-list; TrainList answered with TrainerCreatureList: {\"id\":88,\"creatures\":[\"Murcielago\",\"Lobo\",\"Serpiente\",\"Escorpion\",\"Goblin\"]}",
+   "ms": 5827
   }
  ]
 }
