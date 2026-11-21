@@ -40,7 +40,8 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1
 .coordinate { font-size: 10px; }
 #console { overflow: auto; scrollbar-width: thin; font: 13px/17px Calibri, Arial, sans-serif; color: #c8bebe; } /* RecTxt is 85 px tall: five whole lines, so the oldest visible line is never cut by the header. */
 #console strong { color: #fff3aa; font-weight: normal; }
-#error { color: #ff8c7b; }
+/* Outside the HUD so a refusal is readable on the connect screens too (frmMain is hidden there). */
+#error { position: absolute; left: 262px; width: 500px; top: 744px; z-index: 60; text-align: center; font: bold 12px/14px Tahoma, Arial, sans-serif; color: #ff8c7b; text-shadow: 1px 1px #000; pointer-events: none; }
 #messages > div { white-space: pre-wrap; overflow-wrap: anywhere; }
 #chat { width: 100%; height: 100%; padding: 1px 2px; border: 0; background: #202020; color: #808080; font: bold 13px Tahoma, Arial, sans-serif; }
 #chat-form.guild #chat { background: #400000; }
