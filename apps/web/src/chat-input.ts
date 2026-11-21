@@ -5,7 +5,7 @@
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; see NOTICE.
  * GM and gameplay slash commands belong to other features: they get an explicit "not available" line.
  */
-import { PetsTravelClientPacketId as PT, CombatClientPacketId as CC, ClientPacketId as C, BankTradeClientPacketId as BC, KeysClientPacketId as K, SkillsClientPacketId as SC } from '@ao/protocol';
+import { PetsTravelClientPacketId as PT, CombatClientPacketId as CC, ClientPacketId as C, BankTradeClientPacketId as BC, KeysClientPacketId as K, SkillsClientPacketId as SC, SessionClientPacketId as SE } from '@ao/protocol';
 import type { ClientPacket } from '@ao/protocol';
 import { FONTTYPE } from './chat-fonts.js';
 import { parseGmCommand } from './gm-commands.js';
@@ -127,6 +127,12 @@ export class ChatInput {
     if (command.startsWith('/')) {
       const filled = args.trim() !== '';
       switch (command) {
+        // ProtocolCmdParse: /SALIR starts the logout countdown (the server counts), /HOGAR travels home, /AYUDA, /MOTD and /NAVE are empty requests.
+        case '/SALIR': case '/EXIT': outcome.packet = { id: K.Quit }; return;
+        case '/HOGAR': case '/HOME': outcome.packet = { id: SE.Home }; return;
+        case '/AYUDA': case '/HELP': outcome.packet = { id: SE.Help }; return;
+        case '/MOTD': outcome.packet = { id: SE.RequestMOTD }; return;
+        case '/NAVE': outcome.packet = { id: SE.NavigateToggle }; return;
         case '/CMSG':
           if (hasArguments) outcome.packet = { id: C.GuildMessage, message: args, counter: 0 }; // Session.sendChat fills the shared counter
           else note(MESSAGES.empty);

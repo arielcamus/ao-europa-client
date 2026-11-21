@@ -1,0 +1,41 @@
+/* Connect screens (frmConnect): login, account and character creation. AGPL-3.0-or-later; see NOTICE. */
+#connect-stage { position: absolute; inset: 0; z-index: 15; background: #000 url("/ao-assets/Graficos/239.png") 0 0 / 1024px 1024px no-repeat; font: bold 12px Tahoma, Arial, sans-serif; color: #fff; }
+.cs-screen { position: absolute; inset: 0; }
+.cs-grh { position: absolute; pointer-events: none; z-index: 1; }
+.cs-bg { opacity: .9; z-index: 0; }
+.cs-slots, .cs-info, .cs-hit, .cs-text, .cs-box, .cs-aspect, .cs-name, .cs-preview, .cs-assistant, .cs-assistant-text, .cs-npc-name { z-index: 3; }
+.cs-marco { z-index: 2; }
+.cs-assistant-text { position: absolute; left: 310px; width: 400px; top: 235px; height: 56px; display: flex; align-items: flex-end; justify-content: center; text-align: center; font: bold 12px/14px Tahoma, Arial, sans-serif; color: #f86b03; text-shadow: 1px 1px #000; pointer-events: none; }
+.cs-assistant-text.cs-pop { animation: cs-pop .35s ease-out; }
+@keyframes cs-pop { from { transform: translateY(35px); opacity: .2; } to { transform: none; opacity: 1; } }
+.cs-assistant { position: absolute; cursor: pointer; }
+.cs-npc-name { position: absolute; left: 400px; width: 224px; top: 365px; text-align: center; font: bold 11px/15px Tahoma, Arial, sans-serif; color: #f86b03; text-shadow: 1px 1px #000; pointer-events: none; }
+.cs-npc-name span { display: block; }
+.cs-hit { position: absolute; padding: 0; border: 0; background: transparent; color: transparent; }
+.cs-hit:hover:not(:disabled) { background: #ffffff14; }
+.cs-slots, .cs-info { position: absolute; inset: 0; pointer-events: none; }
+.cs-slot { position: absolute; width: 80px; height: 96px; }
+.cs-slot canvas { position: absolute; left: 0; top: 0; }
+.cs-slot.cs-selected::before { content: ''; position: absolute; left: 4px; top: 16px; width: 71px; height: 85px; box-shadow: 0 0 10px 2px #e8b84a; background: #e8b84a22; }
+.cs-slot-name { position: absolute; left: -14px; width: 108px; top: 82px; text-align: center; font: bold 11px/13px Tahoma, Arial, sans-serif; text-shadow: 1px 1px #000, -1px -1px #000; white-space: nowrap; overflow: hidden; }
+.cs-info > div { position: absolute; left: 391px; width: 240px; text-align: center; font: bold 12px/14px Tahoma, Arial, sans-serif; text-shadow: 1px 1px #000; }
+.cs-text { position: absolute; white-space: nowrap; font: 11px/14px Tahoma, Arial, sans-serif; color: #fff; text-shadow: 1px 1px #000; pointer-events: none; }
+.cs-bold { font-weight: bold; }
+.cs-title { text-align: center; font: bold 18px/22px Tahoma, Arial, sans-serif; color: #c8c8c8; }
+.cs-value { text-align: center; color: #c8c8c8; font-weight: bold; }
+.cs-attr { font-weight: bold; }
+.cs-box { position: absolute; width: 95px; height: 21px; background: #01010164; pointer-events: none; }
+.cs-aspect { position: absolute; background: #00000050; pointer-events: none; }
+.cs-arrow { font: bold 14px Tahoma, Arial, sans-serif; color: #c8c8c8; text-align: center; }
+.cs-arrow.cs-big { font-size: 22px; }
+.cs-arrow:disabled { color: #606060; }
+.cs-arrow.cs-transparent { color: transparent; }
+.cs-name { position: absolute; border: 0; padding: 0; background: #000; color: #e0e0e0; text-align: center; font: bold 15px Verdana, Tahoma, sans-serif; }
+.cs-preview { position: absolute; pointer-events: none; }
+/* The login window of FrmLogear sits low on the frmConnect surface: Top = frmConnect.Height - Me.Height - 450 twips. */
+#login { top: 471px !important; z-index: 16; }
+.cs-check { position: absolute; width: 17px; height: 17px; padding: 0; border: 0; background: transparent; }
+.cs-check[aria-checked="true"] { background: var(--check) center / 100% 100% no-repeat; }
+#loading-card { position: absolute; z-index: 50; left: 431px; top: 331px; width: 161px; height: 106px; background-size: 100% 100%; display: grid; place-items: end center; padding-bottom: 14px; font: bold 11px Tahoma, Arial, sans-serif; color: #fff; text-shadow: 1px 1px #000; }
+#loading-cancel { position: absolute; z-index: 51; }
+#connect-flash { position: absolute; z-index: 4; pointer-events: none; opacity: 0; }
