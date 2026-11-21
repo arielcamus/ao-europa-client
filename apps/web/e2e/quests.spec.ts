@@ -62,6 +62,12 @@ test('quests: Quests button, log, details, abandon with confirmation, NPC offer 
   await expect(log.locator('.q-left')).toHaveText('Mapa de entrega: 44');
   expect(requests).toEqual([{ id: QC.QuestListRequest }, { id: QC.QuestDetailsRequest, slot: 1 }]);
   await page.screenshot({ path: 'artifacts/screenshots/quests-log.png' });
+  // MoverForm: dragging the form background moves the log; a list row stays clickable and does not start a drag.
+  const origin = await log.boundingBox();
+  await page.mouse.move(origin!.x + 10, origin!.y + 60); await page.mouse.down(); await page.mouse.move(origin!.x + 50, origin!.y + 90, { steps: 4 }); await page.mouse.up();
+  const dragged = await log.boundingBox();
+  expect(Math.round(dragged!.x - origin!.x)).toBeGreaterThan(20); expect(Math.round(dragged!.y - origin!.y)).toBeGreaterThan(10);
+  await page.screenshot({ path: 'artifacts/screenshots/wp-b-quest-log-dragged.png' });
 
   // Abandon needs a selected row first (MENSAJE_SELECCIONAR_MISION), then a confirmation (MENSAJE_ABANDONAR_MISION).
   await log.getByRole('button', { name: 'Abandonar' }).click();

@@ -40,6 +40,7 @@ import { OptionsSettings } from './options-settings.js';
 import { OptionsUI } from './options-ui.js';
 import { KeyBindings } from './key-bindings.js';
 import { KeysUI } from './keys-ui.js';
+import { QuestVoice } from './quest-voice.js';
 import { HotkeysUI } from './hotkeys-ui.js';
 import { windows } from './window-stack.js';
 import { displayName } from './character-data.js';
@@ -191,6 +192,7 @@ const connectUi = new ConnectUI(element('classic'), renderer, {
   click: () => audio.director.click(),
 });
 const questWindows = new QuestWindows(element('classic'), renderer, undefined, report);
+const questVoice = new QuestVoice(audio.engine, () => audio.director.language); questWindows.voice = questVoice;
 // frmMain QuestBoton_MouseUp: WriteQuestListRequest; the server answers with the quest list.
 ui.bindMenu('Quests', () => { try { session?.requestQuestList(); } catch (error) { close(String(error)); } });
 const clearInput = () => { keys.clear(); touchHeading = undefined; };
@@ -348,6 +350,7 @@ function connectSession(email: string, secret: string, create = false) {
   session.onCloseClient = () => { if (session === owner) { close('El servidor cerró el cliente.'); showMessage(element('classic'), 'El servidor cerró el cliente.'); } };
   session.tracker.onNpcDescription = ({ npcNumber }) => { if (session === owner) void npcDialog.showWhenReady(npcNumber, () => sharedLocale); };
   chatBox.attach(session);
+  session.ui.chat.onQuestFinal = audioId => { if (session === owner) questVoice.play(audioId); };
   session.ui.chat.copyToConsole = gameOptions.value.copyDialogToConsole;
   audio.attach(session);
   ws.onmessage = event => {
@@ -406,12 +409,11 @@ const WALK: Partial<Record<KeyAction, Heading>> = { [KeyAction.MoveUp]: Heading.
 const directions = { get: (code: string) => { const action = keyAction(code); return action === undefined ? undefined : WALK[action]; } };
 const DEAD = '¡¡Estás muerto!!'; // MENSAJE_ESTAS_MUERTO
 let lastClanCall = -Infinity;
-/** modBindKeys.Accionar: what each [DEFAULTSMODERN] binding does. Bindings without a client feature yet say so in the console. */
+/** modBindKeys.Accionar: what each [DEFAULTSMODERN] binding does. */
 function gameKey(action: KeyAction) {
   const s = session;
   if (!s?.ready) return;
   const dead = s.dead, slot = ui.selectedSlot;
-  const unavailable = (what: string) => s.ui.message(`${what}: aún no disponible en este cliente.`);
   const ifAlive = (run: () => unknown) => { if (dead) s.ui.message(DEAD); else guard(run); };
   switch (action) {
     case KeyAction.Attack: attack(); return;
@@ -428,15 +430,17 @@ function gameKey(action: KeyAction) {
     case KeyAction.Steal: ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Steal, counter: 0 })); return;
     case KeyAction.RefreshPosition: guard(() => s.refreshPosition()); return;
     case KeyAction.Hide: ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Hide, counter: 0 })); return;
+    // VB6 Accionar: eShowOnline flips MostrarOnline, which nothing reads; eScreenShoot (13) has no case at all. Both are faithful no-ops (issue #20 item 7).
     case KeyAction.ShowOnline: showOnline = !showOnline; return;
-    case KeyAction.ScreenShot: unavailable('Captura de pantalla'); return;
+    case KeyAction.ScreenShot: return;
     case KeyAction.ClanCall: case KeyAction.ClanMark: { // IntervaloPermiteLLamadaClan: 5 s between clan calls/marks
       const now = performance.now();
       if (now - lastClanCall < 5000) return;
       lastClanCall = now; guard(() => s.sendAction({ id: action === KeyAction.ClanCall ? K.ClanCall : K.ClanMark }));
       return;
     }
-    case KeyAction.GameStats: gameOptions.update({ showFps: !gameOptions.value.showFps }); return;
+    // VB6 eGameStats only runs SaveSetting("OPCIONES", "FPSFLAG", FPSFLAG): it persists the flag, the FPS checkbox of frmOpciones is what toggles it.
+    case KeyAction.GameStats: gameOptions.update({ showFps: gameOptions.value.showFps }); return;
     case KeyAction.Meditate: // WriteMeditate: not with full mana, not dead, not while walking
       if (s.ui.stats.mana !== undefined && s.ui.stats.mana === s.ui.stats.maxMana) return;
       if (s.motion) return;
@@ -544,7 +548,7 @@ viewport.addEventListener('pointerdown', event => {
   const door = doorAt(event);
   if (door) { event.preventDefault(); clearInput(); session.leftClick(door.x, door.y); renderer.app.canvas.focus(); return; }
   // Touch: a tap on another character selects it (LeftClick: NPC dialog, shop, attack target); anywhere else it walks.
-  const tapped = tileAt(event), target = tapped && characterTapTile(session.characters.values(), session.charIndex, tapped);
+  const tapped = tileAt(event), target = tapped && characterTapTile(session.tracker.chars.values(), session.charIndex, tapped);
   if (target) { event.preventDefault(); clearInput(); try { session.leftClick(target.x, target.y); } catch (error) { close(String(error)); } renderer.app.canvas.focus(); return; }
   event.preventDefault(); clearInput(); aim(event); walk(touchHeading!);
   viewport.setPointerCapture(event.pointerId); renderer.app.canvas.focus();

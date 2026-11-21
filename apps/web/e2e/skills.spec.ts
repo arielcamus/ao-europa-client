@@ -64,6 +64,12 @@ test('skills: skill points window, statistics tabs and trainer list', async ({ p
   await plus('Meditar').click(); await plus('Meditar').click(); await plus('Meditar').click(); await plus('Meditar').click();
   await expect(win.locator('.sk-label').first()).toHaveText('0');
   await page.screenshot({ path: 'artifacts/screenshots/skills-window.png' });
+  // MoverForm: dragging the form background moves the window (and not the controls on it).
+  const origin = await win.boundingBox();
+  await page.mouse.move(origin!.x + 8, origin!.y + 8); await page.mouse.down(); await page.mouse.move(origin!.x + 48, origin!.y + 38, { steps: 4 }); await page.mouse.up();
+  const dragged = await win.boundingBox();
+  expect(Math.round(dragged!.x - origin!.x)).toBeGreaterThan(20); expect(Math.round(dragged!.y - origin!.y)).toBeGreaterThan(10);
+  await page.screenshot({ path: 'artifacts/screenshots/wp-b-skills-dragged.png' });
   // Aceptar with changes asks first; No closes without sending, Yes sends only the added points.
   await win.getByRole('button', { name: 'Aceptar', exact: true }).click();
   await expect(win.locator('.sk-msg-text')).toContainText('Realizó cambios en sus skillpoints');

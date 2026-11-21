@@ -15,7 +15,7 @@
 |---|---|---|---|
 | Packets with a codec | 512 | 513 | 1 |
 | Screens complete (all controls) | 55 | 58 | 3 (2 partial, 0 not started, 1 covered but missing controls) |
-| Behaviour items | 0 | 32 | **32 open** (27 to do, 1 in flight, 4 blocked on data or a decision) |
+| Behaviour items | 0 | 20 | **20 open** (15 to do, 1 in flight, 4 blocked on data or a decision) |
 | Playthrough steps passing end to end | 0 | 164 | 164 (56 recorded at protocol level on main, 2 in flight, 143 automatable, 21 manual) |
 
 Scope. Packets: the 8 post-pin packets are excluded (docs/COVERAGE.md "post-pin"); "codec" is a registered `[Table.Name]` entry, and the handling check is a name search in apps/web and the bridge. Screens: covered + partial + class a; classes b (account server), c (AO20 extras) and d (dead forms) are out. Playthrough: "passing" means an end-to-end run against the real server; none exists yet (WP-D).
@@ -34,11 +34,7 @@ In flight now: PR #54 (feat/prehoo-lock: pins, asset lock, pinned coverage map);
 
 Server packets whose name never appears in apps/web or the bridge (name search: a handler registered by number shows here by mistake). Each needs a one-line answer: handled where, or "VB6 ignores it too".
 
-- [ ] `s2c:46` UserIndexInServer (core)
-- [ ] `s2c:51` Fxpiso (core)
-- [ ] `s2c:82` ShowForumForm (gm)
-- [ ] `s2c:137` ShowFrmLogear (core)
-- [ ] `s2c:185` NotificarClienteCasteo (extras)
+None.
 
 ## 2. Screens
 
@@ -63,7 +59,7 @@ Server packets whose name never appears in apps/web or the bridge (name search: 
 
 ## 3. Behaviour: open issues and reported bugs
 
-**32 items** from the open issues (#58 #44 #43 #39 #38 #35 #34 #28 #24 #22 #20 #19 #17 #16 #15) and Ariel's reports. In flight: 1; blocked on data or a decision: 4.
+**20 items** from the open issues (#58 #44 #43 #39 #38 #35 #34 #28 #24 #22 #17 #16 #15) and Ariel's reports. In flight: 1; blocked on data or a decision: 4.
 
 ### #15
 
@@ -71,25 +67,11 @@ Server packets whose name never appears in apps/web or the bridge (name search: 
 
 ### #16
 
-- [ ] chat-box.ts never passes dead to ChatInput.submit (/GLOBAL while dead)
-- [ ] Wrong comments in chat.test.ts:64 and vb6-chat-record.mjs:28
-- [ ] chat-input.ts filters by code point, not windows-1252 representability
-- [ ] Document the LOCMSG field-3 deviation (VB6 client bug)
-- [ ] Merge the two parsers of sp_localindex.dat (ChatLocale and LocaleData)
-- [ ] CharacterTracker still computes an overhead dialog state no longer drawn; bubbles jump tile to tile for walking NPCs
-- [ ] ChatBubbles and the door rule read session.characters, a second character store next to the tracker
+- [ ] session.characters (raw CharacterCreate copies: hp, cart, self copy) is still a second store next to the tracker; chat bubbles, the door rule and the tap-to-select rule already read the tracker. Remaining readers: session.ts, combat.ts, combat-overlay.ts, extras-ui.ts (other packages' files)
 
 ### #17
 
 - [ ] Record death by a hostile creature, NPCHitUser/NPCKillUser on a non-GM char and the revival after it
-
-### #19
-
-- [ ] hotkeys-ui still reads spellTables.spells: use the shared spellData and delete the copy
-
-### #20
-
-- [ ] Keybound features not in the client (ShowOnline M, ScreenShot, GameStats *): say so in the console; hotkeys 1-0 need eEnableHotkeys
 
 ### #22
 
@@ -115,11 +97,7 @@ Server packets whose name never appears in apps/web or the bridge (name search: 
 
 ### #38
 
-- [ ] SKILL_DESCRIPTIONS in game-text.ts is unused: show on skill-name click or drop it
-- [ ] SkillsState.reset() never called: call on disconnect/relogin or delete
-- [ ] Trainer window empty-list case: what the VB6 form does with zero creatures
 - [ ] Record ObjQuestListSend (S174) with a level-appropriate char holding a quest item
-- [ ] Optional: draggable quest and skill windows (MoverForm), PlayQuestDescAudio
 
 ### #39
 

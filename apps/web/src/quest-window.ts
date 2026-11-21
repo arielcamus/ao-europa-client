@@ -9,6 +9,8 @@ import './quest-window.css';
 import { fetchText } from './assets.js';
 import { loadInterface } from './interface-assets.js';
 import { Icons } from './icons.js';
+import { makeDraggable } from './window-drag.js';
+import type { QuestVoice } from './quest-voice.js';
 import { QuestCatalog, detailsView, offerView } from './quests.js';
 import type { QuestRow } from './quests.js';
 import type { Session } from './session.js';
@@ -43,6 +45,7 @@ class Form {
     this.rewardIcon = node(this.root, 'q-reward-icon', layout.picture1); this.rewardIcon.hidden = true;
     this.rewardLabel = node(this.root, 'q-label', layout.objetolbl);
     void loadInterface(art).then(url => { this.root.style.backgroundImage = `url("${url}")`; }).catch(() => {});
+    makeDraggable(this.root); // FrmQuest / frmQuestInfo Form_MouseDown: MoverForm
   }
   get visible() { return !this.root.hidden; }
   /** An invisible button over the form's artwork; its `-over` bitmap shows while the pointer is on it (Image*_MouseMove). */
@@ -91,6 +94,9 @@ export class QuestWindows {
   private readonly offers: Form;
   private readonly icons: Icons;
   private session: Session | undefined;
+  /** PlayQuestDescAudio / StopQuestDescAudio (main.ts sets it once the audio engine exists). */
+  voice: QuestVoice | undefined;
+  private voiced: { log: number; offers: number } = { log: -1, offers: -1 };
   private logRevision = -1; private offerRevision = -1;
   private logSelected = -1; private offerSelected = 0;
   private picks = { log: { objective: 0, reward: 0 }, offers: { objective: 0, reward: 0 } };
@@ -119,9 +125,9 @@ export class QuestWindows {
   get offersOpen() { return this.offers.visible; }
 
   /** Unload FrmQuests (the server's list is forgotten; Form_Unload). */
-  closeLog() { this.session?.quests.closeList(); this.log.root.hidden = true; this.logSelected = -1; }
+  closeLog() { this.session?.quests.closeList(); this.log.root.hidden = true; this.logSelected = -1; this.voiced.log = -1; this.voice?.stop(); /* Form_Unload: StopQuestDescAudio */ }
   /** Unload FrmQuestInfo (also done by a click on the game screen, frmMain.Form_MouseDown). */
-  closeOffers() { this.session?.quests.closeOffers(); this.offers.root.hidden = true; }
+  closeOffers() { this.session?.quests.closeOffers(); this.offers.root.hidden = true; this.voiced.offers = -1; this.voice?.stop(); }
   closeAll() { this.closeLog(); this.closeOffers(); }
 
   private abandon() {
@@ -175,6 +181,8 @@ export class QuestWindows {
     const details = quests.details;
     if (!details) { this.fill(form, undefined, 'log'); return; }
     const view = detailsView(details, this.catalog);
+    // HandleQuestDetails ends in PlayQuestDescAudio(questIndex): once per quest shown, not on every redraw.
+    if (this.voiced.log !== details.questIndex) { this.voiced.log = details.questIndex; this.voice?.play(this.catalog.questAudio(details.questIndex)); }
     this.fill(form, { ...view, requirements: view.info }, 'log');
   }
   private renderOffers() {
@@ -188,6 +196,8 @@ export class QuestWindows {
       row.addEventListener('click', () => { this.offerSelected = index; this.picks.offers = { objective: 0, reward: 0 }; this.renderOffers(); });
     });
     const offer = quests.offers[this.offerSelected];
+    // ListViewQuest_ItemClick / lstQuests_Click: PlayQuestDescAudio of the quest selected in the offer list.
+    if (offer && this.voiced.offers !== offer.questIndex) { this.voiced.offers = offer.questIndex; this.voice?.play(this.catalog.questAudio(offer.questIndex)); }
     this.fill(form, offer ? offerView(offer, this.catalog) : undefined, 'offers');
   }
 

@@ -4,8 +4,8 @@ import type { ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
 import { parseIni } from '../src/assets.js';
 import { Session } from '../src/session.js';
-import { MSG_CLICK_TARGET, MSG_TOO_FAST, spellTables, swapSpellSlots } from '../src/spells.js';
-import { ChatLocale } from '../src/chat-locale.js';
+import { MSG_CLICK_TARGET, MSG_TOO_FAST, swapSpellSlots } from '../src/spells.js';
+import { ChatLocale, sharedLocale } from '../src/chat-locale.js';
 import { expandConsoleText } from '../src/chat-console.js';
 
 const hechizos = parseIni(`[HECHIZO1]\nNombre=Dardo Mágico\nDesc=Causa 5 a 10 puntos de daño a la víctima.\nHechizeroMsg=Has lanzado Dardo Mágico sobre\nTargetMsg=lanzó Dardo Mágico sobre vos.\nPropioMsg=Has invocado un Lobo\nManaRequerido=10\nMinSkill=0\nStaRequerido=5\n`);
@@ -48,7 +48,7 @@ describe('spell text resolvers (HandleConsoleMessage tokens and Locale_Parse_Ser
 
 describe('spell session behaviour', () => {
   it('casts, waits for the server target request, then sends one WorkLeftClick and clears the cursor', () => {
-    spellTables.spells = hechizos;
+    sharedLocale.spellData = hechizos;
     const h = harness(); h.session.ui.chat.locale = chatLocale;
     expect(h.session.spells.cast(0, 'x')).toBe(false); expect(h.session.spells.cast(1, '(Vacío)')).toBe(false);
     expect(h.session.spells.click(5, 5)).toBe(false); // nothing asked for a target
@@ -96,7 +96,7 @@ describe('spell session behaviour', () => {
     expect(notified()).toEqual([{ id: SC.NotifyInventarioHechizos, value: 1, hechiSel: 0, scrollSel: 0 }]);
   });
   it('records spell effects, cools down and prints locale and token console text', () => {
-    spellTables.spells = hechizos;
+    sharedLocale.spellData = hechizos;
     const h = harness(); h.session.ui.chat.locale = chatLocale;
     h.recv({ id: SS.CreateFX, charIndex: 2555, fx: 15, loops: 0, x: 0, y: 0 }, { id: SS.FxFloor, x: 51, y: 60, grh: 20 });
     expect(h.session.spells.effects.map(e => [e.fx, e.charIndex, e.grh])).toEqual([[15, 2555, undefined], [0, undefined, 20]]);

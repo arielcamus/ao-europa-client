@@ -10,7 +10,7 @@ import { HOTKEY_COUNT, HotkeyType } from '@ao/protocol';
 import { make } from './bank-trade-dom.js';
 import { hotkeyLabel } from './key-bindings.js';
 import { getActiveBindings } from './keymap.js';
-import { spellTables } from './spells.js';
+import { sharedLocale } from './chat-locale.js';
 import type { GraphicFrame } from './assets.js';
 import type { Session } from './session.js';
 
@@ -63,10 +63,10 @@ export class HotkeysUI {
     if (event.button !== 2 || !s?.ready || !s.options.hotkeysEnabled) return;
     const row = (event.target as HTMLElement | null)?.closest<HTMLElement>('.spell'), slot = Number(row?.dataset.slot);
     const index = s.ui.spells.get(slot)?.index ?? 0;
-    if (!row || !(index > 0) || spellTables.spells.get(`hechizo${index}`)?.get('isbindable') !== '1') return;
+    if (!row || !(index > 0) || sharedLocale.spellData.get(`hechizo${index}`)?.get('isbindable') !== '1') return;
     event.preventDefault(); this.drag = { spellSlot: slot, index };
     this.ghost.replaceChildren(); this.ghost.hidden = true;
-    const icon = Number(spellTables.spells.get(`hechizo${index}`)?.get('iconoindex'));
+    const icon = Number(sharedLocale.spellData.get(`hechizo${index}`)?.get('iconoindex'));
     if (icon > 0) void this.art.itemArt(icon).then(canvas => { if (this.drag?.index === index) { this.ghost.replaceChildren(canvas); this.ghost.hidden = false; this.place(event); } }).catch(() => {});
   }
   private place(event: PointerEvent) {
@@ -98,7 +98,7 @@ export class HotkeysUI {
       const label = slot.querySelector<HTMLElement>('.hk-label')!; label.textContent = hotkeyLabel(bindings[24 + i] ?? 0);
       slot.querySelector('canvas')?.remove(); slot.title = '';
       if (entry.index > 0 && entry.type === HotkeyType.Spell) {
-        const data = spellTables.spells.get(`hechizo${entry.index}`), icon = Number(data?.get('iconoindex'));
+        const data = sharedLocale.spellData.get(`hechizo${entry.index}`), icon = Number(data?.get('iconoindex'));
         slot.title = data?.get('nombre') ?? `Hechizo ${entry.index}`;
         if (icon > 0) void this.art.itemArt(icon).then(canvas => { if (this.key === key) slot.insertBefore(canvas, label); }).catch(() => {});
       }
