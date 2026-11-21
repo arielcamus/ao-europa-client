@@ -55,12 +55,26 @@ export function showConnecting(parent: HTMLElement, cancel: () => void): VbWindo
   return win;
 }
 
-/** Frmcarga: the "Cargando..." card (VentanaCargando.bmp, 161x106) while the map and the client resources load. */
+/**
+ * Frmcarga: the "Cargando..." card (VentanaCargando.bmp, 161x106) while the map and the client resources load. The VB6 form is only
+ * that picture with MakeFormTransparent(vbBlack): pure black pixels are see-through, and there is no label (the art already says CARGANDO).
+ */
 export class LoadingCard {
   private readonly el = document.createElement('div');
   constructor(parent: HTMLElement) {
-    this.el.id = 'loading-card'; this.el.hidden = true; this.el.textContent = 'Cargando...';
-    void loadInterface('VentanaCargando').then(url => { this.el.style.backgroundImage = `url("${url}")`; }).catch(() => { this.el.style.background = '#101010'; });
+    this.el.id = 'loading-card'; this.el.hidden = true; this.el.setAttribute('role', 'status'); this.el.setAttribute('aria-label', 'Cargando...');
+    void loadInterface('VentanaCargando').then(url => new Promise<string>((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => {
+        const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = image.height;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true })!; ctx.drawImage(image, 0, 0);
+        const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < pixels.data.length; i += 4) if (!pixels.data[i] && !pixels.data[i + 1] && !pixels.data[i + 2]) pixels.data[i + 3] = 0;
+        ctx.putImageData(pixels, 0, 0); resolve(canvas.toDataURL());
+      };
+      image.onerror = () => reject(new Error('VentanaCargando'));
+      image.src = url;
+    })).then(url => { this.el.style.backgroundImage = `url("${url}")`; }).catch(() => { this.el.style.background = '#101010'; });
     parent.append(this.el);
   }
   set visible(value: boolean) { this.el.hidden = !value; }

@@ -53,10 +53,14 @@ export function validateCharacterName(name: string): string | undefined {
 
 const range = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
 /** ModCabezas.DameOpciones (the same ranges as the server's ValidarCabeza). `race` indexes TEXT.races, `gender` 0 male / 1 female. */
-export function headsFor(race: number, gender: number): number[] {
+export function headsFor(race: number, gender: number, drawable: (head: number) => boolean = () => true): number[] {
   const male = [[...range(1, 41), ...range(778, 791)], [...range(101, 132), ...range(531, 545)], [...range(200, 229), ...range(792, 810)], range(400, 429), range(300, 344), range(500, 529)];
   const female = [[...range(50, 80), ...range(187, 190), ...range(230, 246)], [...range(150, 179), ...range(758, 777)], range(250, 279), range(450, 479), range(350, 379), range(550, 579)];
-  return (gender === 0 ? male : female)[race] ?? [1];
+  const all = (gender === 0 ? male : female)[race] ?? [1];
+  // Ranges the server accepts but the public art never drew (cabezas.ind holds an all-zero entry, e.g. human male 778-791, elf 531-545,
+  // dwarf 330-344): offering them shows a body with no head. They stay valid for the server, they are only not offered.
+  const shown = all.filter(drawable);
+  return shown.length ? shown : all;
 }
 
 /** Rotacion_boton_adelante_clase: the arrow order of the class selector (it is not the list order). Values are 0-based indexes of TEXT.classes. */
