@@ -197,3 +197,72 @@ step('CMB-06', async c => {
   // leave the duel: both characters back in Forgat as citizens
   await dbEditBoth(c, { mage: [setUser('is_dead=0, status=1, min_hp=20, pos_map=751, pos_x=60, pos_y=57')], war: [setUser('is_dead=0, status=1, faction_score=0, min_hp=20, pos_map=751, pos_x=62, pos_y=57')] });
 });
+
+// ---------- magic: CMB-16 .. CMB-20 ----------
+const SC = { paralizar: 1658, inmovilizar: 1659, remover: 1660, invisibilidad: 1657, curarGraves: 1651 } as const;
+const spellSlot = (s: Sess, spell: number) => [...s.spells.values()].find(x => x.spell === spell)?.slot;
+const mana = (s: Sess) => s.stats!.mana, sta = (s: Sess) => s.stats!.stamina;
+const MSG_HAVE_SPELL = 525, MSG_NO_SPELL_ROOM = 777, MSG_VISIBLE_AGAIN = 307;
+/** CastSpell then the target click, the way the client's spell cursor does (HandleWorkRequestTarget answers the cast). */
+async function cast(s: Sess, slot: number, x: number, y: number) {
+  const m = s.mark(); castSpell(s, slot);
+  await s.waitFor('WorkRequestTarget', m, 3000).catch(() => undefined);
+  workClick(s, x, y, 1); await s.sleep(1100);
+  return m;
+}
+
+step('CMB-16', async c => {
+  // UseInvItem otParchment (pinned InvUsuario.bas): dead refused; ClasePuedeUsarItem and RazaPuedeUsarItem (the four scrolls here forbid only the Pirate class); MinHam > 0 and MinAGU > 0 else message 904;
+  // AgregarHechizo (modHechizos.bas): spell already known -> 525 'tenes ese hechizo' and nothing consumed; no free slot of the 40 (MAXUSERHECHIZOS) -> 777; else the first free slot is filled
+  // (ChangeSpellSlot) and ONE scroll is consumed. Scrolls come from UPDATEs of the mage's spare inventory rows: OBJ1658 Paralizar (spell 25) x2, 1659 Inmovilizar (26), 1660 Remover Paralisis (27), 1657 Invisibilidad (24), 1651 Curar heridas graves (13).
+  await dbEdit(c, 'mage', setUser('is_dead=0, is_poisoned=0, status=1, level=1, exp=0, min_hp=20, min_man=150, min_sta=60, min_ham=100, min_sed=100, pos_map=751, pos_x=60, pos_y=57'),
+    setSlot(5, SC.paralizar, 2), setSlot(6, SC.inmovilizar, 1), setSlot(7, SC.remover, 1), setSlot(9, SC.invisibilidad, 1), setSlot(10, SC.curarGraves, 1));
+  const p = await actor(c, 'mage'); const known0 = [...p.spells.values()].map(s => s.spell).sort((a, b) => a - b);
+  c.eq(known0.includes(25), false, 'Paralizar not known yet');
+  const use = async (obj: number) => { const it = slotOf(p, obj)!, m = p.mark(); useSlot(p, it.slot); await p.sleep(1400); return m; };
+  await use(SC.paralizar);
+  c.ok(spellSlot(p, 25) !== undefined, `Paralizar learned into slot ${spellSlot(p, 25)} (ChangeSpellSlot)`);
+  c.eq(amountOf(p, SC.paralizar), 1, 'one scroll consumed (2 -> 1)');
+  let m = await use(SC.paralizar);
+  c.ok(localeIds(p, m).includes(MSG_HAVE_SPELL), `second scroll of the same spell: message ${MSG_HAVE_SPELL} (tenes ese hechizo)`);
+  c.eq(amountOf(p, SC.paralizar), 1, 'and it was NOT consumed');
+  for (const [obj, spell] of [[SC.inmovilizar, 26], [SC.remover, 27], [SC.invisibilidad, 24], [SC.curarGraves, 13]] as const) {
+    await use(obj); c.ok(spellSlot(p, spell) !== undefined, `spell ${spell} learned from scroll ${obj}`); c.eq(amountOf(p, obj), 0, `scroll ${obj} consumed`);
+  }
+  // hunger refusal: the spare Paralizar scroll, hungry
+  await dbEdit(c, 'mage', setUser('min_ham=0'));
+  const q = c.player; m = q.mark(); useSlot(q, slotOf(q, SC.paralizar)!.slot); await q.sleep(1400);
+  c.ok(localeIds(q, m).includes(Msg.hungry), `hungry: message ${Msg.hungry} (demasiado hambriento y sediento), scroll kept (${amountOf(q, SC.paralizar)})`);
+  c.eq(amountOf(q, SC.paralizar), 1, 'scroll not consumed while hungry');
+  c.note(`class and race refusal (906) and the full-list refusal (${MSG_NO_SPELL_ROOM}) are not reachable with the starter data: no scroll prohibits a mage, and 40 spell slots need 38 more scrolls`);
+  await dbEdit(c, 'mage', setUser('min_ham=100'));
+});
+
+step('CMB-17', async c => {
+  // PuedeLanzar (pinned modHechizos.bas): alive, Magia >= MinSkill (Dardo 0), Mana >= ManaRequerido (live Hechizos.dat: Dardo Magico 10), MinSta >= StaRequerido (2); cast interval IntervaloUserPuedeCastear (intervalos.ini IntervaloLanzaHechizo 1230 ms).
+  // HechizoPropNPC for an eDoDamage spell: Damage = RandomNumber(14, 18) + Porcentaje(Damage, 3 * ELV) (+3% at level 1); then the creature's magic resistance: Louise (NPC 602) MagicResistance 5, MagicDef 10: DiffSkill = 5 - Magia(0) = 5
+  // so Damage -= Porcentaje(Damage, MagicDef + DiffSkill * 2 = 20) -> about 11.5..14.8, then DefM (none). Mana -10 and stamina -2 are charged by HandleHechizoNPC.
+  await dbEdit(c, 'mage', setUser('is_dead=0, min_hp=20, min_man=150, min_sta=60, min_ham=100, min_sed=100, pos_map=751, pos_x=60, pos_y=57'));
+  const p = await actor(c, 'mage'); const dardo = spellSlot(p, 1)!; c.eq(dardo, 1, 'Dardo Magico in slot 1');
+  await gmGoto(c, 751, p.x + 3, p.y + 2);
+  const mine = await spawnCreature(c, DUMMY_SPELL);
+  try {
+    const cr = c.gm.chars.get(mine.charIndex) ?? { x: mine.x, y: mine.y };
+    await p.until(() => p.chars.has(mine.charIndex), 5000, 'the mage sees the dummy').catch(() => undefined);
+    const m0 = mana(p); let hp = 1_000_000; const dmg: number[] = []; const costs: number[] = [];
+    for (let i = 0; i < 3; i++) {
+      const before = sta(p), b = p.mark(); await cast(p, dardo, cr.x, cr.y);
+      const low = Math.min(...p.since(b).filter(r => r.name === 'UpdateSta').map(r => (r.packet as any).stamina as number)); costs.push(before - low);
+      for (const r of p.since(b)) if (r.name === 'CharUpdateHP' && (r.packet as any).charIndex === mine.charIndex) { dmg.push(hp - (r.packet as any).hp); hp = (r.packet as any).hp; }
+      await p.sleep(300);
+    }
+    c.ok(dmg.length === 3, `${dmg.length} of 3 casts hit the dummy: damage ${dmg.join(',')}`);
+    c.ok(dmg.every(d => d >= 10 && d <= 16), 'every Dardo did 10..16 (14-18 plus 3%, minus the dummy\'s 20% magic reduction)');
+    c.near(m0 - mana(p), 30, 30 + 0, `mana spent by three casts (10 each, nothing regenerates mana here) = ${m0 - mana(p)}`);
+    c.ok(costs.every(k => k >= 1 && k <= 4), `stamina cost per cast ${costs.join(',')} (StaRequerido 2; a regeneration tick of 1-2 can land in between)`);
+    // two casts inside the 1230 ms window: the second one is refused and charges nothing
+    const m1 = mana(p); await p.sleep(1300); const b = p.mark(); castSpell(p, dardo); await p.waitFor('WorkRequestTarget', b, 2000).catch(() => undefined); workClick(p, cr.x, cr.y, 1);
+    castSpell(p, dardo); workClick(p, cr.x, cr.y, 1); await p.sleep(1500);
+    c.eq(m1 - mana(p), 10, 'two casts inside 1230 ms charged mana ONCE');
+  } finally { await killMine(c, mine); }
+});

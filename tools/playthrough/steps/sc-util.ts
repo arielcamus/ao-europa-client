@@ -54,6 +54,7 @@ export async function dbEdit(c: Ctx, w: Who, ...statements: string[]) {
     if (!out.startsWith('1') && /^update user /i.test(st)) throw new Error(`UPDATE not applied to ${nameOf(c, w)} (is_logged still set?): ${st.slice(0, 80)}`);
   }
   if (w === 'mage') await c.relogin(); else await relogWar(c);
+  await dress(c, w);
   if (!free) c.blocked(`the server kept ${nameOf(c, w)} flagged is_logged=1 for 60 s, so the DB UPDATE was not applied`);
 }
 export const setUser = (set: string) => `update user set ${set} where id={id} and is_logged=0;`;
@@ -109,4 +110,13 @@ export async function dbEditBoth(c: Ctx, edits: { mage: string[]; war: string[] 
     for (const st of edits[ws[i]!]) { const out = sql(st.replace(/\{id\}/g, String(ids[i])).replace(/;\s*$/, ' returning 1;')); if (!out.startsWith('1') && /^update user /i.test(st)) throw new Error(`UPDATE not applied to ${nameOf(c, ws[i]!)}: ${st.slice(0, 80)}`); }
   }
   await Promise.all([c.relogin(), relogWar(c)]);
+  await dress(c, 'mage'); await dress(c, 'war');
+}
+
+/** A character the server saved as naked (is_naked = 1: the armour came off in an earlier step) loses stamina and cannot regenerate (SUR-12): put the armour back before a test that does not want that. */
+export async function dress(c: Ctx, w: Who) {
+  const naked = sql(`select is_naked from user where name='${nameOf(c, w).replace(/'/g, "''")}';`) === '1';
+  const s = w === 'mage' ? c.player : (c.shared.p2 as Sess);
+  if (!naked || !s || s.closed) return;
+  await ensureEquipped(s, w === 'mage' ? 3502 : 3500, true);
 }

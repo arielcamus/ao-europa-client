@@ -5,7 +5,7 @@ import { SkillsClientPacketId as SK } from '@ao/protocol';
 import type { ClientPacket } from '@ao/protocol';
 import { step } from '../harness.js';
 import type { Ctx } from '../harness.js';
-import { attack, actor, dbEdit, setUser, useSlot, equipSlot, slotOf, amountOf, series, localeIds, Msg, gmGoto, spawnCreature, killMine } from './sc-util.js';
+import { ensureEquipped, attack, actor, dbEdit, setUser, useSlot, equipSlot, slotOf, amountOf, series, localeIds, Msg, gmGoto, spawnCreature, killMine } from './sc-util.js';
 import { attributes } from './util.js';
 
 const APPLE = 3684, WATER = 3685, RED = 4335, BLUE = 4336, YELLOW = 4337, VIOLET = 4334;
@@ -179,12 +179,11 @@ step('SUR-12', async c => {
   // Same branch for a NAKED character (flags.Desnudo = 1 after unequipping the armour, InvUsuario.bas Desequipar): Sanar exits at once (Desnudo) and PierdeEnergia runs instead of RecStamina.
   // Resting doubles the interval (IntervaloPerderStamina * 2) and rain outdoors halves it (* 0.5); neither is reachable here (no campfire, weather not controllable).
   await dbEdit(c, 'mage', setUser('min_hp=5, min_sta=60, min_ham=100, min_sed=100'));
-  const p = c.player, armor = slotOf(p, 3502)!; c.ok(!!armor.equipped, 'tunic equipped'); equipSlot(p, armor.slot); await p.sleep(1200);
-  c.ok(!slotOf(p, 3502)!.equipped, 'tunic unequipped (naked)');
+  const p = c.player; c.ok(await ensureEquipped(p, 3502, true), 'tunic equipped'); c.ok(await ensureEquipped(p, 3502, false), 'tunic unequipped (naked)');
   const m = p.mark(), s0 = p.stats!.stamina; await p.sleep(20_000);
   c.eq(series(p, m, 'UpdateHP').length, 0, 'naked: no HP regen (Sanar: Desnudo = 1)');
   assertLoss(c, p, m, s0, 'naked');
-  const m2 = p.mark(); equipSlot(p, slotOf(p, 3502)!.slot); await p.sleep(9000);
+  const m2 = p.mark(); c.ok(await ensureEquipped(p, 3502, true), 'tunic worn again'); await p.sleep(9000);
   const up = staLosses(series(p, m2, 'UpdateSta')).filter((x, i, a) => i > 0 && x.p.stamina > a[i - 1]!.p.stamina);
   c.ok(up.length > 0, 'dressed again: stamina rises again (RecStamina)');
   await dbEdit(c, 'mage', setUser('min_hp=20, min_sta=60'));
