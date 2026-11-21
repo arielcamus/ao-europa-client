@@ -143,6 +143,14 @@ describe('rest and meditation', () => {
     expect(h.session.ui.messages.at(-1)?.text).toBe('Has dejado de meditar.');
     expect(h.session.spells.effects).toEqual([expect.objectContaining({ charIndex: OTHER })]);
   });
+  it('the meditation lines follow the INFO channel (ChatCombate), the effect does not', () => {
+    const h = harness();
+    h.session.ui.chatCombate = false;
+    h.recv({ id: SS.MeditateToggle, charIndex: f.UserCharIndexInServer.charIndex, fx: 7, x: 0, y: 0 });
+    expect(h.session.skills.meditating).toBe(true);
+    expect(h.session.ui.messages.some(m => m.text.includes('meditar'))).toBe(false);
+    expect(h.session.spells.effects).toHaveLength(1);
+  });
   it('CantUseWhileMeditating prints the red warning', () => {
     const h = harness();
     h.recv({ id: SS.CantUseWhileMeditating });

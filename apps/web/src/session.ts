@@ -148,7 +148,7 @@ export class Session {
       this.world.receive(packet);
       this.crafting.receive(packet);
       this.skills.receive(packet, {
-        charIndex: this.charIndex, message: (text, font) => this.ui.message(text, font),
+        charIndex: this.charIndex, message: (text, font) => this.ui.message(text, font), infoChannel: () => this.ui.chatCombate,
         // HandleMeditateToggle: StartFx(..., Fx, -1) loops until the toggle comes back with Fx = 0.
         meditationFx: (charIndex, fx) => {
           this.spells.effects = this.spells.effects.filter(effect => !(effect.charIndex === charIndex && effect.loops < 0));

@@ -32,6 +32,8 @@ export interface MiniStats {
 export interface SkillsContext {
   charIndex: number | undefined;
   message(text: string, font: number): void;
+  /** ChatCombate = 1: the INFO tab of the chat is on (the meditation lines are only shown then). */
+  infoChannel(): boolean;
   /** HandleMeditateToggle's StartFx(ActiveAnimation, Fx, -1) / ChangeToClip: a looping effect on a character, or none. */
   meditationFx(charIndex: number, fx: number): void;
 }
@@ -98,7 +100,7 @@ export class SkillsState {
       case SS.MeditateToggle:
         if (packet.charIndex === context.charIndex) {
           this.meditating = packet.fx !== 0;
-          context.message(this.meditating ? MESSAGES.startMeditating : MESSAGES.stopMeditating, FONTTYPE.INFO);
+          if (context.infoChannel()) context.message(this.meditating ? MESSAGES.startMeditating : MESSAGES.stopMeditating, FONTTYPE.INFO);
         }
         context.meditationFx(packet.charIndex, packet.fx);
         break;
