@@ -81,6 +81,18 @@ The explicit stand-in supplies sample UI data and echoes
 chat locally. The current `elixir-classic` adapter supports login/movement only, so
 chat is disabled for that profile rather than sending an unsupported packet.
 
+### Mobile mode (prototype)
+
+A separate in-world layout for phones and tablets (`apps/web/src/mobile-mode.ts`, rules in `mobile-rules.ts`), inspired by
+AO Forever's mobile client. It is on by default on touch screens up to tablet size; `?layout=mobile` or `?layout=classic`
+forces it (and is remembered), and the drawer's *Modo clásico* / the *Modo móvil* button switch back and forth. Desktop
+stays classic. In the world it shows a zoomed view (~11 tiles across a phone, 15 on a tablet; 🔍 cycles cerca/medio/lejos),
+a floating 4-way joystick, a big context button, and buttons that appear only when they apply: Meditar (low mana, or mana
+missing and no blue potion), red/blue potions (bar not full; a tap keeps drinking until full), Agarrar (loot under you).
+A tap on a creature casts or hits by a fixed rule table (the button shows what a tap will do and the rule id); a long
+press opens a spell picker that also pins a spell for creatures. Players are never attacked by a plain tap. The protocol
+is unchanged. Live checks: `tools/mobile-mode-real-shot.mjs`, `tools/mobile-mode-creature-shot.mjs`.
+
 The launcher binds to loopback by default, starts the bridge on a free port, and
 proxies `/bridge` through the web origin. For a phone on your **local network**, set
 `AO_WEB_HOST=0.0.0.0` and open `http://<Mac-LAN-IP>:5173` on the phone; the WebSocket

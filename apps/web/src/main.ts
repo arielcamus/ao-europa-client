@@ -62,6 +62,7 @@ import { TEXT, silentLoginText } from './connect-text.js';
 import { FloatingTexts } from './floating-text.js';
 import type { SessionNotice } from './session.js';
 import type { VbWindow } from './vb-window.js';
+import { MobileMode } from './mobile-mode.js';
 
 // The saved screen scale applies from the first layout; `?scale=classic|fill|whole` in the address changes and remembers it (see options-settings.ts).
 const gameOptions = new OptionsSettings();
@@ -129,7 +130,7 @@ const npcDialog = new NpcDialog(element('classic'), renderer);
 const skillsWindows = new SkillsWindows(element('classic'));
 // frmMain: EstadisticasBoton (the skills arrow, 982,66 31x28) -> RequestSkills; ImgEstadisticas (Estadísticas in the info panel) -> RequestAtributes + RequestMiniStats.
 const skillsButton = document.createElement('button');
-skillsButton.type = 'button'; skillsButton.className = 'hotspot'; skillsButton.setAttribute('aria-label', 'Skills');
+skillsButton.type = 'button'; skillsButton.id = 'skills-button'; skillsButton.className = 'hotspot'; skillsButton.setAttribute('aria-label', 'Skills');
 skillsButton.style.cssText = 'position:absolute;left:982px;top:66px;width:31px;height:28px;z-index:4';
 element('classic').append(skillsButton);
 skillsButton.onclick = () => { try { session?.requestSkills(); } catch (error) { close(String(error)); } };
@@ -224,6 +225,14 @@ const inventoryExtras = new InventoryExtras(element('classic'), ui, {
   dropSelected: () => guard(() => itemsUi.dropSelected()),
   dropBlocked: () => transacting() || itemsUi.dialogOpen || keyringUi.isOpen || travelUi.isOpen || craftingUi.windowOpen || craftingExtraUi.windowOpen || (session?.items.shopOpen ?? false),
   overHotkeyBar: (x, y) => !!session?.options.hotkeysEnabled && !session.options.hideHotkeys && overHotkeyBar(viewport, element('classic'), x, y),
+});
+// Mobile mode (prototype): a separate touch layout in the world; desktop stays classic (mobile-mode.ts, mobile-rules.ts).
+const mobile = new MobileMode({
+  session: () => session, renderer, ui, attack, guard,
+  meditate: () => gameKey(KeyAction.Meditate), exitGame: () => gameKey(KeyAction.ExitGame),
+  leftClickAt: event => { if (!session?.ready) return; const tile = doorAt(event) ?? tileAt(event); try { if (tile) session.leftClick(tile.x, tile.y); } catch (error) { close(String(error)); } },
+  worldTapped: event => { if (session) { questWindows.closeOffers(); signOverlay.anchor(session, event.clientX, event.clientY, viewport.getBoundingClientRect()); session.sign = undefined; } },
+  openWorldMap: () => { if (session) worldMapUi.open(session); }, dropSelected: () => guard(() => itemsUi.dropSelected()), runCommand: line => runCommand(line),
 });
 const fpsLabel = document.createElement('span'); fpsLabel.id = 'fps'; fpsLabel.hidden = true; element('classic').append(fpsLabel);
 let lastFps = 0;
@@ -331,7 +340,8 @@ async function boot() {
     try {
       if (session && session.phase !== 'closed') {
         session.tick();
-        const heading = touchHeading ?? [...keys.values()].at(-1);
+        mobile.tick(session, now);
+        const heading = touchHeading ?? mobile.heading ?? [...keys.values()].at(-1);
         if (heading && !transacting() && renderer.readyMap === session.resourceMap) session.walk(heading);
         if (session.ready && session.resourceMap !== requestedMap) {
           requestedMap = session.resourceMap;
@@ -388,8 +398,9 @@ function updateUi(now: number) {
   itemsUi.update(session); keyringUi.update(session); papiroUi.update(session); inventoryExtras.update(session);
   guard(() => craftingUi.update(session));
   guard(() => craftingExtraUi.update(session));
-  if (!session) { hotkeysUi.update(undefined, false); return; }
+  if (!session) { hotkeysUi.update(undefined, false); mobile.update(undefined, false); return; }
   const playing = session.ready && renderer.readyMap === session.resourceMap && hudReady;
+  mobile.update(session, playing);
   // ModSettings.LoadHotkeys: once per entry into the game, send the saved slots to the server.
   if (playing && session.self && !hotkeysLoaded.has(session)) { hotkeysLoaded.add(session); applyOptions(); session.optionsActions.loadHotkeys(session.self.tag); }
   hotkeysUi.update(session, playing);
@@ -633,6 +644,7 @@ viewport.addEventListener('pointerdown', event => {
   }
   bankUi.closeOnWorldClick(); // frmMain.renderer_MouseDown unloads frmBancoObj and frmGoliath
   partyUi.closeWindow(); guildUi.closeOnMapClick(); travelUi.closeOnWorldClick(); // ... and FrmGrupo and frmGuildList
+  if (mobile.worldPointerDown(event)) return; // the mobile layout has its own taps (contextual actions, long-press)
   if (!event.isPrimary || !session?.ready) return;
   // frmMain MouseUp: clicX/clicY anchor the next sign; a world click removes the open one (ModGameplayUI: If cartel Then cartel = False).
   signOverlay.anchor(session, event.clientX, event.clientY, viewport.getBoundingClientRect()); session.sign = undefined;
