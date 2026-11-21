@@ -42,3 +42,33 @@ export function splitDefenses(defenses: readonly number[], typeOf: (object: numb
   }
   return { armors, shields, helmets };
 }
+
+/** frmAlqui.lstArmas_Click: the ObjData fields in the order the form tests them (label shown, then the Obj.dat key). */
+const ALCHEMY_MATERIALS = ['Raices', 'Botella', 'Cuchara', 'Mortero', 'FrascoAlq', 'FrascoElixir', 'Dosificador', 'Orquidea', 'Carmesi', 'HongoDeLuz', 'Esporas', 'Tuna',
+  'Cala', 'ColaDeZorro', 'FlorOceano', 'FlorRoja', 'Hierva', 'HojasDeRin', 'HojasRojas', 'SemillasPros', 'Pimiento'] as const;
+/** Only the ingredients the object needs (the form skips every field that is 0). */
+export function alchemyMaterials(ini: Ini, object: number): Material[] {
+  return ALCHEMY_MATERIALS.map(name => ({ name, amount: value(ini, object, name.toLowerCase()) })).filter(material => material.amount > 0);
+}
+/** frmAlqui.List1_Click draws this graphic whatever row is clicked. */
+export const ALCHEMY_MATERIAL_GRH = 21926;
+
+/** FrmSastre.lstArmas_Click: all six skins are listed, also with a 0 amount. */
+export function tailorMaterials(ini: Ini, object: number): Material[] {
+  return [['Piel de Lobo', 'piellobo'], ['Piel de Oso Pardo', 'pielosopardo'], ['Piel de Oso Polar', 'pielosopolar'], ['Piel de Lobo Negro', 'piellobonegro'],
+    ['Piel de Tigre', 'pieltigre'], ['Piel de Tigre Bengala', 'pieltigrebengala']].map(([name, key]) => ({ name: name!, amount: value(ini, object, key!) }));
+}
+/** FrmSastre.List1_Click: rows 0..2 are fixed graphics, 3..5 are the object graphics of Lobo Negro (1146), Tigre (4339) and Tigre Bengala (1145). */
+export const TAILOR_SKIN_OBJECTS = [0, 0, 0, 1146, 4339, 1145] as const;
+export const TAILOR_SKIN_GRH = [697, 699, 698] as const;
+/** HandleSastreObjects: clothes (types 3 and 100) and hats (17) go to separate lists, in the order the server sent them. */
+export function splitTailor(objects: readonly number[], typeOf: (object: number) => number) {
+  const clothes: number[] = [], hats: number[] = [];
+  for (const object of objects) {
+    if (object === 0) break;
+    const type = typeOf(object);
+    if (type === 3 || type === 100) clothes.push(object);
+    if (type === 17) hats.push(object);
+  }
+  return { clothes, hats };
+}

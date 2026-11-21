@@ -23,6 +23,10 @@ export class ClassicState {
     if (this.messages.length > 200) this.messages.shift();
     this.revision++;
   }
+  /** AddtoRichTextBox with explicit RGB (the client's own work prompts). */
+  messageRgb(text: string, color: readonly [number, number, number], bold = false, italic = false) {
+    this.line({ kind: 'rgb', message: text, color, bold, italic });
+  }
   private line(line: ChatLine) {
     const segments = formatLine(line, this.chat.locale);
     this.messages.push({ text: plainText(segments), font: line.kind === 'console' || line.kind === 'locale' ? line.font : 0, line });

@@ -24,7 +24,7 @@
 .bt-log-line { overflow-wrap: anywhere; }
 .bt-chat { position: absolute; border: 0; padding: 0 3px; box-sizing: border-box; background: #070406; color: #fff; font: 12px Arial, sans-serif; }
 .bt-chat.placeholder { color: #757575; }
-.bt-request { position: absolute; z-index: 7; background: #d4d0c8; border: 2px solid #404040; color: #000; font: 11px Tahoma, Verdana, sans-serif; }
+.bt-request { position: absolute; z-index: 25; /* above the guild windows (vb-window is 20): ShowUserRequest also answers GuildRequestJoinerInfo */ background: #d4d0c8; border: 2px solid #404040; color: #000; font: 11px Tahoma, Verdana, sans-serif; }
 .bt-request-title { position: absolute; left: 0; top: 0; right: 0; height: 20px; background: #0a246a; color: #fff; font-weight: bold; padding: 3px 6px; box-sizing: border-box; }
 .bt-request-text { position: absolute; resize: none; font: 12px Tahoma, Verdana, sans-serif; white-space: pre-wrap; }
 .bt-request-close { position: absolute; font: 11px Verdana, Tahoma, sans-serif; }

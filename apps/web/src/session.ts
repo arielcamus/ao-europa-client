@@ -79,6 +79,8 @@ export class Session {
   readonly crafting = new CraftingController({
     send: packet => this.send(packet), ready: () => this.ready, now: () => this.clock(), stamina: () => this.ui.stats.stamina,
     message: (text, font) => this.ui.message(text, font),
+    colored: (text, color, bold, italic) => this.ui.messageRgb(text, color, bold, italic),
+    overhead: (text, color) => { if (this.charIndex !== undefined) this.ui.chat.showOwnDialog(this.charIndex, text, color); },
   }, this.craftingState);
   /** Skills, attributes, statistics, trainer list, rest and meditation (feat/skills). */
   readonly skills = new SkillsState();
@@ -433,6 +435,7 @@ export class Session {
     this.lastQuery = now;
     // MoveTo: a legal step ends the work macro first (ResetearUserMacro: FlagTrabajar + "Has dejado de trabajar...").
     if (this.crafting.macro.active) this.crafting.reset();
+    this.crafting.onWalk();
     this.send({ id: C.Walk, heading, counter: this.next('walk') });
     // TCP order ensures the position probe follows this walk. Silence never counts as success.
     this.send({ id: C.RequestPositionUpdate });
