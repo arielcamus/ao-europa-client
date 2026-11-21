@@ -59,7 +59,7 @@ export class Icons {
     const bodyLayer = layers[0], headLayer = layers[1];
     if (!bodyLayer) return canvas;
     const bodyFrame = bodyLayer.animation.frames[0]!;
-    // engine.bas 3754 uses BodyData.HeadOffset.y raw; the live head layer sits at HeadOffset.y - 1.
+    // engine.bas 3754 uses BodyData.HeadOffset.y (ini HeadOffsetY + BodyOffsetY, Recursos.bas); the live head layer sits at HeadOffset.y - 1.
     const headOffsetY = headLayer ? headLayer.y + 1 : 0;
     const x = Math.trunc((width - bodyFrame.width) / 2);
     const y = Math.min(height - bodyFrame.height + Math.trunc(headOffsetY / 2), Math.trunc((height - bodyFrame.height) / 2));

@@ -24,6 +24,8 @@ export interface Layer { animation: Animation; x: number; y: number; walks: bool
  * parts drawn at TextureX/TextureY + (0, 0) for the body, (0, OffArma) for weapon and shield and
  * (HeadOffset.x, OffHead) for head and helmet, with OffArma = (7 if dwarf) - BodyOffset.y and
  * OffHead = HeadOffset.y - 1 - BodyOffset.y (the breathing `ease` terms are 0 at rest). No +1 on body x.
+ * `headOffsetX/Y` is BodyData.HeadOffset as loaded (Recursos.bas: ini HeadOffset + BodyOffset), so the head lands at
+ * y = HeadOffset.y - 1 and x = BodyOffset.x + HeadOffset.x.
  */
 export function characterAnchors(body: { bodyX: number; bodyY: number; headOffsetX: number; headOffsetY: number }, dwarf: boolean) {
   const offArma = (dwarf ? 7 : 0) - body.bodyY;
@@ -37,7 +39,6 @@ export function characterAnchors(body: { bodyX: number; bodyY: number; headOffse
 
 export class CharacterSprites {
   private bodyCache = new Map<number, Body | null>();
-  private rawHead = new Map<number, { x: number; y: number }>();
   private weaponCache = new Map<number, EquipmentSet>();
   private shieldCache = new Map<number, EquipmentSet>();
   constructor(private readonly resources: CharacterResources) {}
@@ -47,17 +48,19 @@ export class CharacterSprites {
     if (body === undefined) {
       try {
         body = readBody(this.resources.bodies, this.resources.molds, this.resources.graphics, id);
-        const section = this.resources.bodies.get(`body${id}`);
-        this.rawHead.set(id, { x: Number(section?.get('headoffsetx') ?? 0), y: Number(section?.get('headoffsety') ?? 0) });
       } catch { body = null; }
       this.bodyCache.set(id, body);
     }
     return body ?? undefined;
   }
   /** BodyData(Body).HeadOffset.y = -26 marks dwarves: their weapon/shield sit 7 px lower. */
-  private isDwarf(id: number) { return this.rawHead.get(id)?.y === -26; }
-  /** BodyData(id).HeadOffset as in Body.ini (without BodyOffset): quest marker and speech anchors use it raw. */
-  headOffset(id: number): { x: number; y: number } { this.body(id); return this.rawHead.get(id) ?? { x: 0, y: 0 }; }
+  /** Protocol.bas: .EsEnano = (.Body.HeadOffset.y = -26), on the COMBINED offset (mount bodies such as 3057, 3075, 3077, 4763 count too). */
+  private isDwarf(id: number) { return this.body(id)?.headY === -26; }
+  /**
+   * BodyData(id).HeadOffset as the pinned client loads it (Recursos.bas CargarCuerpos: ini HeadOffsetX/Y + BodyOffset), i.e. readBody's
+   * headX/headY. Char_Render, the quest marker and the portrait all use this combined value.
+   */
+  headOffset(id: number): { x: number; y: number } { const body = this.body(id); return body ? { x: body.headX, y: body.headY } : { x: 0, y: 0 }; }
   headOffsetY(char: Character): number { return this.body(char.body)?.headY ?? 0; }
 
   /** Sprites bottom to top, in the VB6 order for the character's heading. */
