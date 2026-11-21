@@ -128,11 +128,11 @@ async function fight(s: Sess, target: number, maxMs = 150_000) {
   const t0 = Date.now(), exp0 = s.stats!.experience, lvl0 = s.stats!.level, m0 = s.mark(); let swings = 0; const trace: string[] = []; const refused = new Set<number>();
   while (s.chars.has(target) && Date.now() - t0 < maxMs) {
     const t = s.chars.get(target)!, d = Math.abs(t.x - s.x) + Math.abs(t.y - s.y);
-    if (trace.length < 40) trace.push(`${s.x},${s.y}>${t.x},${t.y}:${s.stats?.hp}`);
+    if (trace.length < 40) trace.push(`${s.x},${s.y}>${t.x},${t.y}:${s.stats?.hp}/${s.stats?.stamina}`);
     await healIfLow(s);
     if (d === 1) {
       face(s, headingTo(s.x, s.y, t.x, t.y)); await s.sleep(120);
-      if ((s.stats?.stamina ?? 0) < 4) { await s.sleep(2500); continue; }
+      if ((s.stats?.stamina ?? 0) < 10) { await s.sleep(3000); continue; } // UsuarioAtaca refuses under 10 stamina (Msg93, SUR-13): wait for RecStamina
       s.send({ id: CB.Attack, counter: 0 } as ClientPacket); swings++; await s.sleep(1150);
     } else {
       const f = loadMap(s.map)!.map, avoid = new Set([...occupied(s), ...exitTiles(s.map), ...refused]);
@@ -188,7 +188,10 @@ step('NWB-02', async c => {
   const m = s.mark(); s.send({ id: DOOR.LeftClick, x: board!.x, y: board!.y, counter: 0 } as ClientPacket);
   const list = (await s.waitFor('NpcQuestListSend', m, 5000)).quests as { questIndex: number; state: number; requiredLevel: number }[];
   c.eq(list.map(q => q.questIndex), [190, 191, 192, 193, 194, 4, 154, 163, 164, 165], 'the board offers Makrom\'s 190-194, quest 4, then its own 154/163/164/165');
-  c.eq(list.find(q => q.questIndex === 190)!.state, 0, 'quest 190 available (state 0)');
+  const st190 = list.find(q => q.questIndex === 190)!.state;
+  // FinishQuest records EVERY finished quest in quest_done ("aunque sea repetible"), so a character that already handed 190 in sees state 2 (done);
+  // CanUserAcceptQuest skips the done check for Repetible=1, so it can take it again.
+  if (n.fresh) c.eq(st190, 0, 'quest 190 available (state 0)'); else c.ok([0, 2].includes(st190), `quest 190 state ${st190} for a character that may have finished it (Repetible=1: shown done, still acceptable)`);
   c.ok(list.filter(q => [191, 192, 193, 194].includes(q.questIndex)).every(q => q.state !== 0), `191-194 not available at level 1 (states ${list.filter(q => q.questIndex > 190 && q.questIndex < 195).map(q => q.state).join(',')})`);
   const a = s.mark(); s.send({ id: Q.QuestAccept, slot: list.findIndex(q => q.questIndex === 190) + 1 } as unknown as ClientPacket); await s.sleep(1500);
   c.ok(s.localeSince(a).some(l => l.id === 1264), 'QuestAccept answered Msg1264 "Has aceptado la misión"');
@@ -214,18 +217,27 @@ step('NWB-04', async c => {
   if (s.map !== DUNGEON.map) c.blocked(`the newbie is not in the Newbie Dungeon (map ${s.map})`);
   if ((s.stats?.hp ?? 0) <= 0) return c.blocked('the newbie is dead (a creature killed it earlier)');
   const before = await questDetails(s), m = s.mark();
-  // a real creature first (the nearest quest target in view); if none can be reached, the GM spawns ONE Hormiga next to the player
-  let result: Awaited<ReturnType<typeof fight>> | undefined, who = '', spawned: Awaited<ReturnType<typeof spawnCreature>> | undefined;
-  const targets = questTargets(s);
-  for (const t of targets.slice(0, 2)) { who = creatureOf(t.body)!; result = await fight(s, t.charIndex, 60_000); if (result.killed) break; }
-  if (!result?.killed) {
-    spawned = await spawnNext(c, s, 508); who = 'Hormiga';
-    try { result = await fight(s, spawned.charIndex, 90_000); } finally { await killMine(c, spawned); }
-    c.note(`no reachable natural creature: the GM helper spawned one Hormiga (char ${spawned.charIndex}), removed afterwards if alive`);
-  }
+  // ONE Hormiga (Newbie Dungeon NPC 508, a quest-190 target) that the GM helper spawns right next to the player, then removes if it survives.
+  // A natural creature is the fallback: on a busy dungeon a level-1 warrior chasing one is often swarmed (stamina under 10 stops the swings)
+  // and dies, which is real play but makes the step a coin toss.
+  let result: Awaited<ReturnType<typeof fight>> | undefined, who = 'Hormiga';
+  const spawned = await spawnNext(c, s, 508);
+  try { result = await fight(s, spawned.charIndex, 90_000); } finally { await killMine(c, spawned); }
+  c.note(`the GM helper spawned one Hormiga (char ${spawned.charIndex}) next to the player; removed afterwards if alive`);
+  if (!result.killed && (s.stats?.hp ?? 0) > 0) { const t = questTargets(s)[0]; if (t) { who = creatureOf(t.body)!; result = await fight(s, t.charIndex, 60_000); c.note(`fallback: a natural ${who}`); } }
   c.ok(result!.killed, `killed a ${who} after ${result!.swings} swings (route ${result!.trace})`);
   const kind = CREATURES[who]!;
-  if (Number.isFinite(result!.exp)) c.near(result!.exp, kind.giveExp * EXP_MULT - result!.hits / 2, kind.giveExp * EXP_MULT + result!.hits / 2, `exp for the kill = GiveEXP ${kind.giveExp} x ExpMult ${EXP_MULT} = ${kind.giveExp * EXP_MULT}, +-0.5 per hit (GetExpForUser adds damage x GiveEXP / MaxHP x ExpMult per hit to the Long Exp, rounding each time; ${result!.hits} hits; skill-up bonus ${result!.skillUpExp} counted apart)`); else c.note('the kill crossed a level: exp delta not compared');
+  c.fixture('newbie-first-kill', s, m);
+  if (Number.isFinite(result!.exp)) {
+    // GetExpForUser floats "+N" over the player for every exp grant (WriteTextOverTile): the kill's exp is their sum
+    const floated = s.since(m).filter(r => r.name === 'TextOverTile' && /^\+/.test(String((r.packet as any).text))).map(r => Number(String((r.packet as any).text).replace(/\D/g, '')));
+    c.note(`floating exp texts ${floated.join(',')} (sum ${floated.reduce((a, b) => a + b, 0)}); skill-up bonus ${result!.skillUpExp} (Msg140) counted apart`);
+    // x4 is unmistakable (x1 would give about 11). The total is not exactly 44: NpcList().flags.ExpCount is a Long (Declares.bas), so each grant's
+    // fractional ExpaDar is subtracted with rounding, and each grant is itself rounded into the Long Exp. A newbie hitting an 8-HP Hormiga for 1 per hit
+    // gets 1 x 11 / 8 = 1.375 -> x4 = 5.5 -> 6 per hit for 8 hits, then a remainder: 51 in three live runs (VB6 integer rounding, server side).
+    c.ok(result!.exp >= kind.giveExp * EXP_MULT - result!.hits / 2, `exp for the kill ${result!.exp} >= GiveEXP ${kind.giveExp} x ExpMult ${EXP_MULT} = ${kind.giveExp * EXP_MULT} (EXP x4 is live; ${result!.hits} exp grants)`);
+    c.eq(result!.exp, floated.reduce((a, b) => a + b, 0), 'the exp gained equals the sum of the floating +N texts the client shows');
+  } else c.note('the kill crossed a level: exp delta not compared');
   const after = await questDetails(s), i = Q190.npcs.findIndex(([npc]) => npc === kind.npc);
   c.eq(after.npcs[i]!.killed, before.npcs[i]!.killed + 1, `quest 190 counter for NPC ${kind.npc} ticked`);
   c.shared.nbKills = after.npcs.map(x => x.killed);
@@ -234,7 +246,6 @@ step('NWB-04', async c => {
     const sk = await skills(s); c.ok(sk.every(v => v <= cap), `no skill above the level-${lvl} natural cap ${cap} after fighting (${sk.map((v, i) => v ? `${i}:${v}` : '').filter(Boolean).join(' ') || 'all 0'})`);
   }
   if (result!.skillUps.length) c.note(`skills rose by use during the fight: ${result!.skillUps.join(' | ')} (+${result!.skillUpExp} exp = 5 x ExpMult each)`);
-  c.fixture('newbie-first-kill', s, m);
 });
 
 step('NWB-05', async c => {
@@ -297,7 +308,7 @@ step('PRG-07', async c => {
   const after = await skills(s);
   c.eq([after[SKILL.Armas]! - before[SKILL.Armas]!, after[SKILL.Tacticas]! - before[SKILL.Tacticas]!], [4, 3], 'assigned 4 to Armas and 3 to Tacticas');
   c.ok(after[SKILL.Armas]! > 0, `Armas ${after[SKILL.Armas]} may exceed the natural cap of level ${s.stats!.level} (assigned points have no per-level cap)`);
-  await relog(c);
+  await dbNb(c); // a clean /SALIR (the server saves) and a relog; a bare socket close would log back in from the last save
   const lu = n.s.rx.filter(r => r.name === 'LevelUp').pop()?.packet as { skillPoints: number } | undefined;
   c.eq(lu?.skillPoints, free - 7, 'the 7 spent points are gone from the free pool after a relog');
 });

@@ -161,7 +161,8 @@ function assertLoss(c: Ctx, p: import('../session.js').Sess, m: number, start: n
   const sta = staLosses(series(p, m, 'UpdateSta'));
   c.ok(sta.length >= 4, `${what}: ${sta.length} stamina updates in 20 s`);
   const vals = [start, ...sta.map(x => x.p.stamina as number)], drops = vals.slice(1).map((v, i) => vals[i]! - v);
-  c.ok(drops.every(d => d >= 1 && d <= 22), `${what}: each loss ${drops.join(',')} is within 1..22 (RandomNumber(1, Porcentaje(60, (150 - 0) * 0.25 = 37.5) = 22.5))`);
+  const maxSta = p.stats?.maxStamina ?? 60, hi = Math.ceil(maxSta * 0.375); // a character an earlier step left above level 1 has a bigger MaxSta
+  c.ok(drops.every(d => d >= 1 && d <= hi), `${what}: each loss ${drops.join(',')} is within 1..${hi} (RandomNumber(1, Porcentaje(MaxSta ${maxSta}, (150 - 0) * 0.25 = 37.5)))`);
   const gaps = sta.slice(1).map((x, i) => (x.t - sta[i]!.t) / 1000); c.near(Math.min(...gaps), 1, 3, `${what}: loss gaps ${gaps.map(g => g.toFixed(1)).join(', ')} s (IntervaloPerderStamina = 40 loop ticks, about 1.6 s)`);
 }
 
