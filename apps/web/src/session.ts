@@ -28,6 +28,7 @@ import { QuestClientPacketId as QC, QuestServerPacketId as QS } from '@ao/protoc
 
 import { PartyState } from './party.js';
 import { GuildState } from './guild.js';
+import { OptionsController, OptionsState } from './options-state.js';
 
 export interface Position { x: number; y: number }
 const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
@@ -71,6 +72,12 @@ export class Session {
   readonly bankTradeActions = new BankTradeController({ send: packet => this.send(packet), ready: () => this.ready }, this.bankTrade);
   /** Quest list, quest details and NPC quest offers (feat/quests). */
   readonly quests = new QuestsState();
+  /** Server toggles, hotkeys, Goliath transfer (feat/options-extras). */
+  readonly options = new OptionsState();
+  readonly optionsActions = new OptionsController({
+    send: packet => this.send(packet), ready: () => this.ready, dead: () => this.dead,
+    message: text => this.ui.message(text), cancelTargeting: () => this.spells.cancel(),
+  }, this.options);
   characterLevel: number | undefined;
   phase: Phase = 'connecting';
   map: number | undefined;
@@ -170,6 +177,7 @@ export class Session {
           if (fx !== 0) this.spells.addFx({ fx, charIndex, x: 0, y: 0, loops: -1, startedAt: this.clock() });
         },
       });
+      this.options.receive(packet);
       switch (packet.id) {
         case S.Connected:
           if (this.phase !== 'connecting' || !this.credentials) throw new Error('Unexpected Connected');
