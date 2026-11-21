@@ -9,18 +9,18 @@
  ],
  "headline": {
   "packets": 523,
-  "packetsCovered": 180,
-  "packetsMerged": 180,
+  "packetsCovered": 196,
+  "packetsMerged": 196,
   "s2c": 207,
   "c2s": 316,
-  "s2cCovered": 104,
-  "c2sCovered": 76,
+  "s2cCovered": 112,
+  "c2sCovered": 84,
   "forms": 86,
   "formsCovered": 4,
   "formsPartial": 5,
-  "fixturePackets": 143,
-  "packetsPct": 34.4,
-  "packetsMergedPct": 34.4,
+  "fixturePackets": 153,
+  "packetsPct": 37.5,
+  "packetsMergedPct": 37.5,
   "formsPct": 4.7,
   "formsStartedPct": 10.5
  },
@@ -161,9 +161,9 @@
    "id": "skills",
    "title": "Skills / training / stats",
    "packets": 19,
-   "packetsCovered": 3,
-   "packetsMerged": 3,
-   "packetsPct": 15.8,
+   "packetsCovered": 19,
+   "packetsMerged": 19,
+   "packetsPct": 100,
    "forms": 3,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -286,6 +286,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -336,6 +338,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -769,6 +773,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -840,11 +846,13 @@
    "writer": "server Protocol_Writes.bas:WriteCantUseWhileMeditating",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -1009,6 +1017,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1206,6 +1216,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1335,6 +1347,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1476,6 +1490,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1526,6 +1542,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1624,6 +1642,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1710,6 +1730,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1842,6 +1864,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -1969,6 +1993,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -2051,6 +2077,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -2155,6 +2183,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -2171,13 +2201,17 @@
    "writer": null,
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "s2c:68",
@@ -2277,11 +2311,13 @@
    "writer": "server Protocol_Writes.bas:WriteRestOK",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2420,6 +2456,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -2436,13 +2474,17 @@
    "writer": "server Protocol_Writes.bas:WriteMiniStats",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "s2c:80",
@@ -2453,11 +2495,13 @@
    "writer": "server Protocol_Writes.bas:WriteLevelUp",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -2485,6 +2529,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -2552,11 +2598,13 @@
    "writer": "server Protocol_Writes.bas:WriteMeditateToggle",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2603,11 +2651,13 @@
    "writer": "server Protocol_Writes.bas:WriteSendSkills",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -2635,6 +2685,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -2651,11 +2703,13 @@
    "writer": "server Protocol_Writes.bas:WriteTrainerCreatureList",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2935,6 +2989,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3000,6 +3056,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3177,6 +3235,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3337,6 +3397,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3434,6 +3496,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3758,6 +3822,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3831,6 +3897,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -3961,6 +4029,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -4318,6 +4388,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -4385,6 +4457,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -4435,6 +4509,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -4757,6 +4833,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -5108,6 +5186,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -5173,6 +5253,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -5240,6 +5322,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -5305,6 +5389,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -5557,13 +5643,17 @@
    "writer": "client Protocol_Writes.bas:WriteModifySkills",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl"
+   ]
   },
   {
    "key": "c2s:8",
@@ -5574,11 +5664,13 @@
    "writer": "client Protocol_Writes.bas:WriteTrain",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6263,13 +6355,17 @@
    "writer": "client Protocol_Writes.bas:WriteTrainList",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:47",
@@ -6280,13 +6376,17 @@
    "writer": "client Protocol_Writes.bas:WriteRest",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:48",
@@ -6304,8 +6404,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/keys.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:49",
@@ -6373,13 +6475,17 @@
    "writer": "client Protocol_Writes.bas:WriteRequestStats",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:53",
@@ -6808,6 +6914,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -7079,13 +7187,17 @@
    "writer": "client Protocol_Writes.bas:WriteRequestAtributes",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:86",
@@ -7096,13 +7208,18 @@
    "writer": "client Protocol_Writes.bas:WriteRequestSkills",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:87",
@@ -7113,13 +7230,17 @@
    "writer": "client Protocol_Writes.bas:WriteRequestMiniStats",
    "group": "skills",
    "package": "wp09",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/skills.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
+   ]
   },
   {
    "key": "c2s:88",
@@ -11045,6 +11166,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/skills/spend-skill-point.jsonl",
+    "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -12685,42 +12808,8 @@
    "id": "wp09",
    "title": "Skills, training and stats",
    "scope": "Skill allocation, level up, attributes, statistics forms, rest/meditate",
-   "packetIds": [
-    "s2c:24",
-    "s2c:67",
-    "s2c:72",
-    "s2c:79",
-    "s2c:80",
-    "s2c:84",
-    "s2c:87",
-    "s2c:88",
-    "c2s:7",
-    "c2s:8",
-    "c2s:46",
-    "c2s:47",
-    "c2s:52",
-    "c2s:85",
-    "c2s:86",
-    "c2s:87"
-   ],
-   "packetNames": [
-    "S24 CantUseWhileMeditating",
-    "S67 Atributes",
-    "S72 RestOK",
-    "S79 MiniStats",
-    "S80 LevelUp",
-    "S84 MeditateToggle",
-    "S87 SendSkills",
-    "S88 TrainerCreatureList",
-    "C7 ModifySkills",
-    "C8 Train",
-    "C46 TrainList",
-    "C47 Rest",
-    "C52 RequestStats",
-    "C85 RequestAtributes",
-    "C86 RequestSkills",
-    "C87 RequestMiniStats"
-   ],
+   "packetIds": [],
+   "packetNames": [],
    "forms": [
     "frmSkills3",
     "FrmEstadisticas",

@@ -10,8 +10,8 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 180 of 523 = 34.4%.** Merged on main only: 180 = 34.4%.
-  - Server to client: 104 of 207. Client to server: 76 of 316. Packets with a recorded VB6 fixture: 143.
+- **Packets covered (merged + open branches): 196 of 523 = 37.5%.** Merged on main only: 196 = 37.5%.
+  - Server to client: 112 of 207. Client to server: 84 of 316. Packets with a recorded VB6 fixture: 153.
 - **Forms covered: 4 of 86 = 4.7%** (5 more partially, 10.5% started).
 
 ## (c) Feature groups, ordered by player value
@@ -29,7 +29,7 @@ Scanned refs: `main`
 | 9 | Party | 2/9 | 22.2% | 2 | 0/2 | 0% | 0 |
 | 10 | Guild / clan | 2/41 | 4.9% | 2 | 0/11 | 0% | 0 |
 | 11 | Quests | 0/10 | 0% | 0 | 0/2 | 0% | 0 |
-| 12 | Skills / training / stats | 3/19 | 15.8% | 3 | 0/3 | 0% | 0 |
+| 12 | Skills / training / stats | 19/19 | 100% | 19 | 0/3 | 0% | 0 |
 | 13 | Crafting (smith / carpenter / alchemy / tailor) | 25/25 | 100% | 25 | 2/5 | 40% | 3 |
 | 14 | Fishing / mining / lumber (work skills) | 10/10 | 100% | 10 | 0/0 | n/a | 0 |
 | 15 | Options / keybinds | 0/2 | 0% | 0 | 0/4 | 0% | 0 |
@@ -166,7 +166,7 @@ Ids only: .
 | 21 | SafeModeOff | client Protocol.bas:HandleSafeModeOff | combat | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
 | 22 | PartySafeOn | client Protocol.bas:HandlePartySafeOn | combat | not started |  | no |
 | 23 | PartySafeOff | client Protocol.bas:HandlePartySafeOff | combat | not started |  | no |
-| 24 | CantUseWhileMeditating | client Protocol.bas:HandleCantUseWhileMeditating | skills | not started |  | no |
+| 24 | CantUseWhileMeditating | client Protocol.bas:HandleCantUseWhileMeditating | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
 | 25 | UpdateSta | client Protocol.bas:HandleUpdateSta | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 26 | UpdateMana | client Protocol.bas:HandleUpdateMana | core | merged | `main:packages/protocol/src/packets.ts` | no |
 | 27 | UpdateHP | client Protocol.bas:HandleUpdateHP | core | merged | `main:packages/protocol/src/packets.ts` | yes |
@@ -209,28 +209,28 @@ Ids only: .
 | 64 | InventoryUnlockSlots | client Protocol.bas:HandleInventoryUnlockSlots | items | merged | `main:packages/protocol/src/packets.ts` | no |
 | 65 | ChangeBankSlot | client Protocol.bas:HandleChangeBankSlot | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 66 | ChangeSpellSlot | client Protocol.bas:HandleChangeSpellSlot | spells | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 67 | Atributes | client Protocol.bas:HandleAtributes | skills | not started |  | no |
+| 67 | Atributes | client Protocol.bas:HandleAtributes | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 68 | BlacksmithWeapons | client Protocol.bas:HandleBlacksmithWeapons | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 69 | BlacksmithArmors | client Protocol.bas:HandleBlacksmithArmors | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 70 | BlacksmithExtraObjects | client Protocol.bas:HandleBlacksmithExtraObjects | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 71 | CarpenterObjects | client Protocol.bas:HandleCarpenterObjects | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
-| 72 | RestOK | client Protocol.bas:HandleRestOK | skills | not started |  | no |
+| 72 | RestOK | client Protocol.bas:HandleRestOK | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
 | 73 | ErrorMsg | client Protocol.bas:HandleErrorMessage | core | merged | `main:packages/protocol/src/packets.ts` | no |
 | 74 | Blind | client Protocol.bas:HandleBlind | combat | not started |  | no |
 | 75 | Dumb | client Protocol.bas:HandleDumb | combat | not started |  | no |
 | 76 | ShowSignal | client Protocol.bas:HandleShowSignal | chat | not started |  | no |
 | 77 | ChangeNPCInventorySlot | client Protocol.bas:HandleChangeNPCInventorySlot | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 78 | UpdateHungerAndThirst | client Protocol.bas:HandleUpdateHungerAndThirst | items | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 79 | MiniStats | client Protocol.bas:HandleMiniStats | skills | not started |  | no |
-| 80 | LevelUp | client Protocol.bas:HandleLevelUp | skills | not started |  | yes |
+| 79 | MiniStats | client Protocol.bas:HandleMiniStats | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
+| 80 | LevelUp | client Protocol.bas:HandleLevelUp | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 81 | AddForumMsg | client Protocol.bas:HandleAddForumMessage | gm | not started |  | no |
 | 82 | ShowForumForm | client Protocol.bas:HandleShowForumForm | gm | not started |  | no |
 | 83 | SetInvisible | client Protocol.bas:HandleSetInvisible | combat | not started |  | no |
-| 84 | MeditateToggle | client Protocol.bas:HandleMeditateToggle | skills | not started |  | no |
+| 84 | MeditateToggle | client Protocol.bas:HandleMeditateToggle | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
 | 85 | BlindNoMore | client Protocol.bas:HandleBlindNoMore | combat | not started |  | no |
 | 86 | DumbNoMore | client Protocol.bas:HandleDumbNoMore | combat | not started |  | no |
-| 87 | SendSkills | client Protocol.bas:HandleSendSkills | skills | not started |  | yes |
-| 88 | TrainerCreatureList | client Protocol.bas:HandleTrainerCreatureList | skills | not started |  | no |
+| 87 | SendSkills | client Protocol.bas:HandleSendSkills | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
+| 88 | TrainerCreatureList | client Protocol.bas:HandleTrainerCreatureList | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
 | 89 | GuildNews | client Protocol.bas:HandleGuildNews | guild | not started |  | no |
 | 90 | OfferDetails | client Protocol.bas:HandleOfferDetails | guild | not started |  | no |
 | 91 | AlianceProposalsList | client Protocol.bas:HandleAlianceProposalsList | guild | not started |  | no |
@@ -361,8 +361,8 @@ Ids only: .
 | 4 | SpellInfo | server Protocol.bas:HandleSpellInfo | spells | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 5 | EquipItem | server Protocol.bas:HandleEquipItem | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 6 | ChangeHeading | server Protocol.bas:HandleChange_Heading | core | not started |  | no |
-| 7 | ModifySkills | server Protocol.bas:HandleModifySkills | skills | not started |  | no |
-| 8 | Train | server Protocol.bas:HandleTrain | skills | not started |  | no |
+| 7 | ModifySkills | server Protocol.bas:HandleModifySkills | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
+| 8 | Train | server Protocol.bas:HandleTrain | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
 | 9 | CommerceBuy | server Protocol.bas:HandleCommerceBuy | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 10 | BankExtractItem | server Protocol.bas:HandleBankExtractItem | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 11 | CommerceSell | server Protocol.bas:HandleCommerceSell | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
@@ -400,13 +400,13 @@ Ids only: .
 | 43 | PetFollow | server Protocol.bas:HandlePetFollow | npcs | not started |  | no |
 | 44 | PetLeave | server Protocol.bas:HandlePetLeave | npcs | not started |  | no |
 | 45 | GrupoMsg | server Protocol.bas:HandleGrupoMsg | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 46 | TrainList | server Protocol.bas:HandleTrainList | skills | not started |  | no |
-| 47 | Rest | server Protocol.bas:HandleRest | skills | not started |  | no |
-| 48 | Meditate | server Protocol.bas:HandleMeditate | skills | merged | `main:packages/protocol/src/packets/keys.ts` | no |
+| 46 | TrainList | server Protocol.bas:HandleTrainList | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
+| 47 | Rest | server Protocol.bas:HandleRest | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
+| 48 | Meditate | server Protocol.bas:HandleMeditate | skills | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
 | 49 | Resucitate | server Protocol.bas:HandleResucitate | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 50 | Heal | server Protocol.bas:HandleHeal | combat | merged | `main:packages/protocol/src/packets/combat.ts` | no |
 | 51 | Help | server Protocol.bas:HandleHelp | chat | not started |  | no |
-| 52 | RequestStats | server Protocol.bas:HandleRequestStats | skills | not started |  | no |
+| 52 | RequestStats | server Protocol.bas:HandleRequestStats | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 53 | CommerceStart | server Protocol.bas:HandleCommerceStart | items | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 54 | BankStart | server Protocol.bas:HandleBankStart | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 55 | Information | server Protocol.bas:HandleInformation | gm | not started |  | no |
@@ -439,9 +439,9 @@ Ids only: .
 | 82 | SafeToggle | server Protocol.bas:HandleSafeToggle | combat | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
 | 83 | PartySafeToggle | server Protocol.bas:HandlePartyToggle | combat | merged | `main:packages/protocol/src/packets/keys.ts` | no |
 | 84 | RequestGuildLeaderInfo | server Protocol.bas:HandleRequestGuildLeaderInfo | guild | not started |  | no |
-| 85 | RequestAtributes | server Protocol.bas:HandleRequestAtributes | skills | not started |  | no |
-| 86 | RequestSkills | server Protocol.bas:HandleRequestSkills | skills | not started |  | no |
-| 87 | RequestMiniStats | server Protocol.bas:HandleRequestMiniStats | skills | not started |  | no |
+| 85 | RequestAtributes | server Protocol.bas:HandleRequestAtributes | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
+| 86 | RequestSkills | server Protocol.bas:HandleRequestSkills | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
+| 87 | RequestMiniStats | server Protocol.bas:HandleRequestMiniStats | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 88 | CommerceEnd | server Protocol.bas:HandleCommerceEnd | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 89 | UserCommerceEnd | server Protocol.bas:HandleUserCommerceEnd | trade | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 90 | BankEnd | server Protocol.bas:HandleBankEnd | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
@@ -736,7 +736,7 @@ Quest list/details/abandon, NPC quest markers.
 
 Skill allocation, level up, attributes, statistics forms, rest/meditate.
 
-- Packets (16): S24 CantUseWhileMeditating, S67 Atributes, S72 RestOK, S79 MiniStats, S80 LevelUp, S84 MeditateToggle, S87 SendSkills, S88 TrainerCreatureList, C7 ModifySkills, C8 Train, C46 TrainList, C47 Rest, C52 RequestStats, C85 RequestAtributes, C86 RequestSkills, C87 RequestMiniStats
+- Packets (0): none left
 - Forms (3): frmSkills3, FrmEstadisticas, frmStatistics
 
 ### wp10: Crafting and work skills

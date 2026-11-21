@@ -1,0 +1,21 @@
+/* Skill, statistics and trainer windows. Geometry in skills-window.ts; colours are the .frm ForeColor values. */
+.sk-form { position: absolute; z-index: 8; background: #000 no-repeat 0 0; color: #fff; font: 11px Tahoma, Verdana, sans-serif; user-select: none; }
+.sk-form[hidden], .sk-trainer[hidden] { display: none; }
+.sk-form > *, .sk-trainer > * { position: absolute; box-sizing: border-box; }
+.sk-label { color: #eba40e; text-align: center; font: 11px Tahoma, Verdana, sans-serif; white-space: nowrap; }
+.sk-stat { text-align: left; }
+.sk-stat[hidden] { display: none; }
+.sk-hotspot { background: transparent no-repeat center; border: 0; padding: 0; cursor: pointer; }
+.sk-hotspot:focus-visible { outline: 1px solid #eba40e; }
+.sk-msgbox { left: 50%; top: 50%; transform: translate(-50%, -50%); width: 300px; background: #d4d0c8; color: #000; border: 2px outset #fff; font: 11px Tahoma, sans-serif; z-index: 2; }
+.sk-msg-title { background: #0a246a; color: #fff; padding: 2px 5px; font-weight: bold; position: static; }
+.sk-msg-text { padding: 12px 10px; white-space: normal; position: static; }
+.sk-msg-buttons { display: flex; gap: 6px; justify-content: center; padding: 0 0 8px; position: static; }
+.sk-msg-button { min-width: 64px; font: 11px Tahoma, sans-serif; }
+.sk-trainer { position: absolute; z-index: 8; background: #d4d0c8; color: #000; border: 2px outset #fff; font: 11px Tahoma, sans-serif; }
+.sk-trainer-title { background: #0a246a; color: #fff; padding: 2px 5px; font-weight: bold; }
+.sk-trainer-question { text-align: center; }
+.sk-trainer-list { background: #fff; border: 2px inset #fff; overflow-y: auto; }
+.sk-trainer-row { padding: 0 2px; height: 13px; line-height: 13px; white-space: nowrap; cursor: default; }
+.sk-trainer-row[aria-selected="true"] { background: #0a246a; color: #fff; }
+.sk-trainer-button { font: 11px Tahoma, sans-serif; }

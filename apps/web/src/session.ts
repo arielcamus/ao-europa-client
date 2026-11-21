@@ -15,6 +15,8 @@ import { NpcsServerPacketId as NS } from '@ao/protocol';
 import { CombatState } from './combat.js';
 import { SpellState } from './spells.js';
 import { CraftingController, CraftingState } from './crafting.js';
+import { SkillsState } from './skills.js';
+import { SkillsClientPacketId as SC } from '@ao/protocol';
 import { ItemsState } from './items-state.js';
 import { ItemsController } from './items.js';
 import type { ObjectCatalog } from './object-catalog.js';
@@ -45,6 +47,8 @@ export class Session {
     send: packet => this.send(packet), ready: () => this.ready, now: () => this.clock(), stamina: () => this.ui.stats.stamina,
     message: (text, font) => this.ui.message(text, font),
   }, this.craftingState);
+  /** Skills, attributes, statistics, trainer list, rest and meditation (feat/skills). */
+  readonly skills = new SkillsState();
   /** Set by the UI once Dat/Obj.dat is loaded; item actions that need object types wait for it. */
   catalog: ObjectCatalog | undefined;
   readonly itemActions = new ItemsController({
@@ -143,6 +147,14 @@ export class Session {
       this.bankTrade.receive(packet);
       this.world.receive(packet);
       this.crafting.receive(packet);
+      this.skills.receive(packet, {
+        charIndex: this.charIndex, message: (text, font) => this.ui.message(text, font), infoChannel: () => this.ui.chatCombate,
+        // HandleMeditateToggle: StartFx(..., Fx, -1) loops until the toggle comes back with Fx = 0.
+        meditationFx: (charIndex, fx) => {
+          this.spells.effects = this.spells.effects.filter(effect => !(effect.charIndex === charIndex && effect.loops < 0));
+          if (fx !== 0) this.spells.addFx({ fx, charIndex, x: 0, y: 0, loops: -1, startedAt: this.clock() });
+        },
+      });
       switch (packet.id) {
         case S.Connected:
           if (this.phase !== 'connecting' || !this.credentials) throw new Error('Unexpected Connected');
@@ -185,6 +197,7 @@ export class Session {
         case S.Logged:
           if (this.phase !== 'login') throw new Error('Unexpected Logged');
           this.phase = 'playing'; this.loggedAt = this.clock(); this.lastQuery = this.clock();
+          this.skills.resting = false; // HandleLogged: UserDescansar = False
           break;
         case S.Intervals:
           if (packet.walk < 0 || packet.walk > 60_000) throw new Error('Invalid walk interval');
@@ -258,6 +271,8 @@ export class Session {
     const now = this.clock();
     // pausa (HandlePauseToggle) stops keyboard movement, map clicks and item use.
     if (!this.ready || this.world.paused || this.pending || now - this.lastWalk < this.stepMs || !this.position || !this.self) return false;
+    // MoveTo: a resting character does not walk; the first try only asks the server to stand up (UserAvisado).
+    if (this.skills.resting) { if (!this.skills.standUpSent) { this.skills.standUpSent = true; this.send({ id: SC.Rest }); } return false; }
     if (![Heading.North, Heading.East, Heading.South, Heading.West].includes(heading)) return false;
     const to = {
       x: this.position.x + (heading === Heading.East ? 1 : heading === Heading.West ? -1 : 0),
@@ -309,9 +324,33 @@ export class Session {
   get dead() { return this.ui.stats.hp === 0; }
   /** Control key / attack action: WriteAttack (id 80, counter from the shared PacketCounters) paced by Intervals.hit. */
   attack(): boolean {
-    if (!this.ready || this.world.paused) return false;
+    if (!this.ready || this.world.paused || this.skills.resting) return false; // ModGameplayUI: If UserDescansar Then Exit Sub
     return this.combat.attack(this.clock(), this.hitInterval, this.dead, this.ui, () => this.send({ id: CC.Attack, counter: this.next('attack') }));
   }
+  /** frmMain EstadisticasBoton (the skills arrow) -> RequestSkills; the form opens when SendSkills arrives. */
+  requestSkills(): boolean { if (!this.ready) return false; this.skills.expectSkills(); this.send({ id: SC.RequestSkills }); return true; }
+  /** frmMain ImgEstadisticas (Estadísticas in the info panel): RequestAtributes + RequestMiniStats; the form opens when both arrive. */
+  requestStats(): boolean {
+    if (!this.ready) return false;
+    this.skills.expectStats(); this.send({ id: SC.RequestAtributes }); this.send({ id: SC.RequestMiniStats }); return true;
+  }
+  /** /EST: the server prints the character's statistics in the console. */
+  requestStatsText(): boolean { if (!this.ready) return false; this.send({ id: SC.RequestStats }); return true; }
+  /** FrmEstadisticas: the points ADDED to each of the 24 skills. All-zero is legal but pointless, so it is refused. */
+  modifySkills(points: readonly number[]): boolean {
+    if (!this.ready || points.length !== 24 || points.every(p => p === 0)) return false;
+    if (points.some(p => !Number.isInteger(p) || p < 0 || p > 100)) return false;
+    this.send({ id: SC.ModifySkills, points: [...points] }); return true;
+  }
+  /** /ENTRENAR: the server answers with the creature list of the selected trainer. */
+  requestTrainerList(): boolean { if (!this.ready) return false; this.send({ id: SC.TrainList }); return true; }
+  /** frmEntrenador Luchar: `creature` is the 1-based position in that list. */
+  train(creature: number): boolean {
+    if (!this.ready || !Number.isInteger(creature) || creature < 1 || creature > 255) return false;
+    this.send({ id: SC.Train, creature }); return true;
+  }
+  /** /DESCANSAR. */
+  rest(): boolean { if (!this.ready) return false; this.send({ id: SC.Rest }); return true; }
   talk(message: string): boolean {
     if (!this.ready || this.clock() - this.lastTalk < this.talkInterval) return false;
     if (!message.trim() || message.length > 160 || new TextEncoder().encode(message).length > 255) return false;

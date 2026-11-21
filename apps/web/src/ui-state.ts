@@ -7,6 +7,8 @@ import type { ChatLine } from './chat-console.js';
 
 export class ClassicState {
   revision = 0;
+  /** frmMain ChatCombate = 1: the INFO tab of the console is on (the default); no tab switch exists in this client yet. */
+  chatCombate = true;
   stats: Partial<UserStats> = {};
   food: { maxWater: number; water: number; maxFood: number; food: number } | undefined;
   inventory = new Map<number, InventorySlot>();

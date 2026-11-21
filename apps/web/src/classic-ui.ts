@@ -30,6 +30,8 @@ export class ClassicUI {
   private selectedItem = 0;
   private selectedSpell = 0;
   private slotButtons: HTMLButtonElement[] = [];
+  private menuButtons = new Map<string, HTMLButtonElement>();
+  private menuActions = new Map<string, () => void>();
   /** Double click on an inventory item (picInv_DblClick -> UserItemClick); set by main.ts. */
   onActivate: ((slot: number) => void) | undefined;
   private catalog: ObjectCatalog | undefined;
@@ -80,11 +82,14 @@ export class ClassicUI {
       const button = document.createElement('button'); button.className = 'hotspot'; button.type = 'button';
       button.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:36px;height:33px`;
       button.setAttribute('aria-label', name); button.setAttribute('aria-disabled', 'true');
-      button.onclick = () => this.session?.ui.message(`${name} aún no está disponible.`);
+      button.onclick = () => { const action = this.menuActions.get(name); if (action) action(); else this.session?.ui.message(`${name} aún no está disponible.`); };
+      this.menuButtons.set(name, button);
       element('menu-actions').append(button);
     }
     for (const id of ['hp', 'mana', 'stamina', 'water', 'food', 'experience']) element(`${id}-fill`).style.width = '0px';
   }
+  /** Wire a frmMain info-panel button to its form; buttons nobody wired keep the "aún no está disponible" line. */
+  bindMenu(name: string, action: () => void) { this.menuActions.set(name, action); this.menuButtons.get(name)?.removeAttribute('aria-disabled'); }
   async init() {
     const imageTasks = [...document.querySelectorAll<HTMLElement>('[data-interface]')].map(async node => {
       const url = await loadInterface(node.dataset.interface!, !node.hasAttribute('data-unlocalized'));
