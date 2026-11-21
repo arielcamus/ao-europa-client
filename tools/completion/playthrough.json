@@ -1050,6 +1050,51 @@
      "mode": "auto",
      "how": "recorded: tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl",
      "status": "recorded"
+    },
+    {
+     "id": "PRG-16",
+     "step": "Natural skill cap: compare the code table with the player memory (3 at level 1, 5 at 2, 10 at 4, 15 at 6, 20 at 8)",
+     "expected": "SubirSkill maxPermitido gives level 1 = 3, 2 = 5, 3 = 7, 4 = 10, 5 = 13, 6 = 15, 7 = 17, 8 = 20: IDENTICAL to Ariel's remembered numbers (+5 every 2 levels, +3 or +2 on the odd ones). The cap applies to the skill TOTAL (assigned points included) and a skill at or above it never rises from use.",
+     "source": "Modulo_UsUaRiOs.bas:SubirSkill (maxPermitido); Modulo_UsUaRiOs.bas:CheckUserLevel (Pts += ModClase.LevelSkillPoints)",
+     "mode": "auto",
+     "how": "pure computation of the formula from the pinned code for levels 1-47, asserted against Ariel's five remembered values",
+     "status": "untested"
+    },
+    {
+     "id": "PRG-17",
+     "step": "Meditate at level 1 until Meditar stops rising at the natural cap",
+     "expected": "With Meditar at 0 and ELV 1 the skill rises by use (30% per attempt) and STOPS at 3 (maxPermitido level 1 = 3): no '+1' message and no change in RequestSkills past 3 however long you meditate.",
+     "source": "Modulo_UsUaRiOs.bas:SubirSkill (maxPermitido); Modulo_UsUaRiOs.bas:CheckUserLevel (Pts += ModClase.LevelSkillPoints)",
+     "mode": "auto",
+     "how": "one throwaway char (own account), /MEDITAR with mana missing (GM /MOD to drain), repeat until RequestSkills reports 3, then keep meditating and assert it stays 3",
+     "status": "untested"
+    },
+    {
+     "id": "PRG-18",
+     "step": "Level up with /MOD and see natural gain resume up to the new cap",
+     "expected": "GM raises ELV 1 -> 2 (cap 5): Meditar rises again from 3 to 5 and stops. A level-up also adds 5 free points (SkillPts 10 -> 15) and sends LevelUp.",
+     "source": "Modulo_UsUaRiOs.bas:SubirSkill (maxPermitido); Modulo_UsUaRiOs.bas:CheckUserLevel (Pts += ModClase.LevelSkillPoints)",
+     "mode": "auto",
+     "how": "same char, GM /MOD ELV, meditate again, RequestSkills; revert level afterwards",
+     "status": "untested"
+    },
+    {
+     "id": "PRG-19",
+     "step": "Assign free points above the natural cap: natural gain stops",
+     "expected": "ModifySkills may push a skill above maxPermitido (no per-level limit). Once skill >= maxPermitido, SubirSkill exits immediately: Meditar assigned to 8 at level 1 (cap 3) never rises from use; this is why players delay assigning.",
+     "source": "Modulo_UsUaRiOs.bas:SubirSkill (maxPermitido); Modulo_UsUaRiOs.bas:CheckUserLevel (Pts += ModClase.LevelSkillPoints)",
+     "mode": "auto",
+     "how": "same char, ModifySkills +N on one skill to exceed the cap, use it 50 times, assert no gain",
+     "status": "untested"
+    },
+    {
+     "id": "PRG-20",
+     "step": "Unassigned free points accumulate across levels",
+     "expected": "Each level adds LevelSkillPoints (5 for every class, 6 Trabajador) to SkillPts via CheckUserLevel (Pts accumulates across the whole Do While loop, so a multi-level jump adds 5 per level). Unspent points are kept: 10 at creation + 5 per level gained; the LevelUp packet reports the running total.",
+     "source": "Modulo_UsUaRiOs.bas:SubirSkill (maxPermitido); Modulo_UsUaRiOs.bas:CheckUserLevel (Pts += ModClase.LevelSkillPoints)",
+     "mode": "auto",
+     "how": "same char, GM /MOD ELV up by 3 levels without assigning, read the free-points total",
+     "status": "untested"
     }
    ]
   },

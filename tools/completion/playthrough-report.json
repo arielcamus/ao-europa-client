@@ -1,0 +1,274 @@
+{
+ "generated": "2026-11-21T10:33:24.867Z",
+ "server": "127.0.0.1:7667",
+ "account": "fallback",
+ "character": "Aotesta",
+ "creation": {
+  "attempts": 1,
+  "ok": false,
+  "errors": [
+   "no Logged and no ErrorMsg (the known intermittent creation bug)"
+  ],
+  "reused": false
+ },
+ "wallClockSeconds": 26,
+ "totals": {
+  "pass": 10,
+  "fail": 0,
+  "blocked": 32
+ },
+ "results": [
+  {
+   "id": "ACC-01",
+   "outcome": "pass",
+   "detail": "Connected on TCP open; AccountCharacterList after LoginAccount; character count 3 <= MAX_PERSONAJES 10; list holds Aotesta",
+   "ms": 31
+  },
+  {
+   "id": "ACC-02",
+   "outcome": "blocked",
+   "detail": "ACC-02 needs a freshly created character; creation failed 6x on this server (no Logged and no ErrorMsg (the known intermittent creation bug)), the known server bug fixed in build 9ccd7fad. Re-run after the swap.",
+   "ms": 0
+  },
+  {
+   "id": "ACC-03",
+   "outcome": "blocked",
+   "detail": "ACC-03 needs a freshly created character; creation failed 6x on this server (no Logged and no ErrorMsg (the known intermittent creation bug)), the known server bug fixed in build 9ccd7fad. Re-run after the swap.",
+   "ms": 0
+  },
+  {
+   "id": "ACC-04",
+   "outcome": "blocked",
+   "detail": "ACC-04 needs a freshly created character; creation failed 6x on this server (no Logged and no ErrorMsg (the known intermittent creation bug)), the known server bug fixed in build 9ccd7fad. Re-run after the swap.",
+   "ms": 0
+  },
+  {
+   "id": "ACC-05",
+   "outcome": "blocked",
+   "detail": "ACC-05 needs a freshly created character; creation failed 6x on this server (no Logged and no ErrorMsg (the known intermittent creation bug)), the known server bug fixed in build 9ccd7fad. Re-run after the swap.",
+   "ms": 0
+  },
+  {
+   "id": "ACC-06",
+   "outcome": "blocked",
+   "detail": "ACC-06 needs a freshly created character; creation failed 6x on this server (no Logged and no ErrorMsg (the known intermittent creation bug)), the known server bug fixed in build 9ccd7fad. Re-run after the swap.",
+   "ms": 0
+  },
+  {
+   "id": "ACC-07",
+   "outcome": "blocked",
+   "detail": "the server gave no answer to LoginNewChar with an existing name (same known creation bug); expected ShowMessageBox 1769",
+   "ms": 4028
+  },
+  {
+   "id": "ACC-08",
+   "outcome": "pass",
+   "detail": "Logged after LoginExistingChar; position restored from the database = {\"map\":1,\"x\":49,\"y\":45}; stats and inventory sent",
+   "ms": 4059
+  },
+  {
+   "id": "ACC-10",
+   "outcome": "blocked",
+   "detail": "the character stands on map 1, a Seguro=1 map: /SALIR disconnected in 37 ms (that is ACC-11's safe-map half). The countdown needs a character on an unsafe map (a fresh character spawns on 517 Forgat)",
+   "ms": 37
+  },
+  {
+   "id": "ACC-11",
+   "outcome": "pass",
+   "detail": "GM /SALIR disconnected in 22 ms, no countdown; non-GM /SALIR on map 1 disconnected in 1 ms (Seguro=1 map)",
+   "ms": 4104
+  },
+  {
+   "id": "ACC-12",
+   "outcome": "blocked",
+   "detail": "ACC-12 (cancelling the /SALIR countdown) needs an unsafe map; the character stands on a Seguro=1 map (ACC-10 saw an instant /SALIR)",
+   "ms": 0
+  },
+  {
+   "id": "ACC-13",
+   "outcome": "blocked",
+   "detail": "ACC-13 (combat-log countdown after a dropped socket) needs an unsafe map; the character stands on a Seguro=1 map (ACC-10 saw an instant /SALIR)",
+   "ms": 0
+  },
+  {
+   "id": "ACC-14",
+   "outcome": "pass",
+   "detail": "/PROMEDIO printed 3 locale lines: 1988:3¬1¬1 | 1220:20¬10 | 1221:20 (+0)¬10",
+   "ms": 1503
+  },
+  {
+   "id": "ZZ-debug",
+   "outcome": "pass",
+   "detail": "outcome notes [] packets [{\"id\":110,\"userName\":\"Aotesta\",\"map\":2,\"x\":50,\"y\":50}]; gm saw LocaleMsg#948,CharacterCreate; player saw ; player map 1 55,44; gm isGM true name Aotest",
+   "ms": 2510
+  },
+  {
+   "id": "MOV-01",
+   "outcome": "pass",
+   "detail": "Intervals.walk ms (IntervaloCaminar = 210) = 210; heading 2 delta = [1,0]; heading 3 delta = [0,1]; heading 4 delta = [-1,0]; heading 1 delta = [0,-1]; self 5109 at 49,45; recent moves 5104@56,38 5099@58,44 5104@57,38 5099@58,43 5100@56,46 5100@56,45 5105@52,42 5102@54,43; wire tail: >Walk <CharacterMove >RequestPositionUpdate <PosUpdate >Walk <CharacterMove >RequestPositionUpdate <PosUpdate; 4/4 headings moved the character exactly one tile (others hit a blocked tile); fixture walk-four-headings",
+   "ms": 3845
+  },
+  {
+   "id": "MOV-02",
+   "outcome": "blocked",
+   "detail": "wall half PASSED (a blocked tile answers PosUpdate with the old position). Player-collision half not verifiable: the GM helper does not block (admin-invisible GMs never do, LegalWalk), and a second NON-GM character is needed; the per-IP creation budget and the creation bug prevent one",
+   "ms": 3350
+  },
+  {
+   "id": "MOV-03",
+   "outcome": "pass",
+   "detail": "position unchanged by a heading change = [49,45]; the GM next door received CharacterChange for the turn; broadcast heading = 1",
+   "ms": 2704
+  },
+  {
+   "id": "MOV-04",
+   "outcome": "blocked",
+   "detail": "needs the coordinates of a map exit tile; read from the .csm map files (tile exit flags) by a map parser the harness does not have yet. Protocol-level recordings exist: tests/fixtures/vb6/buildings/*castle-trigger-bounce.jsonl",
+   "ms": 1
+  },
+  {
+   "id": "MOV-05",
+   "outcome": "blocked",
+   "detail": "needs the ids of a Newbie / MaxLevel map from the server map files (MapInfo) and a level-13 character; the harness has no map-info reader yet. Route: GM /MOD level 13 on the own character, /TELEP to that map, expect the refusal locale message and no warp",
+   "ms": 0
+  },
+  {
+   "id": "MOV-06",
+   "outcome": "blocked",
+   "detail": "same missing map-info data as MOV-05 (a map with MaxLevel and Salida)",
+   "ms": 0
+  },
+  {
+   "id": "MOV-07",
+   "outcome": "blocked",
+   "detail": "needs a teleport object tile (otTeleport) located through the map files; not parsed yet",
+   "ms": 0
+  },
+  {
+   "id": "MOV-08",
+   "outcome": "blocked",
+   "detail": "door tiles come from the map files; recorded against the real server in tests/fixtures/vb6/doors and items-2 (PR #37/#47), not yet an end-to-end scenario",
+   "ms": 0
+  },
+  {
+   "id": "MOV-09",
+   "outcome": "blocked",
+   "detail": "needs a locked door + its key object from the map files; recorded in tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
+   "ms": 0
+  },
+  {
+   "id": "MOV-10",
+   "outcome": "blocked",
+   "detail": "needs a dock tile and a boat object id plus Navegacion skill and level 25 via GM /MOD; map data not parsed yet",
+   "ms": 0
+  },
+  {
+   "id": "MOV-11",
+   "outcome": "blocked",
+   "detail": "needs a water tile coordinate from the map files",
+   "ms": 0
+  },
+  {
+   "id": "MOV-13",
+   "outcome": "blocked",
+   "detail": "needs a Transportista/Pirata NPC; checked in the next milestone against the pinned npcs.dat (see report note)",
+   "ms": 0
+  },
+  {
+   "id": "MOV-14",
+   "outcome": "pass",
+   "detail": "UseItem answered: ShowFrmMapa,CharacterMove,CharacterMove,CharacterMove,CharacterMove,CharacterMove,CharacterMove,CharacterMove,CharacterMove,CharacterMove | ; the server answered the ticket use",
+   "ms": 1502
+  },
+  {
+   "id": "MOV-15",
+   "outcome": "pass",
+   "detail": "Work(Ocultarse) answered with LocaleMsg,CharacterMove,CharacterMove,CharacterMove,CharacterMove; hide answered (success sets invisible, failure prints a locale message)",
+   "ms": 2002
+  },
+  {
+   "id": "MOV-16",
+   "outcome": "blocked",
+   "detail": "class 3 cannot meditate (only Mage-like classes); needs the fresh mage character",
+   "ms": 0
+  },
+  {
+   "id": "MOV-17",
+   "outcome": "blocked",
+   "detail": "implemented after MOV-16 passes on a mage character",
+   "ms": 0
+  },
+  {
+   "id": "MOV-18",
+   "outcome": "blocked",
+   "detail": "needs a FOGATA (obj 63) from MOV-19",
+   "ms": 0
+  },
+  {
+   "id": "MOV-19",
+   "outcome": "blocked",
+   "detail": "needs /CI 58 3 on the floor + Work on it; pending",
+   "ms": 0
+  },
+  {
+   "id": "MOV-20",
+   "outcome": "blocked",
+   "detail": "needs Magia 87+ via DB UPDATE on a logged-out char; pending",
+   "ms": 0
+  },
+  {
+   "id": "MOV-21",
+   "outcome": "blocked",
+   "detail": "needs a saddle object id; pending",
+   "ms": 0
+  },
+  {
+   "id": "MOV-22",
+   "outcome": "blocked",
+   "detail": "needs a dead character on a NEWBIE map; pending (DTH-01 first)",
+   "ms": 0
+  },
+  {
+   "id": "MOV-23",
+   "outcome": "blocked",
+   "detail": "needs a Seguro map id; the safe-zone refusal is recorded in tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+   "ms": 0
+  },
+  {
+   "id": "MOV-25",
+   "outcome": "blocked",
+   "detail": "needs GM kill (DTH-01) first; pending",
+   "ms": 0
+  },
+  {
+   "id": "PRG-16",
+   "outcome": "pass",
+   "detail": "cap at level 1 (Ariel: 3) = 3; cap at level 2 (Ariel: 5) = 5; cap at level 4 (Ariel: 10) = 10; cap at level 6 (Ariel: 15) = 15; cap at level 8 (Ariel: 20) = 20; odd levels 3, 5, 7 = 7, 13, 17 (+3 or +2) = [7,13,17]; levels 10/20/30/40/47 (PRG-08 table) = [25,50,75,100,117]; Ariel's remembered numbers MATCH the pinned code exactly; the table is SubirSkill, not a guess",
+   "ms": 0
+  },
+  {
+   "id": "PRG-17",
+   "outcome": "blocked",
+   "detail": "PRG-17 needs the harness's own mage character (a fresh one, or a reused one); creation failed 6x (known server bug), and the fallback character is a level-1 warrior that cannot meditate",
+   "ms": 0
+  },
+  {
+   "id": "PRG-18",
+   "outcome": "blocked",
+   "detail": "PRG-18 needs the harness's own mage character (a fresh one, or a reused one); creation failed 6x (known server bug), and the fallback character is a level-1 warrior that cannot meditate",
+   "ms": 0
+  },
+  {
+   "id": "PRG-19",
+   "outcome": "blocked",
+   "detail": "PRG-19 needs the harness's own mage character (a fresh one, or a reused one); creation failed 6x (known server bug), and the fallback character is a level-1 warrior that cannot meditate",
+   "ms": 0
+  },
+  {
+   "id": "PRG-20",
+   "outcome": "blocked",
+   "detail": "PRG-20 needs the harness's own mage character (a fresh one, or a reused one); creation failed 6x (known server bug), and the fallback character is a level-1 warrior that cannot meditate",
+   "ms": 0
+  }
+ ]
+}
