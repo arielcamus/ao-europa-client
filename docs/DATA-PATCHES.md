@@ -267,6 +267,7 @@ The client-consumed ones are listed in `tools/provenance/sources.lock.json` `pat
   (`/MOD <name> EXP 200000`): Msg671 "Has dejado de ser Newbie", then it stood at 1:(58,44) and walked in all 4 directions. With the
   -c server (third restart, 20:20) a graduate in the Newbie Dungeon lands in its own home city and one elsewhere stays put
   (SERVER-PREHOO-BUILD.md, "Newbie graduation").
+- Played: warrior `Nbull` (Ullathorpe), level 1 -> 5 in the Newbie Dungeon (map 168) holding Makrom's quest 190, about 60 kills, 2 deaths revived by the newbie priest; levels 1-4 at x1 then x4 across the restarts, 4 -> 5 on the -c server. Quest 190 progress reached 24/27 (3 snakes left), so the turn-in at Makrom was not exercised. Notes for the next player: stamina 0 stops both walking and attacking (rest, eat the apple, drink the water); bats flutter and rarely end a fight.
 - No server error log after the restart (`C:\ao\server-9ccd\Logs\Errores` empty).
 
 ### Rates (second restart, 2026-11-21 19:37)
