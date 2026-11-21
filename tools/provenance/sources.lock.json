@@ -54,7 +54,38 @@
   }
  },
  "patches": {
-  "active": [],
+  "active": [
+   {
+    "path": "Dat/Motd.ini",
+    "sha256": "1b48b22a84b7cef83870a25486e7eae2604fd4e496abcb279067d88a352c537a",
+    "doc": "docs/DATA-PATCHES.md#8",
+    "reason": "real rates (X1) instead of the stale X4 season lines; two Newbie Dungeon pointer lines"
+   },
+   {
+    "path": "Dat/npcs.dat",
+    "sha256": "8fd35c84496578954f2906e614dc3b1970a22935f21f3036a05ea58168ba1e26",
+    "doc": "docs/DATA-PATCHES.md#8",
+    "reason": "Cartelera <Quest> (1331) offers Makrom's 190-194 and quest 4, new signposting Desc; snake 502 drops its fluid for quest 4 instead of the empty quest 9"
+   },
+   {
+    "path": "Dat/Quests.DAT",
+    "sha256": "455c5753acf2ea0540da3dae36ed73d9dd8640e9a27971dd3f4b56166e0b87c4",
+    "doc": "docs/DATA-PATCHES.md#8",
+    "reason": "quests 40, 41, 42, 193 retargeted to existing pre-HOO creatures; 194 text in Spanish; PosMap of 4, 191, 192"
+   },
+   {
+    "path": "Mapas/Mapa64.csm",
+    "sha256": "8186968a9c01c9e0dd656d9191ef0666976092e9b9150e02314cb66e9f78cf20",
+    "doc": "docs/DATA-PATCHES.md#8",
+    "reason": "one Cartelera <Quest> (NPC 1331) at (52,57) in Lindos"
+   },
+   {
+    "path": "init/sp_localindex.dat",
+    "sha256": "44ac1f437b54ed8778bb18531dd966b66524116b596e324e6f33267586335ceb",
+    "doc": "docs/DATA-PATCHES.md#8",
+    "reason": "[NPC1331] and the patched quests' text synced from the patched server Dat"
+   }
+  ],
   "retired": [
    {
     "doc": "docs/DATA-PATCHES.md#1",

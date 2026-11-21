@@ -197,3 +197,83 @@ Where it is: only `C:\ao\server-9ccd-b\Dat\Ciudades.Dat` (the side-by-side build
 untouched until the swap; the swap copies this file over the live one (backup first). Checked live on 7697 on 2026-11-21: a new
 character with home 4 appeared at 64:50,59 and walked (6/6 steps), also through the browser client. Undo after the swap: copy the
 backup `Ciudades.Dat.bak-homecity-<TS>` back and restart (the server reads `Ciudades.Dat` only at start-up).
+
+## 8. Newbie Dungeon signposting, Makrom's quests on every Cartelera, broken newbie quests repaired (live 2026-11-21 18:47)
+Ariel (2026-11-21 18:28) chose option (c) of the newbie-content report: Forgat stays hidden, levels 1-12 go through the Newbie
+Dungeon (maps 168, 37, 167, 264; `restrict_mode` bit 1, `LimiteNewbie = 12`), with clear signposting. Data only, pre-HOO only
+(nothing from Recursos `1b50fd6` or later; every replacement uses a creature, item or text already in the pinned data). Rates are
+NOT changed (`ExpMult`, `OroMult`, `RecoleccionMult` and `DropMult` stay 1, pending Ariel).
+
+Applied with `python3 tools/data-patches/apply-newbie-patches.py --dat <Dat> --maps <Mapas> --client-init <init>` (idempotent; `--check`
+prints the edits without writing). Live: `C:\ao\server-9ccd\Dat` (the server's `DatPath`) and `C:\ao\Recursos\Mapas` (its `MapPath`),
+then one restart (in-game `/RMSG` 60 s warning, `/GRABAR`, `Stop-Process` of `server-9ccd-b.exe`,
+`powershell -ExecutionPolicy Bypass -File C:\ao\start-server.ps1`; listening again after ~2 min). The same files were copied to
+`~/Projects/ao-reference/Recursos-prehoo` so the live data and the browser client's `AO_ASSETS` stay byte-identical.
+
+### What changed (line numbers are in the pre-patch file)
+
+| File | Lines | Before | After | Why |
+| --- | --- | --- | --- | --- |
+| `Dat/Ciudades.Dat` `[Renacimiento]` | 146-148 | `X=48`, `Y=62`, `MAPA=517` | `X=58`, `Y=44`, `MAPA=1` | `QuitarNewbieObj` (InvUsuario.bas 196) warps EVERY character that reaches level 13 to this point, wherever it is. Map 517 "Alta Mar" is open sea: a GM landing on (48,62) could not take a single step in any direction. (1,58,44) is one tile from the Ullathorpe spawn, inside its 3x3 legal block (section 7). Not the spawn tile itself: `WarpUserChar` does no legal-position search, so a new character and a graduate would stack |
+| `Dat/Motd.ini` | 33 | `NumLines=10` | `NumLines=11` | one more line |
+| | 43 | `Line9=* Rates de esta Temporada: EXP X4 - RECOLECCIÓN X2 - ORO X1` | `Line9=* Rates del servidor: EXP X1 - RECOLECCIÓN X1 - ORO X1` | the real `Configuracion.ini` rates (`ExpMult=1`, `RecoleccionMult=1`, `OroMult=1`) |
+| | 44 | `Line10=* ¡Esta Temporada finalizará el día 30 de Abril!` | `Line10=* ¿Eres nuevo? Hasta el nivel 12 entrena en el Dungeon Newbie: su entrada está en tu ciudad.` | stale season line replaced by the newbie pointer |
+| | (new) 45 | - | `Line11=* Busca la Cartelera de tu ciudad y toma los encargos de Makrom. Al llegar a nivel 13 dejarás de ser Newbie y viajarás a Ullathorpe.` | where the quests are, and what happens at 13 |
+| `Dat/npcs.dat` `[NPC1331]` Cartelera <Quest> | 18396, 18402-18408, + 6 keys | `Desc=Parece tener varios encargos para cumplir`, `NumQuest=4` (154, 163, 164, 165) | `Desc=Encargos para aventureros. Si eres nuevo por aquí, toma los encargos de Makrom y entrena en el Dungeon Newbie, su entrada está en esta misma ciudad.`, `NumQuest=10`: 190, 191, 192, 193, 194, 4, then 154, 163, 164, 165 (`en_desc` translated likewise) | Makrom's chain on the board of every city that has one (Ullathorpe 60,56; Nix 66,69; Banderbill 51,31; Arghal 56,34; also Arkhein and Morgrim) |
+| `Dat/npcs.dat` `[NPC502]` Serpiente | 3193 | `DropQuest1=9-2492-1-1` | `DropQuest1=4-2492-1-1` | quest 4 ("Veneno mortal", L1: 10 snakes + 10 `Fluido de serpiente`) could never finish: the fluid drops only for a player holding quest 9, which is an empty section. The newbie report called quest 4 doable; it was not |
+| `Mapas/Mapa64.csm` (Lindos) | NPC block | 10 NPCs | 11: `NPC 1331` at (52,57) | Lindos had no Cartelera. Same NPC definition and body (4124) as the other cities; (52,57) is 2 tiles NE of the Lindos spawn (64:50,59), not blocked, no trigger, exit, object or NPC, off the walk to the dungeon. Header `NumeroNPCs` 10 -> 11 and 6 bytes inserted before the tile-exit block; blocks, layers, objects and exits unchanged (checked by re-parsing) |
+| `Dat/Quests.DAT` `[QUEST193]` El Gran lobo feroz | 4657-4670 | `RequiredLevel=2`, `RequiredOBJs=1`, `RequiredObj1=453-1 'Piel de Wolfang` | `RequiredLevel=6`, `RequiredNPCs=1`, `RequiredNpc1=965-1`, no object; Desc "Acaba con él y tráeme su piel" -> "Acaba con él" | obj 453 is an empty section pre-HOO and nothing drops it (only HOO defines it, so it is not copied). Killing the Wolfang (NPC 965, one per newbie map 37/167/264) is what the text asks. Level 6 instead of 2: the pre-HOO Wolfang has 250 HP and hits 20-25, two hits kill a level-2 character. Unblocks [194] |
+| `[QUEST194]` Wolfang | 4688-4689 | English text in the Spanish fields | `Desc=Ha llegado la hora... ¡Enfréntate a los Wolfang y libera nuestro Dungeon!`, `DescFinal=¡Te estaré eternamente agradecido!` | the Spanish client showed English |
+| `[QUEST41]` Colmillos de Fuego (Heather, L5) | 994-995, 999-1002, 1004-1005 | `RequiredNpc1=576-25`, `PosMap=35`, orange snakes near Nix | `RequiredNpc1=935-25`, `PosMap=167`, red snakes in the Dungeon Newbie Sur | NPC 576 is an empty `'Libre` slot pre-HOO, so nobody could finish it, and it heads a 6-quest chain (41 -> 42 -> 43 -> 14 -> 114 -> 117 -> 163). 935 "Serpiente Collet" (header comment "Serpiente Roja", 30 HP, poisonous) is the closest existing creature and the level-5 tier of the newbie dungeon (15 on map 167). Typo `contralada` fixed |
+| `[QUEST42]` Un problema gigante (L8) | 1018, 1023, 1026, 1029 | `RequiredNpc1=611-16` (Murciélago Gigante, 750 HP, hits 70-80, only in two Drenaje maps), `PosMap=35` | `RequiredNpc1=500-16` (Lobo de Dungeon Newbie, 60 HP), `PosMap=37`, text: "los lobos de la caverna" | a level-8 quest whose target kills a level-8 character in two hits and lives far away. The newbie wolf is plentiful on maps 37, 264 and 167 |
+| `[QUEST40]` Camino a Ullathorpe (L7) | 966, 971, 974, 980 | `RequiredNpc1=678-30` (Esqueleto agresor, 10,000 HP, hits 60-80), `PosMap=508` (open sea) | `RequiredNpc1=514-15` (Esqueleto, 350 HP, hits 12-15, 8 on map 12), `PosMap=12`, text: "Bosque Este de Ullathorpe" | the level-7 target was a 10,000 HP monster on a Jourmut map; 15 instead of 30 because map 12 holds 8 |
+| `[QUEST190]` Primeros Pasos | 4571 | "Este lugar esta repleto..." | "El Dungeon Newbie, cuya entrada está en tu ciudad, está repleto..." | taken at a city board, "este lugar" pointed nowhere |
+| `[QUEST4]`, `[QUEST191]`, `[QUEST192]` | 138, +4624, +4655 | `PosMap=44`, none, none | `PosMap=168`, `264`, `167` | the map the quest window points at: where the targets live |
+
+English (`en_`) fields of 40, 41, 42 and 193 were rewritten the same way; the pt/fr/it fields were left as they were.
+
+### Client text (local assets, not committed)
+The NPC dialog (`NPCDESC*<n>`) and the quest window take their text from the client's `init/sp_localindex.dat`, not from the server.
+The pinned client index is older than the pinned server Dat: its `[NPC1331]` is "Meren <Quest>, ¡Dragones al Sureste, cuidado!", and
+`[QUEST40]`/`[QUEST41]` are "Camino a Penthar" and "¿Doble cabeza, doble veneno?". The script rewrites `[NPC1331]` (NAME, DESC, BODY 4124,
+HEAD 0) and `[QUEST4]`, `[QUEST40..42]`, `[QUEST190..194]` (DESC, DESCFINAL, NEXTQUEST, NOMBRE, POSMAP, REPETIBLE, REQUIREDLEVEL) from the
+patched server files, in `~/Projects/ao-reference/Recursos-prehoo/init/sp_localindex.dat` (sha256 `ae2de371...` -> `44ac1f43...`). The
+play site reads it at page load, so a reload shows it; it was not restarted. Heather's client text already says "si ya has
+completado las misiones del Newbie Dungeon, tengo un obsequio para ti", so `[NPC415]` is untouched. The rest of the index is still
+out of sync with the server Dat (proposal: regenerate it from the pinned Dat, section 4).
+
+### Hashes (sha256)
+| File | Before | After |
+| --- | --- | --- |
+| `Dat/Ciudades.Dat` (VM only) | `8ced6ca346a8a46fe52314296b188e989936c50c597114a8e1982835f6ee7ca2` | `2d5d27147c0cf9c54838475e94618fca34dc97a95c543120d48cc487adadf3d0` |
+| `Dat/Motd.ini` | `01b55ceedba73c015b03d631367233d9820e1c38915ca928c13ca4579fa4bc3a` | `1b48b22a84b7cef83870a25486e7eae2604fd4e496abcb279067d88a352c537a` |
+| `Dat/npcs.dat` | `68ad6d0810bca761e300ed70ac05d66658a4d086e60bc2a8e4d7672237156940` | `8fd35c84496578954f2906e614dc3b1970a22935f21f3036a05ea58168ba1e26` |
+| `Dat/Quests.DAT` | `4e7881a0a993488cedb52a4b05af023c5abef94c2afca855c521ca5cf7a9a4a3` | `455c5753acf2ea0540da3dae36ed73d9dd8640e9a27971dd3f4b56166e0b87c4` |
+| `Mapas/Mapa64.csm` | `3100a5cd270414f12eac0524943d993d08140aa8fe0d79726767fdcebe87bc0e` | `8186968a9c01c9e0dd656d9191ef0666976092e9b9150e02314cb66e9f78cf20` |
+| `init/sp_localindex.dat` (Mac only) | `ae2de37104d003f108b4256fe9704ffec3966fc084059d0c9de03fe75a67ca74` | `44ac1f437b54ed8778bb18531dd966b66524116b596e324e6f33267586335ceb` |
+
+The client-consumed ones are listed in `tools/provenance/sources.lock.json` `patches.active`.
+
+### Verified live (2026-11-21, after the restart)
+- Before the change: a GM `/TELEP YO 517 48 62` could not move in any of the 4 directions; `/TELEP YO 1 58 44` moved in all 4. (`/TELEP
+  <other user>` is refused with Msg948 outside event maps for every GM: `If .flags.Privilegios And e_PlayerType.Consejero Or e_PlayerType.SemiDios`
+  in `Protocol_GmCommands.bas` is always true. Server bug, not touched.)
+- A fresh level-1 warrior created in each of the 5 start cities received the 11 MOTD lines (new rates and both newbie lines), walked to
+  the Cartelera (Lindos: the new one at 52,57), got `NPCDESC*1331` and a quest list of 190 (available), 191, 192, 193, 194 (level-locked),
+  4 (available), 154, 163, 164, 165; accepted 190 (Msg1264), and walked through the city's door into the Newbie Dungeon: Ullathorpe
+  1:(74,22) -> 168, Nix 34:(59,78) -> 168, Banderbill 59:(60,42) -> 168, Lindos 64 -> 62:(63,41) -> 168, Arghal 151:(46,40) -> 264.
+- Graduation: a level-1 test character standing in map 168 was set to level 12 (`/MOD <name> LEVEL 12`) and given experience
+  (`/MOD <name> EXP 200000`): Msg671 "Has dejado de ser Newbie", then it stood at 1:(58,44) and walked in all 4 directions.
+- No server error log after the restart (`C:\ao\server-9ccd\Logs\Errores` empty).
+
+### Undo
+Server (VM), then restart as above (every file is read only at start-up):
+```
+$s='.bak-20261121-newbie'
+foreach($f in 'Ciudades.Dat','Motd.ini','npcs.dat','Quests.DAT'){ Copy-Item "C:\ao\server-9ccd\Dat\$f$s" "C:\ao\server-9ccd\Dat\$f" -Force }
+Copy-Item "C:\ao\Recursos\Mapas\Mapa64.csm$s" C:\ao\Recursos\Mapas\Mapa64.csm -Force
+```
+Database backup taken before the restart: `C:\ao\server-9ccd\Database.db.bak-20261121-newbie` (sqlite `.backup`; only needed if the
+restart had damaged it, it did not). Mac: copy `~/Projects/ao-reference/Recursos-prehoo-backup-20261121-newbie/{Dat,init,Mapas}/*` back
+over `~/Projects/ao-reference/Recursos-prehoo/`. Characters that already took a changed quest keep its progress slots; the server reads
+the requirement list from `Quests.DAT` at start-up, so an undo re-breaks 41/42/193 for them.
