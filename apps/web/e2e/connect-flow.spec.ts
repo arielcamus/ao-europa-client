@@ -114,9 +114,40 @@ for (const [label, refusal, expected] of [
     await page.locator('#connect').click();
     await expect(page.locator('#connect-stage')).toHaveAttribute('data-screen', 'account');
     await page.getByRole('button', { name: 'Crear personaje' }).first().click();
+    await expect(page.locator('#connect-stage')).toHaveAttribute('data-screen', 'create');
     await page.locator('.cs-name').fill('Thyron');
     await page.locator('.cs-create').getByRole('button', { name: 'Crear personaje' }).click();
     await expect(page.locator('#connect-stage')).toHaveAttribute('data-screen', 'login');
     await expect(page.locator('[id^="message-"]').filter({ hasText: expected })).toHaveCount(1);
   });
 }
+
+// A deliberate Disconnect (the player's Quit, answered by HandleDisconnect) is not a silent drop: no "server didn't answer" message.
+test('a Disconnect during an unanswered creation goes back to login without the no-answer message', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop-chrome', 'pointer flow');
+  await page.route('**/ao-config.json', route => route.fulfill({ json: { mode: 'classic', serverProfile: 'classic', wsPath: '/bridge' } }));
+  await page.routeWebSocket(/\/bridge/, ws => {
+    const decoder = new FrameDecoder();
+    const send = (...packets: ServerPacket[]) => { for (const p of packets) ws.send(Buffer.from(encodeServerFrame(p))); };
+    send({ id: S.Connected, debugging: false });
+    ws.onMessage(message => {
+      for (const body of decoder.push(Uint8Array.from(message as Buffer))) {
+        const packet = decodeClientPacket(body);
+        if (packet.id === 305) send({ id: S.AccountCharacterList, characters: [character] });
+        if (packet.id === 74) send({ id: S.Disconnect, fullLogout: true });
+      }
+    });
+  });
+  await page.goto('/');
+  await expect(page.locator('#connect')).toBeEnabled();
+  await page.locator('#email').fill('mock@local.test'); await page.locator('#password').fill('secret12');
+  await page.locator('#connect').click();
+  await expect(page.locator('#connect-stage')).toHaveAttribute('data-screen', 'account');
+  await page.getByRole('button', { name: 'Crear personaje' }).first().click();
+  await expect(page.locator('#connect-stage')).toHaveAttribute('data-screen', 'create');
+  await page.locator('.cs-name').fill('Thyron');
+  await page.locator('.cs-create').getByRole('button', { name: 'Crear personaje' }).click();
+  await expect(page.locator('#connect-stage')).toHaveAttribute('data-screen', 'login');
+  await page.waitForTimeout(500);
+  await expect(page.locator('[id^="message-"]').filter({ hasText: /no respondió|sin crear el personaje/ })).toHaveCount(0);
+});
