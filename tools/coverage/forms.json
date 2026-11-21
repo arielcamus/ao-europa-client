@@ -8,37 +8,55 @@
     "ref": "main",
     "path": "apps/web/src/classic-layout.ts",
     "partial": true,
-    "note": "Layout shell on main; chat console on feat/chat, inventory on feat/items, spell list on feat/spells"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    },
    {
     "ref": "main",
     "path": "apps/web/src/chat-box.ts",
     "partial": true,
-    "note": "chat console and input"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    },
    {
     "ref": "main",
     "path": "apps/web/src/items-ui.ts",
     "partial": true,
-    "note": "inventory panel, equipment labels"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    },
    {
     "ref": "main",
     "path": "apps/web/src/spells.ts",
     "partial": true,
-    "note": "spell list and casting"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    },
    {
     "ref": "main",
     "path": "apps/web/src/look-at.ts",
     "partial": true,
-    "note": "click to look at tile"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    },
    {
     "ref": "main",
     "path": "apps/web/src/map-objects.ts",
     "partial": true,
-    "note": "doors and roofs in viewport"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+   },
+   {
+    "ref": "main",
+    "path": "apps/web/src/hotkeys-ui.ts",
+    "partial": true,
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+   },
+   {
+    "ref": "main",
+    "path": "apps/web/src/inventory-extras.ts",
+    "partial": true,
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
+   },
+   {
+    "ref": "main",
+    "path": "apps/web/src/minimap.ts",
+    "partial": true,
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    }
   ]
  },
@@ -49,116 +67,220 @@
   "evidence": [
    {
     "ref": "main",
-    "path": "apps/web/index.html",
-    "partial": true,
-    "note": "Single login form; no account creation or character list screen"
+    "path": "apps/web/src/connect-ui.ts"
    }
   ]
  },
  {
   "name": "FrmCuenta",
   "purpose": "Account home / character selection",
-  "group": "core"
+  "group": "core",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/connect-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmOldPersonaje",
   "purpose": "Pick an existing character to log in with",
-  "group": "core"
+  "group": "core",
+  "missing": {
+   "class": "b",
+   "note": "Character picking with a password keypad; the PYMMO=0 server uses the account screen (FrmCuenta) instead"
+  }
  },
  {
   "name": "frmCrearCuenta",
   "purpose": "Create account",
-  "group": "core"
+  "group": "core",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/session-windows.ts"
+   }
+  ]
  },
  {
   "name": "frmNewAccount",
   "purpose": "New account details",
-  "group": "core"
+  "group": "core",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/session-windows.ts"
+   }
+  ]
  },
  {
   "name": "frmCrearPersonaje",
   "purpose": "Create character (race, class, gender, head, city)",
-  "group": "core"
+  "group": "core",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/connect-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmDeleteChar",
   "purpose": "Delete character confirmation",
-  "group": "core"
+  "group": "core",
+  "missing": {
+   "class": "b",
+   "note": "DeleteCharacter needs the account server; PYMMO=0 does nothing, the client says so (connect-text.ts deleteUnsupported)"
+  }
  },
  {
   "name": "frmPasswd",
   "purpose": "Change password",
-  "group": "core"
+  "group": "core",
+  "missing": {
+   "class": "b",
+   "note": "Change password: account server"
+  }
  },
  {
   "name": "frmNewPassword",
   "purpose": "Set new password",
-  "group": "core"
+  "group": "core",
+  "missing": {
+   "class": "b",
+   "note": "Set new password: account server"
+  }
  },
  {
   "name": "FrmRecuperar",
   "purpose": "Recover account",
-  "group": "core"
+  "group": "core",
+  "missing": {
+   "class": "b",
+   "note": "Recover account: account server"
+  }
  },
  {
   "name": "frmPasswordReset",
   "purpose": "Password reset code request",
-  "group": "core"
+  "group": "core",
+  "missing": {
+   "class": "b",
+   "note": "Password reset code: account server"
+  }
  },
  {
   "name": "Frmcarga",
   "purpose": "Loading splash",
-  "group": "core"
+  "group": "core",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/session-windows.ts"
+   }
+  ]
  },
  {
   "name": "frmCargando",
   "purpose": "Loading screen with progress",
-  "group": "core"
+  "group": "core",
+  "missing": {
+   "class": "d",
+   "note": "Never opened by the classic client code (dead form)"
+  }
  },
  {
   "name": "frmConnecting",
   "purpose": "Connecting status",
-  "group": "core"
+  "group": "core",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/session-windows.ts"
+   }
+  ]
  },
  {
   "name": "frmPres",
   "purpose": "Presentation splash",
-  "group": "core"
+  "group": "core",
+  "missing": {
+   "class": "d",
+   "note": "Never opened by the classic client code (splash, dead form)"
+  }
  },
  {
   "name": "frmCerrar",
   "purpose": "Exit confirmation",
-  "group": "core"
+  "group": "core",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/session-windows.ts"
+   }
+  ]
  },
  {
   "name": "frmMensaje",
   "purpose": "Generic message box",
-  "group": "core"
+  "group": "core",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/session-windows.ts"
+   }
+  ]
  },
  {
   "name": "FrmPregunta",
   "purpose": "Generic yes/no question prompt (group invites, confirmations)",
-  "group": "party"
+  "group": "party",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/trade-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmtip",
   "purpose": "Tip of the day",
-  "group": "core"
+  "group": "core",
+  "missing": {
+   "class": "d",
+   "note": "Never opened by the classic client code (dead form)"
+  }
  },
  {
   "name": "FrmLogear",
   "purpose": "Server/port connection dialog",
-  "group": "core"
+  "group": "core",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/main.ts"
+   }
+  ]
  },
  {
   "name": "frmKeypad",
   "purpose": "On-screen keypad for character password",
-  "group": "core"
+  "group": "core",
+  "missing": {
+   "class": "b",
+   "note": "On-screen password keypad, only opened from frmOldPersonaje"
+  }
  },
  {
   "name": "frmMensajePapiro",
   "purpose": "Parchment / papyrus message viewer",
-  "group": "items"
+  "group": "items",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/papiro-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmCantidad",
@@ -167,9 +289,7 @@
   "evidence": [
    {
     "ref": "main",
-    "path": "apps/web/src/items-ui.ts",
-    "partial": false,
-    "note": ""
+    "path": "apps/web/src/items-ui.ts"
    }
   ]
  },
@@ -180,146 +300,298 @@
   "evidence": [
    {
     "ref": "main",
-    "path": "apps/web/src/items-ui.ts",
-    "partial": false,
-    "note": ""
+    "path": "apps/web/src/items-ui.ts"
    }
   ]
  },
  {
   "name": "FrmKeyInv",
   "purpose": "Key ring inventory",
-  "group": "items"
+  "group": "items",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/keyring-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmSkins",
   "purpose": "Item skins / appearance",
-  "group": "extras"
+  "group": "extras",
+  "missing": {
+   "class": "c",
+   "note": "AO20 item skins window (ChangeSkinSlot)"
+  }
  },
  {
   "name": "frmBancoObj",
   "purpose": "Bank vault (items and gold)",
-  "group": "bank"
+  "group": "bank",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/bank-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmGoliath",
   "purpose": "Bank gold deposit/withdraw (Goliath)",
-  "group": "bank"
+  "group": "bank",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/bank-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmBancoCuenta",
   "purpose": "Account-wide vault",
-  "group": "bank"
+  "group": "bank",
+  "missing": {
+   "class": "b",
+   "note": "Account-wide vault; its only opener is a hidden label on frmMain and needs the account server"
+  }
  },
  {
   "name": "frmComerciarUsu",
   "purpose": "Player-to-player trade window",
-  "group": "trade"
+  "group": "trade",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/trade-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmUserRequest",
   "purpose": "Incoming request prompt (trade and similar)",
-  "group": "trade"
+  "group": "trade",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/trade-ui.ts"
+   }
+  ]
  },
  {
   "name": "FrmGrupo",
   "purpose": "Party window",
-  "group": "party"
+  "group": "party",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/party-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmGuildAdm",
   "purpose": "Registered guilds list",
-  "group": "guild"
+  "group": "guild",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/guild-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmGuildBrief",
   "purpose": "Guild brief / details of another guild",
-  "group": "guild"
+  "group": "guild",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/guild-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmGuildDetails",
   "purpose": "Guild founding details",
-  "group": "guild"
+  "group": "guild",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/guild-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmGuildFoundation",
   "purpose": "Found a guild",
-  "group": "guild"
+  "group": "guild",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/guild-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmGuildLeader",
   "purpose": "Guild leader panel (members, proposals, news)",
-  "group": "guild"
+  "group": "guild",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/guild-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmGuildNews",
   "purpose": "Guild news",
-  "group": "guild"
+  "group": "guild",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/guild-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmGuildURL",
   "purpose": "Guild website",
-  "group": "guild"
+  "group": "guild",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/guild-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmCommet",
   "purpose": "Peace / alliance offer text",
-  "group": "guild"
+  "group": "guild",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/guild-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmPeaceProp",
   "purpose": "Peace proposals list",
-  "group": "guild"
+  "group": "guild",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/guild-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmSolicitud",
   "purpose": "Guild membership application",
-  "group": "guild"
+  "group": "guild",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/guild-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmCharInfo",
   "purpose": "Character info / guild applicant info",
-  "group": "guild"
+  "group": "guild",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/guild-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmEligeAlineacion",
   "purpose": "Faction alignment choice",
-  "group": "extras"
+  "group": "extras",
+  "missing": {
+   "class": "d",
+   "note": "Never opened by the classic client code (dead form)"
+  }
  },
  {
   "name": "FrmQuest",
   "purpose": "Quest log",
-  "group": "quests"
+  "group": "quests",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/quest-window.ts"
+   }
+  ]
  },
  {
   "name": "frmQuestInfo",
   "purpose": "Quest details / NPC quest offer",
-  "group": "quests"
+  "group": "quests",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/quest-window.ts"
+   }
+  ]
  },
  {
   "name": "frmSkills3",
   "purpose": "Skill allocation",
-  "group": "skills"
+  "group": "skills",
+  "missing": {
+   "class": "d",
+   "note": "Never opened by the classic client code; the skill help texts it held live in the skill window (game-text.ts)"
+  }
  },
  {
   "name": "FrmEstadisticas",
   "purpose": "Character statistics and attributes",
-  "group": "skills"
+  "group": "skills",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/skills-window.ts"
+   }
+  ]
  },
  {
   "name": "frmStatistics",
   "purpose": "Mini statistics",
-  "group": "skills"
+  "group": "skills",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/skills-window.ts"
+   }
+  ]
  },
  {
   "name": "frmEntrenador",
   "purpose": "Trainer: choose creature",
-  "group": "npcs"
+  "group": "npcs",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/skills-window.ts"
+   }
+  ]
  },
  {
   "name": "FrmViajes",
   "purpose": "Travel destinations via NPC",
-  "group": "npcs"
+  "group": "npcs",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/travel-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmHerrero",
@@ -352,7 +624,7 @@
     "ref": "main",
     "path": "apps/web/src/crafting.ts",
     "partial": true,
-    "note": "state and sends only, no window yet"
+    "note": "crafting state and packets only; no alchemy window yet"
    }
   ]
  },
@@ -365,7 +637,7 @@
     "ref": "main",
     "path": "apps/web/src/crafting.ts",
     "partial": true,
-    "note": "state and sends only, no window yet"
+    "note": "crafting state and packets only; no tailor window yet"
    }
   ]
  },
@@ -378,153 +650,297 @@
     "ref": "main",
     "path": "apps/web/src/crafting.ts",
     "partial": true,
-    "note": "state and sends only, no window yet"
+    "note": "crafting state and packets only; no catalyst crafting window yet"
    }
   ]
  },
  {
   "name": "frmOpciones",
   "purpose": "Options (sound, light, display)",
-  "group": "options"
+  "group": "options",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/options-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmMasOpciones",
   "purpose": "More options",
-  "group": "options"
+  "group": "options",
+  "missing": {
+   "class": "b",
+   "note": "Only opened from the account recovery and account creation forms"
+  }
  },
  {
   "name": "frmCustomKeys",
   "purpose": "Custom key bindings",
-  "group": "options"
+  "group": "options",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/keys-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmBindKey",
   "purpose": "Bind a key to an action",
-  "group": "options"
+  "group": "options",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/keys-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmMapaGrande",
   "purpose": "Large world map",
-  "group": "minimap"
+  "group": "minimap",
+  "missing": {
+   "class": "a",
+   "note": "Large world map (ShowFrmMapa): world agent"
+  }
  },
  {
   "name": "frmCollectibleCard",
   "purpose": "Collectible card viewer",
-  "group": "extras"
+  "group": "extras",
+  "missing": {
+   "class": "c",
+   "note": "AO20 collectible card viewer, local to the AO20 client"
+  }
  },
  {
   "name": "frmCreateBattleground",
   "purpose": "Create battleground",
-  "group": "extras"
+  "group": "extras",
+  "missing": {
+   "class": "c",
+   "note": "AO20 battleground creation (LobbyCommand)"
+  }
  },
  {
   "name": "frmLobbyBattleground",
   "purpose": "Battleground lobby",
-  "group": "extras"
+  "group": "extras",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/extras-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmRetos",
   "purpose": "Challenges / duels",
-  "group": "extras"
+  "group": "extras",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/extras-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmShop",
   "purpose": "Premium shop",
-  "group": "extras"
+  "group": "extras",
+  "missing": {
+   "class": "d",
+   "note": "Dead form: the premium shop the server opens is frmShopAO20, which is not in the classic source"
+  }
  },
  {
   "name": "frmShopPjsAO20",
   "purpose": "Character marketplace",
-  "group": "extras"
+  "group": "extras",
+  "missing": {
+   "class": "c",
+   "note": "AO20 character marketplace (ShopPjsInit, PublicarPersonajeMAO)"
+  }
  },
  {
   "name": "frmTransferChar",
   "purpose": "Character transfer",
-  "group": "extras"
+  "group": "extras",
+  "missing": {
+   "class": "b",
+   "note": "Character transfer between accounts: account server"
+  }
  },
  {
   "name": "frmTransferChar2FA",
   "purpose": "Character transfer two-factor step",
-  "group": "extras"
+  "group": "extras",
+  "missing": {
+   "class": "b",
+   "note": "Character transfer two-factor step: account server"
+  }
  },
  {
   "name": "frmPatchNotes",
   "purpose": "Patch notes",
-  "group": "extras"
+  "group": "extras",
+  "missing": {
+   "class": "b",
+   "note": "Patch notes sent by the login server at login"
+  }
  },
  {
   "name": "frmNoticia",
   "purpose": "News at login",
-  "group": "extras"
+  "group": "extras",
+  "missing": {
+   "class": "d",
+   "note": "Never opened by the classic client code (dead form)"
+  }
  },
  {
   "name": "frmForo",
   "purpose": "Forum message list",
-  "group": "extras"
+  "group": "extras",
+  "missing": {
+   "class": "d",
+   "note": "Never opened by the classic client code (dead form)"
+  }
  },
  {
   "name": "FrmTorneo",
   "purpose": "Tournament organiser",
-  "group": "gm"
+  "group": "gm",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/extras-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmCambiaMotd",
   "purpose": "Edit message of the day",
-  "group": "gm"
+  "group": "gm",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/gm-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmDebug",
   "purpose": "Debug tools",
-  "group": "gm"
+  "group": "gm",
+  "missing": {
+   "class": "d",
+   "note": "Developer debug window, opened only from a hidden frmConnect control"
+  }
  },
  {
   "name": "FrmGmAyuda",
   "purpose": "Message to administrators",
-  "group": "gm"
+  "group": "gm",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/gm-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmMessageTxt",
   "purpose": "Predefined GM messages",
-  "group": "gm"
+  "group": "gm",
+  "missing": {
+   "class": "d",
+   "note": "Never opened by the classic client code (dead form)"
+  }
  },
  {
   "name": "frmMSG",
   "purpose": "GM messages list",
-  "group": "gm"
+  "group": "gm",
+  "missing": {
+   "class": "d",
+   "note": "Never opened by the classic client code (dead form)"
+  }
  },
  {
   "name": "FrmObjetos",
   "purpose": "Create object",
-  "group": "gm"
+  "group": "gm",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/gm-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmPanelGm",
   "purpose": "GM panel",
-  "group": "gm"
+  "group": "gm",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/gm-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmProcesses",
   "purpose": "User processes list (anti-cheat)",
-  "group": "gm"
+  "group": "gm",
+  "missing": {
+   "class": "d",
+   "note": "Never opened by the classic client code (anti-cheat leftover)"
+  }
  },
  {
   "name": "frmSpawnList",
   "purpose": "Spawn NPC list",
-  "group": "gm"
+  "group": "gm",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/gm-ui.ts"
+   }
+  ]
  },
  {
   "name": "MenuGM",
   "purpose": "GM context menu",
-  "group": "gm"
+  "group": "gm",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/extras-ui.ts"
+   }
+  ]
  },
  {
   "name": "MenuNPC",
   "purpose": "NPC context menu",
-  "group": "gm"
+  "group": "gm",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/extras-ui.ts"
+   }
+  ]
  },
  {
   "name": "MenuUser",
   "purpose": "Player context menu",
-  "group": "gm"
+  "group": "gm",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/extras-ui.ts"
+   }
+  ]
  }
 ]

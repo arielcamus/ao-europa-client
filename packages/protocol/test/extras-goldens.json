@@ -1,0 +1,362 @@
+[
+ {
+  "dir": "c2s",
+  "id": 64,
+  "name": "ChangeDescription",
+  "types": [
+   "s8"
+  ],
+  "hex": "40000441622063"
+ },
+ {
+  "dir": "c2s",
+  "id": 67,
+  "name": "Gamble",
+  "types": [
+   "i16"
+  ],
+  "hex": "4300d204"
+ },
+ {
+  "dir": "c2s",
+  "id": 68,
+  "name": "MapPriceEntrance",
+  "types": [],
+  "hex": "4400"
+ },
+ {
+  "dir": "c2s",
+  "id": 69,
+  "name": "LeaveFaction",
+  "types": [],
+  "hex": "4500"
+ },
+ {
+  "dir": "c2s",
+  "id": 185,
+  "name": "Participar",
+  "types": [
+   "i16",
+   "s8"
+  ],
+  "hex": "b900d2040441622063"
+ },
+ {
+  "dir": "c2s",
+  "id": 213,
+  "name": "OfertaInicial",
+  "types": [
+   "i32"
+  ],
+  "hex": "d500a0860100"
+ },
+ {
+  "dir": "c2s",
+  "id": 216,
+  "name": "CuentaRegresiva",
+  "types": [
+   "i8"
+  ],
+  "hex": "d80007"
+ },
+ {
+  "dir": "c2s",
+  "id": 218,
+  "name": "Duel",
+  "types": [
+   "s8",
+   "i32",
+   "i16",
+   "bool"
+  ],
+  "hex": "da000441622063a0860100d20401"
+ },
+ {
+  "dir": "c2s",
+  "id": 219,
+  "name": "AcceptDuel",
+  "types": [
+   "s8"
+  ],
+  "hex": "db000441622063"
+ },
+ {
+  "dir": "c2s",
+  "id": 220,
+  "name": "CancelDuel",
+  "types": [],
+  "hex": "dc00"
+ },
+ {
+  "dir": "c2s",
+  "id": 221,
+  "name": "QuitDuel",
+  "types": [],
+  "hex": "dd00"
+ },
+ {
+  "dir": "c2s",
+  "id": 240,
+  "name": "SubastaInfo",
+  "types": [],
+  "hex": "f000"
+ },
+ {
+  "dir": "c2s",
+  "id": 244,
+  "name": "EventoInfo",
+  "types": [],
+  "hex": "f400"
+ },
+ {
+  "dir": "c2s",
+  "id": 245,
+  "name": "CrearEvento",
+  "types": [
+   "i8",
+   "i8",
+   "i8"
+  ],
+  "hex": "f500070707"
+ },
+ {
+  "dir": "c2s",
+  "id": 249,
+  "name": "ComenzarTorneo",
+  "types": [],
+  "hex": "f900"
+ },
+ {
+  "dir": "c2s",
+  "id": 250,
+  "name": "CancelarTorneo",
+  "types": [],
+  "hex": "fa00"
+ },
+ {
+  "dir": "c2s",
+  "id": 251,
+  "name": "BusquedaTesoro",
+  "types": [
+   "i8"
+  ],
+  "hex": "fb0007"
+ },
+ {
+  "dir": "c2s",
+  "id": 267,
+  "name": "FinEvento",
+  "types": [],
+  "hex": "0b01"
+ },
+ {
+  "dir": "c2s",
+  "id": 272,
+  "name": "CreateEvent",
+  "types": [
+   "s8"
+  ],
+  "hex": "10010441622063"
+ },
+ {
+  "dir": "c2s",
+  "id": 274,
+  "name": "LogMacroClickHechizo",
+  "types": [
+   "i8",
+   "i32"
+  ],
+  "hex": "120107a0860100"
+ },
+ {
+  "dir": "c2s",
+  "id": 292,
+  "name": "CancelarEvento",
+  "types": [],
+  "hex": "2401"
+ },
+ {
+  "dir": "c2s",
+  "id": 295,
+  "name": "EventoFaccionario",
+  "types": [],
+  "hex": "2701"
+ },
+ {
+  "dir": "c2s",
+  "id": 297,
+  "name": "LobbyCommand",
+  "types": [
+   "i8",
+   "s8"
+  ],
+  "hex": "2901070441622063"
+ },
+ {
+  "dir": "c2s",
+  "id": 310,
+  "name": "AntiMacroMessage",
+  "types": [
+   "s8",
+   "s8"
+  ],
+  "hex": "360104416220630441622063"
+ },
+ {
+  "dir": "c2s",
+  "id": 311,
+  "name": "ModifyCastleWhiteList",
+  "types": [
+   "s8"
+  ],
+  "hex": "37010441622063"
+ },
+ {
+  "dir": "c2s",
+  "id": 227,
+  "name": "Casarse",
+  "types": [
+   "s8"
+  ],
+  "hex": "e3000441622063"
+ },
+ {
+  "dir": "c2s",
+  "id": 214,
+  "name": "OfertaDeSubasta",
+  "types": [
+   "i32"
+  ],
+  "hex": "d600a0860100"
+ },
+ {
+  "dir": "c2s",
+  "id": 239,
+  "name": "MacroPossent",
+  "types": [
+   "i8",
+   "i8"
+  ],
+  "hex": "ef000707"
+ },
+ {
+  "dir": "c2s",
+  "id": 248,
+  "name": "CrearTorneo",
+  "types": [
+   "i8",
+   "i8",
+   "i8",
+   "i32",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i16",
+   "i8",
+   "i8",
+   "s8",
+   "s8"
+  ],
+  "hex": "f800070707a0860100070707070707070707070707d204070704416220630441622063"
+ },
+ {
+  "dir": "c2s",
+  "id": 290,
+  "name": "BuyShopItem",
+  "types": [
+   "i32"
+  ],
+  "hex": "2201a0860100"
+ },
+ {
+  "dir": "c2s",
+  "id": 291,
+  "name": "StartEvent",
+  "types": [
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i8",
+   "i32",
+   "s8",
+   "s8"
+  ],
+  "hex": "2301070707070707070707a086010004416220630441622063"
+ },
+ {
+  "dir": "c2s",
+  "id": 294,
+  "name": "PublicarPersonajeMAO",
+  "types": [
+   "i32"
+  ],
+  "hex": "2601a0860100"
+ },
+ {
+  "dir": "c2s",
+  "id": 298,
+  "name": "FeatureToggle",
+  "types": [
+   "i8",
+   "s8"
+  ],
+  "hex": "2a01070441622063"
+ },
+ {
+  "dir": "s2c",
+  "id": 165,
+  "name": "InvasionInfo",
+  "types": [
+   "i8",
+   "i8",
+   "i8"
+  ],
+  "hex": "a500070707"
+ },
+ {
+  "dir": "s2c",
+  "id": 189,
+  "name": "ShopPjsInit",
+  "types": [],
+  "hex": "bd00"
+ },
+ {
+  "dir": "s2c",
+  "id": 197,
+  "name": "AntiCheatStartSession",
+  "types": [],
+  "hex": "c500"
+ },
+ {
+  "dir": "s2c",
+  "id": 179,
+  "name": "UpdateShopClienteCredits",
+  "types": [
+   "i32"
+  ],
+  "hex": "b300a0860100"
+ },
+ {
+  "dir": "s2c",
+  "id": 183,
+  "name": "NotificarClienteSeguido",
+  "types": [
+   "i8"
+  ],
+  "hex": "b70007"
+ }
+]

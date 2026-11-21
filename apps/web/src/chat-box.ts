@@ -12,6 +12,8 @@ export class ChatBox {
   private guild = false;
   /** /GM and /CO open client-side forms (FrmGmAyuda, FrmObjetos); main.ts wires them to the GM forms. */
   onOpenWindow: ((window: 'gmHelp' | 'objects') => void) | undefined;
+  /** Slash commands of the extras feature (events, duels, auction; extras-commands.ts): true when the line was handled there. */
+  onCommand: ((line: string) => boolean) | undefined;
 
   constructor(
     private readonly form: HTMLFormElement,
@@ -52,12 +54,18 @@ export class ChatBox {
     if (wasOpen) this.onClose();
   }
 
+  /** Runs a line as if it had been typed (MenuUser / MenuGM call ParseUserCommand directly). */
+  runLine(text: string) { this.send(text); }
+  /** MenuUser "PRIVADO": SendTxt = "\\name " and the box opens. */
+  whisperTo(name: string) { if (this.session?.ready && !this.guild) { this.input.whisperTo(name); this.open(); } }
+
   /** SendTxt_KeyUp / SendTxtCmsg_KeyUp. */
-  private submit() {
+  private submit() { this.send(this.field.value); }
+  private send(text: string) {
     const session = this.session;
     if (!session) return;
-    const text = this.field.value;
     try {
+      if (!this.guild && text.startsWith('/') && this.onCommand?.(text)) { this.close(); return; }
       const outcome = this.guild ? this.input.guildMessage(text) : this.input.submit(text, { level: session.ui.stats.level, dead: session.dead, trading: session.bankTrade.trading, manaFull: session.ui.stats.mana !== undefined && session.ui.stats.mana === session.ui.stats.maxMana, isGM: session.gm.isGM });
       let ok = true;
       if (outcome.talk !== undefined) ok = outcome.talk.trim() === '' || session.talk(outcome.talk);

@@ -32,6 +32,7 @@ import { QuestClientPacketId as QC, QuestServerPacketId as QS } from '@ao/protoc
 
 import { PartyState } from './party.js';
 import { TravelState } from './travel.js';
+import { ExtrasState } from './extras.js';
 import { GuildState } from './guild.js';
 import { OptionsController, OptionsState } from './options-state.js';
 import { GmState } from './gm-state.js';
@@ -62,6 +63,7 @@ export class Session {
   readonly party = new PartyState();
   /** FrmViajes: the Transporter NPC's destinations (wp05). */
   readonly travel = new TravelState();
+  readonly extras = new ExtrasState(() => this.clock(), text => this.ui.message(text));
   /** Guild forms and their data (wp07). */
   readonly guild = new GuildState();
   readonly spells: SpellState;
@@ -230,6 +232,7 @@ export class Session {
       this.party.selfCharIndex = this.charIndex;
       this.party.receive(packet);
       this.travel.receive(packet);
+      this.extras.receive(packet);
       this.guild.receive(packet);
       this.status.receive(packet, blind => { this.world.blind = blind; });
       this.items.receive(packet);

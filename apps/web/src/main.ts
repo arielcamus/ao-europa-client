@@ -26,6 +26,8 @@ import { BankUI } from './bank-ui.js';
 import { TradeUI } from './trade-ui.js';
 import { PartyUI } from './party-ui.js';
 import { TravelUI } from './travel-ui.js';
+import { ExtrasUI } from './extras-ui.js';
+import { parseExtrasCommand } from './extras-commands.js';
 import { GmUI } from './gm-ui.js';
 import { GuildUI } from './guild-ui.js';
 import { QuestWindows } from './quest-window.js';
@@ -100,6 +102,19 @@ const guildUi = new GuildUI(element('classic'), sendPackets);
 const gmUi = new GmUI(element('classic'), error => report(String(error))); // GM forms (wp12)
 chatBox.onOpenWindow = window => (window === 'objects' ? gmUi.openObjects() : gmUi.openHelp());
 const travelUi = new TravelUI(element('classic'), packet => sendPackets(packet)); // FrmViajes (wp05)
+// Events, duels (frmRetos), the tournament organiser, battleground lobbies and the right-click menus (coverage-tail).
+const extrasUi = new ExtrasUI(element('classic'), viewport, { send: packet => sendPackets(packet), runLine: line => chatBox.runLine(line), whisper: name => chatBox.whisperTo(name) });
+gmUi.onTournament = () => extrasUi.openTournament();
+chatBox.onCommand = line => {
+  if (!session) return false;
+  const cut = line.indexOf(' ');
+  const outcome = parseExtrasCommand((cut < 0 ? line : line.slice(0, cut)).trim().toUpperCase(), cut < 0 ? '' : line.slice(cut + 1), { dead: session.dead, isGM: session.gm.isGM });
+  if (!outcome) return false;
+  for (const note of outcome.notes) session.ui.message(note.text, note.font);
+  for (const packet of outcome.packets) session.sendChat(packet);
+  if (outcome.open) extrasUi.openFor(outcome.open.window, outcome.open.names);
+  return true;
+};
 ui.bindMenu('Grupo', () => sendPackets(session?.party.requestWindow()));
 ui.bindMenu('Clanes', () => { if (session?.ready) sendPackets(session.guild.openGuildPanel()); });
 // frmOpciones (graphics, gameplay and, through audio.options, sound), frmCustomKeys and the hotkey bar (feat/options-extras).
@@ -127,6 +142,7 @@ const applyOptions = () => {
   if (session) session.ui.chat.copyToConsole = gameOptions.value.copyDialogToConsole;
 };
 gameOptions.subscribe(applyOptions);
+applyOptions(); // the saved options (FPS label) apply from the first frame, not only after a change
 const hotkeysLoaded = new WeakSet<Session>();
 /** IsDialogOpen: the bank, Goliath and trade windows pause walking. */
 const transacting = () => bankUi.dialogOpen || tradeUi.dialogOpen;
@@ -238,13 +254,13 @@ function syncConnect() {
 function updateUi(now: number) {
   syncConnect();
   if (session) floating.update(session, renderer, now);
-  ui.update(session); bankUi.update(session); tradeUi.update(session); partyUi.update(session); guildUi.update(session); travelUi.update(session); gmUi.update(session);
+  ui.update(session); bankUi.update(session); tradeUi.update(session); partyUi.update(session); guildUi.update(session); travelUi.update(session); gmUi.update(session); extrasUi.update(session);
   itemsUi.update(session); keyringUi.update(session); papiroUi.update(session); inventoryExtras.update(session);
   guard(() => craftingUi.update(session));
   if (!session) { hotkeysUi.update(undefined, false); return; }
   const playing = session.ready && renderer.readyMap === session.resourceMap;
   // ModSettings.LoadHotkeys: once per entry into the game, send the saved slots to the server.
-  if (playing && session.self && !hotkeysLoaded.has(session)) { hotkeysLoaded.add(session); session.optionsActions.loadHotkeys(session.self.name); }
+  if (playing && session.self && !hotkeysLoaded.has(session)) { hotkeysLoaded.add(session); applyOptions(); session.optionsActions.loadHotkeys(session.self.name); }
   hotkeysUi.update(session, playing);
   if (gameOptions.value.showFps && now - lastFps > 500) { lastFps = now; fpsLabel.textContent = `FPS: ${Math.round(renderer.app.ticker.FPS)}`; }
   minimap.update(session, playing);
@@ -446,7 +462,15 @@ function doorAt(event: PointerEvent | MouseEvent) {
 const tileAt = (event: PointerEvent) => session ? renderer.tileAt(session, event.clientX, event.clientY, performance.now()) : undefined;
 viewport.addEventListener('pointermove', event => { if (event.pointerType === 'mouse') renderer.hoverTile = tileAt(event); });
 viewport.addEventListener('pointerleave', () => { renderer.hoverTile = undefined; });
+viewport.addEventListener('contextmenu', event => event.preventDefault());
 viewport.addEventListener('pointerdown', event => {
+  // frmMain.renderer_MouseDown, ACCION2 = INTERACT: the right button opens the player / pet / GM menu of the character under the mouse.
+  if (event.pointerType === 'mouse' && event.button === 2 && session?.ready && chatSupported) {
+    event.preventDefault(); extrasUi.closeMenu();
+    const tile = tileAt(event), classic = element('classic').getBoundingClientRect();
+    if (tile) extrasUi.interact(session, tile, { x: (event.clientX - classic.left) * 1024 / classic.width, y: (event.clientY - classic.top) * 768 / classic.height }, event.shiftKey);
+    return;
+  }
   bankUi.closeOnWorldClick(); // frmMain.renderer_MouseDown unloads frmBancoObj and frmGoliath
   partyUi.closeWindow(); guildUi.closeOnMapClick(); travelUi.closeOnWorldClick(); // ... and FrmGrupo and frmGuildList
   if (!event.isPrimary || !session?.ready) return;
