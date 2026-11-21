@@ -5,7 +5,11 @@
  * Adapted 2026-11-20 from client Protocol.bas, TileEngine.bas, TileEngine_Map.bas and ao20audio.bas.
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty. See ../../../LICENSE.
  */
+<<<<<<< HEAD
 import { AudioServerPacketId as A, CombatServerPacketId as C, ServerPacketId as S, SkillsServerPacketId as SK, SpellServerPacketId as SP } from '@ao/protocol';
+=======
+import { AudioServerPacketId as A, CombatServerPacketId as C, CraftingServerPacketId as CF, ServerPacketId as S, SpellServerPacketId as SP } from '@ao/protocol';
+>>>>>>> 0df27ce (feat(windows): alchemy, tailor and crafting-station windows, special-fish fight, RGB work prompts)
 import type { ServerPacket } from '@ao/protocol';
 import {
   SND, Terrain, ambientWave, inHearingArea, mapMusicId, musicFile, panAt, panByDistance, stepWave, terrainOf, volumeByDistance, waveFile,
@@ -65,6 +69,8 @@ export class AudioDirector {
     switch (packet.id) {
       case SP.PlayWave: this.playWave(packet); break;
       case A.PlayWaveStep: this.invisibleStep(packet); break;
+      // HandlePelearConPezEspecial: ao20audio.PlayWav(55), not localised, not positional.
+      case CF.PelearConPezEspecial: this.playWave({ id: SP.PlayWave, wave: 55, x: 0, y: 0, cancelLast: 0, localize: 0 } as PlayWavePacket); break;
       case A.RainToggle: this.weather('rain', packet.raining); break;
       case A.NieveToggle: this.weather('snow', packet.snowing); break;
       case A.PlayMIDI: break; // HandlePlayMIDI reads File and Loop and does nothing.

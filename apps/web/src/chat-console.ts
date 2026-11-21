@@ -16,6 +16,8 @@ export type ChatLine =
   | { kind: 'locale'; id: number; extra: string; font: number }
   | { kind: 'faction'; message: string; font: number; label: string }
   | { kind: 'guild'; status: number; message: string }
+  /** AddtoRichTextBox(RecTxt, text, red, green, blue, bold, italic) called by the client itself, with explicit colours. */
+  | { kind: 'rgb'; message: string; color: readonly [number, number, number]; bold: boolean; italic: boolean }
   /** WriteConsoleUserChat: a bold "[Name] " in the speaker's colour, then the text in `color`. */
   | { kind: 'user'; name: string; text: string; color: readonly [number, number, number]; status: number; level: number };
 
@@ -63,6 +65,7 @@ export function formatLine(line: ChatLine, locale: ChatLocale): Segment[] {
   switch (line.kind) {
     case 'console': return [styled(expandConsoleText(line.message, locale), fontStyle(line.font))];
     case 'locale': return [styled(locale.message(line.id, line.extra), fontStyle(line.font))];
+    case 'rgb': return [segment(line.message, rgb(line.color, line.bold, line.italic))];
     case 'faction': return [segment(factionLabel(line.label) + line.message, fontStyle(line.font))];
     case 'guild': {
       let chat = line.message;

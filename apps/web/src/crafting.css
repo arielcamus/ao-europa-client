@@ -8,3 +8,15 @@
 .craft-picture { position: absolute; background: #000; }
 .craft-desc { position: absolute; text-align: center; white-space: nowrap; overflow: hidden; pointer-events: none; }
 .craft-quantity { position: absolute; padding: 0; border: 0; background: #0d1213; color: #fff; font: bold 12px Tahoma, Arial, sans-serif; text-align: center; }
+
+/* Generic crafting station (frmCrafteo): the form is 90% opaque (Aplicar_Transparencia 240) and its buttons are plain Windows ones. */
+.cf-window { background-color: #fff; opacity: 0.94; }
+.cf-pic { position: absolute; background: #000; overflow: hidden; }
+.cf-backdrop { position: absolute; left: 0; top: 0; }
+.cf-grh { position: absolute; pointer-events: none; }
+.cf-slot { background-color: transparent; }
+.cf-text { position: absolute; font: 11px Tahoma, Arial, sans-serif; white-space: nowrap; pointer-events: none; }
+.cf-percent { color: #fff; }
+.cf-cost { color: #ff0; }
+.cf-button { position: absolute; font: 11px Tahoma, Arial, sans-serif; color: #000; background: #e1e1e1; border: 1px solid #adadad; cursor: default; }
+.cf-button:active { background: #cce4f7; border-color: #005499; }

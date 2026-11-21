@@ -11,10 +11,15 @@
  */
 import { CraftingClientPacketId as CC, CraftingServerPacketId as CS, ServerPacketId as S } from '@ao/protocol';
 import type { ClientPacket, ServerPacket } from '@ao/protocol';
+import { MSG_FISH_BROKE, MSG_SUPER_FISH, SpecialFishing } from './fishing.js';
 
 export type CraftingWindow = 'smith' | 'carpenter' | 'alchemy' | 'tailor' | 'crafting';
 /** UserMacro.TIPO values (frmMain.MacroLadder_Timer): 1 alchemy, 3 tailor, 4 smith, 6 server-driven work. */
 export const MacroType = { Alchemy: 1, Tailor: 3, Smith: 4, Work: 6 } as const;
+/** AddtoRichTextBox colours of the client's own work prompts: build start / quantity (2,51,223 bold italic), server work start (2,223,51 bold), stop (223,51,2 bold). */
+export const WORK_COLOR = { build: [2, 51, 223], start: [2, 223, 51], stop: [223, 51, 2] } as const;
+/** MENSAJE_PEZ_ROMPIO_LINEA_PESCA is printed in 255,0,0 bold. */
+export const MSG_FISH_BROKE_LINE = 'El pez ha roto tu línea de pesca.';
 /** Languages/1.json, Spanish. */
 export const MSG_START_WORK = 'Has comenzado a trabajar...';
 export const MSG_BEGIN_WORK = 'Comienzas a trabajar.';
@@ -46,12 +51,17 @@ export class CraftingState {
   result: CraftingResultView | undefined;
   /** HandleMacroTrabajoToggle: the server turned the work macro on or off. */
   workActive = false;
-  /** HandlePelearConPezEspecial: the special-fish fight started (PescandoEspecial). */
-  specialFish = false;
+  /** The special-fish fight (PescandoEspecial and the bar of RenderScreen). */
+  readonly fishing = new SpecialFishing();
+  get specialFish() { return this.fishing.active; }
+  /** Clock of the host, for the fight's 20 s limit; the controller sets it. */
+  now: () => number = () => 0;
   /** gIntervals.BuildWork from the Intervals packet; the macro timer period. */
   buildWork = 0;
   /** Server-driven work macro and ModUtils.ResetearUserMacro, reported to the controller. */
   onWorkToggle: (active: boolean) => void = () => {};
+  /** HandlePelearConPezEspecial: the overhead line MENSAJE_SUPER_PEZ over the player. */
+  onSuperFish: () => void = () => {};
 
   receive(packet: ServerPacket): void {
     switch (packet.id) {
@@ -68,7 +78,7 @@ export class CraftingState {
       case CS.ShowAlquimiaForm: this.open = 'alchemy'; break;
       case CS.ShowSastreForm: this.open = 'tailor'; break;
       case CS.MacroTrabajoToggle: this.workActive = packet.active; this.onWorkToggle(packet.active); break;
-      case CS.PelearConPezEspecial: this.specialFish = true; break;
+      case CS.PelearConPezEspecial: this.fishing.start(this.now()); this.onSuperFish(); break;
       case CS.OpenCrafting:
         // HandleOpenCrafting: every crafting slot, the catalyst and the result start empty.
         this.craftingType = packet.type; this.craftItems.clear(); this.catalyst = undefined; this.catalystPercent = 0; this.result = undefined;
@@ -102,6 +112,10 @@ export interface CraftingDeps {
   now: () => number;
   stamina: () => number | undefined;
   message: (text: string, font?: number) => void;
+  /** Char_Dialog_Set over the player (HandlePelearConPezEspecial). */
+  overhead?: (text: string, color: readonly [number, number, number]) => void;
+  /** AddtoRichTextBox with explicit RGB; falls back to the plain console when the host has none. */
+  colored?: (text: string, color: readonly [number, number, number], bold: boolean, italic: boolean) => void;
 }
 
 export class CraftingController {
@@ -112,6 +126,9 @@ export class CraftingController {
 
   constructor(private readonly deps: CraftingDeps, readonly state: CraftingState) {
     state.onWorkToggle = active => this.serverWorkToggle(active);
+    state.now = () => deps.now();
+    // &H1FFFF is the VB long 0x01FFFF: red 255, green 255, blue 1.
+    state.onSuperFish = () => deps.overhead?.(MSG_SUPER_FISH, [255, 255, 1]);
   }
 
   /** The state first, then the VB6 handlers that act on it: a station form shown while the work macro is on re-sends the last build. */
@@ -124,14 +141,17 @@ export class CraftingController {
   /** HandleMacroTrabajoToggle: off is ResetearUserMacro (which tells the server FlagTrabajar); on starts the type 6 macro. */
   private serverWorkToggle(active: boolean) {
     if (!active) { this.reset(); return; }
-    this.deps.message(MSG_START_WORK);
+    this.colored(MSG_START_WORK, WORK_COLOR.start, true, false);
     Object.assign(this.macro, { active: true, type: MacroType.Work, remaining: 999, intervalMs: this.state.buildWork, lastTick: this.deps.now() });
   }
   /** ModUtils.ResetearUserMacro. */
   reset() {
     this.deps.send({ id: CC.FlagTrabajar });
     Object.assign(this.macro, { active: false, type: 0, object: 0, remaining: 0, intervalMs: 0, lastTick: 0 });
-    this.deps.message(MSG_STOP_WORK);
+    this.colored(MSG_STOP_WORK, WORK_COLOR.stop, true, false);
+  }
+  private colored(text: string, color: readonly [number, number, number], bold: boolean, italic: boolean) {
+    if (this.deps.colored) this.deps.colored(text, color, bold, italic); else this.deps.message(text);
   }
   /** frmMain.MacroLadder_Timer, called from the UI loop. */
   tick() {
@@ -158,7 +178,7 @@ export class CraftingController {
   private build(type: number, id: typeof CC.CraftBlacksmith | typeof CC.CraftAlquimista | typeof CC.CraftSastre, object: number, quantity: number): boolean {
     if (!this.deps.ready() || object < 1) return false;
     if (quantity > 1) {
-      this.deps.message(MSG_BEGIN_WORK);
+      this.colored(MSG_BEGIN_WORK, WORK_COLOR.build, true, true);
       Object.assign(this.macro, { active: true, type, object, remaining: quantity, intervalMs: this.state.buildWork, lastTick: this.deps.now() });
     } else {
       this.deps.send({ id, object });
@@ -169,8 +189,8 @@ export class CraftingController {
   /** frmCarp.cmdConstruir_Click: the server owns the repetition (it answers MacroTrabajoToggle). */
   buildCarpenter(object: number, quantity: number): boolean {
     if (!this.deps.ready() || object < 1) return false;
-    if (quantity > 0) { this.deps.send({ id: CC.CraftCarpenter, object, amount: quantity }); this.deps.message(MSG_BEGIN_WORK); }
-    else this.deps.message(MSG_QUANTITY_ZERO);
+    if (quantity > 0) { this.deps.send({ id: CC.CraftCarpenter, object, amount: quantity }); this.colored(MSG_BEGIN_WORK, WORK_COLOR.build, true, true); }
+    else this.colored(MSG_QUANTITY_ZERO, WORK_COLOR.build, true, true);
     return true;
   }
   /** Server forms that find the work macro already on re-send the last build (HandleShowBlacksmithForm / HandleShowAlquimiaForm). */
@@ -188,7 +208,26 @@ export class CraftingController {
   /** Work-related requests with no window. */
   completeAction(action: number) { this.send({ id: CC.CompletarAccion, action }); }
   breakRod() { this.send({ id: CC.RomperCania }); }
-  finishSpecialFish() { this.send({ id: CC.FinalizarPescaEspecial }); this.state.specialFish = false; this.state.revision++; }
+  finishSpecialFish() { this.send({ id: CC.FinalizarPescaEspecial }); this.state.fishing.stop(); this.state.revision++; }
+  /** General.MoveTo: walking away from the fight breaks the line first (message, WriteRomperCania). */
+  onWalk() { if (this.state.fishing.active) this.breakLine(); }
+  private breakLine() {
+    this.state.fishing.stop(); this.state.revision++;
+    this.colored(MSG_FISH_BROKE, [255, 0, 0], true, false);
+    this.breakRod();
+  }
+  /** One frame of the fight (the RenderScreen block); the UI loop calls it with the time since the last frame. */
+  tickFishing(elapsed: number) {
+    const fishing = this.state.fishing;
+    if (fishing.frame(this.deps.now(), elapsed) === 'broke') { this.state.revision++; this.colored(MSG_FISH_BROKE, [255, 0, 0], true, false); this.breakRod(); }
+  }
+  /** The P key while PescandoEspecial (ModGameplayUI KeyUp). */
+  fishingKey() {
+    const outcome = this.state.fishing.press();
+    if (outcome === 'landed') this.send({ id: CC.FinalizarPescaEspecial });
+    else if (outcome === 'broke') { this.colored(MSG_FISH_BROKE, [255, 0, 0], true, false); this.breakRod(); }
+    return outcome;
+  }
   repeatMacro() { this.send({ id: CC.RepeatMacro }); }
   private send(packet: ClientPacket) { if (this.deps.ready()) this.deps.send(packet); }
 }

@@ -5,7 +5,8 @@ import type { ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
 import { parseIni } from '../src/assets.js';
 import { MAX_CRAFT_SLOTS, MSG_BEGIN_WORK, MSG_QUANTITY_ZERO, MSG_START_WORK, MSG_STOP_WORK } from '../src/crafting.js';
-import { carpenterMaterials, smithMaterials, splitDefenses } from '../src/crafting-recipes.js';
+import { alchemyMaterials, carpenterMaterials, smithMaterials, splitDefenses, splitTailor, tailorMaterials } from '../src/crafting-recipes.js';
+import { MSG_FISH_BROKE } from '../src/fishing.js';
 import { Session } from '../src/session.js';
 import { MSG_CLICK_FORGE, MSG_CLICK_WORK } from '../src/spells.js';
 
@@ -237,5 +238,84 @@ describe('client conformance against the real smith / alchemy / tailor / carpent
     const { h } = replay('carpenter-craft-walk-south');
     expect(h.session.crafting.macro.active).toBe(false);
     expect(h.clientPackets().filter(p => p.id === CC.FlagTrabajar)).toHaveLength(1);
+  });
+});
+
+describe('alchemy and tailor recipes (Obj.dat)', () => {
+  const ini = parseIni('[OBJ50]\nRaices=2\nBotella=1\nFlorOceano=3\nPimiento=0\n[OBJ60]\nPielLobo=4\nPielTigre=1\nPielLoboNegro=2\n');
+  it('lists only the ingredients an alchemy object needs, in the form order, with FlorOceano by its own key', () => {
+    expect(alchemyMaterials(ini, 50)).toEqual([{ name: 'Raices', amount: 2 }, { name: 'Botella', amount: 1 }, { name: 'FlorOceano', amount: 3 }]);
+  });
+  it('always lists all six skins for the tailor, zero amounts included', () => {
+    expect(tailorMaterials(ini, 60)).toEqual([
+      { name: 'Piel de Lobo', amount: 4 }, { name: 'Piel de Oso Pardo', amount: 0 }, { name: 'Piel de Oso Polar', amount: 0 }, { name: 'Piel de Lobo Negro', amount: 2 },
+      { name: 'Piel de Tigre', amount: 1 }, { name: 'Piel de Tigre Bengala', amount: 0 }]);
+  });
+  it('splits clothes (types 3 and 100) from hats (17) and stops at the first 0, like HandleSastreObjects', () => {
+    const types: Record<number, number> = { 1: 3, 2: 17, 3: 100, 4: 2 };
+    expect(splitTailor([1, 2, 3, 4, 0, 1], object => types[object] ?? 0)).toEqual({ clothes: [1, 3], hats: [2] });
+  });
+});
+
+describe('work prompts print with the explicit RGB the VB6 client uses', () => {
+  const rgbLines = (h: ReturnType<typeof harness>) => h.session.ui.messages.filter(m => m.line?.kind === 'rgb').map(m => m.line as { message: string; color: number[]; bold: boolean; italic: boolean });
+  it('server work on (green bold), off (red bold) and a build macro (blue bold italic)', () => {
+    const h = harness();
+    h.recv({ id: CS.MacroTrabajoToggle, active: true }, { id: CS.MacroTrabajoToggle, active: false });
+    h.session.crafting.buildSmith(5, 3);
+    expect(rgbLines(h)).toEqual([
+      { kind: 'rgb', message: MSG_START_WORK, color: [2, 223, 51], bold: true, italic: false },
+      { kind: 'rgb', message: MSG_STOP_WORK, color: [223, 51, 2], bold: true, italic: false },
+      { kind: 'rgb', message: MSG_BEGIN_WORK, color: [2, 51, 223], bold: true, italic: true },
+    ]);
+  });
+});
+
+describe('the special fish fight', () => {
+  const start = () => { const h = harness(); h.recv({ id: CS.PelearConPezEspecial }); return h; };
+  it('starts with the marker at 1, no tries and the overhead line over the player', () => {
+    const h = start(), fishing = h.session.craftingState.fishing;
+    expect([fishing.active, fishing.position, fishing.direction, fishing.attempts]).toEqual([true, 1, 1, [0, 0, 0, 0, 0, 0]]);
+    expect(h.session.ui.chat.visibleDialogs().some(d => d.dialog.text.includes('presiona la tecla P'))).toBe(true);
+  });
+  it('the marker sweeps 0.2 px per ms, turns at 199 and only then allows a try', () => {
+    const fishing = start().session.craftingState.fishing;
+    fishing.frame(0, 500); expect(fishing.position).toBeCloseTo(101); expect(fishing.press()).toBeUndefined(); // no end reached yet
+    for (let i = 0; i < 10; i++) fishing.frame(i * 100, 100);
+    expect(fishing.direction).toBe(-1); expect(fishing.canTry).toBe(true);
+  });
+  it('three hits land the fish with FinalizarPescaEspecial; the green zone is 75..126', () => {
+    const h = start(), fishing = h.session.craftingState.fishing, before = h.clientPackets().length;
+    for (const position of [75, 100, 126]) { fishing.canTry = true; fishing.position = position; h.session.crafting.fishingKey(); }
+    expect(fishing.attempts.slice(1, 4)).toEqual([1, 1, 1]);
+    expect(h.since(before)).toEqual([{ id: CC.FinalizarPescaEspecial }]);
+    expect(fishing.active).toBe(false);
+  });
+  it('three misses break the line: message in red and RomperCania', () => {
+    const h = start(), fishing = h.session.craftingState.fishing, before = h.clientPackets().length;
+    for (const position of [10, 74, 127]) { fishing.canTry = true; fishing.position = position; h.session.crafting.fishingKey(); }
+    expect(fishing.attempts.slice(1, 4)).toEqual([2, 2, 2]);
+    expect(h.since(before)).toEqual([{ id: CC.RomperCania }]);
+    expect(h.session.ui.messages.at(-1)?.line).toMatchObject({ kind: 'rgb', message: MSG_FISH_BROKE, color: [255, 0, 0], bold: true });
+  });
+  it('five tries with fewer than three of either end with FinalizarPescaEspecial (the first branch of the VB6 test wins)', () => {
+    const h = start(), fishing = h.session.craftingState.fishing, before = h.clientPackets().length;
+    for (const position of [100, 10, 100, 10, 10]) { fishing.canTry = true; fishing.position = position; h.session.crafting.fishingKey(); }
+    // the third miss comes on the fifth try, when 5 tries already finish it
+    expect(h.since(before)).toEqual([{ id: CC.FinalizarPescaEspecial }]);
+  });
+  it('20 seconds break the line', () => {
+    const h = start(), before = h.clientPackets().length;
+    h.advance(20_000); h.session.crafting.tickFishing(16);
+    expect(h.since(before)).toEqual([{ id: CC.RomperCania }]); expect(h.session.craftingState.specialFish).toBe(false);
+  });
+  it('walking away breaks the line first (message and RomperCania before the Walk)', () => {
+    const h = start(); h.advance(1000);
+    h.recv({ id: S.PosUpdate, x: 50, y: 50 } as ServerPacket);
+    const before = h.clientPackets().length;
+    h.session.walk(1 as never);
+    const sent = h.since(before).map(p => p.id);
+    if (sent.includes(C.Walk)) expect(sent.indexOf(CC.RomperCania)).toBeLessThan(sent.indexOf(C.Walk));
+    expect(h.session.craftingState.specialFish).toBe(false);
   });
 });
