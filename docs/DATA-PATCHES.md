@@ -158,7 +158,8 @@ Tile check (pinned `Mapa751.csm`, `parseMap` plus the server's `General.HayAgua`
 in `FileIO.CargarMapaFormatoCSM`): both tiles and their 3x3 neighbourhoods are not blocked, not water, trigger 0, no tile exit, no NPC,
 and both sit in the same 4461-tile walkable region. sha256 pinned `a0bdd6a9d9e0f83e1756c588d70e7b60a9f784702c8423086564d68169dc3103`,
 patched `3da1206955c040bff1613f70ea8657a46759b9e04bffd3aaf2a506d858d27e56` (allowlisted in `tools/provenance/sources.lock.json`
-`patches.active`). Only the VM copy is patched; the client does not read `Ciudades.Dat`.
+`patches.active`). Only the VM copy is patched; the client does not read `Ciudades.Dat`. Reproducible with
+`tools/data-patches/apply-home-city-patches.py --dat <Dat>` (sections 6 and 7 together; replayed by `tools/data-patches/build-patched.mjs`).
 
 Characters created before the patch keep their saved position on map 517. Move one with the server stopped, or while it is logged out:
 `update user set pos_map=751,pos_x=60,pos_y=57 where name='<name>' and is_logged=0;`.
@@ -253,7 +254,9 @@ out of sync with the server Dat (proposal: regenerate it from the pinned Dat, se
 | `Mapas/Mapa64.csm` | `3100a5cd270414f12eac0524943d993d08140aa8fe0d79726767fdcebe87bc0e` | `8186968a9c01c9e0dd656d9191ef0666976092e9b9150e02314cb66e9f78cf20` |
 | `init/sp_localindex.dat` (Mac only) | `ae2de37104d003f108b4256fe9704ffec3966fc084059d0c9de03fe75a67ca74` | `44ac1f437b54ed8778bb18531dd966b66524116b596e324e6f33267586335ceb` |
 
-The client-consumed ones are listed in `tools/provenance/sources.lock.json` `patches.active`.
+Every Recursos file here, `Ciudades.Dat` included, is a `patches.active` entry in `tools/provenance/sources.lock.json` (base, output,
+script); `Configuracion.ini` is in `patches.outOfTree`. `tools/data-patches/build-patched.mjs` rebuilds them all from the untouched pin
+([PROVENANCE.md](PROVENANCE.md#patches-are-recipes)).
 
 ### Verified live (2026-11-21, after the restart)
 - Before the change: a GM `/TELEP YO 517 48 62` could not move in any of the 4 directions; `/TELEP YO 1 58 44` moved in all 4. (`/TELEP
@@ -334,5 +337,5 @@ restart.
 **Status: verified on a private APFS clone of Recursos-prehoo** (own web 5820 / bridge 7820, live VB6 server, Aotest as GM,
 `tools/worldmap-newbie-real-shot.mjs`): walked from Ullathorpe 1:(74,24) north through the door into 168 (50,31), big map on the dungeon world
 with the marker on the Newbie Dungeon art (640 of 729 pixels of the cell lit), then 167 (50,50), marker in the bottom-right room of the block
-(471 lit). **Not applied to `~/Projects/ao-reference/Recursos-prehoo`**, which Ariel's play site serves: that is his call. Once applied there,
-`apps/web/test/world-map.test.ts` also runs the world-2 picture check (it is skipped while the 2025 picture is in place).
+(471 lit). **Since applied to `~/Projects/ao-reference/Recursos-prehoo`** (PR #97; both files hash `80e768af...bbce12`, the `.orig-worldmap`
+backups are next to them), so `apps/web/test/world-map.test.ts` runs the world-2 picture check there.

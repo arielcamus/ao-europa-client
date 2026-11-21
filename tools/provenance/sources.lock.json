@@ -19,9 +19,9 @@
     "reason": "parent of 0b9217ba, the first HOO commit; v5.6.65 is the first release containing HOO code"
    },
    "vmBuild": {
-    "sha": "caac3133",
-    "date": "2026-11-19",
-    "note": "C:\\ao\\server\\Codigo in the VM = caac3133 + the twinBASIC build patches (scripts/vm/patches); post-pin: contains every HOO commit from 2026-08-12 to the classic cap v5.6.76 (2026-10-06) plus the classic branch PRs #5..#22. A rebuild at the pin is a manual twinBASIC step."
+    "sha": "9ccd7fade8e3ae50818cbcc9aaea2c757e751d8b",
+    "date": "2026-11-21",
+    "note": "live on 7667 since 2026-11-21 11:40 CET: C:\\ao\\server-9ccd\\server-9ccd-c.exe (since 20:18), built from the pin plus our build patches, two upstream bug fixes, the post-pin backport 07009f8a (home city choice, 2026-08-13, not HOO) and the pre-35a94b15 graduation rule (docs/SERVER-PREHOO-BUILD.md). Its Dat/ is the pin plus patches.active (Ciudades.Dat, Motd.ini, npcs.dat, Quests.DAT) and Mapas/Mapa64.csm. The previous caac3133 build (HOO code) is untouched in C:\\ao\\server and not used."
    }
   },
   "argentum-online-client-classic": {
@@ -54,36 +54,113 @@
   }
  },
  "patches": {
+  "format": "an active patch is { path, base, sha256, script, doc, reason }: base is the pinned hash, sha256 the output of patches.recipe run on the pinned tree (tools/data-patches/build-patched.mjs replays it; tools/provenance/test checks it). provenance.mjs --verify accepts, per file, the pinned hash or that output; --verify-pin accepts only the pin; --verify-patched requires every patch",
+  "recipe": [
+   {
+    "script": "tools/data-patches/apply-home-city-patches.py",
+    "args": [
+     "--dat",
+     "{root}/Dat"
+    ],
+    "doc": "docs/DATA-PATCHES.md#6"
+   },
+   {
+    "script": "tools/data-patches/apply-newbie-patches.py",
+    "args": [
+     "--dat",
+     "{root}/Dat",
+     "--maps",
+     "{root}/Mapas",
+     "--client-init",
+     "{root}/init"
+    ],
+    "doc": "docs/DATA-PATCHES.md#8"
+   },
+   {
+    "script": "tools/data-patches/apply-worldmap-picture.py",
+    "args": [
+     "--assets",
+     "{root}"
+    ],
+    "inputsFlag": "--from",
+    "doc": "docs/DATA-PATCHES.md#9",
+    "inputs": "interface/es_mapa2.bmp and en_mapa2.bmp at Recursos 043cdf20 (sha256 80e768af...bbce12): read from --inputs when given, else downloaded from github.com/ao-org/Recursos"
+   }
+  ],
   "active": [
    {
+    "path": "Dat/Ciudades.Dat",
+    "base": "a0bdd6a9d9e0f83e1756c588d70e7b60a9f784702c8423086564d68169dc3103",
+    "sha256": "2d5d27147c0cf9c54838475e94618fca34dc97a95c543120d48cc487adadf3d0",
+    "script": "tools/data-patches/apply-home-city-patches.py",
+    "doc": "docs/DATA-PATCHES.md#6",
+    "reason": "server only (the client does not read it). [Forgat] and [Lindos] spawn/resurrection moved from open sea to land (sections 6, 7: 751:60,57 / 751:65,70 and 64:50,59 / 64:51,44), then [Renacimiento] 517:48,62 -> 1:58,44 (section 8, apply-newbie-patches.py). Chain a0bdd6a9 -> 3da12069 (6) -> 8ced6ca3 (7) -> 2d5d2714 (8), the file the live 9ccd server reads; the Mac Recursos-prehoo keeps the pinned bytes"
+   },
+   {
     "path": "Dat/Motd.ini",
+    "base": "01b55ceedba73c015b03d631367233d9820e1c38915ca928c13ca4579fa4bc3a",
     "sha256": "55d5bac4c99b72fb813f521ff9b51a48b9daed5bfe2b7ae9385d74dadbd077a8",
+    "script": "tools/data-patches/apply-newbie-patches.py",
     "doc": "docs/DATA-PATCHES.md#8",
     "reason": "rates line set to the current EXP X4, RECOLECCIÓN X2, ORO X1 (Ariel, 21 Nov); the stale end-of-season line replaced by two Newbie Dungeon pointer lines"
    },
    {
     "path": "Dat/npcs.dat",
+    "base": "68ad6d0810bca761e300ed70ac05d66658a4d086e60bc2a8e4d7672237156940",
     "sha256": "8fd35c84496578954f2906e614dc3b1970a22935f21f3036a05ea58168ba1e26",
+    "script": "tools/data-patches/apply-newbie-patches.py",
     "doc": "docs/DATA-PATCHES.md#8",
     "reason": "Cartelera <Quest> (1331) offers Makrom's 190-194 and quest 4, new signposting Desc; snake 502 drops its fluid for quest 4 instead of the empty quest 9"
    },
    {
     "path": "Dat/Quests.DAT",
+    "base": "4e7881a0a993488cedb52a4b05af023c5abef94c2afca855c521ca5cf7a9a4a3",
     "sha256": "455c5753acf2ea0540da3dae36ed73d9dd8640e9a27971dd3f4b56166e0b87c4",
+    "script": "tools/data-patches/apply-newbie-patches.py",
     "doc": "docs/DATA-PATCHES.md#8",
     "reason": "quests 40, 41, 42, 193 retargeted to existing pre-HOO creatures; 194 text in Spanish; PosMap of 4, 191, 192"
    },
    {
     "path": "Mapas/Mapa64.csm",
+    "base": "3100a5cd270414f12eac0524943d993d08140aa8fe0d79726767fdcebe87bc0e",
     "sha256": "8186968a9c01c9e0dd656d9191ef0666976092e9b9150e02314cb66e9f78cf20",
+    "script": "tools/data-patches/apply-newbie-patches.py",
     "doc": "docs/DATA-PATCHES.md#8",
     "reason": "one Cartelera <Quest> (NPC 1331) at (52,57) in Lindos"
    },
    {
     "path": "init/sp_localindex.dat",
+    "base": "ae2de37104d003f108b4256fe9704ffec3966fc084059d0c9de03fe75a67ca74",
     "sha256": "44ac1f437b54ed8778bb18531dd966b66524116b596e324e6f33267586335ceb",
+    "script": "tools/data-patches/apply-newbie-patches.py",
     "doc": "docs/DATA-PATCHES.md#8",
     "reason": "[NPC1331] and the patched quests' text synced from the patched server Dat"
+   },
+   {
+    "path": "interface/es_mapa2.bmp",
+    "base": "f8e5bea18e14f701e04579267ed4cda5ec6da323976c2b4549ca657e44ad9e24",
+    "sha256": "80e768afb1c3adad522162bdb8f53d22276bdec1130270287307ebcb62bbce12",
+    "script": "tools/data-patches/apply-worldmap-picture.py",
+    "doc": "docs/DATA-PATCHES.md#9",
+    "reason": "world-2 (dungeons) picture of frmMapaGrande: the pinned 847f4a23 (2025-07-20) redraw does not match the pinned grid (87 of 112 dungeon cells on black, the Newbie Dungeon among them); the 043cdf20 (2024-04-05, pre-HOO) picture drawn for that grid"
+   },
+   {
+    "path": "interface/en_mapa2.bmp",
+    "base": "f8e5bea18e14f701e04579267ed4cda5ec6da323976c2b4549ca657e44ad9e24",
+    "sha256": "80e768afb1c3adad522162bdb8f53d22276bdec1130270287307ebcb62bbce12",
+    "script": "tools/data-patches/apply-worldmap-picture.py",
+    "doc": "docs/DATA-PATCHES.md#9",
+    "reason": "the English twin of es_mapa2.bmp (byte-identical in both versions)"
+   }
+  ],
+  "outOfTree": [
+   {
+    "path": "Configuracion.ini (VM server root, C:\\ao\\server-9ccd)",
+    "base": "585b5994aacc369838e644ada77399aa0813bdb367a019503d9e48563172a200",
+    "sha256": "1060ea77aa05d375000594a986ed6642fbbff59eeb72d892a07598a3dc66e13a",
+    "script": "tools/data-patches/apply-newbie-patches.py --config",
+    "doc": "docs/DATA-PATCHES.md#8",
+    "reason": "rates ExpMult=4, RecoleccionMult=2, OroMult=1 (Ariel, 21 Nov); not part of Recursos, not hashed by --verify"
    }
   ],
   "retired": [
@@ -107,8 +184,7 @@
     "path": "init/*_localindex.dat",
     "reason": "regenerated from the HOO-era Dat; regenerate from the pinned Dat (tools/generar_localindex.py) and add the result here as an active patch if quest text for quests 256..353 is wanted"
    }
-  ],
-  "format": "an active patch is { path, sha256, doc, reason }: that hash is accepted for that path instead of the pinned one"
+  ]
  },
  "knownGaps": {
   "note": "dangling references already present in the pinned data set (tools/data-integrity). Anything else fails the test. obj.inventoryIcon is keyed by object id (carried objects whose GrhIndex is not one 32x32 frame).",

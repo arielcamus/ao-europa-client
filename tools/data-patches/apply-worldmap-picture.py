@@ -8,10 +8,12 @@ interfaces") with the dungeons rearranged, while the grid was never updated: 87 
 the marker lands on an empty spot. The 043cdf20 picture is the one drawn for this grid (5 of 112 on black, small dark maps).
 Worlds 1 and 3 (847f4a23 too) match the grid: 0 cells on black.
 
-  apply-worldmap-picture.py [--assets <Recursos dir>] [--check | --restore]
+  apply-worldmap-picture.py [--assets <Recursos dir>] [--from <dir>] [--check | --restore]
 
 --assets   the client's AO_ASSETS folder (default: $AO_ASSETS)
 --check    report which picture each world has and how many mapped cells are on black; write nothing
+--from     take the 043cdf20 files from this folder instead of downloading them (same names, sha256 checked; used by
+           tools/data-patches/build-patched.mjs for offline builds)
 --restore  put the backed-up pictures (<file>.orig-worldmap) back
 
 Applying replaces interface/es_mapa2.bmp and en_mapa2.bmp with the 043cdf20 files (downloaded from github.com/ao-org/Recursos,
@@ -72,7 +74,7 @@ def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
     ap.add_argument('--assets', default=os.environ.get('AO_ASSETS'))
-    ap.add_argument('--check', action='store_true'); ap.add_argument('--restore', action='store_true')
+    ap.add_argument('--from', dest='source'); ap.add_argument('--check', action='store_true'); ap.add_argument('--restore', action='store_true')
     a = ap.parse_args()
     if not a.assets: sys.exit('--assets or AO_ASSETS is required')
     root = Path(a.assets).expanduser(); face = root / 'interface'
@@ -94,8 +96,9 @@ def main():
     for name in FILES:
         dest = face / name
         if dest.exists() and sha(dest) == GOOD_SHA: print(f'{name}: already the 043cdf20 picture'); continue
-        data = urllib.request.urlopen(URL.format(name), timeout=60).read()
-        if hashlib.sha256(data).hexdigest() != GOOD_SHA: sys.exit(f'{name}: downloaded file has an unexpected sha256, nothing written')
+        local = Path(a.source).expanduser() / name if a.source else None
+        data = local.read_bytes() if local and local.exists() else urllib.request.urlopen(URL.format(name), timeout=60).read()
+        if hashlib.sha256(data).hexdigest() != GOOD_SHA: sys.exit(f'{name}: {"local" if local and local.exists() else "downloaded"} file has an unexpected sha256, nothing written')
         backup = face / (name + BACKUP)
         if dest.exists() and not backup.exists(): shutil.copy2(dest, backup)
         tmp = face / (name + '.tmp-worldmap'); tmp.write_bytes(data); os.replace(tmp, dest)

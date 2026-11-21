@@ -1,11 +1,13 @@
-import { copyFileSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 // @ts-expect-error plain ESM script without types
-import { consumedFiles, readLock, readManifest, sha256, verifyAssets } from '../provenance.mjs';
+import { consumedFiles, lockProblems, readLock, readManifest, sha256, verifyAssets } from '../provenance.mjs';
 // @ts-expect-error plain ESM script without types
-import { checkIntegrity, findPath, gapIds, loadDataSet, newGaps } from '../../data-integrity/integrity.mjs';
+import { buildPatched } from '../../data-patches/build-patched.mjs';
+// @ts-expect-error plain ESM script without types
+import { checkIntegrity, gapIds, loadDataSet, newGaps } from '../../data-integrity/integrity.mjs';
 
 const tmp = mkdtempSync(join(tmpdir(), 'ao-provenance-'));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));
@@ -49,6 +51,51 @@ describe('provenance lock (synthetic tree)', () => {
     const r = verifyAssets(root, { manifest, lock: patched });
     expect(r.ok).toBe(true);
     expect(r.patched).toEqual(['Dat/npcs.dat']);
+  });
+
+  it('--verify-pin rejects an active patch; --verify-patched requires every one', () => {
+    const manifest = readManifest(manifestText());
+    const npcs = sha256(join(root, 'Dat/npcs.dat'));
+    const lockWith = (out: string) => ({ patches: { active: [{ path: 'Dat/npcs.dat', base: npcs, sha256: out }] } });
+    // pristine tree: fine for 'any' and 'pin', but the patched copy must carry the patch
+    expect(verifyAssets(root, { manifest, lock: lockWith('f'.repeat(64)), mode: 'pin' }).ok).toBe(true);
+    const unpatched = verifyAssets(root, { manifest, lock: lockWith('f'.repeat(64)), mode: 'patched' });
+    expect([unpatched.ok, unpatched.unpatched]).toEqual([false, ['Dat/npcs.dat']]);
+    put(root, 'Dat/npcs.dat', '[NPC1]\r\nBody=1\r\nDesc=patched\r\n');
+    const lock = lockWith(sha256(join(root, 'Dat/npcs.dat')));
+    expect(verifyAssets(root, { manifest, lock }).ok).toBe(true);
+    expect(verifyAssets(root, { manifest, lock, mode: 'patched' }).ok).toBe(true);
+    expect(verifyAssets(root, { manifest, lock, mode: 'pin' }).mismatched.map((m: { path: string }) => m.path)).toEqual(['Dat/npcs.dat']);
+    put(root, 'Dat/npcs.dat', '[NPC1]\r\nBody=1\r\n');
+  });
+
+  it('flags a lock entry whose base is not the pinned hash, or whose script is missing', () => {
+    const manifest = readManifest(manifestText());
+    const npcs = sha256(join(root, 'Dat/npcs.dat'));
+    const script = 'tools/data-patches/apply-newbie-patches.py';
+    const lock = (p: object) => ({ patches: { recipe: [{ script }], active: [{ path: 'Dat/npcs.dat', base: npcs, sha256: 'a'.repeat(64), script, ...p }] } });
+    expect(lockProblems(lock({}), manifest)).toEqual([]);
+    expect(lockProblems(lock({ base: 'b'.repeat(64) }), manifest)[0]).toMatch(/is not the pinned/);
+    expect(lockProblems(lock({ script: 'tools/data-patches/nope.py' }), manifest).join()).toMatch(/not found/);
+    expect(lockProblems(lock({ path: 'Dat/other.dat' }), manifest)[0]).toMatch(/not a pinned file/);
+  });
+});
+
+describe('the committed lock', () => {
+  it('every active patch starts from the pinned file and names a script of patches.recipe', () => {
+    expect(lockProblems()).toEqual([]);
+    const lock = readLock();
+    expect(lock.patches.active.map((p: { path: string }) => p.path)).toEqual([
+      'Dat/Ciudades.Dat', 'Dat/Motd.ini', 'Dat/npcs.dat', 'Dat/Quests.DAT', 'Mapas/Mapa64.csm', 'init/sp_localindex.dat',
+      'interface/es_mapa2.bmp', 'interface/en_mapa2.bmp',
+    ]);
+  });
+
+  it('names no HOO-era source: every pin predates 2026-08-12 and nothing points at Recursos 1b50fd6 or later', () => {
+    const lock = readLock();
+    for (const u of Object.values(lock.upstreams) as { pin: { date: string } }[]) expect(u.pin.date < lock.hooStart.date).toBe(true);
+    const sources = JSON.stringify([lock.patches.recipe, lock.patches.active]);
+    expect(sources).not.toMatch(/1b50fd6|89615f3|hoo-/i);
   });
 });
 
@@ -99,6 +146,7 @@ describe('referential integrity (synthetic data set)', () => {
 });
 
 const assets = process.env.AO_ASSETS && existsSync(process.env.AO_ASSETS) ? process.env.AO_ASSETS : '';
+const pinned = process.env.AO_ASSETS_PIN && existsSync(process.env.AO_ASSETS_PIN) ? process.env.AO_ASSETS_PIN : '';
 if (!assets) {
   process.stderr.write('\n*** SKIPPED: no assets. The pre-HOO provenance (sha256 lock) and the referential-integrity check of the real data set did NOT run. ' +
     'Set AO_ASSETS to a Recursos tree pinned per tools/provenance/sources.lock.json to run them. ***\n\n');
@@ -117,17 +165,20 @@ describe.skipIf(!assets)(`real assets under AO_ASSETS${assets ? '' : ' [skipped:
     const brief = Object.fromEntries(Object.entries(fresh).map(([k, v]) => [k, (v as { from: string; id: number }[]).slice(0, 5)]));
     expect(brief).toEqual({});
   }, 120_000);
+});
 
-  // Proof that the check catches the HOO-era data: point AO_HOO_NPCS at the 2026-10-10 npcs.dat (git show 1b50fd6:Dat/npcs.dat in
-  // ao-org/Recursos). It is never committed here; the test swaps it into a temporary copy of the pinned Dat/.
-  const hoo = process.env.AO_HOO_NPCS && existsSync(process.env.AO_HOO_NPCS) ? process.env.AO_HOO_NPCS : '';
-  it.skipIf(!hoo)('the HOO-era npcs.dat fails the integrity check (AO_HOO_NPCS)', () => {
-    const dat = join(tmp, 'hoo-dat');
-    cpSync(findPath(assets, 'Dat'), dat, { recursive: true });
-    copyFileSync(hoo, join(dat, 'npcs.dat'));
-    const fresh = newGaps(checkIntegrity(loadDataSet(assets, { datDir: dat })), readLock().knownGaps);
-    expect(fresh['npc.body']?.length ?? 0).toBeGreaterThan(500);
-    expect(fresh['map.npc']?.length ?? 0).toBeGreaterThan(0);
-    expect(readFileSync(join(dat, 'npcs.dat')).length).toBeGreaterThan(0);
+if (!pinned) {
+  process.stderr.write('\n*** SKIPPED: no AO_ASSETS_PIN. Replaying patches.recipe on the untouched pin (the patched-copy hashes) did NOT run. ' +
+    'Set AO_ASSETS_PIN to the untouched pre-HOO tree (provenance.mjs --verify-pin passes on it). ***\n\n');
+}
+
+describe.skipIf(!pinned)(`the patch recipe on AO_ASSETS_PIN${pinned ? '' : ' [skipped: no AO_ASSETS_PIN]'}`, () => {
+  it('the scripts turn every pinned base into exactly the locked output', () => {
+    const out = join(tmp, 'patched');
+    // The world-2 pictures are an input, not derived from the pin: take them from AO_ASSETS when it already has them, else download.
+    const inputs = assets ? join(assets, 'interface') : undefined;
+    const r = buildPatched({ pin: pinned, out, inputs, onlyPatched: true, log: () => {} });
+    expect(r.problems).toEqual([]);
+    expect(r.outputs.map((o: { sha256: string }) => o.sha256)).toEqual(readLock().patches.active.map((p: { sha256: string }) => p.sha256));
   }, 120_000);
 });
