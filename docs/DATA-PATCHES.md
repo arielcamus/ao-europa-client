@@ -115,3 +115,32 @@ Backup first: `.backup C:\ao\Database-before-combat-items.db` (VM). Reach the CL
 - **GM spawns**: `/ACC` (CreateNPC, no respawn) near `Aotest`. 🔴 `/RMATA` without respawn (`KillNPCNoRespawn`) kills the *selected* NPC, native ones included: a cleanup loop removed 3 native snakes on map 2 and the priest Juan XXI (map 1, 78,66) until the next server start. They were replaced with `/RACC` (spawn with respawn) at nearly the same tiles (snakes at 48,40, 48,64 and 39,70 / 37,70 on map 2; the priest at 77,66). The recorder now only kills NPCs its own run spawned.
 - Admin NPC safety: NPCs ignore GMs (`AI_NPC.EsObjetivoValido`, `MODULO_NPCs.CanAttackUser`) unless `/IGNORADO` (packet 204) toggled `AdminPerseguible`; even then a spawned snake did not attack `Aotest`. Real NPC attacks on a player come from the earlier `combat-spells-2` recordings (`NPCHitUser`, `NPCKillUser`).
 - **Blind, dumb, stun cannot be reproduced with the current data**: no spell has `Ceguera=`/`Estupidez=`, no object has `Estupidiza` or a ranged-stun `Subtipo`/`Porcentaje` weapon (`SistemaCombate.UserDañoEspecial` is the only `WriteStunStart`/`WriteDumb` path for players besides spells). They stay injected in tests.
+
+# Server data patches on the pre-HOO 9ccd server (`C:\ao\server-9ccd`)
+
+## 6. Forgat home city pointed at open sea (new characters stuck on map 517)
+Applied 2026-11-21 11:44 to the live 9ccd server's `C:\ao\server-9ccd\Dat\Ciudades.Dat` (the pinned file from Recursos `2bfa51e`). The
+pinned server forces every new character's home to Forgat (`TCP.ConnectNewUser`, `.Hogar = cForgat`, TCP.bas:494), and the pinned
+`[Forgat]` section put the spawn (`MAPA/X/Y` 517:48,65) and resurrection (`MapaResu/ResuX/ResuY` 517:65,69) on map 517 "Alta Mar": all
+10000 tiles are water, no land, so the server refuses every step. A stale entry: the city is maps 750-759 ("Puerto de Forgat",
+"Ciudad de Forgat"); map 751 is the only one with zone CIUDAD and its 20 NPCs (bank, priestess, shops).
+
+Patch (only these six keys of `[Forgat]`; file length unchanged, 2357 bytes):
+
+| Key | Pinned | Patched |
+| --- | --- | --- |
+| `MAPA`, `X`, `Y` | 517, 48, 65 | 751, 60, 57 (central square) |
+| `MapaResu`, `ResuX`, `ResuY` | 517, 65, 69 | 751, 65, 70 (two tiles south of Xanthe, Sacerdotisa de Forgat, at 65,68) |
+
+`MAPAVIAJE/ViajeX/ViajeY` (517:48,65) and `Mapas=517,518,153` are left as pinned: no obvious dock to point the boat arrival at.
+Tile check (pinned `Mapa751.csm`, `parseMap` plus the server's `General.HayAgua` graphic ranges, NPC and tile-exit sections read as
+in `FileIO.CargarMapaFormatoCSM`): both tiles and their 3x3 neighbourhoods are not blocked, not water, trigger 0, no tile exit, no NPC,
+and both sit in the same 4461-tile walkable region. sha256 pinned `a0bdd6a9d9e0f83e1756c588d70e7b60a9f784702c8423086564d68169dc3103`,
+patched `3da1206955c040bff1613f70ea8657a46759b9e04bffd3aaf2a506d858d27e56` (allowlisted in `tools/provenance/sources.lock.json`
+`patches.active`). Only the VM copy is patched; the client does not read `Ciudades.Dat`.
+
+Characters created before the patch keep their saved position on map 517. Move one with the server stopped, or while it is logged out:
+`update user set pos_map=751,pos_x=60,pos_y=57 where name='<name>' and is_logged=0;`.
+
+Undo: stop the server, `Copy-Item C:\ao\server-9ccd\Dat\Ciudades.Dat.bak-forgat-20261121-1144 C:\ao\server-9ccd\Dat\Ciudades.Dat`,
+start `C:/ao/start-server.ps1` (the server reads `Ciudades.Dat` only at start-up; load ~5 min).

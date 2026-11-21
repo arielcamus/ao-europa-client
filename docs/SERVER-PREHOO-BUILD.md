@@ -5,14 +5,46 @@ Decision (Ariel, 2026-11-21 10:20): the base becomes the original VB6 server reb
 (Recursos `2bfa51e`). Post-pin content that can be drawn comes back later as documented patches. This page covers the prep;
 the twinBASIC compile and the swap are manual steps.
 
-**Status 2026-11-21: prepared, not built, not swapped.** Everything sits in `C:\ao\server-9ccd` on the VM. The exact GUI and swap
-commands are in `C:\ao\server-9ccd\BUILD-STEPS.txt` (summarised below). The live server (`C:\ao\server`, caac3133, port 7667) was
-not touched.
+**Status: live since 2026-11-21 11:40 CET** (swap approved by Ariel at 11:32; Forgat spawn patch and restart 11:45). The live
+server on port 7667 is `C:\ao\server-9ccd\server.exe` (a copy of `server-9ccd.exe`, sha256 `77093c2d...4fc56220`). Load time from
+start to the 7667 listener: ~3 to 4.5 min (11:35:54 to 11:40:15, then 11:45:03 to 11:47:53). The previous caac3133 server is untouched in `C:\ao\server`.
 
-## Next step
+## The swap as done (2026-11-21)
 
-Open `C:\ao\server-9ccd\Server.VBP` in twinBASIC and build it to `C:\ao\server-9ccd\server-9ccd.exe` (section "Build"), then run it
-on port 7697 next to the live server and log in.
+One deviation from `BUILD-STEPS.txt` section C: step 6 (rename `C:\ao\server` to `server-caac-<TS>` and `server-9ccd` to `server`)
+failed with "being used by another process" on both directories (the twinBASIC IDE, task `AOTwinBASIC`, had both projects open).
+Instead `C:\ao\start-server.ps1` now points at `C:\ao\server-9ccd\server.exe` (working directory `C:\ao\server-9ccd`); it
+re-registers the `AOClassicServer` task with that action. The exe keeps the name `server.exe`. The rename can be done later, once
+twinBASIC is closed: stop the server, rename both dirs, restore `start-server.ps1.bak-swap-20261121-1134`, start.
+
+1. Backups: `C:\ao\Database-before-9ccd-swap-20261121-1134.db` (`.backup` while running) and, after the stop,
+   `C:\ao\server\Database.db.bak-swap-20261121-1134` (file copy); `C:\ao\start-server.ps1.bak-swap-20261121-1134`.
+2. Stopped caac3133 (pid 10460) with `Stop-ScheduledTask AOClassicServer`, then by pid.
+3. Fresh `.backup` of the live DB into `C:\ao\server-9ccd\Database.db` (the 7697 test copy is now `Database.db.test-copy`), then
+   `update spell set spell_id = 0 where spell_id = 352;`: **10 rows** (slot 3 of user ids 4, 15, 16, 18, 19, 20, 21, 22, 23, 24;
+   22-24 were created after the prep). Undo: `update spell set spell_id = 352 where number = 3 and spell_id = 0 and user_id in
+   (4,15,16,18,19,20,21,22,23,24);`.
+4. `Server.ini` `StartPort=7667` (`[Admines]` `Admin2=Aotest|aotest@local.test` kept, `DatPath=.\Dat\`).
+5. `Ciudades.Dat`: Forgat spawn moved off the open sea, see [DATA-PATCHES.md section 6](DATA-PATCHES.md).
+6. Verified: one `server.exe` (the 9ccd one) owns 7667; login answers (packet ids 1, 199, then the world); Ullathorpe sastre
+   shopkeepers (Amarie, Rethor) appear around Aotesta; Player (account `ariel@local.test`) is in the DB; a new character (`Forgatprueba`, test account
+   `swap-forgat@local.test`) spawns on map 751 at 60,57 and walks (6/6 steps accepted, checked with `RequestPositionUpdate`).
+   Aotest is still in `[Admines]`; the 9ccd server logged its GM command `/MOD MANA 0` to the per-GM `[Aotest]`
+   log (event id 16), so it is a GM. A direct Aotest login was refused ("already connected") because a playthrough agent held it.
+   Event log after start: `ES.LoadBalance` subscript out of range and `[Errores.log] Missing file UnderworldMapPool.Dat` (both
+   expected, see "Data the 9ccd code reads that the pin lacks"), and error 404 for `..\Recursos\Mapas\Mapa843.csm` (no such file in the
+   pinned maps; the server keeps loading).
+7. Play site (`~/Projects/ao-client-play/play.sh`, local) reads `AO_ASSETS=$HOME/Projects/ao-reference/Recursos-prehoo`
+   (backup `play.sh.bak-swap-20261121-1134`).
+
+## Rollback (from the layout above)
+
+1. `Stop-ScheduledTask AOClassicServer`, then `Stop-Process -Id <pid of C:\ao\server-9ccd\server.exe>`.
+2. Keep 9ccd progress: `C:\ao\sqlite-cli\sqlite3.exe C:\ao\server-9ccd\Database.db ".backup C:/ao/Database-after-9ccd-<TS2>.db"`.
+3. Pick the DB for caac: either that file (keeps 9ccd progress; run the spell 352 undo above if wanted) or
+   `C:\ao\Database-before-9ccd-swap-20261121-1134.db` (exact pre-swap state); copy it over `C:\ao\server\Database.db`.
+4. `Copy-Item C:\ao\start-server.ps1.bak-swap-20261121-1134 C:\ao\start-server.ps1`, then run it (caac loads in ~2.5 min).
+5. Mac: in `~/Projects/ao-client-play`, `cp play.sh.bak-swap-20261121-1134 play.sh && ./play.sh stop && ./play.sh start`.
 
 ## What is in `C:\ao\server-9ccd`
 
