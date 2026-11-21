@@ -5,7 +5,10 @@
 //   node tools/coverage/build-map.mjs            rebuild from the snapshot
 //   node tools/coverage/build-map.mjs --include-branches   also scan origin/feat/* branches and PRs (not deterministic)
 //   node tools/coverage/build-map.mjs --check    exit 1 if the committed outputs are stale or invalid
-//   node tools/coverage/build-map.mjs --refresh-vb6   re-read the snapshot from the VM and the reference client
+//   node tools/coverage/build-map.mjs --refresh-vb6   re-read the VM-build snapshot (vb6-snapshot/) from the VM and the reference client
+//   node tools/coverage/build-map.mjs --refresh-pinned   re-read the pinned snapshot (vb6-snapshot-pinned/) from git at the pre-HOO pins
+//     of tools/provenance/sources.lock.json (AO_SERVER_REPO / AO_CLIENT_REPO default to ~/Projects/ao-reference clones)
+// The map is computed against the PINNED snapshot (pre-HOO code); packets that only exist in the VM build are listed as post-pin.
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -14,7 +17,8 @@ import { GROUPS, PACKAGES, GROUP_PACKAGE, classifyPacket } from './classify.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..');
-const SNAP = join(HERE, 'vb6-snapshot');
+const SNAP = join(HERE, 'vb6-snapshot-pinned'); // pre-HOO server/client code (tools/provenance/sources.lock.json)
+const VM_SNAP = join(HERE, 'vb6-snapshot'); // what the VM server.exe was compiled from (post-pin, contains HOO packets)
 
 const git = (args, opts = {}) => {
   try { return execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 << 20, stdio: ['ignore', 'pipe', 'ignore'], ...opts }); }
@@ -22,7 +26,7 @@ const git = (args, opts = {}) => {
 };
 
 // ---------- VB6 snapshot ----------
-const snap = (f) => readFileSync(join(SNAP, f), 'latin1').replace(/\r/g, '');
+const snap = (f, dir = SNAP) => readFileSync(join(dir, f), 'latin1').replace(/\r/g, '');
 
 export function parseEnums(text = snap('PacketId.enums.bas')) {
   const out = { s2c: [], c2s: [] };
@@ -231,7 +235,21 @@ export function computeCoverage({ refs = discoverRefs() } = {}) {
     return { id, title, scope, packetIds: ps.map((p) => `${p.direction}:${p.id}`), packetNames: ps.map((p) => `${p.direction === 's2c' ? 'S' : 'C'}${p.id} ${p.name}`), forms: fs.map((f) => f.name) };
   });
 
-  return { refs: refs.map(({ name, ref, sha, pr }) => ({ name, ref, sha, pr })), headline, groups, packets, forms: outForms, duplicates, mainOverlap, workPackages, problems };
+  // packets of the VM build (post-pin) that the pinned code does not have, and names whose id moved
+  const vmEnums = parseEnums(snap('PacketId.enums.bas', VM_SNAP));
+  const postPin = [];
+  for (const dir of ['s2c', 'c2s']) {
+    const pinned = new Map(enums[dir].map((p) => [p.name, p.id]));
+    for (const p of vmEnums[dir]) {
+      if (!pinned.has(p.name)) postPin.push({ direction: dir, vmId: p.id, name: p.name, kind: 'only post-pin' });
+      else if (pinned.get(p.name) !== p.id) postPin.push({ direction: dir, vmId: p.id, pinnedId: pinned.get(p.name), name: p.name, kind: 'id moved' });
+    }
+  }
+  // our codecs registered on ids/names that exist only post-pin (HOO or later classic-branch packets)
+  const postPinNames = new Set(postPin.filter((p) => p.kind === 'only post-pin').map((p) => `${p.direction}:${p.name.toLowerCase()}`));
+  for (const r of refs) for (const [k, e] of scans[r.name]) if (postPinNames.has(`${e.dir}:${e.name.toLowerCase()}`) || postPinNames.has(`${e.dir}:${e.name.toLowerCase().replace(/^hoo/, '')}`)) problems.push(`post-pin packet with a codec on ${r.name}: ${k} ${e.name} (not in the pinned pre-HOO code)`);
+
+  return { refs: refs.map(({ name, ref, sha, pr }) => ({ name, ref, sha, pr })), headline, groups, packets, forms: outForms, duplicates, mainOverlap, workPackages, postPin, problems };
 }
 
 // ---------- render ----------
@@ -256,6 +274,11 @@ export function renderMarkdown(c) {
   L.push('| Id | Direction | Name | Branches |', '|---|---|---|---|');
   for (const d of c.duplicates) L.push(`| ${d.id} | ${d.direction} | ${d.name} | ${d.branches.map((b) => `\`${b}\``).join(', ')} |`);
   L.push('', `Ids only: ${c.duplicates.map((d) => d.id).join(', ')}.`, '');
+  L.push('## Post-pin packets (not in the pre-HOO code)', '');
+  L.push('The map above is computed against the pinned pre-HOO server and client code (`tools/provenance/sources.lock.json`). These ids exist only in the VM build (`tools/coverage/vb6-snapshot/`, compiled from a post-pin server): HOO packets and later classic-branch additions. Do not implement them.', '');
+  L.push('| Direction | VM id | Name | Kind |', '|---|---|---|---|');
+  for (const p of c.postPin) L.push(`| ${p.direction} | ${p.vmId} | ${p.name} | ${p.kind}${p.pinnedId !== undefined ? ` (pinned id ${p.pinnedId})` : ''} |`);
+  L.push('');
   if (c.problems.length) { L.push('## Problems found by the scan', ''); for (const p of c.problems) L.push(`- ${p}`); L.push(''); }
   L.push('## (b) VB6 forms', '');
   L.push('Status is evidence-based: `covered` means every file listed in `tools/coverage/forms.json` for the form exists on the scanned ref; `partial` says what is missing; `not started` carries a class (a player-facing, b account server / not in PYMMO=0, c AO20 premium or online extra, d never opened by the classic client).', '');
@@ -298,22 +321,44 @@ function refreshVb6() {
   const ref = process.env.AO_REFERENCE || join(process.env.HOME, 'Projects/ao-reference/argentum-online-client-classic/CODIGO');
   const S = 'C:\\ao\\server\\Codigo';
   const ssh = (cmd) => execFileSync(vm, [cmd], { encoding: 'latin1', maxBuffer: 64 << 20 }).replace(/\r/g, '');
-  const pid = ssh(`type ${S}\\PacketId.bas`); writeFileSync(join(SNAP, 'PacketId.enums.bas'), pid.slice(pid.indexOf('Public Enum ServerPacketID')), 'latin1');
+  const pid = ssh(`type ${S}\\PacketId.bas`); writeFileSync(join(VM_SNAP, 'PacketId.enums.bas'), pid.slice(pid.indexOf('Public Enum ServerPacketID')), 'latin1');
   const sp = ssh(`type ${S}\\Protocol.bas`).split('\n'); const keep = [];
   sp.forEach((l, i) => { if (/Case ClientPacketID\./.test(l)) { keep.push(l.trim()); const n = sp.slice(i + 1, i + 4).find((x) => /Call Handle/.test(x)); if (n) keep.push(n.trim()); } });
-  writeFileSync(join(SNAP, 'server-dispatch.txt'), keep.join('\n') + '\n', 'latin1');
-  writeFileSync(join(SNAP, 'server-writers.txt'), [...new Set([...ssh(`type ${S}\\Protocol_Writes.bas`).matchAll(/Sub (Write\w+)/g)].map((m) => m[1]))].sort().join('\n') + '\n');
+  writeFileSync(join(VM_SNAP, 'server-dispatch.txt'), keep.join('\n') + '\n', 'latin1');
+  writeFileSync(join(VM_SNAP, 'server-writers.txt'), [...new Set([...ssh(`type ${S}\\Protocol_Writes.bas`).matchAll(/Sub (Write\w+)/g)].map((m) => m[1]))].sort().join('\n') + '\n');
   const cp = readFileSync(join(ref, 'Protocol.bas'), 'latin1');
-  writeFileSync(join(SNAP, 'client-dispatch.txt'), cp.split('\n').filter((l) => /Case ServerPacketID|Call Handle/.test(l)).map((l) => l.trim()).join('\n') + '\n', 'latin1');
-  writeFileSync(join(SNAP, 'client-writers.txt'), [...new Set([...readFileSync(join(ref, 'Protocol_Writes.bas'), 'latin1').matchAll(/Sub (Write\w+)/g)].map((m) => m[1]))].sort().join('\n') + '\n');
+  writeFileSync(join(VM_SNAP, 'client-dispatch.txt'), cp.split('\n').filter((l) => /Case ServerPacketID|Call Handle/.test(l)).map((l) => l.trim()).join('\n') + '\n', 'latin1');
+  writeFileSync(join(VM_SNAP, 'client-writers.txt'), [...new Set([...readFileSync(join(ref, 'Protocol_Writes.bas'), 'latin1').matchAll(/Sub (Write\w+)/g)].map((m) => m[1]))].sort().join('\n') + '\n');
   const fl = execFileSync('sh', ['-c', `cd "${ref}" && for f in *.frm; do echo "$(basename $f .frm) $(wc -l < $f | tr -d ' ')"; done`], { encoding: 'utf8' });
-  writeFileSync(join(SNAP, 'forms.txt'), fl);
+  writeFileSync(join(VM_SNAP, 'forms.txt'), fl);
+}
+
+// ---------- refresh the pinned snapshot from git ----------
+function refreshPinned() {
+  const lock = JSON.parse(readFileSync(join(ROOT, 'tools', 'provenance', 'sources.lock.json'), 'utf8'));
+  const ref = join(process.env.HOME, 'Projects/ao-reference');
+  const serverRepo = process.env.AO_SERVER_REPO || join(ref, 'argentum-online-server-classic');
+  const clientRepo = process.env.AO_CLIENT_REPO || join(ref, 'argentum-online-client-classic');
+  const s = lock.upstreams['argentum-online-server-classic'].pin.sha, c = lock.upstreams['argentum-online-client-classic'].pin.sha;
+  const show = (repo, sha, path) => execFileSync('git', ['-C', repo, 'show', `${sha}:${path}`], { encoding: 'latin1', maxBuffer: 64 << 20 }).replace(/\r/g, '');
+  mkdirSync(SNAP, { recursive: true });
+  const pid = show(serverRepo, s, 'Codigo/PacketId.bas'); writeFileSync(join(SNAP, 'PacketId.enums.bas'), pid.slice(pid.indexOf('Public Enum ServerPacketID')), 'latin1');
+  const sp = show(serverRepo, s, 'Codigo/Protocol.bas').split('\n'); const keep = [];
+  sp.forEach((l, i) => { if (/Case ClientPacketID\./.test(l)) { keep.push(l.trim()); const n = sp.slice(i + 1, i + 4).find((x) => /Call Handle/.test(x)); if (n) keep.push(n.trim()); } });
+  writeFileSync(join(SNAP, 'server-dispatch.txt'), keep.join('\n') + '\n', 'latin1');
+  writeFileSync(join(SNAP, 'server-writers.txt'), [...new Set([...show(serverRepo, s, 'Codigo/Protocol_Writes.bas').matchAll(/Sub (Write\w+)/g)].map((m) => m[1]))].sort().join('\n') + '\n');
+  const cp = show(clientRepo, c, 'CODIGO/Protocol.bas');
+  writeFileSync(join(SNAP, 'client-dispatch.txt'), cp.split('\n').filter((l) => /Case ServerPacketID|Call Handle/.test(l)).map((l) => l.trim()).join('\n') + '\n', 'latin1');
+  writeFileSync(join(SNAP, 'client-writers.txt'), [...new Set([...show(clientRepo, c, 'CODIGO/Protocol_Writes.bas').matchAll(/Sub (Write\w+)/g)].map((m) => m[1]))].sort().join('\n') + '\n');
+  const frms = execFileSync('git', ['-C', clientRepo, 'ls-tree', '--name-only', c, 'CODIGO/'], { encoding: 'utf8' }).split('\n').filter((f) => /\.frm$/i.test(f)).sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+  writeFileSync(join(SNAP, 'forms.txt'), frms.map((f) => `${f.slice(7, -4)} ${show(clientRepo, c, f).split('\n').length - 1}`).join('\n') + '\n');
 }
 
 // ---------- CLI ----------
 const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (isMain) {
   if (process.argv.includes('--refresh-vb6')) refreshVb6();
+  if (process.argv.includes('--refresh-pinned')) refreshPinned();
   const c = computeCoverage({ refs: discoverRefs({ includeBranches: process.argv.includes('--include-branches') }) });
   const md = renderMarkdown(c);
   const docs = join(ROOT, 'docs'); mkdirSync(docs, { recursive: true });

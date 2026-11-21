@@ -10,8 +10,8 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 512 of 523 = 97.9%.** Merged on main only: 512 = 97.9%.
-  - Server to client: 202 of 207. Client to server: 310 of 316. Packets with a recorded VB6 fixture: 262.
+- **Packets covered (merged + open branches): 512 of 513 = 99.8%.** Merged on main only: 512 = 99.8%.
+  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 262.
 - **Forms covered: 53 of 86 = 61.6%** (5 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
@@ -34,7 +34,7 @@ Scanned refs: `main`
 | 14 | Fishing / mining / lumber (work skills) | 10/10 | 100% | 10 | 0/0 | n/a | 0 |
 | 15 | Options / keybinds | 2/2 | 100% | 2 | 3/4 | 75% | 0 |
 | 16 | Minimap / world map | 2/2 | 100% | 2 | 0/1 | 0% | 1 |
-| 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 49/60 | 81.7% | 49 | 2/13 | 15.4% | 0 |
+| 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 49/50 | 98% | 49 | 2/13 | 15.4% | 0 |
 | 18 | GM / admin (lowest) | 142/142 | 100% | 142 | 9/13 | 69.2% | 0 |
 
 ## DUPLICATES
@@ -45,6 +45,23 @@ Packet ids (direction + id) with a codec on more than one open branch. Each bran
 |---|---|---|---|
 
 Ids only: .
+
+## Post-pin packets (not in the pre-HOO code)
+
+The map above is computed against the pinned pre-HOO server and client code (`tools/provenance/sources.lock.json`). These ids exist only in the VM build (`tools/coverage/vb6-snapshot/`, compiled from a post-pin server): HOO packets and later classic-branch additions. Do not implement them.
+
+| Direction | VM id | Name | Kind |
+|---|---|---|---|
+| s2c | 203 | RemortState | only post-pin |
+| s2c | 204 | RemortResult | only post-pin |
+| s2c | 205 | HooTargetedSpellCastResult | only post-pin |
+| s2c | 206 | HooHouseDoorActionResult | only post-pin |
+| s2c | 207 | AutoCombatState | only post-pin |
+| c2s | 312 | HooClientCapabilities | only post-pin |
+| c2s | 313 | RequestRemort | only post-pin |
+| c2s | 314 | HooTargetedSpellCast | only post-pin |
+| c2s | 315 | HooHouseDoorAction | only post-pin |
+| c2s | 316 | ToggleAutoCombat | only post-pin |
 
 ## (b) VB6 forms
 
@@ -400,11 +417,6 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 200 | ChangeSkinSlot | client Protocol.bas:HandleChangeSkinSlot | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 201 | GuildConfig | client Protocol.bas:HandleGuildConfig | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 202 | ShowPickUpObj | client Protocol.bas:HandleShowPickUpObj | items | merged | `main:packages/protocol/src/packets/items.ts` | no |
-| 203 | RemortState | (none in dispatcher) | extras | not started |  | no |
-| 204 | RemortResult | (none in dispatcher) | extras | not started |  | no |
-| 205 | HooTargetedSpellCastResult | (none in dispatcher) | extras | not started |  | no |
-| 206 | HooHouseDoorActionResult | (none in dispatcher) | extras | not started |  | no |
-| 207 | AutoCombatState | client Protocol.bas:HandleAutoCombatState | extras | not started |  | no |
 
 ### Client to server
 
@@ -721,11 +733,6 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 309 | PetFollowAll | server Protocol.bas:HandlePetFollowAll | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | yes |
 | 310 | AntiMacroMessage | server Protocol.bas:HandleAntiMacroMessage | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 311 | ModifyCastleWhiteList | server Protocol.bas:HandleModifyCastleWhiteList | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
-| 312 | HooClientCapabilities | server Protocol.bas:HandleHooClientCapabilities | extras | not started |  | no |
-| 313 | RequestRemort | server Protocol.bas:HandleRequestRemort | extras | not started |  | no |
-| 314 | HooTargetedSpellCast | server Protocol.bas:HandleHooTargetedSpellCast | extras | not started |  | no |
-| 315 | HooHouseDoorAction | server Protocol.bas:HandleHooHouseDoorAction | extras | not started |  | no |
-| 316 | ToggleAutoCombat | server Protocol.bas:HandleToggleAutoCombat | extras | not started |  | no |
 
 ## Next work packages
 
@@ -805,7 +812,7 @@ Smith, carpenter, alchemy, tailor, crafting window, fishing, mining, lumber.
 
 Options forms, custom keys, hotkeys, events, battlegrounds, duels, premium shop, remort.
 
-- Packets (11): S203 RemortState, S204 RemortResult, S205 HooTargetedSpellCastResult, S206 HooHouseDoorActionResult, S207 AutoCombatState, C307 ChangeSkinSlot, C312 HooClientCapabilities, C313 RequestRemort, C314 HooTargetedSpellCast, C315 HooHouseDoorAction, C316 ToggleAutoCombat
+- Packets (1): C307 ChangeSkinSlot
 - Forms (12): frmSkins, frmEligeAlineacion, frmMasOpciones, frmCollectibleCard, frmCreateBattleground, frmShop, frmShopPjsAO20, frmTransferChar, frmTransferChar2FA, frmPatchNotes, frmNoticia, frmForo
 
 ### wp12: GM / admin (last)
