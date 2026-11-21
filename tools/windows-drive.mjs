@@ -11,17 +11,21 @@ export async function open({ email, password, character, port = process.env.AO_W
   const page = await browser.newPage({ viewport: { width: 1024, height: 768 } });
   const problems = [];
   page.on('pageerror', e => problems.push(e.message)); page.on('console', m => { if (m.type() === 'error') problems.push(m.text()); });
-  await page.goto(`http://127.0.0.1:${port}/`);
-  await page.locator('#email').fill(email); await page.locator('#password').fill(password);
-  await page.locator('#connect').click();
-  // The account screen lists the characters; pick one by name when asked (the first otherwise).
-  await page.waitForTimeout(1500);
-  const entered = await page.locator('#viewport[data-rendered="true"]').waitFor({ timeout: 4000 }).then(() => true).catch(() => false);
-  if (!entered && character) {
-    await page.locator(`.cs-slot-hit[aria-label="${character}"]`).click(); await page.waitForTimeout(500);
+  // A character the server still believes online (a recorder or a browser that just closed) is refused: retry the whole login a few times.
+  for (let attempt = 0; attempt < 5; attempt++) {
+    await page.goto(`http://127.0.0.1:${port}/`);
+    await page.locator('#email').fill(email); await page.locator('#password').fill(password);
+    await page.locator('#connect').click();
+    await page.waitForTimeout(1500);
+    const entered = await page.locator('#viewport[data-rendered="true"]').waitFor({ timeout: 4000 }).then(() => true).catch(() => false);
+    if (entered || !character) { if (!entered) { console.log('account screen: no direct login'); await page.screenshot({ path: 'artifacts/screenshots/windows-account.png' }); } break; }
+    await page.locator(`.cs-slot-hit[aria-label="${character}"]`).click().catch(() => {}); await page.waitForTimeout(500);
     await page.mouse.click(685, 729); // JUGAR
-    await page.locator('#viewport[data-rendered="true"]').waitFor({ timeout: 40_000 }).catch(async error => { await page.screenshot({ path: 'artifacts/screenshots/windows-enter-failed.png' }); throw error; });
-  } else if (!entered) { console.log('account screen: no direct login; screenshot account.png'); await page.screenshot({ path: 'artifacts/screenshots/windows-account.png' }); }
+    const ok = await page.locator('#viewport[data-rendered="true"]').waitFor({ timeout: 25_000 }).then(() => true).catch(() => false);
+    if (ok) break;
+    if (attempt === 4) { await page.screenshot({ path: 'artifacts/screenshots/windows-enter-failed.png' }); throw new Error(`could not enter as ${character}`); }
+    await page.waitForTimeout(12_000);
+  }
   mkdirSync('artifacts/screenshots', { recursive: true });
   return {
     browser, page, problems,

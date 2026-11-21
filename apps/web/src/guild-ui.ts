@@ -88,8 +88,8 @@ export class GuildUI {
     const guild = session.guild;
     const win = this.open('brief', { id: 'frm-guild-brief', art: 'ventanaclanes_detalles', size: [300, 295], title: 'Detalles del clan' }, session, g => g.closeDetails());
     const fields = {
-      name: win.label('', [8, 18, 283, 13], 'vb-center vb-bold'), founder: win.label('', [56, 69.3, 51, 13]), creation: win.label('', [173, 70.3, 93, 13]),
-      leader: win.label('', [67, 109.3, 29, 13]), members: win.label('', [194, 109.3, 51, 13]), alignment: win.label('', [55, 149.3, 53, 13]), level: win.label('', [187, 149.3, 65, 13]),
+      name: win.label('', [8, 18, 283, 13], 'vb-center vb-bold'), founder: win.label('', [56, 69.3, 51, 13], 'vb-autosize'), creation: win.label('', [173, 70.3, 93, 13], 'vb-autosize'),
+      leader: win.label('', [67, 109.3, 29, 13], 'vb-autosize'), members: win.label('', [194, 109.3, 51, 13], 'vb-autosize'), alignment: win.label('', [55, 149.3, 53, 13], 'vb-autosize'), level: win.label('', [187, 149.3, 65, 13], 'vb-autosize'),
     };
     const description = win.input([43.3, 186.7, 213.3, 50], { multiline: true, readOnly: true });
     win.button('boton-solicitaringreso', [42, 248, 185, 25], 'Solicitar ingreso', () => guild.startApplication());
