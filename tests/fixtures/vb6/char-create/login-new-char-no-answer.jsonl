@@ -1,0 +1,4 @@
+{"t_ms":67,"dir":"s2c","id":1,"name":"Connected","hex":"010001010a0102030405060708090a"}
+{"t_ms":68,"dir":"c2s","id":305,"name":"LoginAccount","hex":"3101"}
+{"t_ms":92,"dir":"s2c","id":199,"name":"AccountCharacterList","hex":"c700011408436863726561746567020185043041010100000000"}
+{"t_ms":92,"dir":"c2s","id":74,"name":"LoginNewChar","hex":"4a00084363746879726f6e0101010207"}

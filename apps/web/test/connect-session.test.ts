@@ -1,8 +1,10 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { ClientPacketId as C, ServerPacketId as S, SessionClientPacketId as SC, SessionServerPacketId as SS, decodeClientPacket, encodeServerFrame, FrameDecoder } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
 import { Session } from '../src/session.js';
+import { TEXT, silentLoginText } from '../src/connect-text.js';
 
 function harness(credentials: { email: string; password: string; create?: boolean } = { email: 'a@local.test', password: 'secret' }) {
   let now = 0;
@@ -81,5 +83,45 @@ describe('interactive connect flow (frmConnect account screen)', () => {
     expect(h.session.floatingTexts.map(t => t.text)).toEqual(['hola', 'chau']);
     h.recv({ id: SS.EquiteToggle });
     expect(h.session.movement.riding).toBe(false);
+  });
+});
+
+describe('a character request the server never answers (char-create, 21 Nov)', () => {
+  type Row = { t_ms: number; dir: 's2c' | 'c2s'; id: number; hex: string };
+  const recording = readFileSync(new URL('../../../tests/fixtures/vb6/char-create/login-new-char-no-answer.jsonl', import.meta.url), 'utf8')
+    .trim().split('\n').map(line => JSON.parse(line) as Row);
+  const s2c = (row: Row) => { const body = Buffer.from(row.hex, 'hex'); const frame = Buffer.alloc(body.length + 2); frame.writeUInt16LE(body.length, 0); body.copy(frame, 2); return new Uint8Array(frame); };
+  it('the recording: LoginNewChar after LoginAccount gets no packet back from the live server', () => {
+    const at = recording.findIndex(r => r.dir === 'c2s' && r.id === SC.LoginNewChar);
+    expect(at).toBeGreaterThan(0);
+    expect(recording.slice(at + 1).filter(r => r.dir === 's2c')).toEqual([]);
+  });
+  it('replayed: the session flags the request as unanswered once the 10 s deadline closes it, so the UI can explain', () => {
+    const h = harness();
+    for (const row of recording) if (row.dir === 's2c') h.session.receive(s2c(row));
+    expect(h.session.phase).toBe('account');
+    expect(h.session.accountCharacters.map(c => c.name)).toEqual(['Chcreate']);
+    expect(h.session.createCharacter({ name: 'Ccthyron', race: 1, gender: 1, characterClass: 1, head: 2, home: 7 })).toBe(true);
+    h.advance(10_001);
+    expect(() => h.session.tick()).toThrow(/Timed out/);
+    expect(h.session.silentLoginFailure).toBe('create');
+    expect(silentLoginText('create', true)).toBe(TEXT.createNoAnswer);
+    expect(silentLoginText('create', false)).toBe(TEXT.createClosed);
+  });
+  it('a ShowMessageBox answers the request: no extra explanation, even if the socket closes right after', () => {
+    const h = harness();
+    h.recv(f.Connected, { id: S.AccountCharacterList, characters: [] });
+    h.session.createCharacter({ name: 'Nuevo', race: 1, gender: 1, characterClass: 1, head: 2, home: 7 });
+    expect(h.session.silentLoginFailure).toBe('create');
+    h.recv({ id: SS.ShowMessageBox, messageId: 1781, extra: '' }); // MSG_HAS_CREADO_DEMASIADOS_PERSONAJES, then CloseSocket
+    expect(h.session.silentLoginFailure).toBeUndefined();
+    expect(h.session.notices).toEqual([{ kind: 'box', messageId: 1781, extra: '' }]); // still queued for the UI to show before closing
+  });
+  it('entering an existing character is covered the same way', () => {
+    const h = harness();
+    h.recv(f.Connected, { id: S.AccountCharacterList, characters: [char(11, 'Uno')] });
+    h.session.enterCharacter(h.session.accountCharacters[0]!);
+    expect(h.session.silentLoginFailure).toBe('enter');
+    expect(silentLoginText('enter', false)).toBe(TEXT.enterClosed);
   });
 });

@@ -2,9 +2,9 @@ import { test, expect } from '@playwright/test';
 import { ServerPacketId as S, SessionServerPacketId as SS, encodeServerFrame, FrameDecoder, decodeClientPacket } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 
-// The classic connect flow (account screen, character creation, message boxes, exit form) against a scripted server: the real VB6
-// server refuses new characters once an IP passed its 15-per-run cap, so the creation packets are checked on the wire here
-// (tests/fixtures/vb6/core-session holds what the real server answered when it still accepted them).
+// The classic connect flow (account screen, character creation, message boxes, exit form) against a scripted server, so the refusals
+// can be produced on demand. (The per-IP cap in clsAntiMassClon is never armed on this server: its collection is never filled.
+// What the live server answers to LoginNewChar is in tests/fixtures/vb6/char-create.)
 const character = { id: 7, name: 'Mockchar', body: 1, head: 1, characterClass: 3, map: 1, x: 57, y: 44, level: 4, status: 1, helmet: 0, shield: 0, weapon: 0, backpack: 0 };
 const play: ServerPacket[] = [
   { id: S.Intervals, hit: 1000, bow: 1000, magic: 1000, extractWork: 1000, buildWork: 1000, walk: 300, dropItem: 100, useItemKey: 100, useItemClick: 100, hitMagic: 100, magicHit: 100, hitUseItem: 100, hide: 100, talk: 500, leftClick: 100, meditate: 100 },
@@ -86,3 +86,37 @@ test('connect flow: account screen, refused then accepted character creation, ex
   await expect.poll(() => received.some(p => p.id === 39)).toBe(true);
   expect(failures).toEqual([]);
 });
+
+// char-create (21 Nov): a refusal followed by CloseSocket, and a close with no message at all, must both leave a message on screen.
+for (const [label, refusal, expected] of [
+  ['message box, then close', true, /demasiados personajes|Mensaje 1781/],
+  ['close with no message', false, /cerró la conexión sin crear el personaje/],
+] as const) {
+  test(`character creation refused by ${label}: the player is told why`, async ({ page }, info) => {
+    test.skip(info.project.name !== 'desktop-chrome', 'pointer flow');
+    await page.route('**/ao-config.json', route => route.fulfill({ json: { mode: 'classic', serverProfile: 'classic', wsPath: '/bridge' } }));
+    await page.routeWebSocket(/\/bridge/, ws => {
+      const decoder = new FrameDecoder();
+      const send = (...packets: ServerPacket[]) => { for (const p of packets) ws.send(Buffer.from(encodeServerFrame(p))); };
+      send({ id: S.Connected, debugging: false });
+      ws.onMessage(message => {
+        for (const body of decoder.push(Uint8Array.from(message as Buffer))) {
+          const packet = decodeClientPacket(body);
+          if (packet.id === 305) send({ id: S.AccountCharacterList, characters: [character] });
+          // HandleLoginNewChar: WriteShowMessageBox(MSG_HAS_CREADO_DEMASIADOS_PERSONAJES) then CloseSocket; ConnectNewUser's silent exits only close.
+          if (packet.id === 74) { if (refusal) send({ id: SS.ShowMessageBox, messageId: 1781, extra: '' }); ws.close(); }
+        }
+      });
+    });
+    await page.goto('/');
+    await expect(page.locator('#connect')).toBeEnabled();
+    await page.locator('#email').fill('mock@local.test'); await page.locator('#password').fill('secret12');
+    await page.locator('#connect').click();
+    await expect(page.locator('#connect-stage')).toHaveAttribute('data-screen', 'account');
+    await page.getByRole('button', { name: 'Crear personaje' }).first().click();
+    await page.locator('.cs-name').fill('Thyron');
+    await page.locator('.cs-create').getByRole('button', { name: 'Crear personaje' }).click();
+    await expect(page.locator('#connect-stage')).toHaveAttribute('data-screen', 'login');
+    await expect(page.locator('[id^="message-"]').filter({ hasText: expected })).toHaveCount(1);
+  });
+}

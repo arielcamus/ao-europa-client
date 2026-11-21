@@ -17,6 +17,11 @@ export const TEXT = {
   nameLength: 'Debes ingresar un nombre entre 3 y 18 caracteres.', nameChars: 'Sólo se permiten letras y espacios.',
   nameSpaces: 'No se permiten espacios consecutivos.', nameEdges: 'No se permiten espacios al inicio o al final.',
   characterLimit: 'Has alcanzado el límite de personajes de la cuenta.',
+  // Not VB6 text: the classic client has no message for these, it just lands on the login screen (char-create, 21 Nov).
+  createClosed: 'El servidor cerró la conexión sin crear el personaje y sin decir por qué. Volvé a entrar e intentá de nuevo.',
+  createNoAnswer: 'El servidor no respondió a la creación del personaje y se cerró la conexión. Volvé a entrar e intentá de nuevo.',
+  enterClosed: 'El servidor cerró la conexión sin dejar entrar al personaje y sin decir por qué. Volvé a entrar e intentá de nuevo.',
+  enterNoAnswer: 'El servidor no respondió al entrar con el personaje y se cerró la conexión. Volvé a entrar e intentá de nuevo.',
   deleteAsk: (name: string) => `¿Estás seguro que desea borrar el personaje ${name} de la cuenta?`,
   deleteUnsupported: 'Este servidor no permite borrar personajes: el borrado necesita el servidor de cuentas (DeleteCharacter no hace nada con PYMMO=0).',
   resetAsk: '¿Está seguro que desea resetear el personaje? Los items que no sean depositados se perderán.',
@@ -85,3 +90,9 @@ export function raceModifiers(ini: Map<string, Map<string, string>>, race: numbe
 }
 /** The home city id sent by WriteLoginNewChar (CHARACTER_CREATION_HOME_FORGAT) and its name. */
 export const HOME_CITY = 7, HOME_CITY_NAME = 'Forgat';
+
+/** What to tell the player when a character request ends with a closed socket and no word from the server (never a silent login screen). */
+export function silentLoginText(kind: 'create' | 'enter', timedOut: boolean): string {
+  if (kind === 'create') return timedOut ? TEXT.createNoAnswer : TEXT.createClosed;
+  return timedOut ? TEXT.enterNoAnswer : TEXT.enterClosed;
+}

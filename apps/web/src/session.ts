@@ -123,6 +123,12 @@ export class Session {
   accountRevision = 0;
   /** Queue of messages for the player (ShowMessageBox, ErrorMsg); the UI shifts them off. */
   readonly notices: SessionNotice[] = [];
+  /**
+   * The LoginNewChar / LoginExistingChar in flight, and whether the server has said anything about it (ShowMessageBox, ErrorMsg).
+   * The server refuses several things by closing the socket with no message (TCP.ConnectNewUser: race, gender, home, head, ValidarNombre),
+   * and the live server can drop the request entirely (char-create, 21 Nov): `silentLoginFailure` lets the UI explain instead of a bare login screen.
+   */
+  private loginAttempt: { kind: 'create' | 'enter'; answered: boolean } | undefined;
   noticeRevision = 0;
   /** Set by the UI: HandleDisconnect (back to the login screen), HandleCerrarleCliente (CloseClient) and HandleMostrarCuenta (account screen). */
   onDisconnect: (() => void) | undefined;
@@ -303,7 +309,7 @@ export class Session {
         case S.Logged:
           if (this.phase !== 'login') throw new Error('Unexpected Logged');
           this.leaving = false;
-          this.phase = 'playing'; this.loggedAt = this.clock(); this.lastQuery = this.clock();
+          this.phase = 'playing'; this.loggedAt = this.clock(); this.lastQuery = this.clock(); this.loginAttempt = undefined;
           this.skills.resting = false; // HandleLogged: UserDescansar = False
           break;
         case S.Intervals:
@@ -588,7 +594,11 @@ export class Session {
   }
   /** HandleAnswerReset asks the player whether to reset the character; the UI answers with ResetearPersonaje. */
   resetRequested = false;
-  private notify(notice: SessionNotice) { this.notices.push(notice); this.noticeRevision++; }
+  private notify(notice: SessionNotice) { this.notices.push(notice); this.noticeRevision++; if (this.loginAttempt) this.loginAttempt.answered = true; }
+  /** 'create' or 'enter' when a character request is still unanswered: no Logged and no message from the server about it. */
+  get silentLoginFailure(): 'create' | 'enter' | undefined {
+    return this.phase === 'login' && !this.self && this.loginAttempt && !this.loginAttempt.answered ? this.loginAttempt.kind : undefined;
+  }
   private addFloatingText(text: Omit<Session['floatingTexts'][number], 'at'>) {
     // Same cap as a console: an overhead text per call, never an unbounded list.
     this.floatingTexts.push({ ...text, at: this.clock() });
@@ -622,6 +632,7 @@ export class Session {
   enterCharacter(character: AccountCharacter): boolean {
     if (this.phase !== 'account' || character.id <= 0 || !character.name || !this.accountCharacters.some(c => c.id === character.id)) return false;
     this.phase = 'login'; this.characterLevel = character.level; this.placementDeadline = this.clock() + 10_000;
+    this.loginAttempt = { kind: 'enter', answered: false };
     this.send({ id: C.LoginExistingChar, charId: character.id, name: character.name });
     return true;
   }
@@ -632,11 +643,12 @@ export class Session {
   createCharacter(character: NewCharacter): boolean {
     if (this.phase !== 'account') return false;
     this.phase = 'login'; this.placementDeadline = this.clock() + 10_000;
+    this.loginAttempt = { kind: 'create', answered: false };
     this.send({ id: SCP.LoginNewChar, name: character.name, race: character.race, gender: character.gender, characterClass: character.characterClass, head: character.head, home: character.home });
     return true;
   }
   /** A ShowMessageBox during character creation or entry leaves the session on the account screen again (the server did not log anybody in). */
-  backToAccount() { if (this.phase === 'login' && !this.self) this.phase = 'account'; }
+  backToAccount() { if (this.phase === 'login' && !this.self) { this.phase = 'account'; this.loginAttempt = undefined; } }
   finish(message = 'Disconnected'): void {
     this.phase = 'closed'; this.error = message; this.credentials = undefined;
     this.pending = undefined; this.motion = undefined;

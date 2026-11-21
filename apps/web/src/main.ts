@@ -48,7 +48,7 @@ import { PapiroUI } from './papiro-ui.js';
 import { InventoryExtras } from './inventory-extras.js';
 import { ConnectUI } from './connect-ui.js';
 import { LoadingCard, showConfirm, showConnecting, showExit, showMessage, showNewAccount } from './session-windows.js';
-import { TEXT } from './connect-text.js';
+import { TEXT, silentLoginText } from './connect-text.js';
 import { FloatingTexts } from './floating-text.js';
 import type { SessionNotice } from './session.js';
 import type { VbWindow } from './vb-window.js';
@@ -206,6 +206,11 @@ function guard(action: () => unknown) {
   try { action(); } catch (error) { close(error instanceof Error ? error.message : String(error)); }
 }
 function close(message = 'Disconnected') {
+  // A ShowMessageBox / ErrorMsg the server sent right before closing (refusal, then CloseSocket) still reaches the player; and a
+  // character request that ends with no word from the server says so instead of dropping back to the login screen (char-create, 21 Nov).
+  const live = session && session.phase !== 'closed' ? session : undefined;
+  while (live?.notices.length) handleNotice(live.notices.shift()!);
+  const silent = live?.silentLoginFailure;
   connectingWindow?.close(); clearInput(); stoppedAt = performance.now(); chatBox.close(); npcDialog.hide(); audio.detach(); skillsWindows.closeAll(); questWindows.closeAll();
   if (session) {
     try { session.finish(message); } catch (error) { message = `${message}; ${String(error)}`; }
@@ -214,6 +219,7 @@ function close(message = 'Disconnected') {
   connect.disabled = false; disconnect.hidden = true;
   connection.textContent = message;
   if (message !== 'Disconnected') report(message);
+  if (silent) { const text = silentLoginText(silent, message.startsWith('Timed out')); connectUi.say(text); showMessage(element('classic'), text); }
 }
 async function boot() {
   const response = await fetch('/ao-config.json');
