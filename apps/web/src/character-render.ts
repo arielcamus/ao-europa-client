@@ -14,7 +14,8 @@ export interface CharacterResources {
   weapons: Ini; shields: Ini; animation(id: number): Animation;
 }
 /** One sprite of a character. `walks` layers advance with the walking clock, the head never animates. */
-export interface Layer { animation: Animation; x: number; y: number; walks: boolean }
+/** `part` marks the weapon and shield layers, which also play one pass when the server sends ArmaMov / EscudoMov (a swing). */
+export interface Layer { animation: Animation; x: number; y: number; walks: boolean; part?: 'weapon' | 'shield' | undefined }
 
 export class CharacterSprites {
   private bodyCache = new Map<number, Body | null>();
@@ -50,14 +51,14 @@ export class CharacterSprites {
     const headGrh = this.resources.heads[char.head]?.[h];
     const helmetGrh = this.resources.helmets[char.helmet]?.[h];
     const out: Layer[] = [];
-    const add = (animation: Animation | undefined, x: number, y: number, walks: boolean) => { if (animation) out.push({ animation, x, y, walks }); };
+    const add = (animation: Animation | undefined, x: number, y: number, walks: boolean, part?: Layer['part']) => { if (animation) out.push({ animation, x, y, walks, part }); };
     const bodyLayer = () => add(walk, body.bodyX + (char.body < 488 ? 1 : 0), body.bodyY, true);
     const headLayers = () => {
       if (headGrh) add(this.resources.animation(headGrh), body.headX, body.headY, false);
       if (helmetGrh) add(this.resources.animation(helmetGrh), body.headX, body.headY, false);
     };
-    const w = (dy: number) => add(weapon, 0, dy, true);
-    const s = (dy: number) => add(shield, 0, dy, true);
+    const w = (dy: number) => add(weapon, 0, dy, true, 'weapon');
+    const s = (dy: number) => add(shield, 0, dy, true, 'shield');
     // Heading 1 North, 2 East, 3 South, 4 West.
     if (heading === 2) { s(0); bodyLayer(); headLayers(); w(offArma); }
     else if (heading === 1) { w(offArma); s(0); bodyLayer(); headLayers(); }

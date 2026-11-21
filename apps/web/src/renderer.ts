@@ -351,7 +351,14 @@ export class WorldRenderer {
       const alpha = session.status.alphaOf(char.charIndex, session.charIndex, char.charIndex === session.charIndex);
       if (alpha === undefined) continue;
       for (const layer of sprites.layers(char, heading)) {
-        this.draw(pool, layer.animation, px + layer.x, py + layer.y, layer.walks && moving ? elapsed : 0, true, alpha);
+        // ArmaMov / EscudoMov (HandleArmaMov: only while the character is not moving): the weapon or shield animation runs once from the packet.
+        let time = layer.walks && moving ? elapsed : 0;
+        const swingStart = moving ? undefined : layer.part === 'weapon' ? session.combat.swings.get(char.charIndex) : layer.part === 'shield' ? session.status.shieldSwings.get(char.charIndex) : undefined;
+        if (swingStart !== undefined) {
+          const sinceSwing = now - swingStart, length = layer.animation.frames.length * layer.animation.frameMs;
+          if (sinceSwing >= 0 && sinceSwing < length) time = sinceSwing;
+        }
+        this.draw(pool, layer.animation, px + layer.x, py + layer.y, time, true, alpha);
       }
       // Quest marker (engine.bas Char_Render, .simbolo): grh 5257 + symbol, 48 px above the head, bobbing 8 px; drawn even with names hidden.
       const marker = char.npc && char.symbol ? sprites.body(char.body) : undefined;
