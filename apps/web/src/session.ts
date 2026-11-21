@@ -6,7 +6,7 @@
 import { ClientPacketId as C, CombatClientPacketId as CC, ServerPacketId as S, Heading, FrameDecoder, decodeServerPacket, encodeClientFrame } from '@ao/protocol';
 import { StatusClientPacketId, KeysClientPacketId } from '@ao/protocol';
 import { DoorClientPacketId, DoorServerPacketId as DoorServer, KeysServerPacketId as KS } from '@ao/protocol';
-import { SessionServerPacketId as SS, SessionClientPacketId as SCP } from '@ao/protocol';
+import { SessionServerPacketId as SS, SessionClientPacketId as SCP, GmServerPacketId as GmServer } from '@ao/protocol';
 import type { AccountCharacter, CharacterCreate, ClientPacket, ServerPacket } from '@ao/protocol';
 import { ClassicState } from './ui-state.js';
 import { MapObjects, tileKey } from './map-objects.js';
@@ -354,6 +354,10 @@ export class Session {
           this.skills.reset();
           this.onDisconnect?.();
           break;
+        // HandleUserIndexInServer stores `userIndex` (TileEngine.bas global); nothing reads it (Renderizar_Aura's parameter of that name shadows it).
+        case SS.UserIndexInServer: this.userIndex = packet.userIndex; break;
+        // HandleShowFrmLogear only shows the account-server login form (FrmLogear) over frmConnect: the web client's own login screen is already up. HandleShowForumForm has an empty body.
+        case SS.ShowFrmLogear: case GmServer.ShowForumForm: break;
         case SS.ShowMessageBox: this.notify({ kind: 'box', messageId: packet.messageId, extra: packet.extra }); break;
         case SS.CerrarleCliente: this.onCloseClient?.(); break;
         case SS.MostrarCuenta: this.phase = 'account'; this.status.resetOnLeave(); this.world.blind = false; this.world.allies.clear(); /* HandleMostrarCuenta: HideMinimapDot 1..5 */ this.accountRevision++; this.onShowAccount?.(); break;
@@ -570,6 +574,8 @@ export class Session {
   }
   /** SafeModeOn/SafeModeOff (HandleSafeModeOn/Off: SeguroGame); undefined until the server says. */
   safeMode: boolean | undefined;
+  /** The server's user slot (UserIndexInServer); kept as in VB6, unused. */
+  userIndex: number | undefined;
   /** A game-key packet (keymap.ts): same door as chat, counters filled from PacketCounters for sequenced ids (Work). */
   sendAction(packet: ClientPacket): boolean { return this.sendChat(packet); }
   /** The RefreshPosition key (WriteRequestPositionUpdate): one outstanding position probe at a time, like tick(). */

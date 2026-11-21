@@ -10,6 +10,7 @@ import { loadInterface } from './interface-assets.js';
 import { SkillAllocation, statsView } from './skills.js';
 import type { Session } from './session.js';
 import { SKILL_NAMES } from './game-text.js';
+import { makeDraggable } from './window-drag.js';
 
 type Box = readonly [left: number, top: number, width: number, height: number];
 interface SkillRow { value: Box; minus: Box; plus: Box }
@@ -91,6 +92,7 @@ export class SkillsWindows {
   constructor(parent: HTMLElement) {
     // FrmEstadisticas, 473 x 577. Aceptar and Cerrar both offer to save pending changes (MENSAJEBOX_*_SKILLPOINTS).
     this.skills = form(parent, 'skills-window', 'Skills', [473, 577], 'ventanaskills');
+    makeDraggable(this.skills); // FrmEstadisticas Form_MouseDown: MoverForm (frmStatistics and frmEntrenador do not call it)
     this.points = node(this.skills, 'sk-label', [328, 92, 30, 14]);
     for (const [skill, row] of Object.entries(SKILL_LAYOUT)) {
       const index = Number(skill);

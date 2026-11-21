@@ -61,6 +61,8 @@ export class ChatLocale {
   npcDescription(id: number) { return this.value(`npc${id}`, 'desc'); }
   objectName(id: number) { return this.value(`obj${id}`, 'name'); }
   questFinalText(id: number) { return this.value(`quest${id}`, 'descfinal'); }
+  /** QuestList(id).DescAudio / DescFinalAudio ([QUESTn] DESCAUDIO, DESCFINALAUDIO of sp_localindex.dat; empty when the file has none). */
+  questAudio(id: number, final = false) { return this.value(`quest${id}`, final ? 'descfinalaudio' : 'descaudio'); }
   spell(id: number): SpellText {
     const dat = (key: string) => this.spellData.get(`hechizo${id}`)?.get(key) ?? '';
     const get = (key: string) => this.value(`hechizo${id}`, key) || dat(key);

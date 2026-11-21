@@ -214,3 +214,17 @@ agility), GuildNews and GuildLeaderInfo (exp and exp-needed Int16 to Int32), Que
   Regenerate the table with `pnpm --filter @ao/protocol build && node tools/protocol/pinned-layouts.mjs` (needs the `~/Projects/ao-reference` clones).
 - Not covered, as before: the five post-pin HOO packet pairs (RemortState/Result, Hoo*). Locale message ids sent by the HOO-era server
   (`modMessageIDs.bas`) may not exist in the pinned `Recursos-prehoo` locale files; that is data, not layout.
+
+## Packets with a codec and little or no VB6 client effect (2026-11-21)
+
+What the pinned client (619e69d, `Protocol.bas`) does with the five server packets the completion checklist flagged, and where we do it.
+
+| id | name | VB6 client | ours |
+| --- | --- | --- | --- |
+| 46 | `UserIndexInServer` | `userIndex = Reader.ReadInt16()`: a `TileEngine.bas` global that nothing reads (`engine.Renderizar_Aura` has a parameter of the same name that shadows it). The real server sends it right after `Logged` (recorded live 2026-11-21). | `Session.userIndex` stores it (`session.ts`); no reader, like VB6. |
+| 51 | `Fxpiso` (`FxFloor`) | `SetMapFx(x, y, Fx, 0)`: a floor FX. Sent by object use, spells on a tile and a few NPC events. | `SpellState` `FxFloor` case (`spells.ts`), drawn by the spells canvas renderer. |
+| 82 | `ShowForumForm` | Empty body: **VB6 ignores it too** (`HandleShowForumForm` is just the error handler). | accepted, no effect (`session.ts`). |
+| 137 | `ShowFrmLogear` | `FrmLogear.Show , frmConnect`: the account-server login form (class b, out of scope: this client has its own login screen). The server never sends it on the pinned build. | accepted, no effect (`session.ts`). |
+| 185 | `NotificarClienteCasteo` | Sets `frmMain.shapexy.BackColor` (green when 1, else red). `shapexy` is parked at (1200, 1200) of a 1332x928 form by `SetupGameplayUI`: never visible. The server has no caller for its writer. | `SpellState.castFrom` records it (`spells.ts`); nothing is drawn, like VB6. |
+
+Keymap (`modBindKeys.Accionar`, issue #20): `eShowOnline` only flips `MostrarOnline`, which nothing reads; `eScreenShoot` (13) has no `Case` at all; `eGameStats` only runs `SaveSetting("OPCIONES", "FPSFLAG", FPSFLAG)` (the FPS checkbox of frmOpciones is what toggles it). The three are faithful no-ops/persist-only in `main.ts` `gameKey`; hotkeys 1-0 already follow `eEnableHotkeys` (`options-state.ts` `useHotkey`).

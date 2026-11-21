@@ -43,13 +43,13 @@ export const PROJECTILE_SKILL = 12;
 export const MSG_ARROWS_TOO_FAST = 'No puedes lanzar flechas tan rápido.';
 export const MSG_CLICK_VICTIM = 'Haz click sobre la victima...';
 
-/** Data tables read from the local resource mount: Dat/Hechizos.dat and init/FXs.ini. Console text is chat's (ChatLocale). */
-export interface SpellTables { spells: Ini; fx: Ini }
-export const spellTables: SpellTables = { spells: new Map(), fx: new Map() };
+/** init/FXs.ini, read from the local resource mount. Dat/Hechizos.dat is `sharedLocale.spellData` (one copy: chat text, the hotkey bar and the list all read it). */
+export interface SpellTables { fx: Ini }
+export const spellTables: SpellTables = { fx: new Map() };
 
-/** Load the FX table once. `spells` is the already parsed Dat/Hechizos.dat; chat's HECINF/HecMSG text reads it too. */
+/** Load the FX table once. `spells` is the already parsed Dat/Hechizos.dat, shared through the locale. */
 export async function loadSpellTables(spells: Ini): Promise<void> {
-  spellTables.spells = spells; sharedLocale.spellData = spells;
+  sharedLocale.spellData = spells;
   spellTables.fx = parseIni(await fetchText('init/FXs.ini'));
 }
 
@@ -57,6 +57,8 @@ export class SpellState {
   /** Set by WorkRequestTarget; cleared by a click, by a cancel (skill 0) or by leaving the map. */
   targeting: Targeting | undefined;
   effects: ActiveFx[] = [];
+  /** HandleNotificarClienteCasteo: 1 = the cast came from the inventory (frmMain.shapexy turns green), else from the spell list (red). */
+  castFrom: 'inventory' | 'spells' = 'spells';
   /** HandleGetInventarioHechizos: the panel a GM-follow asked this client to show (1 inventory, 2 spells + selection + scroll). */
   panelRequest: { value: number; selected: number; scroll: number; seq: number } | undefined;
   /** `Seguido` (NotificarClienteSeguido, not in the client yet): only a followed client reports its panel. */
@@ -138,6 +140,9 @@ export class SpellState {
         this.addFx({ fx: packet.fx, charIndex: packet.charIndex, x: packet.x, y: packet.y, loops: packet.loops, startedAt: this.clock() });
         break;
       }
+      // HandleNotificarClienteCasteo (NotificarClienteCasteo) only recolours frmMain.shapexy, a PictureBox parked at (1200,1200) of a 1332x928 form (ModGameplayUI.SetupGameplayUI): never visible.
+      case SS.NotifyCasting: this.castFrom = packet.value === 1 ? 'inventory' : 'spells'; break;
+      // efxpiso (VB6 name Fxpiso): HandleFxPiso -> SetMapFx(x, y, Fx, 0), a floor FX.
       case SS.FxFloor: {
         this.addFx({ fx: 0, grh: packet.grh, charIndex: undefined, x: packet.x, y: packet.y, loops: 0, startedAt: this.clock() });
         break;

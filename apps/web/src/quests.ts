@@ -20,6 +20,8 @@ export class QuestCatalog {
   /** The quest's name; init/sp_localindex.dat of this snapshot has only quests 1..255, so a newer quest is shown as "Misión N". */
   questName(id: number) { return this.get(`quest${id}`, 'nombre') || `Misión ${id}`; }
   questDescription(id: number) { return this.get(`quest${id}`, 'desc'); }
+  /** DescAudio / DescFinalAudio of the quest (PlayQuestDescAudio reads QuestList(i).DescAudio); '' when the data has none. */
+  questAudio(id: number) { return this.get(`quest${id}`, 'descaudio'); }
   questRepeatable(id: number) { return this.number(`quest${id}`, 'repetible') === 1; }
   npcName(id: number) { return this.get(`npc${id}`, 'name').split(' <')[0]!; }
   npcLook(id: number) { return { body: this.number(`npc${id}`, 'body'), head: this.number(`npc${id}`, 'head') }; }

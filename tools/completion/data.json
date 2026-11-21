@@ -70,28 +70,8 @@
   },
   {
    "issue": 38,
-   "text": "SKILL_DESCRIPTIONS in game-text.ts is unused: show on skill-name click or drop it",
-   "area": "skills"
-  },
-  {
-   "issue": 38,
-   "text": "SkillsState.reset() never called: call on disconnect/relogin or delete",
-   "area": "skills"
-  },
-  {
-   "issue": 38,
-   "text": "Trainer window empty-list case: what the VB6 form does with zero creatures",
-   "area": "skills"
-  },
-  {
-   "issue": 38,
    "text": "Record ObjQuestListSend (S174) with a level-appropriate char holding a quest item",
    "area": "recordings"
-  },
-  {
-   "issue": 38,
-   "text": "Optional: draggable quest and skill windows (MoverForm), PlayQuestDescAudio",
-   "area": "skills"
   },
   {
    "issue": 35,
@@ -131,53 +111,13 @@
    "blocked": "decision"
   },
   {
-   "issue": 20,
-   "text": "Keybound features not in the client (ShowOnline M, ScreenShot, GameStats *): say so in the console; hotkeys 1-0 need eEnableHotkeys",
-   "area": "hotkeys"
-  },
-  {
-   "issue": 19,
-   "text": "hotkeys-ui still reads spellTables.spells: use the shared spellData and delete the copy",
-   "area": "spells"
-  },
-  {
    "issue": 17,
    "text": "Record death by a hostile creature, NPCHitUser/NPCKillUser on a non-GM char and the revival after it",
    "area": "recordings"
   },
   {
    "issue": 16,
-   "text": "chat-box.ts never passes dead to ChatInput.submit (/GLOBAL while dead)",
-   "area": "chat"
-  },
-  {
-   "issue": 16,
-   "text": "Wrong comments in chat.test.ts:64 and vb6-chat-record.mjs:28",
-   "area": "chat"
-  },
-  {
-   "issue": 16,
-   "text": "chat-input.ts filters by code point, not windows-1252 representability",
-   "area": "chat"
-  },
-  {
-   "issue": 16,
-   "text": "Document the LOCMSG field-3 deviation (VB6 client bug)",
-   "area": "chat"
-  },
-  {
-   "issue": 16,
-   "text": "Merge the two parsers of sp_localindex.dat (ChatLocale and LocaleData)",
-   "area": "chat"
-  },
-  {
-   "issue": 16,
-   "text": "CharacterTracker still computes an overhead dialog state no longer drawn; bubbles jump tile to tile for walking NPCs",
-   "area": "chat"
-  },
-  {
-   "issue": 16,
-   "text": "ChatBubbles and the door rule read session.characters, a second character store next to the tracker",
+   "text": "session.characters (raw CharacterCreate copies: hp, cart, self copy) is still a second store next to the tracker; chat bubbles, the door rule and the tap-to-select rule already read the tracker. Remaining readers: session.ts, combat.ts, combat-overlay.ts, extras-ui.ts (other packages' files)",
    "area": "chat"
   },
   {

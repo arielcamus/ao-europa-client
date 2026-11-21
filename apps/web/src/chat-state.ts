@@ -40,6 +40,8 @@ export class ChatState {
   clock: () => number = () => performance.now();
   /** Config option CopiarDialogoAConsola (Configuracion.ini default 1): copy bubbles to the console. */
   copyToConsole = true;
+  /** QUESTFIN over the head: the quest's DESCFINALAUDIO id to voice (main.ts wires it to QuestVoice). */
+  onQuestFinal: ((audio: string) => void) | undefined;
 
   constructor(private readonly push: (line: ChatLine) => void) {}
 
@@ -87,10 +89,13 @@ export class ChatState {
     const key = readField(1, chat, '*');
     let text = readField(2, chat, '*'), copy = true;
     switch (key) {
+      // DELIBERATE DEVIATION from the pinned client (Protocol.bas HandleChatOverHeadImpl, issue #16 item 4): VB6 reads the message id and its extra
+      // from `text` = ReadField(2, chat, "*") (the id alone), so ReadField(2, text, "*") is always empty and the bubble never gets its parameters
+      // (a VB6 client bug). The server writes "LOCMSG*<id>*<extra>", so we read the extra from field 3. Only ids with a ¬ parameter differ; listed in docs/PROTOCOL-chat.md "Deliberate differences".
       case 'LOCMSG': text = this.locale.message(vbVal(readField(2, chat, '*')), readField(3, chat, '*')); copy = false; break;
       case 'NPCDESC': text = this.locale.npcDescription(vbVal(text)); copy = false; break;
       case 'PMAG': text = this.locale.spell(vbVal(text)).words; copy = false; break;
-      case 'QUESTFIN': text = this.locale.questFinalText(vbVal(text)); copy = false; break;
+      case 'QUESTFIN': this.onQuestFinal?.(this.locale.questAudio(vbVal(text), true)); text = this.locale.questFinalText(vbVal(text)); copy = false; break; // PlayQuestFinalDescAudio
       case 'NOCONSOLA': copy = false; break;
       default: text = chat;
     }
