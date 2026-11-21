@@ -97,3 +97,9 @@ Server facts verified while recording (VB6 `HandleLeftClick` / `HandleWorldActio
 - Walking: `LegalWalk` refuses the move when the TARGET tile's `Blocked` has bit `2^(heading-1)` (N=1,E=2,S=4,W=8), a `FLAG_AGUA` tile (0x20) on foot, an NPC/user on it, a Patreon-only tile (trigger 20) for non-patrons, and castle-entry triggers for non-members.
 - Tile exits (TE) warp with `ChangeMap` + `CharacterCreate`(self) + `UserCharIndexInServer`.
 - Packet counters are per family (`PacketNames`), per connection, started at 1 (`apps/web/src/packet-counters.ts`).
+| `combat-spells-2/bow-shoot-snake.jsonl` | map 2 (Bosque sur de UI), character TSpells (class Paladin via the server DB, see the PR): equip the bow then the arrows (arrows first is refused, locale 2145), use the bow: `WorkRequestTarget` skill 12 (Proyectiles), `WorkLeftClick` at the snake, then the snake (NPC 502) kills the archer: `NPCKillUser`, `UpdateHP` 0, death `CharacterChange`, inventory dropped |
+| `combat-spells-2/cast-dart-snake.jsonl` | Dardo Mágico (spell slot 2) at a snake: `CastSpell`, `WorkRequestTarget` skill 1, `WorkLeftClick`, `ParticleFXWithDestino`, `UpdateMana`, `UpdateExp` |
+| `combat-spells-2/hide-key.jsonl` | the O key (`Work` skill 7, Ocultarse): safe map 1 answers with locale 708, map 2 hides the character: `SetInvisible` (charIndex, true, x, y) to the player |
+| `combat-spells-2/safe-toggles.jsonl` | `SeguroClan` (263) and `SeguroResu` (268) twice each, `PartySafeToggle` twice: `ClanSeguro` (157), `SeguroResu` (162), `PartySafeOff` (23), `PartySafeOn` (22) |
+| `combat-spells-2/snake-poison-antidote.jsonl` | a snake bites, the antidote (Poción Violeta, slot 2) is drunk: locale 682 + `UpdateUserStats` + `ChangeInventorySlot`; the snake then kills the character (`NPCKillUser`) |
+

@@ -9,18 +9,18 @@
  ],
  "headline": {
   "packets": 523,
-  "packetsCovered": 256,
-  "packetsMerged": 256,
+  "packetsCovered": 283,
+  "packetsMerged": 283,
   "s2c": 207,
   "c2s": 316,
-  "s2cCovered": 133,
-  "c2sCovered": 123,
+  "s2cCovered": 156,
+  "c2sCovered": 127,
   "forms": 86,
   "formsCovered": 4,
   "formsPartial": 5,
-  "fixturePackets": 187,
-  "packetsPct": 48.9,
-  "packetsMergedPct": 48.9,
+  "fixturePackets": 199,
+  "packetsPct": 54.1,
+  "packetsMergedPct": 54.1,
   "formsPct": 4.7,
   "formsStartedPct": 10.5
  },
@@ -53,9 +53,9 @@
    "id": "combat",
    "title": "Combat",
    "packets": 41,
-   "packetsCovered": 16,
-   "packetsMerged": 16,
-   "packetsPct": 39,
+   "packetsCovered": 41,
+   "packetsMerged": 41,
+   "packetsPct": 100,
    "forms": 0,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -65,9 +65,9 @@
    "id": "spells",
    "title": "Spells",
    "packets": 8,
-   "packetsCovered": 6,
-   "packetsMerged": 6,
-   "packetsPct": 75,
+   "packetsCovered": 8,
+   "packetsMerged": 8,
+   "packetsPct": 100,
    "forms": 0,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -268,6 +268,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -328,6 +333,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -408,6 +418,8 @@
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
@@ -685,13 +697,18 @@
    "writer": "server Protocol_Writes.bas:WriteNPCKillUser",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl"
+   ]
   },
   {
    "key": "s2c:17",
@@ -702,11 +719,13 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -719,11 +738,13 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -775,6 +796,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -840,13 +866,17 @@
    "writer": "server Protocol_Writes.bas:WritePartySafeOn",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl"
+   ]
   },
   {
    "key": "s2c:23",
@@ -857,13 +887,16 @@
    "writer": "server Protocol_Writes.bas:WritePartySafeOff",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
    ]
   },
@@ -905,6 +938,9 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
@@ -935,6 +971,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
@@ -956,6 +993,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
@@ -999,6 +1040,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
@@ -1033,6 +1076,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -1124,8 +1172,13 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/combat.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl"
+   ]
   },
   {
    "key": "s2c:33",
@@ -1185,6 +1238,7 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/chat/say.jsonl",
     "tests/fixtures/vb6/chat/yell.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -1244,6 +1298,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -1384,6 +1443,11 @@
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -1491,6 +1555,10 @@
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
@@ -1542,6 +1610,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -1602,6 +1675,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -1673,6 +1751,10 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/chat/channels.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
     "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
@@ -1710,6 +1792,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -1808,6 +1895,7 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -1884,6 +1972,10 @@
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
@@ -1958,6 +2050,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -2098,6 +2195,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -2154,6 +2256,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/crafting/mine-extraction.jsonl",
     "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
@@ -2191,6 +2295,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -2307,6 +2416,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -2499,11 +2613,13 @@
    "writer": "server Protocol_Writes.bas:WriteBlind",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2516,11 +2632,13 @@
    "writer": "server Protocol_Writes.bas:WriteDumb",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2587,6 +2705,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -2669,6 +2792,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -2747,13 +2875,17 @@
    "writer": "server Protocol_Writes.bas:WriteSetInvisible",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl"
+   ]
   },
   {
    "key": "s2c:84",
@@ -2783,11 +2915,13 @@
    "writer": "server Protocol_Writes.bas:WriteBlindNoMore",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2800,11 +2934,13 @@
    "writer": "server Protocol_Writes.bas:WriteDumbNoMore",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2833,6 +2969,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -3048,11 +3189,13 @@
    "writer": "server Protocol_Writes.bas:WriteParalizeOK",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -3065,11 +3208,13 @@
    "writer": "server Protocol_Writes.bas:WriteStunStart",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -3133,6 +3278,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
    ]
@@ -3162,6 +3309,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -3238,6 +3390,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -3299,11 +3456,13 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -3422,6 +3581,11 @@
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/chat/say.jsonl",
     "tests/fixtures/vb6/chat/yell.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -3553,8 +3717,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/spells.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl"
+   ]
   },
   {
    "key": "s2c:116",
@@ -3600,6 +3766,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -3705,6 +3876,11 @@
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -3845,6 +4021,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
@@ -3865,8 +4045,10 @@
    "merged": false,
    "branches": [],
    "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl"
+   ]
   },
   {
    "key": "s2c:127",
@@ -4042,6 +4224,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -4128,6 +4315,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -4206,11 +4398,13 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4223,11 +4417,13 @@
    "writer": null,
    "group": "spells",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4262,6 +4458,11 @@
     "tests/fixtures/vb6/chat/channels.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
     "tests/fixtures/vb6/chat/whisper.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -4420,11 +4621,13 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4499,6 +4702,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl"
@@ -4513,11 +4717,13 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4635,13 +4841,17 @@
    "writer": "server Protocol_Writes.bas:WriteClanSeguro",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl"
+   ]
   },
   {
    "key": "s2c:158",
@@ -4668,6 +4878,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -4745,6 +4960,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -4805,6 +5025,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -4849,13 +5074,17 @@
    "writer": "server Protocol_Writes.bas:WriteSeguroResu",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl"
+   ]
   },
   {
    "key": "s2c:163",
@@ -4866,11 +5095,13 @@
    "writer": "server Protocol_Writes.bas:WriteLegionarySecure",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4883,11 +5114,13 @@
    "writer": "server Protocol_Writes.bas:WriteStopped",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -4939,11 +5172,13 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
@@ -5141,6 +5376,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -5262,8 +5502,13 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/combat.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl"
+   ]
   },
   {
    "key": "s2c:183",
@@ -5437,11 +5682,13 @@
    "writer": null,
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5509,6 +5756,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -5584,6 +5836,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -5661,6 +5918,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -5738,6 +6000,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -5919,6 +6186,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -5985,6 +6254,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
     "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
@@ -7335,6 +7605,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -7609,6 +7884,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
    ]
   },
@@ -7850,6 +8126,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl",
     "tests/fixtures/vb6/spells/cast-self.jsonl",
@@ -7934,8 +8211,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/keys.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl"
+   ]
   },
   {
    "key": "c2s:98",
@@ -7946,11 +8225,13 @@
    "writer": "client Protocol_Writes.bas:WriteUseSpellMacro",
    "group": "spells",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -7972,6 +8253,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-north.jsonl",
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
     "tests/fixtures/vb6/crafting/chop-extraction.jsonl",
@@ -10877,13 +11160,17 @@
    "writer": "client Protocol_Writes.bas:WriteSeguroClan",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl"
+   ]
   },
   {
    "key": "c2s:264",
@@ -10962,13 +11249,17 @@
    "writer": "client Protocol_Writes.bas:WriteSeguroResu",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl"
+   ]
   },
   {
    "key": "c2s:269",
@@ -10979,11 +11270,13 @@
    "writer": "client Protocol_Writes.bas:WriteLegionarySecure",
    "group": "combat",
    "package": "wp03",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/status.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11667,6 +11960,11 @@
     "tests/fixtures/vb6/buildings/church-patron-tile.jsonl",
     "tests/fixtures/vb6/buildings/nix-building-castle-trigger-enters.jsonl",
     "tests/fixtures/vb6/chat/login.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/safe-toggles.jsonl",
+    "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/login-and-look.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
@@ -13060,64 +13358,8 @@
    "id": "wp03",
    "title": "Combat and spells completion",
    "scope": "Attack, hit/miss messages, safe modes, stun/paralysis, spell info, hotkeys, macros",
-   "packetIds": [
-    "s2c:16",
-    "s2c:17",
-    "s2c:18",
-    "s2c:22",
-    "s2c:23",
-    "s2c:74",
-    "s2c:75",
-    "s2c:83",
-    "s2c:85",
-    "s2c:86",
-    "s2c:97",
-    "s2c:98",
-    "s2c:106",
-    "s2c:139",
-    "s2c:140",
-    "s2c:146",
-    "s2c:151",
-    "s2c:157",
-    "s2c:162",
-    "s2c:163",
-    "s2c:164",
-    "s2c:167",
-    "s2c:192",
-    "c2s:98",
-    "c2s:263",
-    "c2s:268",
-    "c2s:269"
-   ],
-   "packetNames": [
-    "S16 NPCKillUser",
-    "S17 BlockedWithShieldUser",
-    "S18 BlockedWithShieldOther",
-    "S22 PartySafeOn",
-    "S23 PartySafeOff",
-    "S74 Blind",
-    "S75 Dumb",
-    "S83 SetInvisible",
-    "S85 BlindNoMore",
-    "S86 DumbNoMore",
-    "S97 ParalizeOK",
-    "S98 StunStart",
-    "S106 UpdateCooldownType",
-    "S139 InmovilizadoOK",
-    "S140 BarFx",
-    "S146 EscudoMov",
-    "S151 CharUpdateMAN",
-    "S157 ClanSeguro",
-    "S162 SeguroResu",
-    "S163 LegionarySecure",
-    "S164 Stopped",
-    "S167 DoAnimation",
-    "S192 UpdateTrap",
-    "C98 UseSpellMacro",
-    "C263 SeguroClan",
-    "C268 SeguroResu",
-    "C269 LegionarySecure"
-   ],
+   "packetIds": [],
+   "packetNames": [],
    "forms": []
   },
   {

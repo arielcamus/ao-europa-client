@@ -3,6 +3,7 @@
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty.
  * See ../../../LICENSE and ../../../NOTICE.
  */
+import { TRAP_GRH, TRAP_ALPHA } from './status.js';
 import { Application, Container, Rectangle, Sprite, Text, Texture } from 'pixi.js';
 import { clipFrame, fetchBytes, fetchText, graphicAnimation, parseGraphics, parseHeads, parseIni, parseMap, readBody } from './assets.js';
 import type { Animation, Body, GraphicFrame, GraphicIndex, Ini, WorldMap } from './assets.js';
@@ -264,6 +265,8 @@ export class WorldRenderer {
             this.draw(pool, this.animation(draw.grh), x * 32, y * 32, now, true, alpha);
           }
         }
+        // Traps (UpdateTrap) are drawn first, at alpha 100/255 (RenderScreen: .Trap before the objects).
+        if (layer === 2 && session.status.hasTrap(x, y)) this.draw(pool, this.animation(TRAP_GRH), x * 32, y * 32, now, true, TRAP_ALPHA);
         const id = this.map.layers[layer]![tile]!;
         if (!id) continue;
         if (layer === 4) {
@@ -341,13 +344,17 @@ export class WorldRenderer {
     const pool = this.pools[4]!;
     for (const { char, heading, x, y, moving, elapsed } of placed) {
       const px = x * 32, py = y * 32;
+      // SetInvisible: an invisible character is drawn at alpha 100/255 for those who may see it (itself) and not at all for the rest.
+      const alpha = session.status.alphaOf(char.charIndex, session.charIndex, char.charIndex === session.charIndex);
+      if (alpha === undefined) continue;
       for (const layer of sprites.layers(char, heading)) {
-        this.draw(pool, layer.animation, px + layer.x, py + layer.y, layer.walks && moving ? elapsed : 0);
+        this.draw(pool, layer.animation, px + layer.x, py + layer.y, layer.walks && moving ? elapsed : 0, true, alpha);
       }
       // Quest marker (engine.bas Char_Render, .simbolo): grh 5257 + symbol, 48 px above the head, bobbing 8 px; drawn even with names hidden.
       const marker = char.npc && char.symbol ? sprites.body(char.body) : undefined;
       if (char.symbol && marker) this.draw(pool, this.animation(5257 + char.symbol), px + 6 + marker.headX, py + marker.headY - 48 - 8 * Math.sin((now % 31415) * 0.002) ** 2, now, false);
-      if (!this.showNames) { /* HideNames */ } else if (char.npc) {
+      // A blind player sees no names (engine.bas Char_Render: UserCiego -> MostrarNombre = False).
+      if (!this.showNames || session.status.blind) { /* HideNames */ } else if (char.npc) {
         // NPC names appear only under the cursor, in (0,129,195).
         if (this.hoverTile && this.hoverTile.x === char.x && this.hoverTile.y === char.y && char.name) {
           this.label(char.name, NPC_NAME_COLOR, px + 16, py + 31);

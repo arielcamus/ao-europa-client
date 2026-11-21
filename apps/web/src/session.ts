@@ -4,6 +4,7 @@
  * See ../../../LICENSE and ../../../NOTICE.
  */
 import { ClientPacketId as C, CombatClientPacketId as CC, ServerPacketId as S, Heading, FrameDecoder, decodeServerPacket, encodeClientFrame } from '@ao/protocol';
+import { StatusClientPacketId } from '@ao/protocol';
 import { DoorClientPacketId, DoorServerPacketId as DoorServer, KeysServerPacketId as KS } from '@ao/protocol';
 import type { CharacterCreate, ClientPacket, ServerPacket } from '@ao/protocol';
 import { ClassicState } from './ui-state.js';
@@ -17,6 +18,7 @@ import { SpellState } from './spells.js';
 import { CraftingController, CraftingState } from './crafting.js';
 import { SkillsState } from './skills.js';
 import { SkillsClientPacketId as SC } from '@ao/protocol';
+import { StatusState, STATUS_TEXT, STATUS_FONT } from './status.js';
 import { ItemsState } from './items-state.js';
 import { ItemsController } from './items.js';
 import type { ObjectCatalog } from './object-catalog.js';
@@ -48,6 +50,10 @@ export class Session {
   /** Guild forms and their data (wp07). */
   readonly guild = new GuildState();
   readonly spells: SpellState;
+  /** Blind, dumb, paralysis, stun, invisibility, safes, bars, traps (feat/combat-spells-2). */
+  readonly status: StatusState;
+  /** Random source of the dumb effect (General.MoveTo RandomNumber); tests replace it. */
+  random: () => number = Math.random;
   readonly items = new ItemsState();
   /** Time of day, light, weather, particles and projectiles (feat/world-fx). */
   readonly world: WorldFx;
@@ -116,6 +122,7 @@ export class Session {
     this.ui.chat.clock = clock; this.ui.chat.characters = index => this.characters.get(index);
     this.connectedAt = clock();
     this.spells = new SpellState(packet => this.send(packet), clock, (text, font) => this.ui.message(text, font), family => this.next(family));
+    this.status = new StatusState((text, font) => this.ui.message(text, font), clock);
     this.world = new WorldFx(clock, {
       // CambioDeArea: characters and non-fixed objects outside the new area go (self stays).
       areaChanged: bounds => this.leaveArea(bounds),
@@ -165,6 +172,7 @@ export class Session {
       this.party.selfCharIndex = this.charIndex;
       this.party.receive(packet);
       this.guild.receive(packet);
+      this.status.receive(packet, blind => { this.world.blind = blind; });
       this.items.receive(packet);
       this.bankTrade.receive(packet);
       this.world.receive(packet);
@@ -248,7 +256,7 @@ export class Session {
         case DoorServer.ObjectDelete: if (inMap(packet)) this.mapObjects.delete(packet.x, packet.y); break;
         case DoorServer.BlockPosition: if (inMap(packet)) this.mapObjects.block(packet.x, packet.y, packet.sides); break;
         // The tracker owns appearance; this store (positions for the door rule, chat bubbles) only forgets who left.
-        case NS.CharacterRemove: if (packet.charIndex !== this.charIndex) this.characters.delete(packet.charIndex); break;
+        case NS.CharacterRemove: if (packet.charIndex !== this.charIndex) { this.characters.delete(packet.charIndex); this.status.forget(packet.charIndex); } break;
         // LocaleMsg (141) reaches the console through ui.receive -> ChatState (one print, chat's pipeline).
         case KS.SafeModeOn: this.safeMode = true; break;
         case KS.SafeModeOff: this.safeMode = false; break;
@@ -299,6 +307,12 @@ export class Session {
     // MoveTo: a resting character does not walk; the first try only asks the server to stand up (UserAvisado).
     if (this.skills.resting) { if (!this.skills.standUpSent) { this.skills.standUpSent = true; this.send({ id: SC.Rest }); } return false; }
     if (![Heading.North, Heading.East, Heading.South, Heading.West].includes(heading)) return false;
+    // General.MoveTo: Dumb sends a different heading half of the time; CanMove (paralysis, immobilisation, stun, stopped) blocks the step.
+    if (this.status.dumb && Math.floor(this.random() * 100) + 1 < 50) {
+      const others = [Heading.North, Heading.East, Heading.South, Heading.West].filter(h => h !== heading);
+      heading = others[Math.min(2, Math.floor(this.random() * 3))]!;
+    }
+    if (!this.status.canMove(now)) return false;
     const to = {
       x: this.position.x + (heading === Heading.East ? 1 : heading === Heading.West ? -1 : 0),
       y: this.position.y + (heading === Heading.South ? 1 : heading === Heading.North ? -1 : 0),
@@ -392,6 +406,13 @@ export class Session {
   abandonQuest(slot: number): boolean {
     if (!this.ready || !Number.isInteger(slot) || slot < 1 || slot > 255) return false;
     this.send({ id: QC.QuestAbandon, slot }); return true;
+  }
+  /** ImgSegClan / ImgSegResu click: WriteSeguroClan, WriteSeguroResu. ImgLegionarySecure only prints that it is disabled (frmMain). */
+  toggleSafe(which: 'clan' | 'resu' | 'legion'): boolean {
+    if (!this.ready) return false;
+    if (which === 'legion') { this.ui.message(STATUS_TEXT.legionDisabled, STATUS_FONT.INFO); return true; }
+    this.send({ id: which === 'clan' ? StatusClientPacketId.SeguroClan : StatusClientPacketId.SeguroResu });
+    return true;
   }
   talk(message: string): boolean {
     if (!this.ready || this.clock() - this.lastTalk < this.talkInterval) return false;
