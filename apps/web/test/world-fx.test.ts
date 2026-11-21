@@ -250,6 +250,38 @@ describe('WorldFx packets', () => {
     for (let i = 0; i < 80 && world.travelers.length; i++) { now += 16; world.update(now, frame()); }
     expect(world.tileGroups.get(9 * 100 + 11)!.streamId).toBe(4);
   });
+  describe('travelling spell sounds (Effect_Begin / EraseChar / Effect_Render_Slot)', () => {
+    const tiles: Record<number, { x: number; y: number }> = { 7: { x: 10, y: 10 }, 8: { x: 20, y: 10 } };
+    let waves: Array<[number, number, number]>;
+    beforeEach(() => { waves = []; world.setHooks({ playWave: (w, x, y) => waves.push([w, x, y]), charTile: i => tiles[i] }); });
+    const fly = (f = frame()) => { for (let i = 0; i < 400 && world.travelers.length; i++) { now += 16; world.update(now, f); } };
+    it('Dardo Mágico on a living creature (the pinned server sends the NPC as both emitter and receptor): the wave plays at its tile', () => {
+      world.receive({ id: SS.ParticleFXWithDestino, sender: 8, receiver: 8, travelParticle: 186, finalParticle: 15, time: 0, wave: 16, fx: 1, x: 0, y: 0 });
+      fly();
+      expect(added).toEqual([{ fx: 15, charIndex: 8, x: 0, y: 0, loops: 0 }]);
+      expect(waves).toEqual([[16, 20, 10]]);
+    });
+    it('a killing cast: the creature\'s CharacterRemove arrives in the same batch, the effect still flies to its tile and the wave plays there', () => {
+      world.receive({ id: SS.ParticleFXWithDestino, sender: 8, receiver: 8, travelParticle: 186, finalParticle: 15, time: 0, wave: 16, fx: 1, x: 0, y: 0 });
+      // the tracker has already erased char 8 when the first frame runs
+      fly(frame({ charPixel: (i: number) => (i === 7 ? { x: 320, y: 320 } : undefined) }));
+      expect(added).toEqual([{ fx: 15, charIndex: undefined, x: 20, y: 10, loops: 0 }]);
+      expect(waves).toEqual([[16, 20, 10]]);
+    });
+    it('the target is erased mid-flight: the effect goes on to its last tile (EraseChar sets DestX/DesyY), a particle end also plays the unpositioned wave', () => {
+      const globals: number[] = []; world.setHooks({ playGlobalWave: w => globals.push(w) });
+      world.receive({ id: SS.ParticleFXWithDestino, sender: 7, receiver: 8, travelParticle: 2, finalParticle: 4, time: 5, wave: 19, fx: 0, x: 0, y: 0 });
+      now += 16; world.update(now, frame());
+      expect(world.travelers).toHaveLength(1);
+      fly(frame({ charPixel: (i: number) => (i === 7 ? { x: 320, y: 320 } : undefined) }));
+      expect(world.tileGroups.get(9 * 100 + 19)!.streamId).toBe(4);
+      expect(globals).toEqual([19]); expect(waves).toEqual([[19, 20, 10]]);
+    });
+    it('with no position known for the emitter at all, the effect is dropped silently (Char_Check fails)', () => {
+      world.receive({ id: SS.ParticleFXWithDestino, sender: 99, receiver: 98, travelParticle: 2, finalParticle: 15, time: 0, wave: 16, fx: 1, x: 0, y: 0 });
+      fly(); expect(waves).toEqual([]); expect(added).toEqual([]);
+    });
+  });
   it('a traveller whose sender is gone is dropped; projectiles fly and are released', () => {
     world.receive({ id: SS.ParticleFXWithDestino, sender: 99, receiver: 8, travelParticle: 2, finalParticle: 0, time: 0, wave: 0, fx: 0, x: 0, y: 0 });
     world.update(16, frame()); expect(world.travelers).toHaveLength(0);

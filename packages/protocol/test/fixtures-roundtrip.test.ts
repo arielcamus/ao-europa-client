@@ -18,7 +18,7 @@ describe('VB6 fixture round-trip (all tests/fixtures/vb6/**)', () => {
   // tests/fixtures/vb6/playthrough/ was recorded on the pre-HOO 9ccd server: re-encode it under that wire profile ('live', the default, re-appends
   // the HOO-era clanAlignment byte to NPC CharacterCreate, issue #70). Older fixtures were recorded on the HOO-era server and keep 'live'.
   // Single files recorded on the 9ccd server outside playthrough/ (same reason).
-  const PREHOO_FILES = new Set(['audio/invisible-walker-steps.jsonl', 'audio/force-midi-map.jsonl']);
+  const PREHOO_FILES = new Set(['audio/invisible-walker-steps.jsonl', 'audio/force-midi-map.jsonl', 'spells/dardo-magico-kills-creature.jsonl', 'spells/dardo-magico-training-dummy.jsonl']);
   const before = getWireProfile();
   // Folders recorded against the pinned pre-HOO server (9ccd7fad), whose layouts the 'prehoo' profile writes.
   const PREHOO_DIRS = ['playthrough', 'followups'];
