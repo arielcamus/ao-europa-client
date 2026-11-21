@@ -9,7 +9,10 @@ import { DoorClientPacketId, DoorServerPacketId as DoorServer, KeysServerPacketI
 import { SessionServerPacketId as SS, SessionClientPacketId as SCP } from '@ao/protocol';
 import type { AccountCharacter, CharacterCreate, ClientPacket, ServerPacket } from '@ao/protocol';
 import { ClassicState } from './ui-state.js';
-import { MapObjects } from './map-objects.js';
+import { MapObjects, tileKey } from './map-objects.js';
+import { effectiveBlocked, isDeadBody, legalPos, type LegalContext, type LegalTile } from './movement.js';
+import { privilegeIndex } from './character-data.js';
+const HEADING_INTERVAL_MS = 120;
 import { PacketCounters, SEQUENCED_CLIENT_PACKETS } from './packet-counters.js';
 import type { PacketFamily } from './packet-counters.js';
 import { CharacterTracker, characterChange, splitTag } from './characters.js';
@@ -407,6 +410,23 @@ export class Session {
     this.position = { x, y };
     if (this.self) { this.characters.set(this.self.charIndex, { ...this.self, x, y }); this.tracker.place(this.self.charIndex, x, y); }
   }
+  /** CONST_INTERVALO_HEADING gate of IntervaloPermiteHeading. */
+  private lastHeading = -Infinity;
+  /** Terrain of the current map (main wires the renderer's parsed map): static Blocked byte and trigger of a tile, undefined while it loads. */
+  terrain: ((x: number, y: number) => LegalTile | undefined) | undefined;
+  private legalContext(x: number, y: number): LegalContext {
+    const base = this.terrain?.(x, y), key = tileKey(x, y);
+    const occupant = this.tracker.at(x, y);
+    const own = this.self?.privileges ?? 0;
+    return {
+      tile: base && { blocked: effectiveBlocked(base.blocked, this.mapObjects.blocked.get(key)), trigger: base.trigger },
+      occupant: occupant && {
+        dead: isDeadBody(occupant.body), invisible: this.status.invisible.has(occupant.charIndex),
+        privilege: privilegeIndex(occupant.privileges), dontBlockTile: occupant.dontBlockTile,
+      },
+      ownPrivilege: privilegeIndex(own), sailing: this.movement.sailing, swimming: this.movement.swimming, riding: this.movement.riding, dead: this.dead,
+    };
+  }
   walk(heading: Heading): boolean {
     const now = this.clock();
     this.sign = undefined; // General.MoveTo: If cartel Then cartel = False, whether or not the step is legal
@@ -420,12 +440,21 @@ export class Session {
       const others = [Heading.North, Heading.East, Heading.South, Heading.West].filter(h => h !== heading);
       heading = others[Math.min(2, Math.floor(this.random() * 3))]!;
     }
-    if (!this.status.canMove(now)) return false;
     const to = {
       x: this.position.x + (heading === Heading.East ? 1 : heading === Heading.West ? -1 : 0),
       y: this.position.y + (heading === Heading.South ? 1 : heading === Heading.North ? -1 : 0),
     };
     if (to.x < 1 || to.y < 1 || to.x > 100 || to.y > 100) return false;
+    // General.MoveTo: an illegal step (LegalPos) is never predicted; the character only turns, and WriteChangeHeading goes out when the heading differs.
+    if (!(legalPos(heading, this.legalContext(to.x, to.y)) && this.status.canMove(now))) {
+      if (this.self.heading !== heading && now - this.lastHeading >= HEADING_INTERVAL_MS) {
+        this.lastHeading = now;
+        this.characters.set(this.self.charIndex, { ...this.self, heading });
+        this.tracker.place(this.self.charIndex, this.position.x, this.position.y, heading);
+        this.send({ id: SCP.ChangeHeading, heading, counter: this.next('changeHeading') });
+      }
+      return false;
+    }
     this.motion = { from: this.position, to, started: now, duration: this.stepMs - 30 };
     this.position = to;
     this.characters.set(this.self.charIndex, { ...this.self, ...to, heading });

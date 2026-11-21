@@ -332,6 +332,7 @@ function connectSession(email: string, secret: string, create = false) {
     ws.send(bytes.slice().buffer);
   });
   session.interactive = interactiveFlow;
+  { const mine = session; mine.terrain = (x, y) => renderer.readyMap === mine.resourceMap ? renderer.legalTileAt(x, y) : undefined; } // LegalPos reads MapData(x, y).Blocked / Trigger
   password.value = '';
   npcDialog.hide();
   const owner = session;
