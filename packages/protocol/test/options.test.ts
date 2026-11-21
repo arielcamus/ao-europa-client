@@ -41,6 +41,14 @@ describe('options packets recorded from the VB6 server', () => {
     expect(lines.some(l => l.dir === 's2c' && l.id === 7)).toBe(false);
     expect(lines.filter(l => l.dir === 's2c' && l.id === OS.SendClientToggles)).toHaveLength(1);
   });
+  it('the reviewer\'s live session (a hotkey spell cast and a real TransFerGold) round-trips; logins are redacted', () => {
+    const lines = load('options/live-hotkey-cast-and-transfer.jsonl');
+    const mine = lines.filter(l => l.dir === 'c2s' && [300, 301, 224].includes(l.id));
+    expect(mine.map(l => l.name)).toEqual(['SetHotkeySlot', 'UseHKeySlot', 'TransFerGold']);
+    for (const line of mine) expect(hex(encodeClientPacket(decodeClientPacket(bytes(line.hex)) as never)), line.name).toBe(line.hex);
+    expect(decodeClientPacket(bytes(mine[2]!.hex))).toEqual({ id: 224, amount: 100, username: 'Aotesta' });
+    expect(lines.find(l => l.dir === 'c2s' && l.id === 305)!.hex).toBe('3101');
+  });
   it('rejects trailing bytes (a frame holds exactly one packet)', () => {
     expect(() => decodeClientPacket(bytes('e000e803000006416f7465737400'))).toThrow();
   });

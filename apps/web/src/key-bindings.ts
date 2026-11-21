@@ -55,7 +55,9 @@ export function parseBindings(raw: string | null | undefined): Bindings {
       if (typeof code === 'number' && Number.isInteger(code) && code >= 0 && code <= 255) table[action] = code;
     }
   } catch { /* keep the defaults */ }
-  return table;
+  // Two bindings on one key can only come from a corrupt or hand-edited value (the editor refuses duplicates): use the defaults.
+  const codes = Object.values(table);
+  return new Set(codes).size === codes.length ? table : { ...DEFAULTS_MODERN };
 }
 
 export class KeyBindings {

@@ -33,7 +33,7 @@ export class AudioOptions {
       root.append(this.range(row.id, row.label, row.volume, row.bar));
     }
     root.append(this.check('invert', 'Invertir canales', 'invertChannels', 17, 154));
-    root.addEventListener('keydown', event => { if (event.key === 'Escape') { event.stopPropagation(); this.hide(); } });
+    // Escape is left to bubble: the options window owns closing (options-ui.ts).
     parent.append(root);
     this.engine.subscribe(settings => this.sync(settings));
     this.sync(engine.settings);

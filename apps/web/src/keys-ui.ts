@@ -55,6 +55,8 @@ export class KeysUI {
     const code = vbKeyCode(event.code);
     const box = this.boxes.get(action)!;
     if (code === undefined) { this.message.textContent = 'Esa tecla no se puede asignar.'; return; }
+    // The arrow keys walk implicitly (keymap.ts); only the four movement bindings may use them.
+    if (code >= 37 && code <= 40 && (action < 14 || action > 17)) { box.dataset.bad = 'true'; this.message.textContent = 'Las flechas solo pueden asignarse al movimiento.'; return; }
     if (KeyBindings.taken(this.draft, code, action)) { box.dataset.bad = 'true'; this.message.textContent = `${keyName(code)} ya está asignada a otra acción.`; return; }
     box.dataset.bad = 'false'; this.message.textContent = ''; this.draft[action] = code; this.render();
   }

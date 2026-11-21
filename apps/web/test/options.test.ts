@@ -160,7 +160,8 @@ describe('key bindings (frmCustomKeys)', () => {
   });
   it('a hostile or half-written saved value falls back to the defaults per binding', () => {
     for (const raw of [null, '', 'x', '[]', '{"1":"a","2":-5,"3":999,"4":1.5}']) expect(parseBindings(raw)).toEqual(DEFAULTS_MODERN);
-    expect(parseBindings('{"2":65,"99":1}')[2]).toBe(65);
+    expect(parseBindings('{"2":90,"99":1}')[2]).toBe(90);
+    expect(parseBindings('{"2":65}')).toEqual(DEFAULTS_MODERN); // 65 (A) is already MoveLeft: a duplicate means a corrupt table
     expect(new KeyBindings({ getItem: () => { throw new Error('blocked'); }, setItem: () => { throw new Error('full'); }, removeItem: () => {} }).table).toEqual(DEFAULTS_MODERN);
   });
   it('names and hotkey labels follow frmCustomKeys.txConfig_KeyUp and modBindKeys.GetHotkeyLabel', () => {
