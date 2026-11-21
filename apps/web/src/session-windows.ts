@@ -81,11 +81,14 @@ export function showNewAccount(parent: HTMLElement, hooks: { create(email: strin
   const eye = win.add(document.createElement('button'), [294, 158, 17, 17]); eye.type = 'button'; eye.className = 'vb-hotspot'; eye.setAttribute('aria-label', 'Ver contraseña');
   const reveal = (on: boolean) => { password.type = on ? 'text' : 'password'; };
   eye.addEventListener('pointerdown', () => reveal(true)); eye.addEventListener('pointerup', () => reveal(false)); eye.addEventListener('pointerleave', () => reveal(false));
-  const a = 1 + Math.floor(Math.random() * 9), b = 1 + Math.floor(Math.random() * 9);
-  win.label(`${a} + ${b}`, [80, 198, 55, 17], 'vb-bold');
+  let a = 0, b = 0;
+  const sum = win.label('', [80, 198, 55, 17], 'vb-bold');
+  // calculateCaptcha: a new sum on load and after every attempt.
+  const newCaptcha = () => { a = 1 + Math.floor(Math.random() * 9); b = 1 + Math.floor(Math.random() * 9); sum.textContent = `${a} + ${b}`; };
+  newCaptcha();
   const captcha = field([144, 198, 73, 19], 'Captcha'); captcha.inputMode = 'numeric';
   const submit = () => {
-    if (Number(captcha.value) !== a + b) { hooks.say(TEXT.captcha); captcha.value = ''; return; }
+    if (Number(captcha.value) !== a + b) { hooks.say(TEXT.captcha); captcha.value = ''; newCaptcha(); return; }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) { hooks.say(TEXT.badEmail); return; }
     if (password.value.length < 4) { hooks.say('La contraseña debe tener al menos 4 caracteres.'); return; }
     hooks.create(email.value.trim(), password.value); win.close();

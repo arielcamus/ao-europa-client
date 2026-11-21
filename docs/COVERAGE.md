@@ -10,16 +10,16 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 435 of 523 = 83.2%.** Merged on main only: 435 = 83.2%.
-  - Server to client: 170 of 207. Client to server: 265 of 316. Packets with a recorded VB6 fixture: 235.
+- **Packets covered (merged + open branches): 463 of 523 = 88.5%.** Merged on main only: 463 = 88.5%.
+  - Server to client: 190 of 207. Client to server: 273 of 316. Packets with a recorded VB6 fixture: 237.
 - **Forms covered: 4 of 86 = 4.7%** (5 more partially, 10.5% started).
 
 ## (c) Feature groups, ordered by player value
 
 | # | Group | Packets covered | % | Merged | Forms covered | % | Partial forms |
 |---|---|---|---|---|---|---|---|
-| 1 | Core movement / world / session | 47/68 | 69.1% | 47 | 0/21 | 0% | 2 |
-| 2 | Chat | 21/28 | 75% | 21 | 0/0 | n/a | 0 |
+| 1 | Core movement / world / session | 68/68 | 100% | 68 | 0/21 | 0% | 2 |
+| 2 | Chat | 28/28 | 100% | 28 | 0/0 | n/a | 0 |
 | 3 | Combat | 41/41 | 100% | 41 | 0/0 | n/a | 0 |
 | 4 | Spells | 8/8 | 100% | 8 | 0/0 | n/a | 0 |
 | 5 | Items / commerce (NPC shop, inventory) | 27/27 | 100% | 27 | 2/4 | 50% | 0 |
@@ -147,9 +147,9 @@ Ids only: .
 | 2 | Logged | client Protocol.bas:HandleLogged | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 3 | RemoveDialogs | client Protocol.bas:HandleRemoveDialogs | chat | merged | `main:packages/protocol/src/packets/npcs.ts` | yes |
 | 4 | RemoveCharDialog | client Protocol.bas:HandleRemoveCharDialog | chat | merged | `main:packages/protocol/src/packets/npcs.ts` | yes |
-| 5 | NavigateToggle | client Protocol.bas:HandleNavigateToggle | core | not started |  | no |
-| 6 | EquiteToggle | client Protocol.bas:HandleEquiteToggle | core | not started |  | no |
-| 7 | Disconnect | client Protocol.bas:HandleDisconnect | core | merged | `main:packages/protocol/src/packets.ts` | no |
+| 5 | NavigateToggle | client Protocol.bas:HandleNavigateToggle | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
+| 6 | EquiteToggle | client Protocol.bas:HandleEquiteToggle | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
+| 7 | Disconnect | client Protocol.bas:HandleDisconnect | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 8 | CommerceEnd | client Protocol.bas:HandleCommerceEnd | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 9 | BankEnd | client Protocol.bas:HandleBankEnd | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 10 | CommerceInit | client Protocol.bas:HandleCommerceInit | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
@@ -182,15 +182,15 @@ Ids only: .
 | 37 | ConsoleMsg | client Protocol.bas:HandleConsoleMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 38 | ConsoleFactionMessage | client Protocol.bas:HandleConsoleFactionMessage | chat | merged | `main:packages/protocol/src/packets.ts` | no |
 | 39 | GuildChat | client Protocol.bas:HandleGuildChat | chat | merged | `main:packages/protocol/src/packets.ts` | no |
-| 40 | ShowMessageBox | client Protocol.bas:HandleShowMessageBox | chat | not started |  | yes |
-| 41 | MostrarCuenta | client Protocol.bas:HandleMostrarCuenta | core | not started |  | no |
+| 40 | ShowMessageBox | client Protocol.bas:HandleShowMessageBox | chat | merged | `main:packages/protocol/src/packets/session.ts` | yes |
+| 41 | MostrarCuenta | client Protocol.bas:HandleMostrarCuenta | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 42 | CharacterCreate | client Protocol.bas:HandleCharacterCreate | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 43 | CharacterRemove | client Protocol.bas:HandleCharacterRemove | core | merged | `main:packages/protocol/src/packets/npcs.ts` | yes |
 | 44 | CharacterMove | client Protocol.bas:HandleCharacterMove | core | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 45 | CharacterTranslate | client Protocol.bas:HandleCharacterTranslate | core | not started |  | no |
-| 46 | UserIndexInServer | client Protocol.bas:HandleUserIndexInServer | core | not started |  | yes |
+| 45 | CharacterTranslate | client Protocol.bas:HandleCharacterTranslate | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
+| 46 | UserIndexInServer | client Protocol.bas:HandleUserIndexInServer | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 47 | UserCharIndexInServer | client Protocol.bas:HandleUserCharIndexInServer | core | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 48 | ForceCharMove | client Protocol.bas:HandleForceCharMove | core | not started |  | no |
+| 48 | ForceCharMove | client Protocol.bas:HandleForceCharMove | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 49 | CharacterChange | client Protocol.bas:HandleCharacterChange | core | merged | `main:packages/protocol/src/packets/npcs.ts` | yes |
 | 50 | ObjectCreate | client Protocol.bas:HandleObjectCreate | items | merged | `main:packages/protocol/src/packets/doors.ts` | yes |
 | 51 | Fxpiso | client Protocol.bas:HandleFxPiso | core | merged | `main:packages/protocol/src/packets/spells.ts` | no |
@@ -218,7 +218,7 @@ Ids only: .
 | 73 | ErrorMsg | client Protocol.bas:HandleErrorMessage | core | merged | `main:packages/protocol/src/packets.ts` | no |
 | 74 | Blind | client Protocol.bas:HandleBlind | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 75 | Dumb | client Protocol.bas:HandleDumb | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
-| 76 | ShowSignal | client Protocol.bas:HandleShowSignal | chat | not started |  | no |
+| 76 | ShowSignal | client Protocol.bas:HandleShowSignal | chat | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 77 | ChangeNPCInventorySlot | client Protocol.bas:HandleChangeNPCInventorySlot | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 78 | UpdateHungerAndThirst | client Protocol.bas:HandleUpdateHungerAndThirst | items | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 79 | MiniStats | client Protocol.bas:HandleMiniStats | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
@@ -243,10 +243,10 @@ Ids only: .
 | 98 | StunStart | client Protocol.bas:HandleStunStart | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 99 | ShowUserRequest | client Protocol.bas:HandleShowUserRequest | trade | merged | `main:packages/protocol/src/packets/bank-trade.ts` | no |
 | 100 | ChangeUserTradeSlot | client Protocol.bas:HandleChangeUserTradeSlot | trade | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
-| 101 | UpdateTagAndStatus | client Protocol.bas:HandleUpdateTagAndStatus | core | not started |  | yes |
+| 101 | UpdateTagAndStatus | client Protocol.bas:HandleUpdateTagAndStatus | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 102 | FYA | client Protocol.bas:HandleFYA | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
-| 103 | CerrarleCliente | client Protocol.bas:HandleCerrarleCliente | core | not started |  | no |
-| 104 | Contadores | client Protocol.bas:HandleContadores | core | not started |  | yes |
+| 103 | CerrarleCliente | client Protocol.bas:HandleCerrarleCliente | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
+| 104 | Contadores | client Protocol.bas:HandleContadores | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 105 | ShowPapiro | client Protocol.bas:HandleShowPapiro | gm | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
 | 106 | UpdateCooldownType | client Protocol.bas:HandleUpdateCooldownType | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 107 | SpawnListt | client Protocol.bas:HandleSpawnList | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
@@ -268,18 +268,18 @@ Ids only: .
 | 123 | NieblaToggle | client Protocol.bas:HandleNieblaToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 124 | Goliath | client Protocol.bas:HandleGoliath | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 125 | TextOverChar | client Protocol.bas:HandleTextOverChar | chat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
-| 126 | TextOverTile | client Protocol.bas:HandleTextOverTile | chat | not started |  | yes |
-| 127 | TextCharDrop | client Protocol.bas:HandleTextCharDrop | chat | not started |  | yes |
+| 126 | TextOverTile | client Protocol.bas:HandleTextOverTile | chat | merged | `main:packages/protocol/src/packets/session.ts` | yes |
+| 127 | TextCharDrop | client Protocol.bas:HandleTextCharDrop | chat | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 128 | ConsoleCharText | client Protocol.bas:HandleConsoleCharText | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 129 | FlashScreen | client Protocol.bas:HandleFlashScreen | chat | not started |  | yes |
+| 129 | FlashScreen | client Protocol.bas:HandleFlashScreen | chat | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 130 | AlquimistaObj | client Protocol.bas:HandleAlquimiaObjects | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 131 | ShowAlquimiaForm | client Protocol.bas:HandleShowAlquimiaForm | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 132 | SastreObj | client Protocol.bas:HandleSastreObjects | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 133 | ShowSastreForm | client Protocol.bas:HandleShowSastreForm | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
-| 134 | VelocidadToggle | client Protocol.bas:HandleVelocidadToggle | core | not started |  | yes |
+| 134 | VelocidadToggle | client Protocol.bas:HandleVelocidadToggle | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 135 | MacroTrabajoToggle | client Protocol.bas:HandleMacroTrabajoToggle | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 136 | BindKeys | client Protocol.bas:HandleBindKeys | options | merged | `main:packages/protocol/src/packets/options.ts` | yes |
-| 137 | ShowFrmLogear | client Protocol.bas:HandleShowFrmLogear | core | not started |  | no |
+| 137 | ShowFrmLogear | client Protocol.bas:HandleShowFrmLogear | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 138 | ShowFrmMapa | client Protocol.bas:HandleShowFrmMapa | minimap | not started |  | no |
 | 139 | InmovilizadoOK | client Protocol.bas:HandleInmovilizadoOK | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 140 | BarFx | client Protocol.bas:HandleBarFx | spells | merged | `main:packages/protocol/src/packets/status.ts` | no |
@@ -290,7 +290,7 @@ Ids only: .
 | 145 | ArmaMov | client Protocol.bas:HandleArmaMov | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 146 | EscudoMov | client Protocol.bas:HandleEscudoMov | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 147 | ViajarForm | client Protocol.bas:HandleViajarForm | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | no |
-| 148 | NadarToggle | client Protocol.bas:HandleNadarToggle | core | not started |  | no |
+| 148 | NadarToggle | client Protocol.bas:HandleNadarToggle | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 149 | ShowFundarClanForm | client Protocol.bas:HandleShowFundarClanForm | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 150 | CharUpdateHP | client Protocol.bas:HandleCharUpdateHP | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 151 | CharUpdateMAN | client Protocol.bas:HandleCharUpdateMAN | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
@@ -315,7 +315,7 @@ Ids only: .
 | 170 | CraftingCatalyst | client Protocol.bas:HandleCraftingCatalyst | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 171 | CraftingResult | client Protocol.bas:HandleCraftingResult | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 172 | GuardNotice | (none in dispatcher) | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 173 | AnswerReset | client Protocol.bas:HandleAnswerReset | core | not started |  | no |
+| 173 | AnswerReset | client Protocol.bas:HandleAnswerReset | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 174 | ObjQuestListSend | client Protocol.bas:HandleObjQuestListSend | quests | merged | `main:packages/protocol/src/packets/quests.ts` | no |
 | 175 | UpdateBankGld | client Protocol.bas:HandleUpdateBankGld | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 176 | PelearConPezEspecial | client Protocol.bas:HandlePelearConPezEspecial | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
@@ -323,7 +323,7 @@ Ids only: .
 | 178 | ShopInit | client Protocol.bas:HandleShopInit | extras | not started |  | no |
 | 179 | UpdateShopClienteCredits | client Protocol.bas:HandleUpdateShopClienteCredits | extras | not started |  | no |
 | 180 | SendSkillCdUpdate | client Protocol.bas:HandleSendSkillCdUpdate | combat | merged | `main:packages/protocol/src/packets/spells.ts` | no |
-| 181 | UpdateFlag | client Protocol.bas:HandleUpdateFlag | core | not started |  | no |
+| 181 | UpdateFlag | client Protocol.bas:HandleUpdateFlag | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 182 | CharAtaca | client Protocol.bas:HandleCharAtaca | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 183 | NotificarClienteSeguido | client Protocol.bas:HandleNotificarClienteSeguido | extras | not started |  | no |
 | 184 | GetInventarioHechizos | client Protocol.bas:HandleGetInventarioHechizos | extras | not started |  | no |
@@ -336,7 +336,7 @@ Ids only: .
 | 191 | CreateProjectile | client Protocol.bas:HandleCreateProjectile | combat | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 192 | UpdateTrap | client Protocol.bas:HandleUpdateTrapState | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 193 | UpdateGroupInfo | client Protocol.bas:HandleUpdateGroupInfo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
-| 194 | UpdateCharValue | client Protocol.bas:HandleUpdateCharValue | core | not started |  | yes |
+| 194 | UpdateCharValue | client Protocol.bas:HandleUpdateCharValue | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 195 | SendClientToggles | client Protocol.bas:HandleSendClientToggles | extras | merged | `main:packages/protocol/src/packets/options.ts` | yes |
 | 196 | AntiCheatMessage | client Protocol.bas:HandleAntiCheatMessage | extras | not started |  | no |
 | 197 | AntiCheatStartSession | client Protocol.bas:HandleAntiCheatStartSession | extras | not started |  | yes |
@@ -360,7 +360,7 @@ Ids only: .
 | 3 | CreateNewGuild | server Protocol.bas:HandleCreateNewGuild | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 4 | SpellInfo | server Protocol.bas:HandleSpellInfo | spells | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 5 | EquipItem | server Protocol.bas:HandleEquipItem | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
-| 6 | ChangeHeading | server Protocol.bas:HandleChange_Heading | core | not started |  | no |
+| 6 | ChangeHeading | server Protocol.bas:HandleChange_Heading | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 7 | ModifySkills | server Protocol.bas:HandleModifySkills | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 8 | Train | server Protocol.bas:HandleTrain | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
 | 9 | CommerceBuy | server Protocol.bas:HandleCommerceBuy | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
@@ -393,7 +393,7 @@ Ids only: .
 | 36 | GuildRequestMembership | server Protocol.bas:HandleGuildRequestMembership | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 37 | GuildRequestDetails | server Protocol.bas:HandleGuildRequestDetails | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 38 | Online | server Protocol.bas:HandleOnline | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
-| 39 | Quit | server Protocol.bas:HandleQuit | core | merged | `main:packages/protocol/src/packets/keys.ts` | no |
+| 39 | Quit | server Protocol.bas:HandleQuit | core | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
 | 40 | GuildLeave | server Protocol.bas:HandleGuildLeave | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 41 | RequestAccountState | server Protocol.bas:HandleRequestAccountState | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 42 | PetStand | server Protocol.bas:HandlePetStand | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | yes |
@@ -405,13 +405,13 @@ Ids only: .
 | 48 | Meditate | server Protocol.bas:HandleMeditate | skills | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
 | 49 | Resucitate | server Protocol.bas:HandleResucitate | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 50 | Heal | server Protocol.bas:HandleHeal | combat | merged | `main:packages/protocol/src/packets/combat.ts` | no |
-| 51 | Help | server Protocol.bas:HandleHelp | chat | not started |  | no |
+| 51 | Help | server Protocol.bas:HandleHelp | chat | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 52 | RequestStats | server Protocol.bas:HandleRequestStats | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 53 | CommerceStart | server Protocol.bas:HandleCommerceStart | items | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 54 | BankStart | server Protocol.bas:HandleBankStart | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 55 | Information | server Protocol.bas:HandleInformation | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
 | 56 | Reward | server Protocol.bas:HandleReward | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 57 | RequestMOTD | server Protocol.bas:HandleRequestMOTD | chat | not started |  | no |
+| 57 | RequestMOTD | server Protocol.bas:HandleRequestMOTD | chat | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 58 | UpTime | server Protocol.bas:HandleUpTime | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 59 | GuildMessage | server Protocol.bas:HandleGuildMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 60 | GuildOnline | server Protocol.bas:HandleGuildOnline | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
@@ -428,7 +428,7 @@ Ids only: .
 | 71 | BankDepositGold | server Protocol.bas:HandleBankDepositGold | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 72 | Denounce | server Protocol.bas:HandleDenounce | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 73 | LoginExistingChar | server Protocol.bas:HandleLoginExistingChar | core | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 74 | LoginNewChar | server Protocol.bas:HandleLoginNewChar | core | not started |  | no |
+| 74 | LoginNewChar | server Protocol.bas:HandleLoginNewChar | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 75 | Talk | server Protocol.bas:HandleTalk | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 76 | Yell | server Protocol.bas:HandleYell | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 77 | Whisper | server Protocol.bas:HandleWhisper | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
@@ -537,7 +537,7 @@ Ids only: .
 | 180 | SystemMessage | server Protocol.bas:HandleSystemMessage | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 181 | CreateNPC | server Protocol.bas:HandleCreateNPC | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
 | 182 | CreateNPCWithRespawn | server Protocol.bas:HandleCreateNPCWithRespawn | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 183 | NavigateToggle | server Protocol.bas:HandleNavigateToggle | core | not started |  | no |
+| 183 | NavigateToggle | server Protocol.bas:HandleNavigateToggle | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 184 | ServerOpenToUsersToggle | server Protocol.bas:HandleServerOpenToUsersToggle | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 185 | Participar | server Protocol.bas:HandleParticipar | extras | not started |  | no |
 | 186 | RemoveCharFromGuild | server Protocol.bas:HandleRemoveCharFromGuild | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
@@ -618,7 +618,7 @@ Ids only: .
 | 261 | QuestDetailsRequest | server Protocol.bas:HandleQuestDetailsRequest | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
 | 262 | QuestAbandon | server Protocol.bas:HandleQuestAbandon | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
 | 263 | SeguroClan | server Protocol.bas:HandleSeguroClan | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
-| 264 | Home | server Protocol.bas:HandleHome | core | not started |  | no |
+| 264 | Home | server Protocol.bas:HandleHome | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 265 | Consulta | server Protocol.bas:HandleConsulta | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 266 | GetMapInfo | server Protocol.bas:HandleGetMapInfo | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 267 | FinEvento | server Protocol.bas:HandleFinEvento | extras | not started |  | no |
@@ -658,9 +658,9 @@ Ids only: .
 | 301 | UseHKeySlot | server Protocol.bas:HandleUseHKeySlot | items | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
 | 302 | AntiCheatMessage | server Protocol.bas:HandleAntiCheatMessage | extras | not started |  | no |
 | 303 | RequestLobbyList | (none in dispatcher) | extras | not started |  | no |
-| 304 | CreateAccount | server Protocol.bas:HandleCreateAccount | core | not started |  | no |
+| 304 | CreateAccount | server Protocol.bas:HandleCreateAccount | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 305 | LoginAccount | server Protocol.bas:HandleLoginAccount | core | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 306 | DeleteCharacter | server Protocol.bas:HandleDeleteCharacter | core | not started |  | no |
+| 306 | DeleteCharacter | server Protocol.bas:HandleDeleteCharacter | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 307 | ChangeSkinSlot | (none in dispatcher) | extras | not started |  | no |
 | 308 | StartAutomatedAction | server Protocol.bas:HandleStartAutomatedAction | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 309 | PetFollowAll | server Protocol.bas:HandlePetFollowAll | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | yes |
@@ -680,7 +680,7 @@ Disjoint by construction: every uncovered packet and form belongs to exactly one
 
 Account create/select/delete, character create, loading screens, HUD stat updates, remaining chat packets.
 
-- Packets (28): S5 NavigateToggle, S6 EquiteToggle, S40 ShowMessageBox, S41 MostrarCuenta, S45 CharacterTranslate, S46 UserIndexInServer, S48 ForceCharMove, S76 ShowSignal, S101 UpdateTagAndStatus, S103 CerrarleCliente, S104 Contadores, S126 TextOverTile, S127 TextCharDrop, S129 FlashScreen, S134 VelocidadToggle, S137 ShowFrmLogear, S148 NadarToggle, S173 AnswerReset, S181 UpdateFlag, S194 UpdateCharValue, C6 ChangeHeading, C51 Help, C57 RequestMOTD, C74 LoginNewChar, C183 NavigateToggle, C264 Home, C304 CreateAccount, C306 DeleteCharacter
+- Packets (0): none left
 - Forms (21): frmMain, frmConnect, FrmCuenta, frmOldPersonaje, frmCrearCuenta, frmNewAccount, frmCrearPersonaje, frmDeleteChar, frmPasswd, frmNewPassword, FrmRecuperar, frmPasswordReset, Frmcarga, frmCargando, frmConnecting, frmPres, frmCerrar, frmMensaje, frmtip, FrmLogear, frmKeypad
 
 ### wp02: World FX, environment and minimap
