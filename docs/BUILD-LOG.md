@@ -703,3 +703,9 @@ Spec = the pinned VB6 client 619e69d (the reference checkout is at b648c1a, 84 l
   The search box writes "name (n)" with a space, a click on the picture "name(n)" (both as in the form).
 - Real-server checks (own account wpa@local.test / char Wpascreens, own bridge 7794, web 5794, `tools/wp-a-screens-shot.mjs`, `tools/wp-a-map-shot.mjs`): BindKeys 0x88 `0101`, MacroPos
   sends `ef00 0001` / `ef00 0000`, `/HOGAR` = 264, map 4 "Lobo Negro": HP 400, 20/35, EXP 220, drop "Piel de Lobo Negro" 100 %.
+
+## 2026-11-21 maps fidelity (fix/maps-fidelity)
+
+- Minimap, pinned VB6 (619e69d): the default `CenteredMinimap = 1` draws `interface/mapa1_200x200.bmp` / `mapa2_200x200.bmp` (ModMinimap.RenderMinimapCentered); world 3 has no file (`Case Else: minimapFile = ""` then `Exit Sub`, nothing drawn). Those two bitmaps exist in no public Recursos commit (tree and per-path history checked with `gh api`, nor in Recursos-prehoo), so the pinned client run on public data draws a blank minimap. Default here is now CenteredMinimap = 0 (the per-map 100x100 pictures, real data); the continuous mode stays behind the option, composed from those pictures at an assumed 200 px per cell.
+- Mode 0 also paints the quest NPC markers (DibujarMiniMapa, `OUTPUT/QuestNPCsMapData.bin` = ListNPCMapData): 2x2 cyan (state 1) or yellow square with 8 grey pixels around. Was missing. `tools/local-assets.mjs` now serves that one file.
+- frmMapaGrande already loaded the real `interface/mapa<world>.bmp` (513x594, 19x22 cells of 27 px). TotalWorlds = 3 (mapa1 continent, mapa2 dungeons, mapa3 the 2024 lands incl. Forgat); `ToggleDungeonView` only swaps worlds 1 and 2, so from world 3 the Dungeons check does nothing in VB6 as well. `mapsworlddata.dat` also holds a [WORLDMAP4] (14x18) that TotalWorlds = 3 ignores.

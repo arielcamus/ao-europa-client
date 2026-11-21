@@ -36,6 +36,37 @@ export const cByte = (v: number) => { const r = Math.round(v); return Math.abs(v
 
 export const minimapUrl = (resourceMap: number) => `/ao-assets/Minimapas/mapa${resourceMap}.bmp`;
 
+/** One NPC marker of ListNPCMapData (Recursos.CargarNPCsMapData): the position is already ConvertToMinimapPosition(x, y, 2, 0), a minimap pixel. */
+export interface QuestDot { x: number; y: number; state: number }
+const clongHalfEven = (v: number) => { const r = Math.round(v); return Math.abs(v % 1) === 0.5 && r % 2 !== 0 ? r - 1 : r; };
+/**
+ * OUTPUT/QuestNPCsMapData.bin: repeated `Integer map` (when > 0: 100 slots of NPCNumber, x, y, state, all Integer), a map <= 0 is a bare 2-byte filler.
+ * Slots with NPCNumber = 0 are skipped: the pinned loop paints them too, but their (0, 0) converts to a negative pixel, off the picture.
+ */
+export function parseQuestNpcDots(bytes: Uint8Array): Map<number, QuestDot[]> {
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength), out = new Map<number, QuestDot[]>();
+  for (let at = 0; at + 2 <= bytes.length;) {
+    const map = view.getInt16(at, true); at += 2;
+    if (map <= 0) continue;
+    if (at + 800 > bytes.length) break;
+    const dots: QuestDot[] = [];
+    for (let slot = 0; slot < 100; slot++, at += 8) {
+      if (view.getInt16(at, true) <= 0) continue;
+      // ConvertToMinimapPosition(x, y, MarkerWidth 2, MarkerHeight 0); the Single goes into an Integer field, then a Long: round half to even.
+      dots.push({ x: clongHalfEven((view.getInt16(at + 2, true) - HALF_W - 2) * (100 / (100 - 2 * HALF_W - 4)) - 1 - 1), y: clongHalfEven((view.getInt16(at + 4, true) - HALF_H - 1) * (100 / (100 - 2 * HALF_H - 2)) - 0 - 1), state: view.getInt16(at + 6, true) });
+    }
+    out.set(map, dots);
+  }
+  return out;
+}
+const QUEST_GREY = '#808080', QUEST_CYAN = 'rgb(0,198,254)', QUEST_YELLOW = 'rgb(255,201,14)';
+/** ModMinimap.DibujarMiniMapa: a 2x2 square (cyan for state 1, yellow otherwise) with a 8-pixel grey outline, as `[x, y, colour]` pixels. */
+export function questDotPixels(dot: QuestDot): [number, number, string][] {
+  const colour = dot.state === 1 ? QUEST_CYAN : QUEST_YELLOW, { x, y } = dot;
+  return [[x + 1, y, colour], [x, y + 1, colour], [x + 1, y + 1, colour], [x, y, colour],
+    [x, y - 1, QUEST_GREY], [x + 1, y - 1, QUEST_GREY], [x + 2, y, QUEST_GREY], [x + 2, y + 1, QUEST_GREY], [x + 1, y + 2, QUEST_GREY], [x, y + 2, QUEST_GREY], [x - 1, y + 1, QUEST_GREY], [x - 1, y, QUEST_GREY]];
+}
+
 export interface MinimapOptions { centered: boolean; zoom: number }
 export interface MinimapHooks {
   /** Left click (MiniMap_MouseDown): open the big map. */
@@ -49,6 +80,10 @@ export class Minimap {
   private readonly dot: HTMLElement;
   private readonly canvas: HTMLCanvasElement;
   private readonly allyDots: HTMLElement[] = [];
+  private readonly quest: HTMLCanvasElement;
+  /** ListNPCMapData; filled by main once OUTPUT/QuestNPCsMapData.bin is read (optional data). */
+  questDots: ReadonlyMap<number, QuestDot[]> = new Map();
+  private questDrawn = '';
   /** Per-map pictures for the centred composite; `undefined` while loading or missing. */
   private readonly pictures = new Map<number, HTMLImageElement | 'missing'>();
   private drawn = '';
@@ -62,6 +97,9 @@ export class Minimap {
     this.dot = host.querySelector<HTMLElement>('#minimap-dot')!;
     this.canvas = document.createElement('canvas'); this.canvas.width = MINIMAP_SIZE; this.canvas.height = MINIMAP_SIZE; this.canvas.id = 'minimap-canvas';
     this.canvas.hidden = true; host.prepend(this.canvas);
+    // DibujarMiniMapa paints the quest NPC markers straight onto the per-map picture (CenteredMinimap = 0 only).
+    this.quest = document.createElement('canvas'); this.quest.width = MINIMAP_SIZE; this.quest.height = MINIMAP_SIZE; this.quest.id = 'minimap-quest';
+    this.quest.hidden = true; host.prepend(this.quest);
     for (let slot = 1; slot <= 5; slot++) {
       const el = document.createElement('span'); el.className = 'dot ally'; el.hidden = true; el.dataset.slot = String(slot);
       el.style.background = DOT_COLORS[slot]!; host.append(el); this.allyDots.push(el);
@@ -95,7 +133,7 @@ export class Minimap {
     this.map = map;
     const position = session?.position;
     const centered = this.options.centered;
-    this.canvas.hidden = !(centered && playing); this.host.dataset.minimapMode = centered ? 'centered' : 'map';
+    this.canvas.hidden = !(centered && playing); if (centered) this.quest.hidden = true; this.host.dataset.minimapMode = centered ? 'centered' : 'map';
     if (!centered) { this.updatePicture(session, playing, position, allies); return; }
     // The per-map picture is not shown in the centred mode (DibujarMiniMapa only loads it for CenteredMinimap = 0).
     if (this.shownMap !== -2) { this.shownMap = -2; this.host.style.backgroundImage = ''; }
@@ -126,6 +164,17 @@ export class Minimap {
     ctx.fillStyle = '#000'; ctx.fillRect(0, 0, MINIMAP_SIZE, MINIMAP_SIZE); this.drawn = '';
   }
 
+  private paintQuestDots(map: number) {
+    const dots = map > 0 ? this.questDots.get(map) ?? [] : [];
+    const key = `${map}|${dots.length}`;
+    this.quest.hidden = dots.length === 0;
+    if (key === this.questDrawn) return;
+    this.questDrawn = key;
+    const ctx = this.quest.getContext('2d'); if (!ctx) return;
+    ctx.clearRect(0, 0, MINIMAP_SIZE, MINIMAP_SIZE);
+    for (const dot of dots) for (const [x, y, colour] of questDotPixels(dot)) { ctx.fillStyle = colour; ctx.fillRect(x, y, 1, 1); }
+  }
+
   private updatePicture(session: Session | undefined, playing: boolean, position: { x: number; y: number } | undefined, allies: ReadonlyMap<number, { x: number; y: number }>) {
     const map = playing && session ? (session.resourceMap ?? 0) : 0;
     if (map !== this.shownMap) {
@@ -133,6 +182,7 @@ export class Minimap {
       this.host.style.backgroundImage = map > 0 ? `url("${minimapUrl(map)}")` : '';
       this.host.dataset.minimapMap = String(map);
     }
+    this.paintQuestDots(playing ? map : 0);
     this.dot.hidden = !playing || !position;
     let dot: { x: number; y: number } | undefined;
     if (playing && position) {

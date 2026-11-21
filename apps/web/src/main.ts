@@ -28,7 +28,7 @@ import { FishingUI } from './fishing-ui.js';
 import { KeyAction, keyAction } from './keymap.js';
 import { SkillsWindows } from './skills-window.js';
 import { KeysClientPacketId as K, WorkSkill } from '@ao/protocol';
-import { Minimap } from './minimap.js';
+import { Minimap, parseQuestNpcDots } from './minimap.js';
 import { AudioSystem } from './audio-system.js';
 import './bank-trade.css';
 import { BankUI } from './bank-ui.js';
@@ -73,6 +73,8 @@ const minimap = new Minimap(element('minimap'));
 let worlds: World[] = [];
 let mapNames = parseIni('');
 void fetchText('init/mapsworlddata.dat').then(text => { worlds = parseWorlds(parseIni(text)); minimap.worlds = worlds; }).catch(error => report(`mapsworlddata.dat: ${String(error)}`));
+// Recursos.CargarNPCsMapData: the quest NPC markers of the per-map minimap (OUTPUT/QuestNPCsMapData.bin).
+void fetchBytes('OUTPUT/QuestNPCsMapData.bin').then(bytes => { minimap.questDots = parseQuestNpcDots(bytes); }).catch(() => undefined);
 void fetchText('init/namemapa.dat').then(text => { mapNames = parseIni(text); }).catch(() => undefined);
 const mapHeaderNames = new Map<number, Promise<string>>();
 // NpcData / ObjData as frmMapaGrande reads them (Dat/npcs.dat, Dat/Obj.dat), loaded the first time the large map opens.

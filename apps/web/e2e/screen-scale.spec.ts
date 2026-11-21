@@ -18,6 +18,8 @@ for (const [name, width, height, scale] of [['1x', 1024, 768, 1], ['1.5x', 1536,
         }
       });
     });
+    // The default minimap is the per-map picture mode (see options-settings.ts); this test drives the continuous one.
+    await page.addInitScript(() => { try { localStorage.setItem('ao.options.v1', JSON.stringify({ centeredMinimap: true })); } catch { /* no storage */ } });
     await page.goto('/');
     await expect(page.locator('#classic')).toHaveAttribute('data-ui-ready', 'true');
     await page.locator('#connect').click();
@@ -53,7 +55,7 @@ for (const [name, width, height, scale] of [['1x', 1024, 768, 1], ['1.5x', 1536,
     await expect(page.locator('#connection')).toHaveText('Connected');
     await expect.poll(() => leftClicks.length).toBeGreaterThan(0);
     expect(leftClicks.at(-1)).toEqual({ x: px + 1, y: py });
-    // The minimap: the centred DirectX mode is the VB6 default (a 100 x 100 canvas in the 100 px control), the player dot is its centre, and the
+    // The minimap: the centred DirectX mode (VB6 default, switched on here) (a 100 x 100 canvas in the 100 px control), the player dot is its centre, and the
     // zoom buttons change the crop (CenteredMinimapZoom -20 / +20, clamped to +-50).
     const minimap = page.locator('#minimap');
     await expect(minimap).toHaveAttribute('data-minimap-mode', 'centered');

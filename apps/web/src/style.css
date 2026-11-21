@@ -55,7 +55,7 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1
 #minimap { background: #000; overflow: hidden; }
 #minimap { background-repeat: no-repeat; background-size: 100px 100px; image-rendering: pixelated; }
 #minimap .dot { position: absolute; border-radius: 50%; pointer-events: none; }
-#minimap-canvas { position: absolute; left: 0; top: 0; width: 100px; height: 100px; }
+#minimap-canvas, #minimap-quest { position: absolute; left: 0; top: 0; width: 100px; height: 100px; pointer-events: none; }
 #minimap .dot.ally { width: 5px; height: 5px; border: 1px solid #fff; }
 #minimap-dot { width: 5px; height: 5px; border: 1px solid #fff; background: #c00000; }
 #classic canvas, #classic img, #classic .inventory-slot { image-rendering: pixelated; }
