@@ -58,6 +58,9 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1
 #login { position: absolute; left: 334px; top: 250.5px; width: 356px; height: 267px; }
 #login input { border: 0; padding: 0; color: #c0c0c0; background: #131403; font-size: 13px; font-weight: bold; }
 #mode-note { position: absolute; left: 43px; top: 171px; width: 270px; margin: 0; font-size: 11px; color: #c8bebe; }
+#connect { background-size: 132px 28px; }
+#connect:hover { background-image: var(--over) !important; }
+#connect:active { background-image: var(--off) !important; filter: none; }
 #connect:disabled { opacity: .5; cursor: wait; }
 .visually-hidden { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* NPC dialog (mostrarCartel): bottom of the 736x608 viewport. */

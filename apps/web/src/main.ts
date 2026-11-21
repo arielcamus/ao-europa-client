@@ -420,6 +420,8 @@ remember.addEventListener('click', () => {
   const on = remember.getAttribute('aria-checked') !== 'true'; remember.setAttribute('aria-checked', String(on));
   connectUi.say(on ? TEXT.remember : TEXT.forget);
 });
+// FrmLogear.loadButtons: cmdIngresar uses boton-ingresar-default / -over / -off (clsGraphicalButton: over on hover, off while pressed), 132x28.
+void import('./interface-assets.js').then(({ loadInterface }) => Promise.all(['over', 'off'].map(state => loadInterface(`boton-ingresar-${state}`).then(url => connect.style.setProperty(`--${state}`, `url("${url}")`)))).catch(() => undefined));
 const accountButton = document.createElement('button'); accountButton.type = 'button'; accountButton.className = 'hotspot'; accountButton.setAttribute('aria-label', 'Crear cuenta'); accountButton.style.cssText = 'position:absolute;left:43px;top:202px;width:132px;height:28px';
 accountButton.addEventListener('click', () => { if (!socket) showNewAccount(element('classic'), { create: (email, secret) => connectSession(email, secret, true), say: text => connectUi.say(text) }); });
 const quitButton = document.createElement('button'); quitButton.type = 'button'; quitButton.className = 'hotspot'; quitButton.setAttribute('aria-label', 'Salir'); quitButton.style.cssText = 'position:absolute;left:183px;top:202px;width:132px;height:28px';
