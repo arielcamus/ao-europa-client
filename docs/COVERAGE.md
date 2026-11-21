@@ -11,7 +11,7 @@ Scanned refs: `main`
 ## Headline
 
 - **Packets covered (merged + open branches): 512 of 513 = 99.8%.** Merged on main only: 512 = 99.8%.
-  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 295.
+  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 297.
 - **Forms covered: 58 of 86 = 67.4%** (0 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
@@ -260,7 +260,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 48 | ForceCharMove | client Protocol.bas:HandleForceCharMove | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 49 | CharacterChange | client Protocol.bas:HandleCharacterChange | core | merged | `main:packages/protocol/src/packets/npcs.ts` | yes |
 | 50 | ObjectCreate | client Protocol.bas:HandleObjectCreate | items | merged | `main:packages/protocol/src/packets/doors.ts` | yes |
-| 51 | Fxpiso | client Protocol.bas:HandleFxPiso | core | merged | `main:packages/protocol/src/packets/spells.ts` | no |
+| 51 | Fxpiso | client Protocol.bas:HandleFxPiso | core | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 52 | ObjectDelete | client Protocol.bas:HandleObjectDelete | items | merged | `main:packages/protocol/src/packets/doors.ts` | no |
 | 53 | BlockPosition | client Protocol.bas:HandleBlockPosition | core | merged | `main:packages/protocol/src/packets/doors.ts` | yes |
 | 54 | PlayMIDI | client Protocol.bas:HandlePlayMIDI | core | merged | `main:packages/protocol/src/packets/audio.ts` | yes |
@@ -720,7 +720,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 301 | UseHKeySlot | server Protocol.bas:HandleUseHKeySlot | items | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
 | 302 | AntiCheatMessage | server Protocol.bas:HandleAntiCheatMessage | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 303 | RequestLobbyList | (none in dispatcher) | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
-| 304 | CreateAccount | server Protocol.bas:HandleCreateAccount | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
+| 304 | CreateAccount | server Protocol.bas:HandleCreateAccount | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 305 | LoginAccount | server Protocol.bas:HandleLoginAccount | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 306 | DeleteCharacter | server Protocol.bas:HandleDeleteCharacter | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 307 | ChangeSkinSlot | (none in dispatcher) | extras | not started |  | no |

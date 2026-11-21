@@ -16,7 +16,7 @@
 | Packets with a codec | 512 | 513 | 1 |
 | Screens complete (all controls) | 58 | 58 | 0 (0 partial, 0 not started, 0 covered but missing controls) |
 | Behaviour items | 0 | 6 | **6 open** (4 to do, 1 in flight, 1 blocked on data or a decision) |
-| Playthrough steps passing end to end | 26 | 169 | 143 (48 recorded at protocol level on main, 0 in flight, 148 automatable, 21 manual) |
+| Playthrough steps passing end to end | 70 | 177 | 107 (31 recorded at protocol level on main, 0 in flight, 147 automatable, 30 manual) |
 
 Scope. Packets: the 8 post-pin packets are excluded (docs/COVERAGE.md "post-pin"); "codec" is a registered `[Table.Name]` entry, and the handling check is a name search in apps/web and the bridge. Screens: covered + partial + class a; classes b (account server), c (AO20 extras) and d (dead forms) are out. Playthrough: "passing" means an end-to-end run against the real server; none exists yet (WP-D).
 
@@ -24,7 +24,7 @@ In flight now: PR #54 (feat/prehoo-lock: pins, asset lock, pinned coverage map);
 
 ## 1. Packets
 
-**512 of 513 have a codec** (server to client 202/202, client to server 310/311); 295 have a recorded VB6 fixture.
+**512 of 513 have a codec** (server to client 202/202, client to server 310/311); 297 have a recorded VB6 fixture.
 
 ### Missing codecs
 
@@ -76,18 +76,19 @@ None.
 
 ## 4. End-to-end playthrough
 
-Full list with expected results and VB6 sources: [PLAYTHROUGH.md](PLAYTHROUGH.md). **169 steps, 26 passing**, 2 failing, 11 blocked, 48 recorded, 0 in flight, 148 automatable, 21 manual.
+Full list with expected results and VB6 sources: [PLAYTHROUGH.md](PLAYTHROUGH.md). **177 steps, 70 passing**, 0 failing, 23 blocked, 31 recorded, 0 in flight, 147 automatable, 30 manual.
 
 | Category | Steps | Recorded | In flight | Auto | Manual |
 |---|---|---|---|---|---|
 | Account, character creation and session | 14 | 1 | 0 | 13 | 1 |
+| Newbie path: city, Cartelera, Newbie Dungeon, quest 190, graduation | 8 | 0 | 0 | 8 | 0 |
 | Movement and world | 27 | 3 | 0 | 23 | 4 |
-| Survival: hunger, thirst, potions, regeneration | 15 | 5 | 0 | 13 | 2 |
-| Combat, magic, factions and pets | 26 | 9 | 0 | 23 | 3 |
+| Survival: hunger, thirst, potions, regeneration | 15 | 0 | 0 | 13 | 2 |
+| Combat, magic, factions and pets | 26 | 1 | 0 | 14 | 12 |
 | Death, ghost state and resurrection | 16 | 2 | 0 | 15 | 1 |
-| Progression: exp, levels, skills | 20 | 3 | 0 | 19 | 1 |
+| Progression: exp, levels, skills | 20 | 1 | 0 | 19 | 1 |
 | Trades: chop, mine, smelt, fish, craft, tame, steal | 14 | 8 | 0 | 13 | 1 |
-| Economy, social, guilds, quests and chat | 25 | 15 | 0 | 22 | 3 |
+| Economy, social, guilds, quests and chat | 25 | 13 | 0 | 22 | 3 |
 | Other player actions in the packet table | 12 | 2 | 0 | 7 | 5 |
 
 ## Work packages for parallel agents

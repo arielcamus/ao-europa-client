@@ -31,7 +31,9 @@ describe('PlayWave as the real VB6 server sends it (every recorded fixture)', ()
   const waves = recordedWaves();
   it('decodes every recorded PlayWave with the spells codec', () => {
     expect(waves.length).toBeGreaterThan(5);
-    for (const w of waves) expect(w.wave).toBeGreaterThan(0);
+    // wave 0 is real: a Quest NPC with no SoundOpen (the Cartelera, NPC 1331) is clicked with WritePlayWave(SoundOpen = 0); VB6 HandlePlayWave plays "0" (no file, silent)
+    for (const w of waves) expect(w.wave).toBeGreaterThanOrEqual(0);
+    expect(waves.filter(w => w.wave > 0).length).toBeGreaterThan(5);
   });
   it('plays them back through the session: each wave heard in the area reaches the engine under its recorded id', () => {
     const withWaves = fixtures.filter(name => rows(name).some(r => r.id === SP.PlayWave));
