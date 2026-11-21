@@ -8,6 +8,24 @@ const T = { DETALLEAGUA: 8, VALIDONADO: 11, NADOBAJOTECHO: 16, VALIDOPUENTE: 17,
 /** CASPER_BODY_IDLE / CASPER_BODY_NAVIGATING (Declares.bas): the ghost bodies of a dead character (CharacterCreate: Muerto). */
 export const isDeadBody = (body: number) => body === 829 || body === 87;
 
+/**
+ * TileEngine.Init_TileEngine: MinXBorder = 1 + ScaleWidth \ 64, MaxXBorder = 100 - ScaleWidth \ 64, same for Y with ScaleHeight. The classic
+ * renderer is 736x608, so x 12..89 and y 10..91; the server's LegalWalk uses the same box (XWindow 23, YWindow 18 -> 1 + 23 \ 2, 1 + 18 \ 2).
+ * LegalPos refuses any tile outside it, so MoveTo never sends a Walk the server would only bounce with a PosUpdate.
+ */
+export const MIN_X_BORDER = 12, MAX_X_BORDER = 89, MIN_Y_BORDER = 10, MAX_Y_BORDER = 91;
+export const inWalkBorders = (x: number, y: number) => x >= MIN_X_BORDER && x <= MAX_X_BORDER && y >= MIN_Y_BORDER && y <= MAX_Y_BORDER;
+
+/** TileEngine_Map.HayAgua: layer-1 graphics that are water. */
+const WATER_GRH: [number, number][] = [[1505, 1520], [124, 139], [24223, 24238], [24303, 24318], [468, 483], [44668, 44683], [24143, 24158], [12628, 12643], [2948, 2963]];
+/**
+ * Recursos.ReadMapGraphics derives two Blocked bits from the graphics, never stored in the CSM: FLAG_AGUA when layer 1 is water, FLAG_COSTA when layer 2 or 3
+ * has a graphic. LegalPos needs them (a sailor may only enter water, a walker only land), the server computes the same on load.
+ */
+export function graphicFlags(layer1: number, layer2: number, layer3: number): number {
+  return (WATER_GRH.some(([a, b]) => layer1 >= a && layer1 <= b) ? FLAG_AGUA : 0) | (layer2 > 0 || layer3 > 0 ? FLAG_COSTA : 0);
+}
+
 export interface LegalTile { blocked: number; trigger: number }
 export interface LegalOccupant { dead: boolean; invisible: boolean; privilege: number; dontBlockTile: boolean }
 export interface LegalContext {

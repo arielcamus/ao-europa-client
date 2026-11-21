@@ -10,7 +10,7 @@ import { SessionServerPacketId as SS, SessionClientPacketId as SCP, GmServerPack
 import type { AccountCharacter, CharacterCreate, ClientPacket, ServerPacket } from '@ao/protocol';
 import { ClassicState } from './ui-state.js';
 import { MapObjects, tileKey } from './map-objects.js';
-import { effectiveBlocked, isDeadBody, legalPos, type LegalContext, type LegalTile } from './movement.js';
+import { effectiveBlocked, inWalkBorders, isDeadBody, legalPos, type LegalContext, type LegalTile } from './movement.js';
 import { privilegeIndex } from './character-data.js';
 const HEADING_INTERVAL_MS = 120;
 import { PacketCounters, SEQUENCED_CLIENT_PACKETS } from './packet-counters.js';
@@ -454,9 +454,9 @@ export class Session {
       x: this.position.x + (heading === Heading.East ? 1 : heading === Heading.West ? -1 : 0),
       y: this.position.y + (heading === Heading.South ? 1 : heading === Heading.North ? -1 : 0),
     };
-    if (to.x < 1 || to.y < 1 || to.x > 100 || to.y > 100) return false;
-    // General.MoveTo: an illegal step (LegalPos) is never predicted; the character only turns, and WriteChangeHeading goes out when the heading differs.
-    if (!(legalPos(heading, this.legalContext(to.x, to.y)) && this.status.canMove(now))) {
+    // General.MoveTo: an illegal step (LegalPos: the MinXBorder..MaxYBorder box first, then occupants and terrain) is never predicted; the character
+    // only turns, and WriteChangeHeading goes out when the heading differs. The old 1..100 test sent a Walk the server bounced with a PosUpdate.
+    if (!(inWalkBorders(to.x, to.y) && legalPos(heading, this.legalContext(to.x, to.y)) && this.status.canMove(now))) {
       if (this.self.heading !== heading && now - this.lastHeading >= HEADING_INTERVAL_MS) {
         this.lastHeading = now;
         this.characters.set(this.self.charIndex, { ...this.self, heading });
