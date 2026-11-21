@@ -173,6 +173,26 @@ const TREE_MIN_ALPHA = 130 / 255, TREE_FADE_MS = 150;
 /** RenderScreen tree test for objects: within 2 tiles sideways and 7 rows, with the tree south of the player. */
 export const treeCoversPlayer = (player: { x: number; y: number }, x: number, y: number) =>
   Math.abs(player.x - x) < 3 && Math.abs(player.y - y) < 8 && player.y < y;
+/**
+ * clsTileEngineHelper.ValidTreeIndices (pinned 619e69d): the Grh indices Recursos.bas flags FLAG_ARBOL (Blocked Or &H40) when it loads
+ * the map's row-pass layer (pinned Graphic(3), `layers[3]` here; most forest trees). RenderScreen fades ONLY those sprites of that layer.
+ */
+export const TREE_GRH_INDICES: ReadonlySet<number> = new Set([
+  643, 644, 647, 735, 1121, 2931, 11903, 11904, 11905, 14775, 11906, 70885, 70884, 71042, 71041, 15698, 14504, 14505, 15697, 15510, 12581, 12582,
+  12583, 12584, 12585, 12586, 12164, 12165, 12166, 12167, 12168, 12169, 12170, 12171, 12172, 12173, 12174, 12175, 12176, 12177, 12178, 12179, 32142, 32143, 32144,
+  32145, 32146, 32147, 32148, 32149, 32150, 32151, 32152, 32154, 55626, 55627, 55628, 55629, 55630, 55631, 55632, 55633, 55634, 55635, 55636, 55637, 55638, 55639,
+  55640, 55642, 50985, 50986, 50987, 50988, 50989, 50990, 50991, 2547, 2548, 2549, 6597, 6598, 15108, 15109, 15110, 12160, 7220, 462, 463, 1877, 1878, 1879, 1880,
+  1881, 1890, 1892, 433, 460, 461, 9513, 9514, 9515, 9518, 9519, 9520, 9529, 14687, 47726, 12333, 12330, 20369, 21120, 21227, 21352, 12332, 21226, 8258, 32118, 32119,
+  32129, 32132, 32133, 32135,
+]);
+/** RenderScreen row-pass layer (pinned Graphic(3)) with FLAG_ARBOL: wider than the object rule, |dx| <= 3 and |dy| < 12, with the tree south of the player. */
+export const layer4TreeCoversPlayer = (player: { x: number; y: number }, x: number, y: number) =>
+  Math.abs(player.x - x) <= 3 && Math.abs(player.y - y) < 12 && player.y < y;
+/**
+ * Sort key of the row pass (pinned TileEngine_RenderScreen.bas "Layer 3 & chars"): for each row y, the characters standing on row y
+ * (Char_Render, x order), then that row's big objects and Graphic(3). An object one row south of a character covers its lower body.
+ */
+export const rowSlot = (row: number, phase: 'characters' | 'objects') => row * 2 + (phase === 'objects' ? 1 : 0);
 export class TreeFade {
   private alpha = new Map<number, number>();
   step(key: number, covers: boolean, dtMs: number): number {

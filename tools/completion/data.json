@@ -16,11 +16,6 @@
  "formGaps": [],
  "behaviour": [
   {
-   "issue": 58,
-   "text": "Port the live engine.bas Char_Render offsets (no +1 body x; head y OffHead = HeadOffset.y - ease - 1 - BodyOffset.y), with a unit test and before/after screenshots",
-   "area": "render"
-  },
-  {
    "issue": 34,
    "text": "roofTint: roofs shaded with the 4 tile vertices need a vertex-colour mesh",
    "area": "render"
