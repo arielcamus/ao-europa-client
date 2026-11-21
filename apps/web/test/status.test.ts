@@ -129,3 +129,20 @@ describe('replay of a real VB6 spell scroll (tests/fixtures/vb6/combat-items/lea
     expect(lines.find(l => l.dir === 'c2s' && l.id === 99)?.hex).toBe('63000d0101000000'); // UseItem(slot 13, fromInventory, counter 1)
   });
 });
+
+describe('replay of a real VB6 priest revival (tests/fixtures/vb6/combat-items/priest-revive-click.jsonl)', () => {
+  it('a dead character that left-clicks the priest is revived: UpdateHP, LocaleMsg 585, alive again', () => {
+    const lines = readFileSync(new URL('../../../tests/fixtures/vb6/combat-items/priest-revive-click.jsonl', import.meta.url), 'utf8').trim().split('\n')
+      .map(line => JSON.parse(line) as { dir: string; id: number; hex: string });
+    const session = new Session({ email: 'x', password: 'y' }, () => undefined, () => 5000);
+    let hpAtLogin: number | undefined;
+    for (const line of lines.filter(l => l.dir === 's2c')) {
+      const body = Buffer.from(line.hex, 'hex'); session.receive(new Uint8Array([body.length & 255, body.length >> 8, ...body]));
+      if (line.id === S.Logged) hpAtLogin = session.ui.stats.hp;
+    }
+    expect(hpAtLogin).toBe(0); // the character logs in dead
+    expect(session.ui.stats.hp).toBe(20); expect(session.dead).toBe(false);
+    expect(lines.some(l => l.dir === 's2c' && l.id === 141 && l.hex.startsWith('8d004902'))).toBe(true); // LocaleMsg 585
+    expect(lines.find(l => l.dir === 'c2s' && l.id === 95)?.hex).toBe('5f004d4201000000'); // LeftClick (77, 66) on the priest; the server revives on the click, a later /RESUCITAR is ignored
+  });
+});

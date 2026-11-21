@@ -38,6 +38,16 @@ const kill = async n => { // select it (LeftClick), then GM /RMATA without respa
 const killAllMine = async () => { for (let i = 0; i < 8; i++) { const n = npcs().find(c => mine.has(c.charIndex)); if (!n) return; await kill(n); } };
 const respawnSpawn = npcIndex => s.send({ id: G.CreateNPCWithRespawn, npcIndex });
 const scenarios = {
+  // The character is DEAD in the DB (is_dead=1, min_hp=0) next to the priest Juan XXI (NPC 1, map 1): select him (LeftClick) and /RESUCITAR; the server revives (UpdateHP, body/head change, console text).
+  async 'priest-revive'() {
+    await say(1500);
+    log('npcs in view', npcs().map(n => [n.npcNumber, n.x, n.y, n.name]));
+    const priest = nearestNpc(1); log('priest', priest && [priest.x, priest.y], 'me', s.pos);
+    if (!priest) throw new Error('no priest in view');
+    leftClick(priest.x, priest.y); await say(1200);
+    s.send({ id: CC.Resucitate }); await say(3000);
+    log('hp', hp());
+  },
   // The spell scroll in slot 13 (amount set to 1 through the DB; UseItem exits when the amount is 0): the server teaches the spell (ChangeSpellSlot + console line) and consumes the scroll.
   async 'learn-spell-scroll'() { await say(2500); s.send({ id: IC.UseItem, slot: 13, fromInventory: true, counter: s.nextCounter('use') }); await say(3000); },
   // user.is_paralyzed = 1 in the DB (logged-out character): the login sends ParalizeOK, and ~20 s later the paralysis expires and the server sends it again (a toggle).
