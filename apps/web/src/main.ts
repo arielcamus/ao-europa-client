@@ -13,6 +13,7 @@ import { sharedLocale } from './chat-locale.js';
 import { CombatOverlay } from './combat-overlay.js';
 import { fetchText } from './assets.js';
 import { ItemsUI } from './items-ui.js';
+import { CraftingUI } from './crafting-ui.js';
 import { KeyAction, keyAction } from './keymap.js';
 import { KeysClientPacketId as K, WorkSkill } from '@ao/protocol';
 import { Minimap } from './minimap.js';
@@ -47,6 +48,7 @@ const bubbles = new ChatBubbles(element('chat-bubbles'));
 const chatBox = new ChatBox(chatForm, chat, element('messages'), () => renderer.app.canvas.focus(), error => close(String(error)));
 const combatOverlay = new CombatOverlay(viewport, renderer);
 const itemsUi = new ItemsUI(ui, element('classic'), report);
+const craftingUi = new CraftingUI(ui, element('classic'), report);
 ui.onActivate = slot => guard(() => session?.itemActions.activate(slot));
 const audio = new AudioSystem(element('classic'), renderer, report);
 const bankUi = new BankUI(element('classic'), ui, report);
@@ -121,6 +123,7 @@ async function boot() {
 function updateUi(now: number) {
   ui.update(session); bankUi.update(session); tradeUi.update(session);
   itemsUi.update(session);
+  guard(() => craftingUi.update(session));
   if (!session) return;
   const playing = session.ready && renderer.readyMap === session.resourceMap;
   minimap.update(session, playing);
@@ -230,7 +233,7 @@ function gameKey(action: KeyAction) {
   }
 }
 window.addEventListener('keydown', event => {
-  if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); itemsUi.closeDialogs(); bankUi.closeDialogs(); tradeUi.closeDialogs(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
+  if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); itemsUi.closeDialogs(); bankUi.closeDialogs(); tradeUi.closeDialogs(); craftingUi.closeAll(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
   // IsDialogOpen: while the vault, Goliath or a trade window is up the game keys (attack, use, drop...) do nothing.
   if (transacting()) return;
   // The inventory slot that was just clicked keeps focus; the game keys must still work from it.

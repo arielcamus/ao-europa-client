@@ -1,0 +1,10 @@
+/* Smith and carpenter windows. Original VB6 geometry; AGPL-3.0-or-later. */
+.craft-window { position: absolute; background: #000 no-repeat 0 0; z-index: 6; color: #fff; font: 11px/13px Tahoma, Arial, sans-serif; }
+.craft-window[hidden] { display: none; }
+.craft-button, .craft-tab { position: absolute; border: 0; padding: 0; background-color: transparent; background-repeat: no-repeat; background-position: 0 0; cursor: pointer; }
+.craft-list { position: absolute; background: #000; color: #fff; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: #555 #000; contain: paint; }
+.craft-row { height: 13px; padding: 0 1px; white-space: nowrap; overflow: hidden; cursor: default; }
+.craft-row[aria-selected="true"] { background: #316ac5; }
+.craft-picture { position: absolute; background: #000; }
+.craft-desc { position: absolute; text-align: center; white-space: nowrap; overflow: hidden; pointer-events: none; }
+.craft-quantity { position: absolute; padding: 0; border: 0; background: #0d1213; color: #fff; font: bold 12px Tahoma, Arial, sans-serif; text-align: center; }

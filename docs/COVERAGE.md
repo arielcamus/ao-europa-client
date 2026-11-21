@@ -10,9 +10,9 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 147 of 523 = 28.1%.** Merged on main only: 147 = 28.1%.
-  - Server to client: 88 of 207. Client to server: 59 of 316. Packets with a recorded VB6 fixture: 116.
-- **Forms covered: 2 of 86 = 2.3%** (2 more partially, 4.7% started).
+- **Packets covered (merged + open branches): 180 of 523 = 34.4%.** Merged on main only: 180 = 34.4%.
+  - Server to client: 104 of 207. Client to server: 76 of 316. Packets with a recorded VB6 fixture: 143.
+- **Forms covered: 4 of 86 = 4.7%** (5 more partially, 10.5% started).
 
 ## (c) Feature groups, ordered by player value
 
@@ -30,8 +30,8 @@ Scanned refs: `main`
 | 10 | Guild / clan | 2/41 | 4.9% | 2 | 0/11 | 0% | 0 |
 | 11 | Quests | 0/10 | 0% | 0 | 0/2 | 0% | 0 |
 | 12 | Skills / training / stats | 3/19 | 15.8% | 3 | 0/3 | 0% | 0 |
-| 13 | Crafting (smith / carpenter / alchemy / tailor) | 0/25 | 0% | 0 | 0/5 | 0% | 0 |
-| 14 | Fishing / mining / lumber (work skills) | 2/10 | 20% | 2 | 0/0 | n/a | 0 |
+| 13 | Crafting (smith / carpenter / alchemy / tailor) | 25/25 | 100% | 25 | 2/5 | 40% | 3 |
+| 14 | Fishing / mining / lumber (work skills) | 10/10 | 100% | 10 | 0/0 | n/a | 0 |
 | 15 | Options / keybinds | 0/2 | 0% | 0 | 0/4 | 0% | 0 |
 | 16 | Minimap / world map | 0/2 | 0% | 0 | 0/1 | 0% | 0 |
 | 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 1/60 | 1.7% | 1 | 0/13 | 0% | 0 |
@@ -100,11 +100,11 @@ Ids only: .
 | FrmEstadisticas | Character statistics and attributes | skills | not started | wp09 |
 | frmSkills3 | Skill allocation | skills | not started | wp09 |
 | frmStatistics | Mini statistics | skills | not started | wp09 |
-| frmAlqui | Alchemy crafting | crafting | not started | wp10 |
-| frmCarp | Carpenter crafting | crafting | not started | wp10 |
-| frmCrafteo | Generic crafting window with catalyst | crafting | not started | wp10 |
-| frmHerrero | Blacksmith crafting | crafting | not started | wp10 |
-| FrmSastre | Tailor crafting | crafting | not started | wp10 |
+| frmAlqui | Alchemy crafting | crafting | merged (partial) | wp10 |
+| frmCarp | Carpenter crafting | crafting | merged | wp10 |
+| frmCrafteo | Generic crafting window with catalyst | crafting | merged (partial) | wp10 |
+| frmHerrero | Blacksmith crafting | crafting | merged | wp10 |
+| FrmSastre | Tailor crafting | crafting | merged (partial) | wp10 |
 | frmBindKey | Bind a key to an action | options | not started | wp11 |
 | frmCustomKeys | Custom key bindings | options | not started | wp11 |
 | frmMasOpciones | More options | options | not started | wp11 |
@@ -156,8 +156,8 @@ Ids only: .
 | 11 | BankInit | client Protocol.bas:HandleBankInit | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 12 | UserCommerceInit | client Protocol.bas:HandleUserCommerceInit | trade | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 13 | UserCommerceEnd | client Protocol.bas:HandleUserCommerceEnd | trade | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
-| 14 | ShowBlacksmithForm | client Protocol.bas:HandleShowBlacksmithForm | crafting | not started |  | no |
-| 15 | ShowCarpenterForm | client Protocol.bas:HandleShowCarpenterForm | crafting | not started |  | no |
+| 14 | ShowBlacksmithForm | client Protocol.bas:HandleShowBlacksmithForm | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 15 | ShowCarpenterForm | client Protocol.bas:HandleShowCarpenterForm | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 16 | NPCKillUser | client Protocol.bas:HandleNPCKillUser | combat | not started |  | no |
 | 17 | BlockedWithShieldUser | client Protocol.bas:HandleBlockedWithShieldUser | combat | not started |  | no |
 | 18 | BlockedWithShieldOther | client Protocol.bas:HandleBlockedWithShieldOther | combat | not started |  | no |
@@ -210,10 +210,10 @@ Ids only: .
 | 65 | ChangeBankSlot | client Protocol.bas:HandleChangeBankSlot | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 66 | ChangeSpellSlot | client Protocol.bas:HandleChangeSpellSlot | spells | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 67 | Atributes | client Protocol.bas:HandleAtributes | skills | not started |  | no |
-| 68 | BlacksmithWeapons | client Protocol.bas:HandleBlacksmithWeapons | crafting | not started |  | no |
-| 69 | BlacksmithArmors | client Protocol.bas:HandleBlacksmithArmors | crafting | not started |  | no |
-| 70 | BlacksmithExtraObjects | client Protocol.bas:HandleBlacksmithExtraObjects | crafting | not started |  | no |
-| 71 | CarpenterObjects | client Protocol.bas:HandleCarpenterObjects | crafting | not started |  | no |
+| 68 | BlacksmithWeapons | client Protocol.bas:HandleBlacksmithWeapons | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 69 | BlacksmithArmors | client Protocol.bas:HandleBlacksmithArmors | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 70 | BlacksmithExtraObjects | client Protocol.bas:HandleBlacksmithExtraObjects | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 71 | CarpenterObjects | client Protocol.bas:HandleCarpenterObjects | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 72 | RestOK | client Protocol.bas:HandleRestOK | skills | not started |  | no |
 | 73 | ErrorMsg | client Protocol.bas:HandleErrorMessage | core | merged | `main:packages/protocol/src/packets.ts` | no |
 | 74 | Blind | client Protocol.bas:HandleBlind | combat | not started |  | no |
@@ -269,15 +269,15 @@ Ids only: .
 | 124 | Goliath | client Protocol.bas:HandleGoliath | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 125 | TextOverChar | client Protocol.bas:HandleTextOverChar | chat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 126 | TextOverTile | client Protocol.bas:HandleTextOverTile | chat | not started |  | no |
-| 127 | TextCharDrop | client Protocol.bas:HandleTextCharDrop | chat | not started |  | no |
+| 127 | TextCharDrop | client Protocol.bas:HandleTextCharDrop | chat | not started |  | yes |
 | 128 | ConsoleCharText | client Protocol.bas:HandleConsoleCharText | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 129 | FlashScreen | client Protocol.bas:HandleFlashScreen | chat | not started |  | yes |
-| 130 | AlquimistaObj | client Protocol.bas:HandleAlquimiaObjects | crafting | not started |  | no |
-| 131 | ShowAlquimiaForm | client Protocol.bas:HandleShowAlquimiaForm | crafting | not started |  | no |
-| 132 | SastreObj | client Protocol.bas:HandleSastreObjects | crafting | not started |  | no |
-| 133 | ShowSastreForm | client Protocol.bas:HandleShowSastreForm | crafting | not started |  | no |
+| 130 | AlquimistaObj | client Protocol.bas:HandleAlquimiaObjects | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 131 | ShowAlquimiaForm | client Protocol.bas:HandleShowAlquimiaForm | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 132 | SastreObj | client Protocol.bas:HandleSastreObjects | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 133 | ShowSastreForm | client Protocol.bas:HandleShowSastreForm | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 134 | VelocidadToggle | client Protocol.bas:HandleVelocidadToggle | core | not started |  | yes |
-| 135 | MacroTrabajoToggle | client Protocol.bas:HandleMacroTrabajoToggle | work | not started |  | no |
+| 135 | MacroTrabajoToggle | client Protocol.bas:HandleMacroTrabajoToggle | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 136 | BindKeys | client Protocol.bas:HandleBindKeys | options | not started |  | yes |
 | 137 | ShowFrmLogear | client Protocol.bas:HandleShowFrmLogear | core | not started |  | no |
 | 138 | ShowFrmMapa | client Protocol.bas:HandleShowFrmMapa | minimap | not started |  | no |
@@ -310,15 +310,15 @@ Ids only: .
 | 165 | InvasionInfo | client Protocol.bas:HandleInvasionInfo | extras | not started |  | no |
 | 166 | CommerceRecieveChatMessage | client Protocol.bas:HandleCommerceRecieveChatMessage | chat | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 167 | DoAnimation | client Protocol.bas:HandleDoAnimation | combat | not started |  | no |
-| 168 | OpenCrafting | client Protocol.bas:HandleOpenCrafting | crafting | not started |  | no |
-| 169 | CraftingItem | client Protocol.bas:HandleCraftingItem | crafting | not started |  | no |
-| 170 | CraftingCatalyst | client Protocol.bas:HandleCraftingCatalyst | crafting | not started |  | no |
-| 171 | CraftingResult | client Protocol.bas:HandleCraftingResult | crafting | not started |  | no |
+| 168 | OpenCrafting | client Protocol.bas:HandleOpenCrafting | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
+| 169 | CraftingItem | client Protocol.bas:HandleCraftingItem | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
+| 170 | CraftingCatalyst | client Protocol.bas:HandleCraftingCatalyst | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
+| 171 | CraftingResult | client Protocol.bas:HandleCraftingResult | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 172 | GuardNotice | (none in dispatcher) | gm | not started |  | no |
 | 173 | AnswerReset | client Protocol.bas:HandleAnswerReset | core | not started |  | no |
 | 174 | ObjQuestListSend | client Protocol.bas:HandleObjQuestListSend | quests | not started |  | no |
 | 175 | UpdateBankGld | client Protocol.bas:HandleUpdateBankGld | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
-| 176 | PelearConPezEspecial | client Protocol.bas:HandlePelearConPezEspecial | work | not started |  | no |
+| 176 | PelearConPezEspecial | client Protocol.bas:HandlePelearConPezEspecial | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 177 | Privilegios | client Protocol.bas:HandlePrivilegios | gm | not started |  | yes |
 | 178 | ShopInit | client Protocol.bas:HandleShopInit | extras | not started |  | no |
 | 179 | UpdateShopClienteCredits | client Protocol.bas:HandleUpdateShopClienteCredits | extras | not started |  | no |
@@ -355,7 +355,7 @@ Ids only: .
 
 | Id | Name | VB6 handler | Group | Status | Codec file(s) | Fixture |
 |---|---|---|---|---|---|---|
-| 1 | CraftCarpenter | server Protocol.bas:HandleCraftCarpenter | crafting | not started |  | no |
+| 1 | CraftCarpenter | server Protocol.bas:HandleCraftCarpenter | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 2 | WorkLeftClick | server Protocol.bas:HandleWorkLeftClick | work | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 3 | CreateNewGuild | server Protocol.bas:HandleCreateNewGuild | guild | not started |  | no |
 | 4 | SpellInfo | server Protocol.bas:HandleSpellInfo | spells | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
@@ -454,7 +454,7 @@ Ids only: .
 | 97 | Work | server Protocol.bas:HandleWork | work | merged | `main:packages/protocol/src/packets/keys.ts` | no |
 | 98 | UseSpellMacro | server Protocol.bas:HandleUseSpellMacro | spells | not started |  | no |
 | 99 | UseItem | server Protocol.bas:HandleUseItem | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
-| 100 | CraftBlacksmith | server Protocol.bas:HandleCraftBlacksmith | crafting | not started |  | no |
+| 100 | CraftBlacksmith | server Protocol.bas:HandleCraftBlacksmith | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 101 | GMMessage | server Protocol.bas:HandleGMMessage | gm | not started |  | no |
 | 102 | ShowName | server Protocol.bas:HandleShowName | gm | not started |  | no |
 | 103 | OnlineRoyalArmy | server Protocol.bas:HandleOnlineRoyalArmy | gm | not started |  | no |
@@ -582,12 +582,12 @@ Ids only: .
 | 225 | Moveitem | server Protocol.bas:HandleMoveItem | items | not started |  | no |
 | 226 | Genio | server Protocol.bas:HandleGenio | gm | not started |  | no |
 | 227 | Casarse | server Protocol.bas:HandleCasamiento | extras | not started |  | no |
-| 228 | CraftAlquimista | server Protocol.bas:HandleCraftAlquimia | crafting | not started |  | no |
-| 229 | FlagTrabajar | server Protocol.bas:HandleFlagTrabajar | work | not started |  | no |
-| 230 | CraftSastre | server Protocol.bas:HandleCraftSastre | crafting | not started |  | no |
+| 228 | CraftAlquimista | server Protocol.bas:HandleCraftAlquimia | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 229 | FlagTrabajar | server Protocol.bas:HandleFlagTrabajar | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 230 | CraftSastre | server Protocol.bas:HandleCraftSastre | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 231 | MensajeUser | server Protocol.bas:HandleMensajeUser | gm | not started |  | no |
 | 232 | TraerBoveda | server Protocol.bas:HandleTraerBoveda | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | no |
-| 233 | CompletarAccion | server Protocol.bas:HandleCompletarAccion | work | not started |  | no |
+| 233 | CompletarAccion | server Protocol.bas:HandleCompletarAccion | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 234 | InvitarGrupo | server Protocol.bas:HandleInvitarGrupo | party | not started |  | no |
 | 235 | ResponderPregunta | server Protocol.bas:HandleResponderPregunta | party | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 236 | RequestGrupo | server Protocol.bas:HandleRequestGrupo | party | not started |  | no |
@@ -629,21 +629,21 @@ Ids only: .
 | 272 | CreateEvent | server Protocol.bas:HandleCreateEvent | extras | not started |  | no |
 | 273 | CommerceSendChatMessage | server Protocol.bas:HandleCommerceSendChatMessage | chat | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 274 | LogMacroClickHechizo | server Protocol.bas:HandleLogMacroClickHechizo | extras | not started |  | no |
-| 275 | AddItemCrafting | server Protocol.bas:HandleAddItemCrafting | crafting | not started |  | no |
-| 276 | RemoveItemCrafting | server Protocol.bas:HandleRemoveItemCrafting | crafting | not started |  | no |
-| 277 | AddCatalyst | server Protocol.bas:HandleAddCatalyst | crafting | not started |  | no |
-| 278 | RemoveCatalyst | server Protocol.bas:HandleRemoveCatalyst | crafting | not started |  | no |
-| 279 | CraftItem | server Protocol.bas:HandleCraftItem | crafting | not started |  | no |
-| 280 | CloseCrafting | server Protocol.bas:HandleCloseCrafting | crafting | not started |  | no |
-| 281 | MoveCraftItem | server Protocol.bas:HandleMoveCraftItem | crafting | not started |  | no |
+| 275 | AddItemCrafting | server Protocol.bas:HandleAddItemCrafting | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 276 | RemoveItemCrafting | server Protocol.bas:HandleRemoveItemCrafting | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 277 | AddCatalyst | server Protocol.bas:HandleAddCatalyst | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 278 | RemoveCatalyst | server Protocol.bas:HandleRemoveCatalyst | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 279 | CraftItem | server Protocol.bas:HandleCraftItem | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 280 | CloseCrafting | server Protocol.bas:HandleCloseCrafting | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
+| 281 | MoveCraftItem | server Protocol.bas:HandleMoveCraftItem | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 282 | PetLeaveAll | server Protocol.bas:HandlePetLeaveAll | npcs | not started |  | no |
 | 283 | ResetChar | server Protocol.bas:HandleResetChar | gm | not started |  | no |
 | 284 | ResetearPersonaje | server Protocol.bas:HandleResetearPersonaje | gm | not started |  | no |
 | 285 | DeleteItem | server Protocol.bas:HandleDeleteItem | items | not started |  | no |
-| 286 | FinalizarPescaEspecial | server Protocol.bas:HandleFinalizarPescaEspecial | work | not started |  | no |
-| 287 | RomperCania | server Protocol.bas:HandleRomperCania | work | not started |  | no |
+| 286 | FinalizarPescaEspecial | server Protocol.bas:HandleFinalizarPescaEspecial | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
+| 287 | RomperCania | server Protocol.bas:HandleRomperCania | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 288 | UseItemU | server Protocol.bas:HandleUseItemU | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
-| 289 | RepeatMacro | server Protocol.bas:HandleRepeatMacro | work | not started |  | no |
+| 289 | RepeatMacro | server Protocol.bas:HandleRepeatMacro | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 290 | BuyShopItem | server Protocol.bas:HandleBuyShopItem | extras | not started |  | no |
 | 291 | StartEvent | server Protocol.bas:HandleStartEvent | extras | not started |  | no |
 | 292 | CancelarEvento | server Protocol.bas:HandleCancelarEvento | extras | not started |  | no |
@@ -662,7 +662,7 @@ Ids only: .
 | 305 | LoginAccount | server Protocol.bas:HandleLoginAccount | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 306 | DeleteCharacter | server Protocol.bas:HandleDeleteCharacter | core | not started |  | no |
 | 307 | ChangeSkinSlot | (none in dispatcher) | extras | not started |  | no |
-| 308 | StartAutomatedAction | server Protocol.bas:HandleStartAutomatedAction | work | not started |  | no |
+| 308 | StartAutomatedAction | server Protocol.bas:HandleStartAutomatedAction | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 309 | PetFollowAll | server Protocol.bas:HandlePetFollowAll | npcs | not started |  | no |
 | 310 | AntiMacroMessage | server Protocol.bas:HandleAntiMacroMessage | extras | not started |  | no |
 | 311 | ModifyCastleWhiteList | server Protocol.bas:HandleModifyCastleWhiteList | extras | not started |  | no |
@@ -743,8 +743,8 @@ Skill allocation, level up, attributes, statistics forms, rest/meditate.
 
 Smith, carpenter, alchemy, tailor, crafting window, fishing, mining, lumber.
 
-- Packets (33): S14 ShowBlacksmithForm, S15 ShowCarpenterForm, S68 BlacksmithWeapons, S69 BlacksmithArmors, S70 BlacksmithExtraObjects, S71 CarpenterObjects, S130 AlquimistaObj, S131 ShowAlquimiaForm, S132 SastreObj, S133 ShowSastreForm, S135 MacroTrabajoToggle, S168 OpenCrafting, S169 CraftingItem, S170 CraftingCatalyst, S171 CraftingResult, S176 PelearConPezEspecial, C1 CraftCarpenter, C100 CraftBlacksmith, C228 CraftAlquimista, C229 FlagTrabajar, C230 CraftSastre, C233 CompletarAccion, C275 AddItemCrafting, C276 RemoveItemCrafting, C277 AddCatalyst, C278 RemoveCatalyst, C279 CraftItem, C280 CloseCrafting, C281 MoveCraftItem, C286 FinalizarPescaEspecial, C287 RomperCania, C289 RepeatMacro, C308 StartAutomatedAction
-- Forms (5): frmHerrero, frmCarp, frmAlqui, FrmSastre, frmCrafteo
+- Packets (0): none left
+- Forms (3): frmAlqui, FrmSastre, frmCrafteo
 
 ### wp11: Options, keybinds and extras
 

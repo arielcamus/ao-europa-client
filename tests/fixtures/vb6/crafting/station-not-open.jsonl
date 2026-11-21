@@ -1,0 +1,14 @@
+{"t_ms":1541,"dir":"c2s","id":275,"name":"AddItemCrafting","hex":"13010400"}
+{"t_ms":2241,"dir":"c2s","id":276,"name":"RemoveItemCrafting","hex":"14010100"}
+{"t_ms":2943,"dir":"c2s","id":277,"name":"AddCatalyst","hex":"150107"}
+{"t_ms":3462,"dir":"s2c","id":55,"name":"PlayWave","hex":"3700ab004d330000"}
+{"t_ms":3643,"dir":"c2s","id":278,"name":"RemoveCatalyst","hex":"160100"}
+{"t_ms":4346,"dir":"c2s","id":281,"name":"MoveCraftItem","hex":"19010102"}
+{"t_ms":5047,"dir":"c2s","id":279,"name":"CraftItem","hex":"1701"}
+{"t_ms":5288,"dir":"s2c","id":113,"name":"ParticleFX","hex":"7100ea1300000000000001000000000000"}
+{"t_ms":5288,"dir":"s2c","id":60,"name":"CreateFX","hex":"3c00ea13000000000000"}
+{"t_ms":5288,"dir":"s2c","id":4,"name":"RemoveCharDialog","hex":"0400ea13"}
+{"t_ms":5288,"dir":"s2c","id":43,"name":"CharacterRemove","hex":"2b00ea130100"}
+{"t_ms":5749,"dir":"c2s","id":280,"name":"CloseCrafting","hex":"1801"}
+{"t_ms":6451,"dir":"c2s","id":229,"name":"FlagTrabajar","hex":"e500"}
+{"t_ms":7153,"dir":"c2s","id":289,"name":"RepeatMacro","hex":"2101"}
