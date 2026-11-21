@@ -320,6 +320,7 @@ export class Session {
           break;
         case S.UserCharIndexInServer:
           this.charIndex = packet.charIndex;
+          this.tracker.selfIndex = packet.charIndex;
           if (this.self) this.place(this.self.x, this.self.y);
           break;
         case S.Logged:
@@ -394,6 +395,7 @@ export class Session {
   }
   /** ModAreas.CambioDeArea: erase every character (not self) and server-sent object outside the new area; fixed map objects stay (renderer). */
   private leaveArea(bounds: { minX: number; maxX: number; minY: number; maxY: number }) {
+    this.tracker.area = bounds; // MinLimiteX..MaxLimiteY: later steps out of it erase the character (Char_Move_by_Pos)
     const outside = (x: number, y: number) => x < bounds.minX || x > bounds.maxX || y < bounds.minY || y > bounds.maxY;
     for (const [index, char] of [...this.tracker.chars]) if (index !== this.charIndex && outside(char.x, char.y)) this.tracker.chars.delete(index);
     for (const key of [...this.mapObjects.objects.keys()]) {

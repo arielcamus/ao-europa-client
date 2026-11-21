@@ -73,8 +73,24 @@ export class CharacterTracker {
   /** Fires once per NPCDESC overhead message (the VB6 mostrarCartel NPC dialog window). */
   onNpcDescription: ((description: NpcDescription) => void) | undefined;
   revision = 0;
+  /**
+   * ModAreas MinLimiteX..MaxLimiteY, set by every AreaChanged (CambioDeArea); undefined until the first one. The server sends a
+   * creature's step to the area it LEAVES (MoveNPCChar: ToNPCArea, then CheckUpdateNeededNpc) and never a CharacterRemove, so a
+   * character that steps outside it is erased here, as Char_Move_by_Pos / TranslateCharacterToPos do. Kept across ChangeMap like the VB6 globals.
+   */
+  area: { minX: number; maxX: number; minY: number; maxY: number } | undefined;
+  /** UserCharIndex: EraseChar never erases the player's own character. */
+  selfIndex: number | undefined;
 
   clear() { this.chars.clear(); this.revision++; }
+
+  /** Char_Move_by_Pos / TranslateCharacterToPos tail: `If (nY < MinLimiteY) Or (nY > MaxLimiteY) Or ... Then EraseChar`. */
+  private eraseOutsideArea(charIndex: number, x: number, y: number): boolean {
+    const a = this.area;
+    if (!a || charIndex === this.selfIndex || (x >= a.minX && x <= a.maxX && y >= a.minY && y <= a.maxY)) return false;
+    this.chars.delete(charIndex); this.revision++;
+    return true;
+  }
 
   receive(packet: ServerPacket, now: number): void {
     switch (packet.id) {
@@ -151,6 +167,7 @@ export class CharacterTracker {
     char.x = x; char.y = y; char.idle = true; char.offTile = false;
     char.motion = time > 0 && (from.x !== x || from.y !== y) ? { from, to: { x, y }, started: now, duration: time, translate: true } : undefined;
     this.revision++;
+    this.eraseOutsideArea(charIndex, x, y);
   }
 
   /** Char_Move_by_Pos: heading from the delta, then slide one tile (teleports snap). */
@@ -165,6 +182,7 @@ export class CharacterTracker {
     char.x = x; char.y = y; char.offTile = false; // Char_Move_by_Pos sets MapData(nX, nY).charindex
     char.motion = Math.abs(dx) + Math.abs(dy) > 2 ? undefined
       : { from, to: { x, y }, started: now, duration: TILE_MS / char.speeding };
+    this.eraseOutsideArea(charIndex, x, y);
   }
 
   /** HandleChatOverHeadImpl "NPCDESC*<npc number>": the NPC dialog window (mostrarCartel). */

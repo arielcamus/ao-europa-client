@@ -188,3 +188,51 @@ describe('replay of recorded VB6 sessions', () => {
     expect([...session.tracker.chars.values()].some(c => c.npc > 0)).toBe(true);
   });
 });
+
+// Ariel 21 Nov: creatures drawn behind a wall in the Newbie Dungeon always answered "Target inválido". Real creatures behind a wall
+// target fine (live, map 37: WorkLeftClick on their tile -> Msg1622); the ones that fail are stale copies. The server sends a creature's
+// step to the area it LEAVES and never a CharacterRemove (MoveNPCChar: ToNPCArea, then CheckUpdateNeededNpc). Recorded live on map 37:
+// AreaChanged (75,78) -> area 60..95; a Murciélago (NPC 506) then stepped to (73,59). VB6 Char_Move_by_Pos erases it there.
+describe('characters that step out of the area (Char_Move_by_Pos: If nY < MinLimiteY ... Then EraseChar)', () => {
+  const area = { minX: 60, maxX: 95, minY: 60, maxY: 95 }; // CambioDeArea(75, 78)
+  it('a step or a translate outside MinLimiteX..MaxLimiteY erases the character; inside it stays; the own character never goes', () => {
+    const t = new CharacterTracker(); t.area = area; t.selfIndex = 1;
+    t.receive(create(689, { npc: 1, npcNumber: 506, x: 73, y: 60 }), 0);
+    t.receive({ id: S.CharacterMove, charIndex: 689, x: 73, y: 61 }, 100);
+    expect(t.chars.get(689)).toMatchObject({ x: 73, y: 61 });
+    t.receive({ id: S.CharacterMove, charIndex: 689, x: 73, y: 60 }, 200);
+    const before = t.revision;
+    t.receive({ id: S.CharacterMove, charIndex: 689, x: 73, y: 59 }, 300);
+    expect(t.chars.has(689)).toBe(false); expect(t.revision).toBeGreaterThan(before);
+    for (const [from, x, y] of [[{ x: 60, y: 70 }, 59, 70], [{ x: 95, y: 70 }, 96, 70], [{ x: 70, y: 95 }, 70, 96]] as const) {
+      t.receive(create(700, { npc: 1, ...from }), 400);
+      t.receive({ id: S.CharacterMove, charIndex: 700, x, y }, 500);
+      expect(t.chars.has(700), `${x},${y}`).toBe(false);
+    }
+    t.receive(create(701, { npc: 1, x: 80, y: 70 }), 600);
+    t.receive({ id: 45, charIndex: 701, x: 80, y: 40, time: 300 } as ServerPacket, 700); // CharacterTranslate
+    expect(t.chars.has(701)).toBe(false);
+    t.receive(create(1, { x: 60, y: 70 }), 800);
+    t.receive({ id: S.CharacterMove, charIndex: 1, x: 59, y: 70 }, 900); // EraseChar exits for UserCharIndex
+    expect(t.chars.get(1)).toMatchObject({ x: 59 });
+  });
+  it('before the first AreaChanged nothing is erased', () => {
+    const t = new CharacterTracker();
+    t.receive(create(5, { npc: 1, x: 73, y: 60 }), 0);
+    t.receive({ id: S.CharacterMove, charIndex: 5, x: 73, y: 59 }, 100);
+    expect(t.chars.get(5)).toMatchObject({ x: 73, y: 59 });
+  });
+  it('session: the creature that left is not kept as a ghost the player later walks up to (the "Target inválido" creatures)', () => {
+    let now = 0;
+    const session = new Session({ email: 'a', password: 'b' }, () => {}, () => now);
+    const recv = (...packets: ServerPacket[]) => { for (const packet of packets) session.receive(encodeServerFrame(packet)); };
+    recv(f.Connected, f.AccountCharacterList, f.Intervals, f.ChangeMap, { ...f.CharacterCreate, x: 75, y: 78, speeding: 1 }, f.UserCharIndexInServer, f.Logged);
+    recv({ id: 57, x: 75, y: 78 } as ServerPacket); // AreaChanged: area 60..95 x 60..95
+    recv(create(689, { npc: 1, npcNumber: 506, x: 73, y: 60 }), { id: S.CharacterMove, charIndex: 689, x: 73, y: 59 });
+    expect(session.tracker.chars.has(689)).toBe(false);
+    // Before the fix the bat stayed frozen at (73,59): the next area north (36..71) keeps it and it is drawn where nothing is.
+    recv({ id: 57, x: 74, y: 59 } as ServerPacket);
+    expect(session.tracker.at(73, 59)).toBeUndefined();
+    expect(session.tracker.chars.has(f.UserCharIndexInServer.charIndex)).toBe(true);
+  });
+});

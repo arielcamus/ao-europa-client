@@ -736,3 +736,21 @@ Spec = the pinned VB6 client 619e69d (the reference checkout is at b648c1a, 84 l
 - Our own character froze with the creatures because `walk()` waits for the PosUpdate answering the previous step's position probe. VB6 (`General.MoveTo`) does not wait, but the server's anti speed hack (`MaximoSpeedHack=4` ms in Configuracion.ini) rejects a burst of walks that arrives after a stall, so not waiting would trade the freeze for a snap-back. The gate stays.
 - The client's 5 s watchdog (tick() threw "Server stopped responding to position requests") is not in the pinned client (619e69d): only a socket error (WSAETIMEDOUT, connection refused) ends a VB6 session. It now prints one console line after 5 s ("El servidor no responde. Esperando...") and one when the reply arrives, and never disconnects. The in-game 10 s placement deadline after a warp is gone too; only the login keeps its deadline.
 - Follow-up (fix/stutter-followups): with no client watchdog, a half-open connection must still end the session. The bridge pings the browser every 15 s and terminates a WebSocket that missed 3 pings in a row (45-60 s of silence; one missed ping would log out a player on a brief Wi-Fi blip) (closing the server socket, so VB6 logs the character out), and turns on TCP keepalive (first probe after 10 s) on both the browser socket and the server socket. A ChangeMap or finish() during a stall clears `serverSilentSince`, so a warp no longer prints a stray "volvió a responder" and the next stall is announced again. Live: 45 s through the new bridge on the VB6 server, 167 position replies, no drop.
+
+## 2026-11-21 "Target inválido" on creatures behind a wall (fix/spell-target-wall)
+
+- Ariel 21:22: in the Newbie Dungeon, creatures in a row "behind a wall" always answered "Target inválido" (Msg792), wherever he clicked.
+- Not a server rule and not the click mapping. Live (map 37, mage south of the merchant room's north wall, creatures lined up at row 70
+  trying to reach it, `tools/spell-wall-real-shot.mjs`): LeftClick and WorkLeftClick on a creature's tile or the tile above it carry
+  exactly that tile and LookatTile finds the NPC (Msg1622) every time. The pinned server has no wall or line-of-sight check; the client
+  tile is ConvertCPtoTP's (UserPos + viewport \ 32 - 11 / - 9), same as VB6.
+- Cause: stale copies. The server sends a creature's step to the area it LEAVES (`MoveNPCChar`: `ToNPCArea`, then
+  `CheckUpdateNeededNpc`; users: `ToPCAreaButIndex` then `CheckUpdateNeededUser`) and never a CharacterRemove. VB6 `Char_Move_by_Pos`
+  and `TranslateCharacterToPos` erase a character whose new tile is outside MinLimiteX..MaxLimiteY; our tracker kept it, frozen on the
+  area line (a row or column of creatures). The next AreaChanged keeps it when that line is inside the new area, and its death or logout
+  is only sent to its own area, so nothing ever corrects it. Clicking it: nothing on the server's tile -> Msg1114, then Msg792.
+- Live, raw TCP on map 37 (`AreaChanged 75,78` -> area 60..95): a Murciélago (NPC 506) stepped to (73,59); in 3 min three creatures
+  were left outside the area (bat at 59,57, NPC 509 at 59,65, Makrom at 73,84). Live web client in Ullathorpe
+  (`tools/area-ghost-real-shot.mjs`): before the fix a player who had walked off was still drawn at (63,35) after an area change and
+  LeftClick there and one tile above answered Msg1114; after the fix the stale copy of our own walker (stepped to 58,35, logged out) is not drawn.
+- Fix: `CharacterTracker.area` (set by every AreaChanged) and the erase in `move()` / `translate()`; never the own character, nothing before the first AreaChanged.
