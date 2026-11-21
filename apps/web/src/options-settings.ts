@@ -10,12 +10,17 @@ export interface GameOptions {
   moveWhileTyping: boolean;
   /** CopiarDialogoAConsola ("Copiar diálogos a consola"): player speech bubbles are also written to the console. */
   copyDialogToConsole: boolean;
-  /** OPCIONES/CenteredMinimap ("Utilizar minimapa en modo continuo"): VB6 reads `GetSettingAsByte(..., 1)`, so it is on by default. */
+  /**
+   * OPCIONES/CenteredMinimap ("Utilizar minimapa en modo continuo"): VB6 reads `GetSettingAsByte(..., 1)`, so it is on by default there, but that mode draws
+   * `interface/mapa1_200x200.bmp` / `mapa2_200x200.bmp`, which no public Recursos commit contains (and world 3 has no file name at all: `Case Else: minimapFile = ""`).
+   * Without them the pinned client draws nothing, so here the default is the per-map picture mode (CenteredMinimap = 0), which the real data fully supports;
+   * the checkbox still switches to the continuous mode, composed from the per-map pictures.
+   */
   centeredMinimap: boolean;
   /** OPCIONES/CenteredMinimapZoom: the zoom of the centred minimap, -50..50 (frmMain.ApplyMinimapZoom). */
   centeredMinimapZoom: number;
 }
-export const DEFAULT_OPTIONS: GameOptions = { showFps: false, moveWhileTyping: false, copyDialogToConsole: true, centeredMinimap: true, centeredMinimapZoom: 0 };
+export const DEFAULT_OPTIONS: GameOptions = { showFps: false, moveWhileTyping: false, copyDialogToConsole: true, centeredMinimap: false, centeredMinimapZoom: 0 };
 export const OPTIONS_KEY = 'ao.options.v1';
 
 /** Read a stored object defensively: unknown keys are dropped, non-booleans fall back to the default. */

@@ -7,12 +7,12 @@ export async function localAssets(directory) {
   if (!directory) throw new Error('Set AO_ASSETS to your local ao-reference/Recursos directory. Assets are never bundled.');
   const root = await realpath(directory);
   const files = new Map();
-  const allowed = /^(Mapas\/mapa\d+\.csm|Graficos\/\d+\.png|init\/(graficos\.ini|cuerpos\.dat|moldes\.ini|cabezas\.ind|armas\.dat|escudos\.dat|cascos\.ind|colores\.dat|FXs\.ini|particles\.ind|ProjectileDef\.dat|sp_localindex\.dat|sp_localmsg\.dat|mapsworlddata\.dat|namemapa\.dat|crafteo\.ini)|interface\/[a-z0-9_-]+\.bmp|Minimapas\/mapa\d+\.bmp|Dat\/(Obj|Hechizos|zonas|npcs)\.dat|OGG\/[\w -]+\.ogg|wav\/[\w -]+\.wav|Mp3\/\d+\.mp3)$/i;
+  const allowed = /^(Mapas\/mapa\d+\.csm|Graficos\/\d+\.png|init\/(graficos\.ini|cuerpos\.dat|moldes\.ini|cabezas\.ind|armas\.dat|escudos\.dat|cascos\.ind|colores\.dat|FXs\.ini|particles\.ind|ProjectileDef\.dat|sp_localindex\.dat|sp_localmsg\.dat|mapsworlddata\.dat|namemapa\.dat|crafteo\.ini)|interface\/[a-z0-9_-]+\.bmp|Minimapas\/mapa\d+\.bmp|OUTPUT\/QuestNPCsMapData\.bin|Dat\/(Obj|Hechizos|zonas|npcs)\.dat|OGG\/[\w -]+\.ogg|wav\/[\w -]+\.wav|Mp3\/\d+\.mp3)$/i;
   const folders = await readdir(root);
   // Minimapas and the sound folders are optional: without them there is no minimap picture / the client is silent.
-  for (const folder of ['Mapas', 'Graficos', 'init', 'interface', 'Dat', 'Minimapas', 'OGG', 'wav', 'Mp3']) {
+  for (const folder of ['Mapas', 'Graficos', 'init', 'interface', 'Dat', 'Minimapas', 'OUTPUT', 'OGG', 'wav', 'Mp3']) {
     const actual = folders.find(name => name.toLowerCase() === folder.toLowerCase());
-    if (!actual) { if (['Minimapas', 'OGG', 'wav', 'Mp3'].includes(folder)) continue; throw new Error(`Missing local asset directory: ${folder}`); }
+    if (!actual) { if (['Minimapas', 'OUTPUT', 'OGG', 'wav', 'Mp3'].includes(folder)) continue; throw new Error(`Missing local asset directory: ${folder}`); }
     for (const name of await readdir(join(root, actual))) {
       const path = `${actual}/${name}`;
       if (allowed.test(path)) files.set(path.toLowerCase(), join(root, path));

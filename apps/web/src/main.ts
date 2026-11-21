@@ -28,7 +28,7 @@ import { FishingUI } from './fishing-ui.js';
 import { KeyAction, keyAction } from './keymap.js';
 import { SkillsWindows } from './skills-window.js';
 import { KeysClientPacketId as K, WorkSkill } from '@ao/protocol';
-import { Minimap } from './minimap.js';
+import { Minimap, parseQuestNpcDots } from './minimap.js';
 import { AudioSystem } from './audio-system.js';
 import './bank-trade.css';
 import { BankUI } from './bank-ui.js';
@@ -73,6 +73,14 @@ const minimap = new Minimap(element('minimap'));
 let worlds: World[] = [];
 let mapNames = parseIni('');
 void fetchText('init/mapsworlddata.dat').then(text => { worlds = parseWorlds(parseIni(text)); minimap.worlds = worlds; }).catch(error => report(`mapsworlddata.dat: ${String(error)}`));
+// Recursos.CargarNPCsMapData: the quest NPC markers of the per-map minimap (OUTPUT/QuestNPCsMapData.bin, ~480 KB). VB6 reads it at startup;
+// here it is fetched on the first frame in the world, so it never competes with the splash and login art on a slow link.
+let questDotsRequested = false;
+const loadQuestDots = () => {
+  if (questDotsRequested) return;
+  questDotsRequested = true;
+  void fetchBytes('OUTPUT/QuestNPCsMapData.bin').then(bytes => { minimap.questDots = parseQuestNpcDots(bytes); }).catch(() => undefined);
+};
 void fetchText('init/namemapa.dat').then(text => { mapNames = parseIni(text); }).catch(() => undefined);
 const mapHeaderNames = new Map<number, Promise<string>>();
 // NpcData / ObjData as frmMapaGrande reads them (Dat/npcs.dat, Dat/Obj.dat), loaded the first time the large map opens.
@@ -355,6 +363,7 @@ function updateUi(now: number) {
   hotkeysUi.update(session, playing);
   if (gameOptions.value.showFps && now - lastFps > 500) { lastFps = now; fpsLabel.textContent = `FPS: ${Math.round(renderer.app.ticker.FPS)}`; }
   minimap.options = { centered: gameOptions.value.centeredMinimap, zoom: gameOptions.value.centeredMinimapZoom };
+  if (playing) loadQuestDots();
   minimap.update(session, playing, session.world.allies);
   if (session.world.mapForm.opened !== shownMapForm.get(session)) { shownMapForm.set(session, session.world.mapForm.opened); if (session.world.mapForm.opened > 0) worldMapUi.open(session); }
   worldMapUi.update(session);

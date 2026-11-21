@@ -1,16 +1,40 @@
 import { describe, expect, it } from 'vitest';
-import { minimapDotPosition, minimapTile, minimapUrl } from '../src/minimap.js';
+import { ALLY_BOX, minimapDotPixel, minimapDotPosition, minimapTile, minimapUrl, parseQuestNpcDots } from '../src/minimap.js';
 import { classicScale } from '../src/classic-layout.js';
 
 describe('minimap (frmMain.SetMinimapPosition, mode 0)', () => {
   it('stretches the playable area (tiles 13..87 x 10..90) over the 100px picture, centring the 5px dot', () => {
     // (50-11-2)*100/74 = 50 ; minus 5\2 + 1 = 3 ; (50-9-1)*100/80 = 50 ; minus 3
-    // VB6 assigns the Single to Shape.Left/Top unrounded; the page keeps the fraction and the browser snaps the box when it paints.
     const at = (x: number, y: number) => { const p = minimapDotPosition(x, y); return [p.left, p.top]; };
     expect(at(50, 50)[0]).toBeCloseTo(47, 9); expect(at(50, 50)[1]).toBeCloseTo(47, 9);
     expect(at(13, 10)[0]).toBeCloseTo(-3, 9); expect(at(13, 10)[1]).toBeCloseTo(-3, 9);
     expect(at(87, 90)[0]).toBeCloseTo(97, 9); expect(at(87, 90)[1]).toBeCloseTo(97, 9);
-    expect(minimapDotPosition(51, 50).left).not.toBe(Math.round(minimapDotPosition(51, 50).left)); // a fractional pixel survives (<= 1 px from the old rounding)
+  });
+  it('puts the player dot on the whole pixel the VB6 formula gives: corners, edges and centre of the playable area', () => {
+    // Hand-computed from frmMain.SetMinimapPosition with HalfWindowTileWidth 11, HalfWindowTileHeight 9, personaje(0) 5 x 5:
+    //   left = (x - 13) * 100 / 74 - 3, top = (y - 10) * 100 / 80 - 3, then the nearest pixel.
+    const table: [number, number, number, number][] = [
+      [13, 10, -3, -3], [87, 10, 97, -3], [13, 90, -3, 97], [87, 90, 97, 97], // the four corners of the picture
+      [50, 50, 47, 47], // centre
+      [14, 11, -2, -2], // (1 * 1.3514 - 3 = -1.65, 1.25 - 3 = -1.75)
+      [62, 41, 63, 36], // (49 * 1.3514 - 3 = 63.22, 31 * 1.25 - 3 = 35.75)
+      [86, 89, 96, 96], // (73 * 1.3514 - 3 = 95.65, 79 * 1.25 - 3 = 95.75)
+      [30, 70, 20, 72], // (17 * 1.3514 - 3 = 19.97, 60 * 1.25 - 3 = 72)
+    ];
+    for (const [x, y, left, top] of table) expect(minimapDotPixel(x, y), `tile ${x},${y}`).toEqual({ left, top });
+    // The dot's centre (box + 2) is the tile's pixel on the picture: the centre tile 50,50 is pixel 49,49 of the 100 x 100 picture.
+    expect(minimapDotPixel(50, 50).left + 2).toBe(49);
+  });
+  it('places the ally circles from their 10 x 4 box (personaje(1..5): Width \\ 2 = 5, Height \\ 2 = 2)', () => {
+    expect(ALLY_BOX).toEqual({ width: 10, height: 4 });
+    expect(minimapDotPixel(50, 50, 10, 4)).toEqual({ left: 44, top: 47 }); // 50 - 5 - 1, 50 - 2 - 1
+  });
+  it('quest markers land on the same pixel as a dot on that tile (ConvertToMinimapPosition with the 2 x 0 marker)', () => {
+    const bytes = new Uint8Array(2 + 800), view = new DataView(bytes.buffer);
+    view.setInt16(0, 1, true);
+    [[1, 13, 10, 1], [2, 87, 90, 2], [3, 50, 50, 1]].forEach((slot, i) => slot.forEach((v, j) => view.setInt16(2 + i * 8 + j * 2, v, true)));
+    // x = (x - 13) * 100 / 74 - 1 - 1, y = (y - 10) * 100 / 80 - 0 - 1: the 2 x 2 square starts one pixel up-left of the tile pixel.
+    expect(parseQuestNpcDots(bytes).get(1)).toEqual([{ x: -2, y: -1, state: 1 }, { x: 98, y: 99, state: 2 }, { x: 48, y: 49, state: 1 }]);
   });
   it('maps a minimap pixel back to a tile (GetMinimapPosition)', () => {
     const t = minimapTile(50, 50);
