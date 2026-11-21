@@ -84,7 +84,7 @@ async function withCaptions(name: string, original: string, url: string): Promis
   if (!specs || typeof document === 'undefined' || new URLSearchParams(location.search).get('captions') === 'off') return url;
   try {
     const image = new Image(); image.src = url; await image.decode();
-    const captioned = await captionedUrl(image, specs);
+    const captioned = await captionedUrl(image, specs, original.split('?')[0]!.split('/').pop());
     if (!captioned) return url;
     urls.set(original, captioned); return captioned;
   } catch { return url; } // the original picture, letters and all

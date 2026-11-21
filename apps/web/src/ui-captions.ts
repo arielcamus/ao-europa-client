@@ -53,8 +53,8 @@ interface Captioned { width: number; height: number; captions: FoundCaption[] }
 /** Captioned picture URLs (what loadInterface hands out) and what was found in them. */
 const registry = new Map<string, Captioned>();
 
-/** Make the captioned copy of a decoded bitmap: returns its URL, or undefined when nothing was found (keep the original). */
-export async function captionedUrl(image: HTMLImageElement, specs: readonly CaptionSpec[]): Promise<string | undefined> {
+/** Make the captioned copy of a decoded bitmap (`file`: its original file name): returns its URL, or undefined when nothing was found. */
+export async function captionedUrl(image: HTMLImageElement, specs: readonly CaptionSpec[], file = ''): Promise<string | undefined> {
   const canvas = document.createElement('canvas'); canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
   const ctx = canvas.getContext('2d', { willReadFrequently: true }); if (!ctx) return undefined;
   ctx.drawImage(image, 0, 0);
@@ -64,7 +64,8 @@ export async function captionedUrl(image: HTMLImageElement, specs: readonly Capt
   ctx.putImageData(data, 0, 0);
   const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
   if (!blob) return undefined;
-  const url = URL.createObjectURL(blob);
+  // The fragment keeps the original file name in the URL (`blob:...#es_ventanaretos.bmp`): what a window shows stays readable in the DOM.
+  const url = `${URL.createObjectURL(blob)}${file ? `#${file}` : ''}`;
   registry.set(url, { width: canvas.width, height: canvas.height, captions });
   await document.fonts?.load('700 12px Cinzel').catch(() => undefined);
   return url;
