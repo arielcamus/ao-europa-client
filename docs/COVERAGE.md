@@ -11,7 +11,7 @@ Scanned refs: `main`
 ## Headline
 
 - **Packets covered (merged + open branches): 435 of 523 = 83.2%.** Merged on main only: 435 = 83.2%.
-  - Server to client: 170 of 207. Client to server: 265 of 316. Packets with a recorded VB6 fixture: 229.
+  - Server to client: 170 of 207. Client to server: 265 of 316. Packets with a recorded VB6 fixture: 235.
 - **Forms covered: 4 of 86 = 4.7%** (5 more partially, 10.5% started).
 
 ## (c) Feature groups, ordered by player value
@@ -249,11 +249,11 @@ Ids only: .
 | 104 | Contadores | client Protocol.bas:HandleContadores | core | not started |  | yes |
 | 105 | ShowPapiro | client Protocol.bas:HandleShowPapiro | gm | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
 | 106 | UpdateCooldownType | client Protocol.bas:HandleUpdateCooldownType | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
-| 107 | SpawnListt | client Protocol.bas:HandleSpawnList | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 108 | ShowSOSForm | client Protocol.bas:HandleShowSOSForm | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 109 | ShowMOTDEditionForm | client Protocol.bas:HandleShowMOTDEditionForm | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 110 | ShowGMPanelForm | client Protocol.bas:HandleShowGMPanelForm | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 111 | UserNameList | client Protocol.bas:HandleUserNameList | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
+| 107 | SpawnListt | client Protocol.bas:HandleSpawnList | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 108 | ShowSOSForm | client Protocol.bas:HandleShowSOSForm | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 109 | ShowMOTDEditionForm | client Protocol.bas:HandleShowMOTDEditionForm | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 110 | ShowGMPanelForm | client Protocol.bas:HandleShowGMPanelForm | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
+| 111 | UserNameList | client Protocol.bas:HandleUserNameList | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
 | 112 | UserOnline | client Protocol.bas:HandleUserOnline | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
 | 113 | ParticleFX | client Protocol.bas:HandleParticleFX | core | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 114 | ParticleFXToFloor | client Protocol.bas:HandleParticleFXToFloor | core | merged | `main:packages/protocol/src/packets/spells.ts` | no |
@@ -293,7 +293,7 @@ Ids only: .
 | 148 | NadarToggle | client Protocol.bas:HandleNadarToggle | core | not started |  | no |
 | 149 | ShowFundarClanForm | client Protocol.bas:HandleShowFundarClanForm | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 150 | CharUpdateHP | client Protocol.bas:HandleCharUpdateHP | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
-| 151 | CharUpdateMAN | client Protocol.bas:HandleCharUpdateMAN | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
+| 151 | CharUpdateMAN | client Protocol.bas:HandleCharUpdateMAN | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 152 | PosLLamadaDeClan | client Protocol.bas:HandlePosLLamadaDeClan | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 153 | QuestDetails | client Protocol.bas:HandleQuestDetails | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
 | 154 | QuestListSend | client Protocol.bas:HandleQuestListSend | quests | merged | `main:packages/protocol/src/packets/quests.ts` | yes |
