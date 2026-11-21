@@ -1,11 +1,22 @@
 import { test, expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 import { FrameDecoder, OptionsClientPacketId as OC, OptionsServerPacketId as OS, KeysClientPacketId as KC, HOTKEY_TOGGLE, decodeClientPacket, encodeServerFrame } from '../../../packages/protocol/src/index.js';
 import type { ClientPacket, ServerPacket } from '../../../packages/protocol/src/index.js';
 
 // Issue #40: the wp11 UI (options window, key editor, hotkey bar) against the stand-in server. The stand-in knows nothing about hotkeys, so
 // the page's WebSocket is intercepted: SendClientToggles ("hotokey-enabled") is injected after login and SetHotkeySlot / UseHKeySlot are
 // recorded and swallowed here instead of reaching the stand-in.
+// IsBindable is post-pin: in the pre-HOO Recursos (client-classic 619e69d) HECHIZO1 has no IsBindable=1, so right-dragging spell 1 binds nothing there.
+function spellOneBindable(): boolean {
+  const root = process.env.AO_ASSETS;
+  if (!root) return true;
+  try {
+    const section = readFileSync(`${root}/Dat/Hechizos.dat`, 'latin1').split(/^\[HECHIZO1\]\r?$/m)[1]?.split(/^\[/m)[0] ?? '';
+    return /^IsBindable=1/im.test(section);
+  } catch { return true; }
+}
+
 async function login(page: Page) {
   const seen: ClientPacket[] = [];
   let inject: (...packets: ServerPacket[]) => void = () => {};
@@ -119,6 +130,7 @@ test.describe('options window, key editor and hotkey bar', () => {
   });
 
   test('hotkey bar: appears with hotokey-enabled, right-drag of a bindable spell binds a slot, the bound key uses it', async ({ page }) => {
+    test.skip(!spellOneBindable(), 'HECHIZO1 is not IsBindable in this Hechizos.dat (pre-HOO data)');
     const { seen, inject } = await login(page);
     const bar = page.locator('#hotkeys');
     await expect(bar).toBeHidden();
