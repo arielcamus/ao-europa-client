@@ -1,0 +1,22 @@
+diff --git a/Codigo/InvUsuario.bas b/Codigo/InvUsuario.bas
+index 24d8b00..99f99b9 100644
+--- a/Codigo/InvUsuario.bas
++++ b/Codigo/InvUsuario.bas
+@@ -191,9 +191,14 @@ Sub QuitarNewbieObj(ByVal UserIndex As Integer)
+             End If
+         End If
+     Next j
+-    'Si el usuario dejó de ser Newbie, y estaba en el Newbie Dungeon
+-    'Mandamos a la Isla de la Fortuna
+-    Call WarpUserChar(UserIndex, Renacimiento.Map, Renacimiento.x, Renacimiento.y, True)
++    'Si el usuario dejó de ser Newbie, y estaba en un mapa Newbie (el Newbie Dungeon), lo mandamos a su ciudad de origen.
++    'Fuera de un mapa Newbie se queda donde está (la regla anterior a 35a94b15, que hacía el warp sin importar el mapa).
++    If MapInfo(UserList(UserIndex).pos.Map).Newbie Then
++        Dim HomeCity As e_City
++        HomeCity = UserList(UserIndex).Hogar
++        If Not IsValidCity(HomeCity) Then HomeCity = e_City.cUllathorpe
++        Call WarpToLegalPos(UserIndex, Cities(HomeCity).Map, CByte(Cities(HomeCity).x), CByte(Cities(HomeCity).y), True)
++    End If
+     ' Msg671=Has dejado de ser Newbie.
+     Call WriteLocaleMsg(UserIndex, MSG_DEJADO_NEWBIE, e_FontTypeNames.FONTTYPE_INFO)
+     Exit Sub
