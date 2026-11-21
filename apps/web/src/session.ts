@@ -6,7 +6,8 @@
 import { ClientPacketId as C, CombatClientPacketId as CC, ServerPacketId as S, Heading, FrameDecoder, decodeServerPacket, encodeClientFrame } from '@ao/protocol';
 import { StatusClientPacketId } from '@ao/protocol';
 import { DoorClientPacketId, DoorServerPacketId as DoorServer, KeysServerPacketId as KS } from '@ao/protocol';
-import type { CharacterCreate, ClientPacket, ServerPacket } from '@ao/protocol';
+import { SessionServerPacketId as SS, SessionClientPacketId as SCP } from '@ao/protocol';
+import type { AccountCharacter, CharacterCreate, ClientPacket, ServerPacket } from '@ao/protocol';
 import { ClassicState } from './ui-state.js';
 import { MapObjects } from './map-objects.js';
 import { PacketCounters, SEQUENCED_CLIENT_PACKETS } from './packet-counters.js';
@@ -39,6 +40,13 @@ export interface Position { x: number; y: number }
 const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
 export interface Motion { from: Position; to: Position; started: number; duration: number }
 export type Phase = 'connecting' | 'account' | 'login' | 'playing' | 'closed';
+/**
+ * Something the server wants the player to read outside the console: ShowMessageBox (a locale id the UI resolves, shown by
+ * frmMensaje or the login assistant depending on the screen) or ErrorMsg (a VB6 MsgBox, then the server closes the socket).
+ */
+export type SessionNotice = { kind: 'box'; messageId: number; extra: string } | { kind: 'error'; text: string };
+/** What the player entered on frmCrearPersonaje; the head must come from the race/gender head list (ModCabezas.DameOpciones). */
+export interface NewCharacter { name: string; race: number; gender: number; characterClass: number; head: number; home: number }
 
 /** Transport-independent state. Only one position query/walk may be outstanding. */
 export class Session {
@@ -95,6 +103,30 @@ export class Session {
     message: text => this.ui.message(text), cancelTargeting: () => this.spells.cancel(),
   }, this.options);
   characterLevel: number | undefined;
+  /**
+   * Interactive connect flow (the VB6 account screen). False keeps the historic behaviour that the bot, the stand-in tests and the
+   * recorders rely on: the first character is entered automatically and a server error closes the session with a thrown error.
+   */
+  interactive = false;
+  /** The account's characters from AccountCharacterList (HandleAccountCharacterList fills Pjs). */
+  accountCharacters: AccountCharacter[] = [];
+  /** Bumped every time the list arrives, so the account screen redraws. */
+  accountRevision = 0;
+  /** Queue of messages for the player (ShowMessageBox, ErrorMsg); the UI shifts them off. */
+  readonly notices: SessionNotice[] = [];
+  noticeRevision = 0;
+  /** Set by the UI: HandleDisconnect (back to the login screen), HandleCerrarleCliente (CloseClient) and HandleMostrarCuenta (account screen). */
+  onDisconnect: (() => void) | undefined;
+  onCloseClient: (() => void) | undefined;
+  onShowAccount: (() => void) | undefined;
+  /** UserNavegando, UserMontado, UserNadando, UserNadandoTrajeCaucho (the toggle packets). */
+  readonly movement = { sailing: false, riding: false, swimming: false, rubberSuit: false };
+  /** InviCounter and DrogaCounter (Contadores) in seconds; 0 when off. */
+  timers = { invisibility: 0, effect: 0 };
+  /** Last FlashScreen the server sent (EfectoEnPantalla): the UI tints the viewport until it has passed. */
+  flash: { color: number; duration: number; ignore: boolean; at: number } | undefined;
+  /** Floating texts (TextOverTile / TextCharDrop) waiting to be drawn by the bubbles layer. */
+  readonly floatingTexts: { text: string; x?: number; y?: number; charIndex?: number; color: number; duration: number; offsetY: number; animated: boolean; at: number }[] = [];
   phase: Phase = 'connecting';
   map: number | undefined;
   resourceMap: number | undefined;
@@ -121,10 +153,10 @@ export class Session {
   private talkInterval = 500;
   private hitInterval = 0;
   private placementDeadline: number;
-  private credentials: { email: string; password: string } | undefined;
+  private credentials: { email: string; password: string; create?: boolean } | undefined;
 
   constructor(
-    credentials: { email: string; password: string },
+    credentials: { email: string; password: string; create?: boolean },
     private readonly write: (bytes: Uint8Array) => void,
     private readonly clock: () => number = () => performance.now(),
   ) {
@@ -203,11 +235,16 @@ export class Session {
         case S.Connected:
           if (this.phase !== 'connecting' || !this.credentials) throw new Error('Unexpected Connected');
           this.phase = 'account';
-          this.send({ id: C.LoginAccount, ...this.credentials });
+          // WriteCreateAccount and WriteLoginAccount carry the same two strings; the server answers both with AccountCharacterList.
+          if (this.credentials.create) this.send({ id: SCP.CreateAccount, email: this.credentials.email, password: this.credentials.password });
+          else this.send({ id: C.LoginAccount, email: this.credentials.email, password: this.credentials.password });
           this.credentials = undefined;
+          this.placementDeadline = this.clock() + 10_000;
           break;
         case S.AccountCharacterList: {
           if (this.phase !== 'account') throw new Error('Unexpected character list');
+          this.accountCharacters = packet.characters; this.accountRevision++;
+          if (this.interactive) break; // the account screen picks (frmConnect state e_state_account_screen)
           const first = packet.characters[0];
           if (!first || first.id <= 0 || !first.name) throw new Error('This account has no character');
           this.phase = 'login';
@@ -273,8 +310,29 @@ export class Session {
         // LocaleMsg (141) reaches the console through ui.receive -> ChatState (one print, chat's pipeline).
         case KS.SafeModeOn: this.safeMode = true; break;
         case KS.SafeModeOff: this.safeMode = false; break;
-        case S.ErrorMsg: throw new Error(`Server: ${packet.message}`);
-        case S.Disconnect: throw new Error('The server disconnected this character');
+        case S.ErrorMsg:
+          // HandleErrorMessage: MsgBox(text). The server closes the socket right after, which returns the player to the login screen.
+          if (!this.interactive) throw new Error(`Server: ${packet.message}`);
+          this.notify({ kind: 'error', text: packet.message });
+          break;
+        case S.Disconnect:
+          // HandleDisconnect (PYMMO=0) ends in General_Set_Connect: the login screen, not an error.
+          if (!this.interactive) throw new Error('The server disconnected this character');
+          this.onDisconnect?.();
+          break;
+        case SS.ShowMessageBox: this.notify({ kind: 'box', messageId: packet.messageId, extra: packet.extra }); break;
+        case SS.CerrarleCliente: this.onCloseClient?.(); break;
+        case SS.MostrarCuenta: this.phase = 'account'; this.accountRevision++; this.onShowAccount?.(); break;
+        case SS.NavigateToggle: this.movement.sailing = packet.sailing; break;
+        case SS.EquiteToggle: this.movement.riding = !this.movement.riding; break; // HandleEquiteToggle flips it
+        case SS.NadarToggle: this.movement.swimming = packet.swimming; this.movement.rubberSuit = packet.rubberSuit; break;
+        case SS.VelocidadToggle: if (this.charIndex !== undefined) this.setSpeeding(this.charIndex, packet.speeding); break;
+        case SS.Contadores: this.timers = { invisibility: packet.invisibility, effect: packet.effect }; break;
+        case SS.FlashScreen: this.flash = { color: packet.color, duration: packet.duration, ignore: packet.ignore, at: this.clock() }; break;
+        case SS.TextOverTile: this.addFloatingText({ text: packet.text, x: packet.x, y: packet.y, color: packet.color, duration: packet.duration, offsetY: packet.offsetY, animated: packet.animated }); break;
+        case SS.TextCharDrop: this.addFloatingText({ text: packet.text, charIndex: packet.charIndex, color: packet.color, duration: packet.duration, offsetY: 0, animated: packet.animated }); break;
+        case SS.ForceCharMove: this.forceMove(packet.heading); break;
+        case SS.AnswerReset: this.resetRequested = true; break;
       }
       this.onPacket?.(packet);
     }
@@ -347,7 +405,9 @@ export class Session {
   tick(): void {
     const now = this.clock();
     if (this.phase === 'closed') return;
-    if (!this.ready && now > this.placementDeadline) throw new Error('Timed out waiting for login, placement and intervals');
+    // The account and character screens wait for the player; the placement clock starts when a character is entered.
+    if (!this.ready && this.phase !== 'connecting' && this.phase !== 'account' && now > this.placementDeadline) throw new Error('Timed out waiting for login, placement and intervals');
+    if (!this.ready && this.phase === 'connecting' && now > this.placementDeadline) throw new Error('Timed out waiting for the server');
     if (this.pending && now - this.pending.since > 5000) throw new Error('Server stopped responding to position requests');
     if (this.ready && !this.pending && now - this.lastQuery > 5000) {
       this.pending = { since: now }; this.lastQuery = now;
@@ -458,6 +518,46 @@ export class Session {
     if (!this.ready) return false;
     this.send(packet); return true;
   }
+  /** HandleAnswerReset asks the player whether to reset the character; the UI answers with ResetearPersonaje. */
+  resetRequested = false;
+  private notify(notice: SessionNotice) { this.notices.push(notice); this.noticeRevision++; }
+  private addFloatingText(text: Omit<Session['floatingTexts'][number], 'at'>) {
+    // Same cap as a console: an overhead text per call, never an unbounded list.
+    this.floatingTexts.push({ ...text, at: this.clock() });
+    if (this.floatingTexts.length > 50) this.floatingTexts.shift();
+  }
+  /** HandleForceCharMove: the server pushes the player one tile (Char_Move_by_Head + MoveScreen). */
+  private forceMove(heading: number) {
+    if (!this.position || !this.self || heading < 1 || heading > 4) return;
+    const to = {
+      x: this.position.x + (heading === Heading.East ? 1 : heading === Heading.West ? -1 : 0),
+      y: this.position.y + (heading === Heading.South ? 1 : heading === Heading.North ? -1 : 0),
+    };
+    if (to.x < 1 || to.y < 1 || to.x > 100 || to.y > 100) return;
+    this.motion = { from: this.position, to, started: this.clock(), duration: Math.max(50, this.stepMs - 30) };
+    this.position = to;
+    this.characters.set(this.self.charIndex, { ...this.self, ...to, heading: heading as Heading });
+    this.lastWalk = this.clock();
+  }
+  /** frmConnect render_MouseUp / frmConnect Jugar: LoginExistingChar for a character of the account list (LoginCharacter). */
+  enterCharacter(character: AccountCharacter): boolean {
+    if (this.phase !== 'account' || character.id <= 0 || !character.name || !this.accountCharacters.some(c => c.id === character.id)) return false;
+    this.phase = 'login'; this.characterLevel = character.level; this.placementDeadline = this.clock() + 10_000;
+    this.send({ id: C.LoginExistingChar, charId: character.id, name: character.name });
+    return true;
+  }
+  /**
+   * frmConnect Crear: WriteLoginNewChar. The server (PYMMO=0) validates and enters the new character directly; a refusal comes back as
+   * ShowMessageBox (the session stays on the account screen) or as a closed socket.
+   */
+  createCharacter(character: NewCharacter): boolean {
+    if (this.phase !== 'account') return false;
+    this.phase = 'login'; this.placementDeadline = this.clock() + 10_000;
+    this.send({ id: SCP.LoginNewChar, name: character.name, race: character.race, gender: character.gender, characterClass: character.characterClass, head: character.head, home: character.home });
+    return true;
+  }
+  /** A ShowMessageBox during character creation or entry leaves the session on the account screen again (the server did not log anybody in). */
+  backToAccount() { if (this.phase === 'login' && !this.self) this.phase = 'account'; }
   finish(message = 'Disconnected'): void {
     this.phase = 'closed'; this.error = message; this.credentials = undefined;
     this.pending = undefined; this.motion = undefined;

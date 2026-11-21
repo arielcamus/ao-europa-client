@@ -37,6 +37,12 @@ import { displayName } from './character-data.js';
 import { KeyringUI } from './keyring-ui.js';
 import { PapiroUI } from './papiro-ui.js';
 import { InventoryExtras } from './inventory-extras.js';
+import { ConnectUI } from './connect-ui.js';
+import { LoadingCard, showConfirm, showConnecting, showExit, showMessage, showNewAccount } from './session-windows.js';
+import { TEXT } from './connect-text.js';
+import { FloatingTexts } from './floating-text.js';
+import type { SessionNotice } from './session.js';
+import type { VbWindow } from './vb-window.js';
 
 applyClassicLayout();
 windows.install();
@@ -54,6 +60,8 @@ let wsPath = '/bridge';
 let lastUi = 0;
 let stoppedAt: number | undefined;
 let chatSupported = true;
+/** The account screen, character creation and message boxes belong to the classic server; the stand-in and the community adapter keep the one-click login. */
+let interactiveFlow = true;
 const report = (message: string) => {
   errorBox.textContent = message; errorBox.hidden = false;
   element('console').scrollTop = element('console').scrollHeight;
@@ -119,6 +127,19 @@ gameOptions.subscribe(applyOptions);
 const hotkeysLoaded = new WeakSet<Session>();
 /** IsDialogOpen: the bank, Goliath and trade windows pause walking. */
 const transacting = () => bankUi.dialogOpen || tradeUi.dialogOpen;
+// frmConnect: the login, account and character-creation screens, and the small forms of the connect flow (frmMensaje, frmConnecting, Frmcarga).
+const loading = new LoadingCard(element('classic'));
+const floating = new FloatingTexts(element('chat-bubbles'));
+let connectingWindow: VbWindow | undefined;
+const connectUi = new ConnectUI(element('classic'), renderer, {
+  enter: character => guard(() => session?.enterCharacter(character)),
+  create: character => guard(() => session?.createCharacter(character)),
+  logout: () => close(),
+  close: () => { close(); try { window.close(); } catch { /* a tab the script did not open stays open */ } },
+  message: text => { showMessage(element('classic'), text); },
+  confirm: (text, yes) => { showConfirm(element('classic'), text, yes); },
+  click: () => audio.director.click(),
+});
 const questWindows = new QuestWindows(element('classic'), renderer, undefined, report);
 // frmMain QuestBoton_MouseUp: WriteQuestListRequest; the server answers with the quest list.
 ui.bindMenu('Quests', () => { try { session?.requestQuestList(); } catch (error) { close(String(error)); } });
@@ -135,12 +156,12 @@ function guard(action: () => unknown) {
   try { action(); } catch (error) { close(error instanceof Error ? error.message : String(error)); }
 }
 function close(message = 'Disconnected') {
-  clearInput(); stoppedAt = performance.now(); chatBox.close(); npcDialog.hide(); audio.detach(); skillsWindows.closeAll(); questWindows.closeAll();
+  connectingWindow?.close(); clearInput(); stoppedAt = performance.now(); chatBox.close(); npcDialog.hide(); audio.detach(); skillsWindows.closeAll(); questWindows.closeAll();
   if (session) {
     try { session.finish(message); } catch (error) { message = `${message}; ${String(error)}`; }
   }
   const old = socket; socket = undefined; old?.close();
-  form.hidden = false; connect.disabled = false; disconnect.hidden = true;
+  connect.disabled = false; disconnect.hidden = true;
   connection.textContent = message;
   if (message !== 'Disconnected') report(message);
 }
@@ -152,9 +173,10 @@ async function boot() {
   if (config.serverProfile && !['classic', 'elixir-classic'].includes(config.serverProfile)) throw new Error('Invalid server profile');
   wsPath = config.wsPath;
   const community = config.mode === 'classic' && config.serverProfile === 'elixir-classic';
+  interactiveFlow = config.mode === 'classic' && !community;
   chatSupported = !community; // The current opt-in community adapter only supports login/movement.
   element('mode').textContent = config.mode === 'standin' ? 'TEST STAND-IN' : community ? 'AO COMMUNITY SERVER' : 'CLASSIC · UNVERIFIED';
-  element('mode-note').textContent = config.mode === 'standin' ? 'Prueba local · standin@local / testpass' : 'Conecta con tu cuenta. Se seleccionará el primer personaje.';
+  element('mode-note').textContent = config.mode === 'standin' ? 'Prueba local · standin@local / testpass' : 'Conecta con tu cuenta y elige tu personaje.';
   element('scope-note').textContent = config.mode === 'standin'
     ? 'Mundo de prueba local. Objetos y estadísticas de muestra; sin combate ni persistencia.'
     : community ? 'Servidor comunitario · movimiento y persistencia. Chat aún no disponible.' : 'Cliente clásico · movimiento, combate, objetos, hechizos, banco y chat.';
@@ -189,7 +211,30 @@ async function boot() {
     if (now - lastUi > 100) { updateUi(now); lastUi = now; }
   });
 }
+function handleNotice(notice: SessionNotice) {
+  if (notice.kind === 'error') { showMessage(element('classic'), notice.text); return; } // HandleErrorMessage: MsgBox
+  const text = sharedLocale.message(notice.messageId, notice.extra) || `Mensaje ${notice.messageId}`;
+  // HandleShowMessageBox: the login screen speaks through the assistant, every other screen opens frmMensaje.
+  if (!session?.self && connectUi.current === 'login') connectUi.say(text); else showMessage(element('classic'), text);
+  session?.backToAccount(); // a refused LoginNewChar / LoginExistingChar leaves the player on the account screen
+}
+let shownAccount = -1;
+/** The VB6 screen state machine: which connect screen, the connecting form and the loading card the session phase calls for. */
+function syncConnect() {
+  const s = session && session.phase !== 'closed' ? session : undefined;
+  while (s?.notices.length) handleNotice(s.notices.shift()!);
+  const playing = !!s && s.ready && renderer.readyMap === s.resourceMap;
+  if (s?.phase === 'connecting') { if (!connectingWindow?.isOpen) connectingWindow = showConnecting(element('classic'), () => close()); } else connectingWindow?.close();
+  if (playing) connectUi.setScreen('none');
+  else if (s?.phase === 'account') {
+    if (shownAccount !== s.accountRevision || connectUi.current === 'login' || connectUi.current === 'none') { shownAccount = s.accountRevision; connectUi.showAccount(s.accountCharacters); }
+  } else if (!s) { shownAccount = -1; connectUi.setScreen('login'); }
+  loading.visible = !!s && (s.phase === 'login' || (s.phase === 'playing' && !playing));
+  form.hidden = !!s || connectUi.current !== 'login';
+}
 function updateUi(now: number) {
+  syncConnect();
+  if (session) floating.update(session, renderer, now);
   ui.update(session); bankUi.update(session); tradeUi.update(session); partyUi.update(session); guildUi.update(session); travelUi.update(session); gmUi.update(session);
   itemsUi.update(session); keyringUi.update(session); papiroUi.update(session); inventoryExtras.update(session);
   guard(() => craftingUi.update(session));
@@ -201,7 +246,7 @@ function updateUi(now: number) {
   if (gameOptions.value.showFps && now - lastFps > 500) { lastFps = now; fpsLabel.textContent = `FPS: ${Math.round(renderer.app.ticker.FPS)}`; }
   minimap.update(session, playing);
   if (playing) {
-    form.hidden = true; disconnect.hidden = false;
+    disconnect.hidden = false;
     element('map-name').textContent = renderer.mapName; element('map-name').title = renderer.mapName;
     element('character-name').textContent = displayName(session.self!.name);
     connection.textContent = 'Connected';
@@ -220,19 +265,23 @@ function updateUi(now: number) {
   element('asset-note').hidden = renderer.clippedFrames === 0;
   element('asset-note').textContent = `El recurso local contiene ${renderer.clippedFrames} regiones fuera de su imagen. Los píxeles ausentes quedan transparentes.`;
 }
-form.addEventListener('submit', event => {
-  event.preventDefault();
+/** DoLogin / CreateAccount: open the socket and start a session; the account screen takes over when the character list arrives. */
+function connectSession(email: string, secret: string, create = false) {
   if (socket) return;
   clearInput(); errorBox.hidden = true; connect.disabled = true; stoppedAt = undefined; requestedMap = undefined;
   const url = new URL(wsPath, location.href); url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
   const ws = new WebSocket(url); socket = ws; ws.binaryType = 'arraybuffer';
-  session = new Session({ email: account.value, password: password.value }, bytes => {
+  session = new Session({ email, password: secret, ...(create ? { create: true } : {}) }, bytes => {
     if (ws.readyState !== WebSocket.OPEN || ws.bufferedAmount > 64 * 1024) throw new Error('Connection is not writable');
     ws.send(bytes.slice().buffer);
   });
+  session.interactive = interactiveFlow;
   password.value = '';
   npcDialog.hide();
   const owner = session;
+  // HandleDisconnect ends in General_Set_Connect (the login screen); HandleCerrarleCliente is CloseClient.
+  session.onDisconnect = () => { if (session === owner) close(); };
+  session.onCloseClient = () => { if (session === owner) { close('El servidor cerró el cliente.'); showMessage(element('classic'), 'El servidor cerró el cliente.'); } };
   session.tracker.onNpcDescription = ({ npcNumber }) => { if (session === owner) void npcDialog.showWhenReady(npcNumber, () => renderer.locale); };
   chatBox.attach(session);
   session.ui.chat.copyToConsole = gameOptions.value.copyDialogToConsole;
@@ -244,11 +293,42 @@ form.addEventListener('submit', event => {
       session!.receive(new Uint8Array(event.data));
     } catch (error) { close(error instanceof Error ? error.message : String(error)); }
   };
-  ws.onerror = () => { if (socket === ws) close('Unable to connect to the local bridge'); };
-  ws.onclose = () => { if (socket === ws) close('Server connection closed'); };
+  ws.onerror = () => { if (socket === ws) { close('Disconnected'); connectUi.say(TEXT.connectionError); showMessage(element('classic'), TEXT.connectionError); } };
+  ws.onclose = () => {
+    if (socket !== ws) return;
+    const wasPlaying = owner.phase === 'playing';
+    // After a refusal (ErrorMsg) the server closes the socket: back to the login screen without a second complaint.
+    close('Disconnected');
+    if (wasPlaying) showMessage(element('classic'), TEXT.serverError);
+  };
   renderer.app.canvas.focus();
+}
+const REMEMBER = 'ao.account';
+const remembered = (() => { try { return localStorage.getItem(REMEMBER) ?? ''; } catch { return ''; } })();
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  try { if (remember.getAttribute('aria-checked') === 'true') localStorage.setItem(REMEMBER, account.value); else localStorage.removeItem(REMEMBER); } catch { /* storage may be blocked */ }
+  connectSession(account.value, password.value);
 });
-disconnect.addEventListener('click', () => close());
+// FrmLogear: chkRecordar (42.7,143), cmdCuenta (43,202) and cmdSalir (183,202). Only the e-mail is remembered, never the password.
+const remember = document.createElement('button'); remember.type = 'button'; remember.className = 'cs-check'; remember.setAttribute('role', 'checkbox'); remember.setAttribute('aria-label', 'Recordarme');
+remember.style.cssText = 'left:43px;top:143px'; remember.setAttribute('aria-checked', String(remembered !== ''));
+void import('./interface-assets.js').then(({ loadInterface }) => loadInterface('check-amarillo').then(url => remember.style.setProperty('--check', `url("${url}")`)).catch(() => undefined));
+remember.addEventListener('click', () => {
+  const on = remember.getAttribute('aria-checked') !== 'true'; remember.setAttribute('aria-checked', String(on));
+  connectUi.say(on ? TEXT.remember : TEXT.forget);
+});
+const accountButton = document.createElement('button'); accountButton.type = 'button'; accountButton.className = 'hotspot'; accountButton.setAttribute('aria-label', 'Crear cuenta'); accountButton.style.cssText = 'position:absolute;left:43px;top:202px;width:132px;height:28px';
+accountButton.addEventListener('click', () => { if (!socket) showNewAccount(element('classic'), { create: (email, secret) => connectSession(email, secret, true), say: text => connectUi.say(text) }); });
+const quitButton = document.createElement('button'); quitButton.type = 'button'; quitButton.className = 'hotspot'; quitButton.setAttribute('aria-label', 'Salir'); quitButton.style.cssText = 'position:absolute;left:183px;top:202px;width:132px;height:28px';
+quitButton.addEventListener('click', () => { try { window.close(); } catch { /* ignored */ } connectUi.say('Podés cerrar esta pestaña cuando quieras.'); });
+form.append(remember, accountButton, quitButton);
+if (remembered) { account.value = remembered; connectUi.say(TEXT.welcomeBack); }
+// frmMain Image4(1) opens frmCerrar: Menú principal = WriteQuit (the server counts down, then Disconnect), Salir = CloseClient.
+disconnect.addEventListener('click', () => !interactiveFlow ? close() : showExit(element('classic'), {
+  menu: () => guard(() => session?.sendAction({ id: K.Quit })),
+  exit: () => { guard(() => session?.sendAction({ id: K.Quit })); window.setTimeout(() => { close(); try { window.close(); } catch { /* ignored */ } }, 300); },
+}));
 // frmMain OpcionesBoton opens frmOpciones (gameplay, video, audio tabs, and the key editor).
 element('settings').addEventListener('click', () => optionsUi.toggle());
 const openChat = (guild = false) => {

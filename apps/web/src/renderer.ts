@@ -11,7 +11,7 @@ import type { Session } from './session.js';
 import { DOOR_OBJECT_TYPE, ObjType, hayTecho, RoofLights, roofTriggers, TreeFade, fixedObjects, nearRoof, objectDraws, parseObjectGraphics, treeCoversPlayer } from './map-objects.js';
 import type { GroundObject, ObjectGraphic } from './map-objects.js';
 import { CharacterSprites } from './character-render.js';
-import { NPC_NAME_COLOR, parseColors, parseLocale, playerNameColor, privilegeTitle } from './character-data.js';
+import { NPC_NAME_COLOR, colorPj, parseColors, parseLocale, playerNameColor, privilegeTitle } from './character-data.js';
 import type { LocaleData, Rgb } from './character-data.js';
 import { spellTables } from './spells.js';
 import type { ActiveFx } from './spells.js';
@@ -310,6 +310,12 @@ export class WorldRenderer {
   }
   /** Grh index of a head facing south (cabezas.ind), for overlays that draw only the head (party frames). */
   headGrh(head: number): number | undefined { return this.heads[head]?.[2] || undefined; }
+  /** Sprites of a stationary character with its equipment (account screen, character creation), in the VB6 layer order for `heading` (1 N, 2 E, 3 S, 4 W). */
+  characterLayers(char: { body: number; head: number; weapon?: number; shield?: number; helmet?: number }, heading = 3) {
+    return this.sprites?.layers({ weapon: 0, shield: 0, helmet: 0, ...char } as never, heading) ?? [];
+  }
+  /** ColoresPJ(index) from init/colores.dat (name colours of the account screen). */
+  pjColor(index: number): Rgb { return colorPj(this.colors, index); }
   /** Sprites of a stationary south-facing character, for the NPC dialog portrait. */
   portraitLayers(body: number, head: number) {
     return this.sprites?.layers({ body, head, weapon: 0, shield: 0, helmet: 0 } as never, 3) ?? [];
