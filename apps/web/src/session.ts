@@ -33,6 +33,7 @@ import { PartyState } from './party.js';
 import { TravelState } from './travel.js';
 import { GuildState } from './guild.js';
 import { OptionsController, OptionsState } from './options-state.js';
+import { GmState } from './gm-state.js';
 
 export interface Position { x: number; y: number }
 const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
@@ -85,6 +86,8 @@ export class Session {
   readonly bankTradeActions = new BankTradeController({ send: packet => this.send(packet), ready: () => this.ready }, this.bankTrade);
   /** Quest list, quest details and NPC quest offers (feat/quests). */
   readonly quests = new QuestsState();
+  /** GM privileges, panel, SOS list, spawn and MOTD forms (wp12). */
+  readonly gm = new GmState();
   /** Server toggles, hotkeys, Goliath transfer (feat/options-extras). */
   readonly options = new OptionsState();
   readonly optionsActions = new OptionsController({
@@ -195,6 +198,7 @@ export class Session {
         },
       });
       this.options.receive(packet);
+      this.gm.receive(packet);
       switch (packet.id) {
         case S.Connected:
           if (this.phase !== 'connecting' || !this.credentials) throw new Error('Unexpected Connected');

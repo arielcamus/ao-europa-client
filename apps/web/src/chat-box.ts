@@ -10,6 +10,8 @@ export class ChatBox {
   private input = new ChatInput();
   private session: Session | undefined;
   private guild = false;
+  /** /GM and /CO open client-side forms (FrmGmAyuda, FrmObjetos); main.ts wires them to the GM forms. */
+  onOpenWindow: ((window: 'gmHelp' | 'objects') => void) | undefined;
 
   constructor(
     private readonly form: HTMLFormElement,
@@ -56,10 +58,12 @@ export class ChatBox {
     if (!session) return;
     const text = this.field.value;
     try {
-      const outcome = this.guild ? this.input.guildMessage(text) : this.input.submit(text, { level: session.ui.stats.level, dead: session.dead, trading: session.bankTrade.trading, manaFull: session.ui.stats.mana !== undefined && session.ui.stats.mana === session.ui.stats.maxMana });
+      const outcome = this.guild ? this.input.guildMessage(text) : this.input.submit(text, { level: session.ui.stats.level, dead: session.dead, trading: session.bankTrade.trading, manaFull: session.ui.stats.mana !== undefined && session.ui.stats.mana === session.ui.stats.maxMana, isGM: session.gm.isGM });
       let ok = true;
       if (outcome.talk !== undefined) ok = outcome.talk.trim() === '' || session.talk(outcome.talk);
       else if (outcome.packet) ok = session.sendChat(outcome.packet);
+      for (const more of outcome.more ?? []) session.sendChat(more);
+      if (outcome.open) this.onOpenWindow?.(outcome.open);
       for (const note of outcome.notes) session.ui.message(note.text, note.font);
       if (!ok) { session.ui.message('Espera un momento o acorta el mensaje (máximo 255 bytes).'); return; }
       this.close();

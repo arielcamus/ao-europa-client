@@ -9,18 +9,18 @@
  ],
  "headline": {
   "packets": 523,
-  "packetsCovered": 295,
-  "packetsMerged": 295,
+  "packetsCovered": 435,
+  "packetsMerged": 435,
   "s2c": 207,
   "c2s": 316,
-  "s2cCovered": 159,
-  "c2sCovered": 136,
+  "s2cCovered": 170,
+  "c2sCovered": 265,
   "forms": 86,
   "formsCovered": 4,
   "formsPartial": 5,
-  "fixturePackets": 211,
-  "packetsPct": 56.4,
-  "packetsMergedPct": 56.4,
+  "fixturePackets": 235,
+  "packetsPct": 83.2,
+  "packetsMergedPct": 83.2,
   "formsPct": 4.7,
   "formsStartedPct": 10.5
  },
@@ -233,9 +233,9 @@
    "id": "gm",
    "title": "GM / admin (lowest)",
    "packets": 142,
-   "packetsCovered": 2,
-   "packetsMerged": 2,
-   "packetsPct": 1.4,
+   "packetsCovered": 142,
+   "packetsMerged": 142,
+   "packetsPct": 100,
    "forms": 13,
    "formsCovered": 0,
    "formsPartial": 0,
@@ -287,6 +287,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -355,6 +357,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -398,7 +402,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
-    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl"
+    "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl"
    ]
   },
   {
@@ -431,6 +436,7 @@
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/station-not-open.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
@@ -821,6 +827,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -959,6 +967,7 @@
     "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
@@ -981,6 +990,7 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
@@ -1007,6 +1017,7 @@
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
    ]
   },
@@ -1028,7 +1039,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl"
+    "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl"
    ]
   },
   {
@@ -1104,6 +1116,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -1330,6 +1344,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/papiro-sign.jsonl",
     "tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
@@ -1479,6 +1495,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/drop-pickup.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
@@ -1537,6 +1555,7 @@
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/station-not-open.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
@@ -1582,6 +1601,7 @@
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
@@ -1652,6 +1672,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -1720,6 +1742,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -1842,6 +1866,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -1940,6 +1966,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -2021,6 +2049,8 @@
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/crafting/station-not-open.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
@@ -2102,6 +2132,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -2161,8 +2193,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/audio.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "s2c:60",
@@ -2191,6 +2225,7 @@
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/station-not-open.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
@@ -2250,6 +2285,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
@@ -2355,6 +2392,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/delete-item.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/move-item.jsonl",
@@ -2483,6 +2522,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -2775,6 +2816,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
@@ -2865,6 +2908,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -2898,11 +2943,13 @@
    "writer": "server Protocol_Writes.bas:WriteAddForumMsg",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2915,11 +2962,13 @@
    "writer": "server Protocol_Writes.bas:WriteShowForumForm",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -2941,7 +2990,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl"
+    "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl"
    ]
   },
   {
@@ -3045,6 +3095,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -3388,6 +3440,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
@@ -3472,6 +3526,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -3545,13 +3601,17 @@
    "writer": null,
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl"
+   ]
   },
   {
    "key": "s2c:108",
@@ -3562,13 +3622,17 @@
    "writer": "server Protocol_Writes.bas:WriteShowSOSForm",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl"
+   ]
   },
   {
    "key": "s2c:109",
@@ -3579,13 +3643,17 @@
    "writer": "server Protocol_Writes.bas:WriteShowMOTDEditionForm",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl"
+   ]
   },
   {
    "key": "s2c:110",
@@ -3596,13 +3664,17 @@
    "writer": "server Protocol_Writes.bas:WriteShowGMPanelForm",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl"
+   ]
   },
   {
    "key": "s2c:111",
@@ -3613,13 +3685,17 @@
    "writer": "server Protocol_Writes.bas:WriteUserNameList",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl"
+   ]
   },
   {
    "key": "s2c:112",
@@ -3630,11 +3706,13 @@
    "writer": null,
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -3671,6 +3749,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/move-item.jsonl",
     "tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
@@ -3860,6 +3940,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -3973,6 +4055,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/drop-pickup.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
@@ -4036,8 +4120,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/audio.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "s2c:123",
@@ -4059,6 +4145,7 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl"
    ]
   },
@@ -4195,6 +4282,7 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl"
    ]
   },
@@ -4324,6 +4412,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
@@ -4418,6 +4508,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -4568,6 +4660,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/delete-item.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
@@ -4798,6 +4892,7 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/combat-spells-2/cast-dart-snake.jsonl",
     "tests/fixtures/vb6/combat/melee-dummy.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/spells/cast-orb.jsonl"
    ]
@@ -4818,8 +4913,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/status.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl"
+   ]
   },
   {
    "key": "s2c:152",
@@ -4991,6 +5088,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -5080,6 +5179,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -5148,6 +5249,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -5376,11 +5479,13 @@
    "writer": "server Protocol_Writes.bas:WriteGuardNotice",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5469,11 +5574,13 @@
    "writer": "server Protocol_Writes.bas:WritePrivilegios",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -5502,6 +5609,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -5756,11 +5865,13 @@
    "writer": null,
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5887,6 +5998,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -5970,6 +6083,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -6055,6 +6170,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -6140,6 +6257,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -6544,11 +6663,13 @@
    "writer": "client Protocol_Writes.bas:WriteForumPost",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -7036,13 +7157,18 @@
    "writer": "client Protocol_Writes.bas:WriteOnline",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:39",
@@ -7391,13 +7517,18 @@
    "writer": "client Protocol_Writes.bas:WriteInformation",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:56",
@@ -7408,11 +7539,13 @@
    "writer": "client Protocol_Writes.bas:WriteReward",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -7442,11 +7575,13 @@
    "writer": "client Protocol_Writes.bas:WriteUpTime",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -7543,11 +7678,13 @@
    "writer": "client Protocol_Writes.bas:WriteRoleMasterRequest",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -7596,11 +7733,13 @@
    "writer": "client Protocol_Writes.bas:WritePunishments",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -7710,11 +7849,13 @@
    "writer": "client Protocol_Writes.bas:WriteDenounce",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -7762,6 +7903,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -8444,11 +8587,13 @@
    "writer": "client Protocol_Writes.bas:WriteGMMessage",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8461,11 +8606,13 @@
    "writer": "client Protocol_Writes.bas:WriteShowName",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8478,11 +8625,13 @@
    "writer": "client Protocol_Writes.bas:WriteOnlineRoyalArmy",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8495,11 +8644,13 @@
    "writer": "client Protocol_Writes.bas:WriteOnlineChaosLegion",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8512,11 +8663,13 @@
    "writer": "client Protocol_Writes.bas:WriteGoNearby",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8529,11 +8682,13 @@
    "writer": "client Protocol_Writes.bas:WriteComment",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8546,13 +8701,18 @@
    "writer": "client Protocol_Writes.bas:WriteWhere",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:108",
@@ -8563,11 +8723,13 @@
    "writer": "client Protocol_Writes.bas:WriteCreaturesInMap",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8580,11 +8742,13 @@
    "writer": "client Protocol_Writes.bas:WriteWarpMeToTarget",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8597,13 +8761,18 @@
    "writer": "client Protocol_Writes.bas:WriteWarpChar",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:111",
@@ -8614,11 +8783,13 @@
    "writer": "client Protocol_Writes.bas:WriteSilence",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8631,13 +8802,18 @@
    "writer": "client Protocol_Writes.bas:WriteSOSShowList",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:113",
@@ -8648,11 +8824,13 @@
    "writer": "client Protocol_Writes.bas:WriteSOSRemove",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8665,11 +8843,13 @@
    "writer": "client Protocol_Writes.bas:WriteGoToChar",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8682,13 +8862,18 @@
    "writer": "client Protocol_Writes.bas:WriteInvisible",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:116",
@@ -8699,13 +8884,18 @@
    "writer": "client Protocol_Writes.bas:WriteGMPanel",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:117",
@@ -8716,13 +8906,18 @@
    "writer": "client Protocol_Writes.bas:WriteRequestUserList",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:118",
@@ -8733,11 +8928,13 @@
    "writer": "client Protocol_Writes.bas:WriteWorking",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8750,11 +8947,13 @@
    "writer": "client Protocol_Writes.bas:WriteHiding",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8767,11 +8966,13 @@
    "writer": "client Protocol_Writes.bas:WriteJail",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8784,13 +8985,18 @@
    "writer": "client Protocol_Writes.bas:WriteKillNPC",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:122",
@@ -8801,11 +9007,13 @@
    "writer": "client Protocol_Writes.bas:WriteWarnUser",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8818,13 +9026,18 @@
    "writer": "client Protocol_Writes.bas:WriteEditChar",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:124",
@@ -8835,11 +9048,13 @@
    "writer": "client Protocol_Writes.bas:WriteRequestCharInfo",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8852,11 +9067,13 @@
    "writer": "client Protocol_Writes.bas:WriteRequestCharStats",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8869,11 +9086,13 @@
    "writer": "client Protocol_Writes.bas:WriteRequestCharGold",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8886,11 +9105,13 @@
    "writer": "client Protocol_Writes.bas:WriteRequestCharInventory",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8903,11 +9124,13 @@
    "writer": "client Protocol_Writes.bas:WriteRequestCharBank",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8920,11 +9143,13 @@
    "writer": "client Protocol_Writes.bas:WriteRequestCharSkills",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8937,13 +9162,18 @@
    "writer": "client Protocol_Writes.bas:WriteReviveChar",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:131",
@@ -8954,11 +9184,13 @@
    "writer": "client Protocol_Writes.bas:WriteOnlineGM",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8971,11 +9203,13 @@
    "writer": "client Protocol_Writes.bas:WriteOnlineMap",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8988,11 +9222,13 @@
    "writer": "client Protocol_Writes.bas:WriteForgive",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9005,11 +9241,13 @@
    "writer": "client Protocol_Writes.bas:WriteKick",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9022,11 +9260,13 @@
    "writer": "client Protocol_Writes.bas:WriteExecute",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9039,11 +9279,13 @@
    "writer": "client Protocol_Writes.bas:WriteBanChar",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9056,11 +9298,13 @@
    "writer": "client Protocol_Writes.bas:WriteUnbanChar",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9073,11 +9317,13 @@
    "writer": "client Protocol_Writes.bas:WriteNPCFollow",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9090,13 +9336,18 @@
    "writer": "client Protocol_Writes.bas:WriteSummonChar",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:140",
@@ -9107,13 +9358,18 @@
    "writer": "client Protocol_Writes.bas:WriteSpawnListRequest",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:141",
@@ -9124,11 +9380,13 @@
    "writer": "client Protocol_Writes.bas:WriteSpawnCreature",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9141,11 +9399,13 @@
    "writer": "client Protocol_Writes.bas:WriteResetNPCInventory",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9158,11 +9418,13 @@
    "writer": "client Protocol_Writes.bas:WriteCleanWorld",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9175,11 +9437,13 @@
    "writer": "client Protocol_Writes.bas:WriteServerMessage",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9192,11 +9456,13 @@
    "writer": "client Protocol_Writes.bas:WriteNickToIP",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9209,11 +9475,13 @@
    "writer": "client Protocol_Writes.bas:WriteIPToNick",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9226,11 +9494,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildOnlineMembers",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9243,11 +9513,13 @@
    "writer": "client Protocol_Writes.bas:WriteTeleportCreate",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9260,11 +9532,13 @@
    "writer": "client Protocol_Writes.bas:WriteTeleportDestroy",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9296,11 +9570,13 @@
    "writer": "client Protocol_Writes.bas:WriteSetCharDescription",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9313,11 +9589,13 @@
    "writer": "client Protocol_Writes.bas:WriteForceMIDIToMap",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9330,11 +9608,13 @@
    "writer": "client Protocol_Writes.bas:WriteForceWAVEToMap",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9347,11 +9627,13 @@
    "writer": "client Protocol_Writes.bas:WriteRoyalArmyMessage",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9364,11 +9646,13 @@
    "writer": "client Protocol_Writes.bas:WriteChaosLegionMessage",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9381,11 +9665,13 @@
    "writer": "client Protocol_Writes.bas:WriteTalkAsNPC",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9398,11 +9684,13 @@
    "writer": "client Protocol_Writes.bas:WriteDestroyAllItemsInArea",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9415,11 +9703,13 @@
    "writer": "client Protocol_Writes.bas:WriteAcceptRoyalCouncilMember",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9432,11 +9722,13 @@
    "writer": "client Protocol_Writes.bas:WriteAcceptChaosCouncilMember",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9449,11 +9741,13 @@
    "writer": "client Protocol_Writes.bas:WriteItemsInTheFloor",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9466,11 +9760,13 @@
    "writer": "client Protocol_Writes.bas:WriteMakeDumb",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9483,11 +9779,13 @@
    "writer": "client Protocol_Writes.bas:WriteMakeDumbNoMore",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9500,11 +9798,13 @@
    "writer": "client Protocol_Writes.bas:WriteCouncilKick",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9517,11 +9817,13 @@
    "writer": "client Protocol_Writes.bas:WriteSetTrigger",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9534,11 +9836,13 @@
    "writer": "client Protocol_Writes.bas:WriteAskTrigger",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9551,11 +9855,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildMemberList",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9568,11 +9874,13 @@
    "writer": "client Protocol_Writes.bas:WriteGuildBan",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9585,13 +9893,18 @@
    "writer": "client Protocol_Writes.bas:WriteCreateItem",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:169",
@@ -9602,11 +9915,13 @@
    "writer": "client Protocol_Writes.bas:WriteDestroyItems",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9619,11 +9934,13 @@
    "writer": "client Protocol_Writes.bas:WriteChaosLegionKick",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9636,11 +9953,13 @@
    "writer": "client Protocol_Writes.bas:WriteRoyalArmyKick",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9653,11 +9972,13 @@
    "writer": "client Protocol_Writes.bas:WriteForceMIDIAll",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9670,11 +9991,13 @@
    "writer": "client Protocol_Writes.bas:WriteForceWAVEAll",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9687,11 +10010,13 @@
    "writer": "client Protocol_Writes.bas:WriteRemovePunishment",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9704,11 +10029,13 @@
    "writer": "client Protocol_Writes.bas:WriteTileBlockedToggle",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9721,11 +10048,13 @@
    "writer": "client Protocol_Writes.bas:WriteKillNPCNoRespawn",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9738,11 +10067,13 @@
    "writer": "client Protocol_Writes.bas:WriteKillAllNearbyNPCs",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9755,13 +10086,18 @@
    "writer": "client Protocol_Writes.bas:WriteChangeMOTD",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:179",
@@ -9772,11 +10108,13 @@
    "writer": "client Protocol_Writes.bas:WriteSetMOTD",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9789,11 +10127,13 @@
    "writer": "client Protocol_Writes.bas:WriteSystemMessage",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9806,13 +10146,18 @@
    "writer": "client Protocol_Writes.bas:WriteCreateNPC",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+   ]
   },
   {
    "key": "c2s:182",
@@ -9823,11 +10168,13 @@
    "writer": "client Protocol_Writes.bas:WriteCreateNPCWithRespawn",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9857,11 +10204,13 @@
    "writer": "client Protocol_Writes.bas:WriteServerOpenToUsersToggle",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9891,11 +10240,13 @@
    "writer": "client Protocol_Writes.bas:WriteRemoveCharFromGuild",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9908,11 +10259,13 @@
    "writer": "client Protocol_Writes.bas:WriteAlterName",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9925,11 +10278,13 @@
    "writer": null,
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9942,11 +10297,13 @@
    "writer": "client Protocol_Writes.bas:WriteShowGuildMessages",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9959,11 +10316,13 @@
    "writer": "client Protocol_Writes.bas:WriteChangeMapInfoPK",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9976,11 +10335,13 @@
    "writer": "client Protocol_Writes.bas:WriteChangeMapInfoBackup",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -9993,11 +10354,13 @@
    "writer": "client Protocol_Writes.bas:WriteChangeMapInfoRestricted",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10010,11 +10373,13 @@
    "writer": "client Protocol_Writes.bas:WriteChangeMapInfoNoMagic",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10027,11 +10392,13 @@
    "writer": "client Protocol_Writes.bas:WriteChangeMapInfoNoInvi",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10044,11 +10411,13 @@
    "writer": "client Protocol_Writes.bas:WriteChangeMapInfoNoResu",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10061,11 +10430,13 @@
    "writer": "client Protocol_Writes.bas:WriteChangeMapInfoLand",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10078,11 +10449,13 @@
    "writer": "client Protocol_Writes.bas:WriteChangeMapInfoZone",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10095,11 +10468,13 @@
    "writer": "client Protocol_Writes.bas:WriteChangeMapSetting",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10112,11 +10487,13 @@
    "writer": "client Protocol_Writes.bas:WriteSaveChars",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10129,11 +10506,13 @@
    "writer": "client Protocol_Writes.bas:WriteCleanSOS",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10146,11 +10525,13 @@
    "writer": "client Protocol_Writes.bas:WriteShowServerForm",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10163,11 +10544,13 @@
    "writer": "client Protocol_Writes.bas:WriteKickAllChars",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10180,11 +10563,13 @@
    "writer": "client Protocol_Writes.bas:WriteChatColor",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10197,11 +10582,13 @@
    "writer": "client Protocol_Writes.bas:WriteIgnored",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10214,11 +10601,13 @@
    "writer": "client Protocol_Writes.bas:WriteCheckSlot",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10231,11 +10620,13 @@
    "writer": "client Protocol_Writes.bas:WriteSetSpeed",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10267,11 +10658,13 @@
    "writer": "client Protocol_Writes.bas:WriteGlobalOnOff",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10306,11 +10699,13 @@
    "writer": "client Protocol_Writes.bas:WriteDonateGold",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10323,11 +10718,13 @@
    "writer": "client Protocol_Writes.bas:WritePromedio",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10340,11 +10737,13 @@
    "writer": "client Protocol_Writes.bas:WriteGiveItem",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10391,11 +10790,13 @@
    "writer": "client Protocol_Writes.bas:WriteQuestionGM",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10425,11 +10826,13 @@
    "writer": "client Protocol_Writes.bas:WritePossUser",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10591,11 +10994,13 @@
    "writer": "client Protocol_Writes.bas:WriteGenio",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10700,11 +11105,13 @@
    "writer": "client Protocol_Writes.bas:WriteMensajeUser",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10904,11 +11311,13 @@
    "writer": "client Protocol_Writes.bas:WriteBanCuenta",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10921,11 +11330,13 @@
    "writer": null,
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10938,11 +11349,13 @@
    "writer": null,
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -10989,11 +11402,13 @@
    "writer": "client Protocol_Writes.bas:WriteBanTemporal",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11195,11 +11610,13 @@
    "writer": null,
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11355,11 +11772,13 @@
    "writer": "client Protocol_Writes.bas:WriteConsulta",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11372,11 +11791,13 @@
    "writer": "client Protocol_Writes.bas:WriteGetMapInfo",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11707,11 +12128,13 @@
    "writer": "client Protocol_Writes.bas:WriteResetChar",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11724,11 +12147,13 @@
    "writer": "client Protocol_Writes.bas:WriteResetearPersonaje",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11944,11 +12369,13 @@
    "writer": "client Protocol_Writes.bas:WriteRequestDebug",
    "group": "gm",
    "package": "wp12",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/gm.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12144,6 +12571,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -13775,290 +14204,8 @@
    "id": "wp12",
    "title": "GM / admin (last)",
    "scope": "All GM commands, GM panel, SOS, MOTD edit, debug",
-   "packetIds": [
-    "s2c:81",
-    "s2c:82",
-    "s2c:107",
-    "s2c:108",
-    "s2c:109",
-    "s2c:110",
-    "s2c:111",
-    "s2c:112",
-    "s2c:172",
-    "s2c:177",
-    "s2c:190",
-    "c2s:13",
-    "c2s:38",
-    "c2s:55",
-    "c2s:56",
-    "c2s:58",
-    "c2s:63",
-    "c2s:66",
-    "c2s:72",
-    "c2s:101",
-    "c2s:102",
-    "c2s:103",
-    "c2s:104",
-    "c2s:105",
-    "c2s:106",
-    "c2s:107",
-    "c2s:108",
-    "c2s:109",
-    "c2s:110",
-    "c2s:111",
-    "c2s:112",
-    "c2s:113",
-    "c2s:114",
-    "c2s:115",
-    "c2s:116",
-    "c2s:117",
-    "c2s:118",
-    "c2s:119",
-    "c2s:120",
-    "c2s:121",
-    "c2s:122",
-    "c2s:123",
-    "c2s:124",
-    "c2s:125",
-    "c2s:126",
-    "c2s:127",
-    "c2s:128",
-    "c2s:129",
-    "c2s:130",
-    "c2s:131",
-    "c2s:132",
-    "c2s:133",
-    "c2s:134",
-    "c2s:135",
-    "c2s:136",
-    "c2s:137",
-    "c2s:138",
-    "c2s:139",
-    "c2s:140",
-    "c2s:141",
-    "c2s:142",
-    "c2s:143",
-    "c2s:144",
-    "c2s:145",
-    "c2s:146",
-    "c2s:147",
-    "c2s:148",
-    "c2s:149",
-    "c2s:151",
-    "c2s:152",
-    "c2s:153",
-    "c2s:154",
-    "c2s:155",
-    "c2s:156",
-    "c2s:157",
-    "c2s:158",
-    "c2s:159",
-    "c2s:160",
-    "c2s:161",
-    "c2s:162",
-    "c2s:163",
-    "c2s:164",
-    "c2s:165",
-    "c2s:166",
-    "c2s:167",
-    "c2s:168",
-    "c2s:169",
-    "c2s:170",
-    "c2s:171",
-    "c2s:172",
-    "c2s:173",
-    "c2s:174",
-    "c2s:175",
-    "c2s:176",
-    "c2s:177",
-    "c2s:178",
-    "c2s:179",
-    "c2s:180",
-    "c2s:181",
-    "c2s:182",
-    "c2s:184",
-    "c2s:186",
-    "c2s:187",
-    "c2s:188",
-    "c2s:189",
-    "c2s:190",
-    "c2s:191",
-    "c2s:192",
-    "c2s:193",
-    "c2s:194",
-    "c2s:195",
-    "c2s:196",
-    "c2s:197",
-    "c2s:198",
-    "c2s:199",
-    "c2s:200",
-    "c2s:201",
-    "c2s:202",
-    "c2s:203",
-    "c2s:204",
-    "c2s:205",
-    "c2s:206",
-    "c2s:208",
-    "c2s:210",
-    "c2s:211",
-    "c2s:212",
-    "c2s:215",
-    "c2s:217",
-    "c2s:226",
-    "c2s:231",
-    "c2s:241",
-    "c2s:242",
-    "c2s:243",
-    "c2s:246",
-    "c2s:257",
-    "c2s:265",
-    "c2s:266",
-    "c2s:283",
-    "c2s:284",
-    "c2s:296"
-   ],
-   "packetNames": [
-    "S81 AddForumMsg",
-    "S82 ShowForumForm",
-    "S107 SpawnListt",
-    "S108 ShowSOSForm",
-    "S109 ShowMOTDEditionForm",
-    "S110 ShowGMPanelForm",
-    "S111 UserNameList",
-    "S112 UserOnline",
-    "S172 GuardNotice",
-    "S177 Privilegios",
-    "S190 DebugDataResponse",
-    "C13 ForumPost",
-    "C38 Online",
-    "C55 Information",
-    "C56 Reward",
-    "C58 UpTime",
-    "C63 RoleMasterRequest",
-    "C66 Punishments",
-    "C72 Denounce",
-    "C101 GMMessage",
-    "C102 ShowName",
-    "C103 OnlineRoyalArmy",
-    "C104 OnlineChaosLegion",
-    "C105 GoNearby",
-    "C106 Comment",
-    "C107 Where",
-    "C108 CreaturesInMap",
-    "C109 WarpMeToTarget",
-    "C110 WarpChar",
-    "C111 Silence",
-    "C112 SOSShowList",
-    "C113 SOSRemove",
-    "C114 GoToChar",
-    "C115 Invisible",
-    "C116 GMPanel",
-    "C117 RequestUserList",
-    "C118 Working",
-    "C119 Hiding",
-    "C120 Jail",
-    "C121 KillNPC",
-    "C122 WarnUser",
-    "C123 EditChar",
-    "C124 RequestCharInfo",
-    "C125 RequestCharStats",
-    "C126 RequestCharGold",
-    "C127 RequestCharInventory",
-    "C128 RequestCharBank",
-    "C129 RequestCharSkills",
-    "C130 ReviveChar",
-    "C131 OnlineGM",
-    "C132 OnlineMap",
-    "C133 Forgive",
-    "C134 Kick",
-    "C135 Execute",
-    "C136 BanChar",
-    "C137 UnbanChar",
-    "C138 NPCFollow",
-    "C139 SummonChar",
-    "C140 SpawnListRequest",
-    "C141 SpawnCreature",
-    "C142 ResetNPCInventory",
-    "C143 CleanWorld",
-    "C144 ServerMessage",
-    "C145 NickToIP",
-    "C146 IPToNick",
-    "C147 GuildOnlineMembers",
-    "C148 TeleportCreate",
-    "C149 TeleportDestroy",
-    "C151 SetCharDescription",
-    "C152 ForceMIDIToMap",
-    "C153 ForceWAVEToMap",
-    "C154 RoyalArmyMessage",
-    "C155 ChaosLegionMessage",
-    "C156 TalkAsNPC",
-    "C157 DestroyAllItemsInArea",
-    "C158 AcceptRoyalCouncilMember",
-    "C159 AcceptChaosCouncilMember",
-    "C160 ItemsInTheFloor",
-    "C161 MakeDumb",
-    "C162 MakeDumbNoMore",
-    "C163 CouncilKick",
-    "C164 SetTrigger",
-    "C165 AskTrigger",
-    "C166 GuildMemberList",
-    "C167 GuildBan",
-    "C168 CreateItem",
-    "C169 DestroyItems",
-    "C170 ChaosLegionKick",
-    "C171 RoyalArmyKick",
-    "C172 ForceMIDIAll",
-    "C173 ForceWAVEAll",
-    "C174 RemovePunishment",
-    "C175 TileBlockedToggle",
-    "C176 KillNPCNoRespawn",
-    "C177 KillAllNearbyNPCs",
-    "C178 ChangeMOTD",
-    "C179 SetMOTD",
-    "C180 SystemMessage",
-    "C181 CreateNPC",
-    "C182 CreateNPCWithRespawn",
-    "C184 ServerOpenToUsersToggle",
-    "C186 RemoveCharFromGuild",
-    "C187 AlterName",
-    "C188 DoBackUp",
-    "C189 ShowGuildMessages",
-    "C190 ChangeMapInfoPK",
-    "C191 ChangeMapInfoBackup",
-    "C192 ChangeMapInfoRestricted",
-    "C193 ChangeMapInfoNoMagic",
-    "C194 ChangeMapInfoNoInvi",
-    "C195 ChangeMapInfoNoResu",
-    "C196 ChangeMapInfoLand",
-    "C197 ChangeMapInfoZone",
-    "C198 ChangeMapSetting",
-    "C199 SaveChars",
-    "C200 CleanSOS",
-    "C201 ShowServerForm",
-    "C202 KickAllChars",
-    "C203 ChatColor",
-    "C204 Ignored",
-    "C205 CheckSlot",
-    "C206 SetSpeed",
-    "C208 GlobalOnOff",
-    "C210 DonateGold",
-    "C211 Promedio",
-    "C212 GiveItem",
-    "C215 QuestionGM",
-    "C217 PossUser",
-    "C226 Genio",
-    "C231 MensajeUser",
-    "C241 BanCuenta",
-    "C242 UnbanCuenta",
-    "C243 CerrarCliente",
-    "C246 BanTemporal",
-    "C257 MarcaDeGMPack",
-    "C265 Consulta",
-    "C266 GetMapInfo",
-    "C283 ResetChar",
-    "C284 ResetearPersonaje",
-    "C296 RequestDebug"
-   ],
+   "packetIds": [],
+   "packetNames": [],
    "forms": [
     "FrmTorneo",
     "frmCambiaMotd",

@@ -20,3 +20,4 @@ export * from './packets/guild.js';
 export * from './packets/options.js';
 export * from './packets/pets-travel.js';
 export * from './packets/keyring.js';
+export * from './packets/gm.js';

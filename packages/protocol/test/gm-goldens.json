@@ -1,0 +1,989 @@
+[
+ {
+  "id": 13,
+  "name": "ForumPost",
+  "value": {
+   "title": "Ab c",
+   "message": "Ab c"
+  },
+  "hex": "0d0004416220630441622063"
+ },
+ {
+  "id": 38,
+  "name": "Online",
+  "value": {},
+  "hex": "2600"
+ },
+ {
+  "id": 55,
+  "name": "Information",
+  "value": {},
+  "hex": "3700"
+ },
+ {
+  "id": 56,
+  "name": "Reward",
+  "value": {},
+  "hex": "3800"
+ },
+ {
+  "id": 58,
+  "name": "UpTime",
+  "value": {},
+  "hex": "3a00"
+ },
+ {
+  "id": 63,
+  "name": "RoleMasterRequest",
+  "value": {
+   "message": "Ab c"
+  },
+  "hex": "3f000441622063"
+ },
+ {
+  "id": 66,
+  "name": "Punishments",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "42000441622063"
+ },
+ {
+  "id": 72,
+  "name": "Denounce",
+  "value": {
+   "name": "Ab c"
+  },
+  "hex": "48000441622063"
+ },
+ {
+  "id": 101,
+  "name": "GMMessage",
+  "value": {
+   "message": "Ab c"
+  },
+  "hex": "65000441622063"
+ },
+ {
+  "id": 102,
+  "name": "ShowName",
+  "value": {},
+  "hex": "6600"
+ },
+ {
+  "id": 103,
+  "name": "OnlineRoyalArmy",
+  "value": {},
+  "hex": "6700"
+ },
+ {
+  "id": 104,
+  "name": "OnlineChaosLegion",
+  "value": {},
+  "hex": "6800"
+ },
+ {
+  "id": 105,
+  "name": "GoNearby",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "69000441622063"
+ },
+ {
+  "id": 106,
+  "name": "Comment",
+  "value": {
+   "message": "Ab c"
+  },
+  "hex": "6a000441622063"
+ },
+ {
+  "id": 107,
+  "name": "Where",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "6b000441622063"
+ },
+ {
+  "id": 108,
+  "name": "CreaturesInMap",
+  "value": {
+   "map": 1234
+  },
+  "hex": "6c00d204"
+ },
+ {
+  "id": 109,
+  "name": "WarpMeToTarget",
+  "value": {},
+  "hex": "6d00"
+ },
+ {
+  "id": 110,
+  "name": "WarpChar",
+  "value": {
+   "userName": "Ab c",
+   "map": 1234,
+   "x": 7,
+   "y": 7
+  },
+  "hex": "6e000441622063d2040707"
+ },
+ {
+  "id": 111,
+  "name": "Silence",
+  "value": {
+   "userName": "Ab c",
+   "minutos": 1234
+  },
+  "hex": "6f000441622063d204"
+ },
+ {
+  "id": 112,
+  "name": "SOSShowList",
+  "value": {},
+  "hex": "7000"
+ },
+ {
+  "id": 113,
+  "name": "SOSRemove",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "71000441622063"
+ },
+ {
+  "id": 114,
+  "name": "GoToChar",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "72000441622063"
+ },
+ {
+  "id": 115,
+  "name": "Invisible",
+  "value": {},
+  "hex": "7300"
+ },
+ {
+  "id": 116,
+  "name": "GMPanel",
+  "value": {},
+  "hex": "7400"
+ },
+ {
+  "id": 117,
+  "name": "RequestUserList",
+  "value": {},
+  "hex": "7500"
+ },
+ {
+  "id": 118,
+  "name": "Working",
+  "value": {},
+  "hex": "7600"
+ },
+ {
+  "id": 119,
+  "name": "Hiding",
+  "value": {},
+  "hex": "7700"
+ },
+ {
+  "id": 120,
+  "name": "Jail",
+  "value": {
+   "userName": "Ab c",
+   "reason": "Ab c",
+   "time": 100000
+  },
+  "hex": "780004416220630441622063a0860100"
+ },
+ {
+  "id": 121,
+  "name": "KillNPC",
+  "value": {},
+  "hex": "7900"
+ },
+ {
+  "id": 122,
+  "name": "WarnUser",
+  "value": {
+   "userName": "Ab c",
+   "reason": "Ab c"
+  },
+  "hex": "7a0004416220630441622063"
+ },
+ {
+  "id": 123,
+  "name": "EditChar",
+  "value": {
+   "userName": "Ab c",
+   "editOption": 7,
+   "arg1": "Ab c",
+   "arg2": "Ab c"
+  },
+  "hex": "7b0004416220630704416220630441622063"
+ },
+ {
+  "id": 124,
+  "name": "RequestCharInfo",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "7c000441622063"
+ },
+ {
+  "id": 125,
+  "name": "RequestCharStats",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "7d000441622063"
+ },
+ {
+  "id": 126,
+  "name": "RequestCharGold",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "7e000441622063"
+ },
+ {
+  "id": 127,
+  "name": "RequestCharInventory",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "7f000441622063"
+ },
+ {
+  "id": 128,
+  "name": "RequestCharBank",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "80000441622063"
+ },
+ {
+  "id": 129,
+  "name": "RequestCharSkills",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "81000441622063"
+ },
+ {
+  "id": 130,
+  "name": "ReviveChar",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "82000441622063"
+ },
+ {
+  "id": 131,
+  "name": "OnlineGM",
+  "value": {},
+  "hex": "8300"
+ },
+ {
+  "id": 132,
+  "name": "OnlineMap",
+  "value": {},
+  "hex": "8400"
+ },
+ {
+  "id": 133,
+  "name": "Forgive",
+  "value": {},
+  "hex": "8500"
+ },
+ {
+  "id": 134,
+  "name": "Kick",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "86000441622063"
+ },
+ {
+  "id": 135,
+  "name": "Execute",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "87000441622063"
+ },
+ {
+  "id": 136,
+  "name": "BanChar",
+  "value": {
+   "userName": "Ab c",
+   "reason": "Ab c"
+  },
+  "hex": "880004416220630441622063"
+ },
+ {
+  "id": 137,
+  "name": "UnbanChar",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "89000441622063"
+ },
+ {
+  "id": 138,
+  "name": "NPCFollow",
+  "value": {},
+  "hex": "8a00"
+ },
+ {
+  "id": 139,
+  "name": "SummonChar",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "8b000441622063"
+ },
+ {
+  "id": 140,
+  "name": "SpawnListRequest",
+  "value": {},
+  "hex": "8c00"
+ },
+ {
+  "id": 141,
+  "name": "SpawnCreature",
+  "value": {
+   "creatureIndex": 1234
+  },
+  "hex": "8d00d204"
+ },
+ {
+  "id": 142,
+  "name": "ResetNPCInventory",
+  "value": {},
+  "hex": "8e00"
+ },
+ {
+  "id": 143,
+  "name": "CleanWorld",
+  "value": {},
+  "hex": "8f00"
+ },
+ {
+  "id": 144,
+  "name": "ServerMessage",
+  "value": {
+   "message": "Ab c"
+  },
+  "hex": "90000441622063"
+ },
+ {
+  "id": 145,
+  "name": "NickToIP",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "91000441622063"
+ },
+ {
+  "id": 146,
+  "name": "IPToNick",
+  "value": {
+   "ip": [
+    127,
+    0,
+    0,
+    1
+   ]
+  },
+  "hex": "92007f000001"
+ },
+ {
+  "id": 147,
+  "name": "GuildOnlineMembers",
+  "value": {
+   "guild": "Ab c"
+  },
+  "hex": "93000441622063"
+ },
+ {
+  "id": 148,
+  "name": "TeleportCreate",
+  "value": {
+   "map": 1234,
+   "x": 7,
+   "y": 7,
+   "radio": 7,
+   "motivo": "Ab c"
+  },
+  "hex": "9400d2040707070441622063"
+ },
+ {
+  "id": 149,
+  "name": "TeleportDestroy",
+  "value": {},
+  "hex": "9500"
+ },
+ {
+  "id": 151,
+  "name": "SetCharDescription",
+  "value": {
+   "desc": "Ab c"
+  },
+  "hex": "97000441622063"
+ },
+ {
+  "id": 152,
+  "name": "ForceMIDIToMap",
+  "value": {
+   "midiID": 7,
+   "map": 1234
+  },
+  "hex": "980007d204"
+ },
+ {
+  "id": 153,
+  "name": "ForceWAVEToMap",
+  "value": {
+   "waveID": 7,
+   "map": 1234,
+   "x": 7,
+   "y": 7
+  },
+  "hex": "990007d2040707"
+ },
+ {
+  "id": 154,
+  "name": "RoyalArmyMessage",
+  "value": {
+   "message": "Ab c"
+  },
+  "hex": "9a000441622063"
+ },
+ {
+  "id": 155,
+  "name": "ChaosLegionMessage",
+  "value": {
+   "message": "Ab c"
+  },
+  "hex": "9b000441622063"
+ },
+ {
+  "id": 156,
+  "name": "TalkAsNPC",
+  "value": {
+   "message": "Ab c"
+  },
+  "hex": "9c000441622063"
+ },
+ {
+  "id": 157,
+  "name": "DestroyAllItemsInArea",
+  "value": {},
+  "hex": "9d00"
+ },
+ {
+  "id": 158,
+  "name": "AcceptRoyalCouncilMember",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "9e000441622063"
+ },
+ {
+  "id": 159,
+  "name": "AcceptChaosCouncilMember",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "9f000441622063"
+ },
+ {
+  "id": 160,
+  "name": "ItemsInTheFloor",
+  "value": {},
+  "hex": "a000"
+ },
+ {
+  "id": 161,
+  "name": "MakeDumb",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "a1000441622063"
+ },
+ {
+  "id": 162,
+  "name": "MakeDumbNoMore",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "a2000441622063"
+ },
+ {
+  "id": 163,
+  "name": "CouncilKick",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "a3000441622063"
+ },
+ {
+  "id": 164,
+  "name": "SetTrigger",
+  "value": {
+   "trigger": 7
+  },
+  "hex": "a40007"
+ },
+ {
+  "id": 165,
+  "name": "AskTrigger",
+  "value": {},
+  "hex": "a500"
+ },
+ {
+  "id": 166,
+  "name": "GuildMemberList",
+  "value": {
+   "guild": "Ab c"
+  },
+  "hex": "a6000441622063"
+ },
+ {
+  "id": 167,
+  "name": "GuildBan",
+  "value": {
+   "guild": "Ab c"
+  },
+  "hex": "a7000441622063"
+ },
+ {
+  "id": 168,
+  "name": "CreateItem",
+  "value": {
+   "itemIndex": 1234,
+   "cantidad": 1234
+  },
+  "hex": "a800d204d204"
+ },
+ {
+  "id": 169,
+  "name": "DestroyItems",
+  "value": {},
+  "hex": "a900"
+ },
+ {
+  "id": 170,
+  "name": "ChaosLegionKick",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "aa000441622063"
+ },
+ {
+  "id": 171,
+  "name": "RoyalArmyKick",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "ab000441622063"
+ },
+ {
+  "id": 172,
+  "name": "ForceMIDIAll",
+  "value": {
+   "midiID": 7
+  },
+  "hex": "ac0007"
+ },
+ {
+  "id": 173,
+  "name": "ForceWAVEAll",
+  "value": {
+   "waveID": 7
+  },
+  "hex": "ad0007"
+ },
+ {
+  "id": 174,
+  "name": "RemovePunishment",
+  "value": {
+   "userName": "Ab c",
+   "punishment": 7,
+   "newText": "Ab c"
+  },
+  "hex": "ae000441622063070441622063"
+ },
+ {
+  "id": 175,
+  "name": "TileBlockedToggle",
+  "value": {},
+  "hex": "af00"
+ },
+ {
+  "id": 176,
+  "name": "KillNPCNoRespawn",
+  "value": {},
+  "hex": "b000"
+ },
+ {
+  "id": 177,
+  "name": "KillAllNearbyNPCs",
+  "value": {},
+  "hex": "b100"
+ },
+ {
+  "id": 178,
+  "name": "ChangeMOTD",
+  "value": {},
+  "hex": "b200"
+ },
+ {
+  "id": 179,
+  "name": "SetMOTD",
+  "value": {
+   "message": "Ab c"
+  },
+  "hex": "b3000441622063"
+ },
+ {
+  "id": 180,
+  "name": "SystemMessage",
+  "value": {
+   "message": "Ab c"
+  },
+  "hex": "b4000441622063"
+ },
+ {
+  "id": 181,
+  "name": "CreateNPC",
+  "value": {
+   "npcIndex": 1234
+  },
+  "hex": "b500d204"
+ },
+ {
+  "id": 182,
+  "name": "CreateNPCWithRespawn",
+  "value": {
+   "npcIndex": 1234
+  },
+  "hex": "b600d204"
+ },
+ {
+  "id": 184,
+  "name": "ServerOpenToUsersToggle",
+  "value": {},
+  "hex": "b800"
+ },
+ {
+  "id": 186,
+  "name": "RemoveCharFromGuild",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "ba000441622063"
+ },
+ {
+  "id": 187,
+  "name": "AlterName",
+  "value": {
+   "userName": "Ab c",
+   "newName": "Ab c"
+  },
+  "hex": "bb0004416220630441622063"
+ },
+ {
+  "id": 188,
+  "name": "DoBackUp",
+  "value": {},
+  "hex": "bc00"
+ },
+ {
+  "id": 189,
+  "name": "ShowGuildMessages",
+  "value": {
+   "guild": "Ab c"
+  },
+  "hex": "bd000441622063"
+ },
+ {
+  "id": 190,
+  "name": "ChangeMapInfoPK",
+  "value": {
+   "isPK": true
+  },
+  "hex": "be0001"
+ },
+ {
+  "id": 191,
+  "name": "ChangeMapInfoBackup",
+  "value": {
+   "backup": true
+  },
+  "hex": "bf0001"
+ },
+ {
+  "id": 192,
+  "name": "ChangeMapInfoRestricted",
+  "value": {
+   "restrict": "Ab c"
+  },
+  "hex": "c0000441622063"
+ },
+ {
+  "id": 193,
+  "name": "ChangeMapInfoNoMagic",
+  "value": {
+   "nomagic": true
+  },
+  "hex": "c10001"
+ },
+ {
+  "id": 194,
+  "name": "ChangeMapInfoNoInvi",
+  "value": {
+   "noinvi": true
+  },
+  "hex": "c20001"
+ },
+ {
+  "id": 195,
+  "name": "ChangeMapInfoNoResu",
+  "value": {
+   "noresu": true
+  },
+  "hex": "c30001"
+ },
+ {
+  "id": 196,
+  "name": "ChangeMapInfoLand",
+  "value": {
+   "lAnd": "Ab c"
+  },
+  "hex": "c4000441622063"
+ },
+ {
+  "id": 197,
+  "name": "ChangeMapInfoZone",
+  "value": {
+   "zone": "Ab c"
+  },
+  "hex": "c5000441622063"
+ },
+ {
+  "id": 198,
+  "name": "ChangeMapSetting",
+  "value": {
+   "setting": 7,
+   "value": 7
+  },
+  "hex": "c6000707"
+ },
+ {
+  "id": 199,
+  "name": "SaveChars",
+  "value": {},
+  "hex": "c700"
+ },
+ {
+  "id": 200,
+  "name": "CleanSOS",
+  "value": {},
+  "hex": "c800"
+ },
+ {
+  "id": 201,
+  "name": "ShowServerForm",
+  "value": {},
+  "hex": "c900"
+ },
+ {
+  "id": 202,
+  "name": "KickAllChars",
+  "value": {},
+  "hex": "ca00"
+ },
+ {
+  "id": 203,
+  "name": "ChatColor",
+  "value": {
+   "r": 7,
+   "g": 7,
+   "b": 7
+  },
+  "hex": "cb00070707"
+ },
+ {
+  "id": 204,
+  "name": "Ignored",
+  "value": {},
+  "hex": "cc00"
+ },
+ {
+  "id": 205,
+  "name": "CheckSlot",
+  "value": {
+   "userName": "Ab c",
+   "slot": 7
+  },
+  "hex": "cd00044162206307"
+ },
+ {
+  "id": 206,
+  "name": "SetSpeed",
+  "value": {
+   "speed": 1.5
+  },
+  "hex": "ce000000c03f"
+ },
+ {
+  "id": 208,
+  "name": "GlobalOnOff",
+  "value": {},
+  "hex": "d000"
+ },
+ {
+  "id": 210,
+  "name": "DonateGold",
+  "value": {
+   "oro": 100000
+  },
+  "hex": "d200a0860100"
+ },
+ {
+  "id": 211,
+  "name": "Promedio",
+  "value": {},
+  "hex": "d300"
+ },
+ {
+  "id": 212,
+  "name": "GiveItem",
+  "value": {
+   "userName": "Ab c",
+   "objIndex": 1234,
+   "cantidad": 1234,
+   "motivo": "Ab c"
+  },
+  "hex": "d4000441622063d204d2040441622063"
+ },
+ {
+  "id": 215,
+  "name": "QuestionGM",
+  "value": {
+   "consulta": "Ab c",
+   "tipoDeConsulta": "Ab c",
+   "counter": 100000
+  },
+  "hex": "d70004416220630441622063a0860100"
+ },
+ {
+  "id": 217,
+  "name": "PossUser",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "d9000441622063"
+ },
+ {
+  "id": 226,
+  "name": "Genio",
+  "value": {},
+  "hex": "e200"
+ },
+ {
+  "id": 231,
+  "name": "MensajeUser",
+  "value": {
+   "userName": "Ab c",
+   "mensaje": "Ab c"
+  },
+  "hex": "e70004416220630441622063"
+ },
+ {
+  "id": 241,
+  "name": "BanCuenta",
+  "value": {
+   "userName": "Ab c",
+   "reason": "Ab c"
+  },
+  "hex": "f10004416220630441622063"
+ },
+ {
+  "id": 242,
+  "name": "UnbanCuenta",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "f2000441622063"
+ },
+ {
+  "id": 243,
+  "name": "CerrarCliente",
+  "value": {
+   "userName": "Ab c"
+  },
+  "hex": "f3000441622063"
+ },
+ {
+  "id": 246,
+  "name": "BanTemporal",
+  "value": {
+   "userName": "Ab c",
+   "reason": "Ab c",
+   "dias": 7
+  },
+  "hex": "f6000441622063044162206307"
+ },
+ {
+  "id": 257,
+  "name": "MarcaDeGMPack",
+  "value": {},
+  "hex": "0101"
+ },
+ {
+  "id": 265,
+  "name": "Consulta",
+  "value": {
+   "nick": "Ab c"
+  },
+  "hex": "09010441622063"
+ },
+ {
+  "id": 266,
+  "name": "GetMapInfo",
+  "value": {},
+  "hex": "0a01"
+ },
+ {
+  "id": 283,
+  "name": "ResetChar",
+  "value": {
+   "nick": "Ab c"
+  },
+  "hex": "1b010441622063"
+ },
+ {
+  "id": 284,
+  "name": "ResetearPersonaje",
+  "value": {},
+  "hex": "1c01"
+ },
+ {
+  "id": 296,
+  "name": "RequestDebug",
+  "value": {
+   "debugType": 1,
+   "argument": "Bob"
+  },
+  "hex": "28010103426f62"
+ }
+]
