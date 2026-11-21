@@ -10,8 +10,8 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 464 of 523 = 88.7%.** Merged on main only: 464 = 88.7%.
-  - Server to client: 190 of 207. Client to server: 274 of 316. Packets with a recorded VB6 fixture: 238.
+- **Packets covered (merged + open branches): 466 of 523 = 89.1%.** Merged on main only: 466 = 89.1%.
+  - Server to client: 191 of 207. Client to server: 275 of 316. Packets with a recorded VB6 fixture: 239.
 - **Forms covered: 4 of 86 = 4.7%** (5 more partially, 10.5% started).
 
 ## (c) Feature groups, ordered by player value
@@ -34,7 +34,7 @@ Scanned refs: `main`
 | 14 | Fishing / mining / lumber (work skills) | 10/10 | 100% | 10 | 0/0 | n/a | 0 |
 | 15 | Options / keybinds | 1/2 | 50% | 1 | 0/4 | 0% | 0 |
 | 16 | Minimap / world map | 0/2 | 0% | 0 | 0/1 | 0% | 0 |
-| 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 4/60 | 6.7% | 4 | 0/13 | 0% | 0 |
+| 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 6/60 | 10% | 6 | 0/13 | 0% | 0 |
 | 18 | GM / admin (lowest) | 142/142 | 100% | 142 | 0/13 | 0% | 0 |
 
 ## DUPLICATES
@@ -239,7 +239,7 @@ Ids only: .
 | 94 | GuildLeaderInfo | client Protocol.bas:HandleGuildLeaderInfo | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 95 | GuildDetails | client Protocol.bas:HandleGuildDetails | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 96 | ShowGuildFundationForm | client Protocol.bas:HandleShowGuildFundationForm | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
-| 97 | ParalizeOK | client Protocol.bas:HandleParalizeOK | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
+| 97 | ParalizeOK | client Protocol.bas:HandleParalizeOK | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 98 | StunStart | client Protocol.bas:HandleStunStart | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 99 | ShowUserRequest | client Protocol.bas:HandleShowUserRequest | trade | merged | `main:packages/protocol/src/packets/bank-trade.ts` | no |
 | 100 | ChangeUserTradeSlot | client Protocol.bas:HandleChangeUserTradeSlot | trade | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
@@ -326,7 +326,7 @@ Ids only: .
 | 181 | UpdateFlag | client Protocol.bas:HandleUpdateFlag | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 182 | CharAtaca | client Protocol.bas:HandleCharAtaca | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 183 | NotificarClienteSeguido | client Protocol.bas:HandleNotificarClienteSeguido | extras | not started |  | no |
-| 184 | GetInventarioHechizos | client Protocol.bas:HandleGetInventarioHechizos | extras | not started |  | no |
+| 184 | GetInventarioHechizos | client Protocol.bas:HandleGetInventarioHechizos | extras | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 185 | NotificarClienteCasteo | client Protocol.bas:HandleNotificarClienteCasteo | extras | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 186 | PosUpdateUserChar | client Protocol.bas:HandlePosUpdateUserChar | core | merged | `main:packages/protocol/src/packets.ts` | no |
 | 187 | PosUpdateChar | client Protocol.bas:HandlePosUpdateChar | core | merged | `main:packages/protocol/src/packets.ts` | no |
@@ -647,7 +647,7 @@ Ids only: .
 | 290 | BuyShopItem | server Protocol.bas:HandleBuyShopItem | extras | not started |  | no |
 | 291 | StartEvent | server Protocol.bas:HandleStartEvent | extras | not started |  | no |
 | 292 | CancelarEvento | server Protocol.bas:HandleCancelarEvento | extras | not started |  | no |
-| 293 | NotifyInventarioHechizos | server Protocol.bas:HandleNotifyInventariohechizos | extras | not started |  | no |
+| 293 | NotifyInventarioHechizos | server Protocol.bas:HandleNotifyInventariohechizos | extras | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 294 | PublicarPersonajeMAO | server Protocol.bas:HandlePublicarPersonajeMAO | extras | not started |  | no |
 | 295 | EventoFaccionario | server Protocol.bas:HandleEventoFaccionario | extras | not started |  | no |
 | 296 | RequestDebug | server Protocol.bas:HandleDebugRequest | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
@@ -750,7 +750,7 @@ Smith, carpenter, alchemy, tailor, crafting window, fishing, mining, lumber.
 
 Options forms, custom keys, hotkeys, events, battlegrounds, duels, premium shop, remort.
 
-- Packets (57): S165 InvasionInfo, S178 ShopInit, S179 UpdateShopClienteCredits, S183 NotificarClienteSeguido, S184 GetInventarioHechizos, S189 ShopPjsInit, S196 AntiCheatMessage, S197 AntiCheatStartSession, S198 ReportLobbyList, S200 ChangeSkinSlot, S203 RemortState, S204 RemortResult, S205 HooTargetedSpellCastResult, S206 HooHouseDoorActionResult, S207 AutoCombatState, C64 ChangeDescription, C67 Gamble, C68 MapPriceEntrance, C69 LeaveFaction, C185 Participar, C213 OfertaInicial, C214 OfertaDeSubasta, C216 CuentaRegresiva, C218 Duel, C219 AcceptDuel, C220 CancelDuel, C221 QuitDuel, C227 Casarse, C239 MacroPossent, C240 SubastaInfo, C244 EventoInfo, C245 CrearEvento, C248 CrearTorneo, C249 ComenzarTorneo, C250 CancelarTorneo, C251 BusquedaTesoro, C267 FinEvento, C272 CreateEvent, C274 LogMacroClickHechizo, C290 BuyShopItem, C291 StartEvent, C292 CancelarEvento, C293 NotifyInventarioHechizos, C294 PublicarPersonajeMAO, C295 EventoFaccionario, C297 LobbyCommand, C298 FeatureToggle, C302 AntiCheatMessage, C303 RequestLobbyList, C307 ChangeSkinSlot, C310 AntiMacroMessage, C311 ModifyCastleWhiteList, C312 HooClientCapabilities, C313 RequestRemort, C314 HooTargetedSpellCast, C315 HooHouseDoorAction, C316 ToggleAutoCombat
+- Packets (55): S165 InvasionInfo, S178 ShopInit, S179 UpdateShopClienteCredits, S183 NotificarClienteSeguido, S189 ShopPjsInit, S196 AntiCheatMessage, S197 AntiCheatStartSession, S198 ReportLobbyList, S200 ChangeSkinSlot, S203 RemortState, S204 RemortResult, S205 HooTargetedSpellCastResult, S206 HooHouseDoorActionResult, S207 AutoCombatState, C64 ChangeDescription, C67 Gamble, C68 MapPriceEntrance, C69 LeaveFaction, C185 Participar, C213 OfertaInicial, C214 OfertaDeSubasta, C216 CuentaRegresiva, C218 Duel, C219 AcceptDuel, C220 CancelDuel, C221 QuitDuel, C227 Casarse, C239 MacroPossent, C240 SubastaInfo, C244 EventoInfo, C245 CrearEvento, C248 CrearTorneo, C249 ComenzarTorneo, C250 CancelarTorneo, C251 BusquedaTesoro, C267 FinEvento, C272 CreateEvent, C274 LogMacroClickHechizo, C290 BuyShopItem, C291 StartEvent, C292 CancelarEvento, C294 PublicarPersonajeMAO, C295 EventoFaccionario, C297 LobbyCommand, C298 FeatureToggle, C302 AntiCheatMessage, C303 RequestLobbyList, C307 ChangeSkinSlot, C310 AntiMacroMessage, C311 ModifyCastleWhiteList, C312 HooClientCapabilities, C313 RequestRemort, C314 HooTargetedSpellCast, C315 HooHouseDoorAction, C316 ToggleAutoCombat
 - Forms (17): frmSkins, frmEligeAlineacion, frmOpciones, frmMasOpciones, frmCustomKeys, frmBindKey, frmCollectibleCard, frmCreateBattleground, frmLobbyBattleground, frmRetos, frmShop, frmShopPjsAO20, frmTransferChar, frmTransferChar2FA, frmPatchNotes, frmNoticia, frmForo
 
 ### wp12: GM / admin (last)
