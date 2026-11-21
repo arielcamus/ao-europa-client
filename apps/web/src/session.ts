@@ -262,7 +262,7 @@ export class Session {
             // An id FXs.ini has is the meditation animation as sent (normal blend, +4, alpha 180). A substituted classic FX 115-119 is IsPNG=0
             // palette art that the pinned client draws through the ordinary FX list (additive, alpha 220, +20): no meditation flag.
             const art = meditationArt(fx, id => spellTables.fx.has(`fx${id}`));
-            this.spells.addFx({ fx: art, charIndex, x: 0, y: 0, loops: -1, startedAt: this.clock(), ...(art === fx ? { meditation: true } : {}) });
+            this.spells.addFx({ fx: art, charIndex, x: 0, y: 0, loops: -1, startedAt: this.clock(), ...(art === fx ? { meditation: true } : { aura: true }) });
           }
         },
       });

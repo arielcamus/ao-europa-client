@@ -148,6 +148,7 @@ describe('rest and meditation', () => {
     h.recv({ id: SS.MeditateToggle, charIndex: f.UserCharIndexInServer.charIndex, fx: 155, x: 57, y: 50 });
     expect(h.session.spells.effects).toEqual([expect.objectContaining({ fx: 116, loops: -1 })]);
     expect(h.session.spells.effects[0]!.meditation).toBeUndefined(); // ordinary additive FX path (IsPNG=0 art)
+    expect(h.session.spells.effects[0]!.aura).toBe(true);
     h.recv({ id: SS.MeditateToggle, charIndex: f.UserCharIndexInServer.charIndex, fx: 0, x: 0, y: 0 });
     expect(h.session.spells.effects).toEqual([]);
   });

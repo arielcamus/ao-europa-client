@@ -445,7 +445,11 @@ export class WorldRenderer {
       }
       // Meditation: engine.bas Draw_Animation, (+BodyOffset, +4), alpha 180, not additive (Initialize: alpha False).
       if (fx.meditation) { this.draw(this.pools[8]!, data.animation, x * 32 + data.offsetX, y * 32 + data.offsetY + 4 + body, now - fx.startedAt, true, 180 / 220); continue; }
-      this.draw(this.pools[data.png ? 8 : 7]!, data.animation, x * 32 + data.offsetX, y * 32 + data.offsetY + 20 + body, now - fx.startedAt);
+      // Pinned ordinary FX path: bottom of the frame at tile top + 20 + 32 (+ FXs.ini offsets, all 0 for FX 115-119), which is under the feet.
+      // That suits the tall auras; a short substituted one (FX 115, 116) would sit under the character, so its centre is kept at the chest: bottom = min(52, 4 + height / 2).
+      let lift = 0;
+      if (fx.aura) { const height = data.animation.frames[Math.floor((now - fx.startedAt) / data.animation.frameMs) % data.animation.frames.length]!.height; lift = Math.min(0, 4 + height / 2 - 52); }
+      this.draw(this.pools[data.png ? 8 : 7]!, data.animation, x * 32 + data.offsetX, y * 32 + data.offsetY + 20 + body + lift, now - fx.startedAt);
     }
   }
   destroy() {
