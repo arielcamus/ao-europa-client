@@ -3,6 +3,9 @@
  * in Configuracion.ini: OPCIONES/PermitirMoverse, OPCIONES/CopiarDialogoAConsola, VIDEO FPSFLAG). The sound options live in
  * audio-engine.ts. AGPL-3.0-or-later; no warranty. See ../../../LICENSE.
  */
+import { SCREEN_SCALES } from './classic-layout.js';
+import type { ScreenScale } from './classic-layout.js';
+
 export interface GameOptions {
   /** FPSFLAG: the "Fps: n" label. */
   showFps: boolean;
@@ -19,8 +22,14 @@ export interface GameOptions {
   centeredMinimap: boolean;
   /** OPCIONES/CenteredMinimapZoom: the zoom of the centred minimap, -50..50 (frmMain.ApplyMinimapZoom). */
   centeredMinimapZoom: number;
+  /**
+   * Web client only (VB6 runs in a fixed 1024x768 window): how the classic window grows on a large screen, see ScreenScale in classic-layout.ts.
+   * `classic` (default) as before; `fill` fills the window with nearest-neighbour art at device pixels; `whole` keeps a whole number of device
+   * pixels per art pixel, letterboxed. Set with `?scale=classic|fill|whole` in the address; remembered.
+   */
+  screenScale: ScreenScale;
 }
-export const DEFAULT_OPTIONS: GameOptions = { showFps: false, moveWhileTyping: false, copyDialogToConsole: true, centeredMinimap: false, centeredMinimapZoom: 0 };
+export const DEFAULT_OPTIONS: GameOptions = { showFps: false, moveWhileTyping: false, copyDialogToConsole: true, centeredMinimap: false, centeredMinimapZoom: 0, screenScale: 'classic' };
 export const OPTIONS_KEY = 'ao.options.v1';
 
 /** Read a stored object defensively: unknown keys are dropped, non-booleans fall back to the default. */
@@ -31,6 +40,7 @@ export function sanitizeOptions(raw: unknown): GameOptions {
   return {
     showFps: flag('showFps'), moveWhileTyping: flag('moveWhileTyping'), copyDialogToConsole: flag('copyDialogToConsole'),
     centeredMinimap: flag('centeredMinimap'), centeredMinimapZoom: Math.min(50, Math.max(-50, zoom)),
+    screenScale: SCREEN_SCALES.includes(o.screenScale as ScreenScale) ? o.screenScale as ScreenScale : DEFAULT_OPTIONS.screenScale,
   };
 }
 

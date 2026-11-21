@@ -1,4 +1,5 @@
 import { assetUrl } from './assets.js';
+import { CAPTIONS, captionState, captionedUrl, captionsFor, renderCaptioned, verifyCaptions } from './ui-captions.js';
 // Original BMP files remain untouched. Some true-color BI_RGB headers declare
 // important palette colors; WebKit rejects these, although there is no palette.
 // Normalize only unused palette metadata in a browser-local copy. Pixel bytes,
@@ -48,14 +49,14 @@ export function loadInterface(name: string, localized = true): Promise<string> {
   let promise = pending.get(original);
   if (!promise && booting && !CONNECT_ART.has(`${localized ? 'es_' : ''}${name}`.toLowerCase())) {
     promise = new Promise<void>(start => { waiting.push({ original, start }); pump(); })
-      .then(() => fetchInterface(original)).finally(() => { running--; pump(); });
+      .then(() => fetchInterface(original)).then(url => withCaptions(name, original, url)).finally(() => { running--; pump(); });
     pending.set(original, promise);
   } else if (promise && !booting) {
     // Asked for again after the boot (a window opening): a queued picture jumps the queue.
     const at = waiting.findIndex(item => item.original === original);
     if (at >= 0) { running++; waiting.splice(at, 1)[0]!.start(); }
   }
-  if (!promise) { promise = fetchInterface(original); pending.set(original, promise); }
+  if (!promise) { promise = fetchInterface(original).then(url => withCaptions(name, original, url)); pending.set(original, promise); }
   return promise;
 }
 
@@ -74,6 +75,51 @@ async function fetchInterface(original: string): Promise<string> {
     catch { URL.revokeObjectURL(url); throw new Error(`No se pudo decodificar la interfaz original: ${original}`); }
     urls.set(original, url); return url;
   }
+}
+
+/** A bitmap with captions baked in (ui-captions.ts): hand out the copy with the letters painted over; the overlay draws them as text. */
+async function withCaptions(name: string, original: string, url: string): Promise<string> {
+  const specs = captionsFor(name);
+  // `?captions=off` shows the bitmaps exactly as shipped (comparisons, a caption that looks wrong).
+  if (!specs || typeof document === 'undefined' || new URLSearchParams(location.search).get('captions') === 'off') return url;
+  try {
+    const image = new Image(); image.src = url; await image.decode();
+    const captioned = await captionedUrl(image, specs, original.split('?')[0]!.split('/').pop());
+    if (!captioned) return url;
+    if (url.startsWith('blob:')) URL.revokeObjectURL(url); // the decodable copy of the BMP, no longer handed out
+    urls.set(original, captioned); return captioned;
+  } catch { return url; } // the original picture, letters and all
+}
+
+// `?captiondebug`: the caption table and its check against the original bitmaps (e2e/ui-captions.spec.ts).
+if (typeof location !== 'undefined' && new URLSearchParams(location.search).has('captiondebug')) {
+  (globalThis as { __aoCaptions?: unknown }).__aoCaptions = {
+    names: Object.keys(CAPTIONS),
+    texts: (name: string) => (CAPTIONS[name] ?? []).map(spec => spec.text),
+    /** Every element under `root` that shows a captioned picture right now, with the caption text drawn on it (none = a bare picture). */
+    audit(root: Element = document.body) {
+      return [...root.querySelectorAll('*')].filter(element => !(element instanceof SVGElement)).flatMap(element => {
+        const { captioned, drawn } = captionState(element);
+        if (!captioned || (element as HTMLElement).offsetParent === null) return [];
+        return [{ id: element.id || element.getAttribute('aria-label') || element.className.toString(), drawn }];
+      });
+    },
+    async check(file: string) {
+      const url = await fetchInterface(interfaceUrl(file)).catch(() => fetchInterface(interfaceUrl(file, false))).catch(() => undefined); if (!url) return undefined;
+      const image = new Image(); image.src = url; await image.decode();
+      await document.fonts.load('700 12px Cinzel');
+      return verifyCaptions(image, captionsFor(file)!);
+    },
+    /** Original and captioned copy, `scale` times larger, as data URLs (the review sheet). */
+    async preview(file: string, scale = 3) {
+      const url = await fetchInterface(interfaceUrl(file)).catch(() => fetchInterface(interfaceUrl(file, false))).catch(() => undefined); if (!url) return undefined;
+      const image = new Image(); image.src = url; await image.decode();
+      await document.fonts.load('700 12px Cinzel');
+      const before = document.createElement('canvas'); before.width = image.naturalWidth * scale; before.height = image.naturalHeight * scale;
+      const g = before.getContext('2d')!; g.imageSmoothingEnabled = false; g.drawImage(image, 0, 0, before.width, before.height);
+      return { before: before.toDataURL(), after: renderCaptioned(image, captionsFor(file)!, scale).toDataURL() };
+    },
+  };
 }
 
 if (typeof window !== 'undefined') window.addEventListener('pagehide', () => {

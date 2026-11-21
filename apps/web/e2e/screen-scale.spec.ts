@@ -72,3 +72,37 @@ for (const [name, width, height, scale] of [['1x', 1024, 768, 1], ['1.5x', 1536,
     await page.screenshot({ path: `artifacts/screenshots/screen-minimap-${name}.png` });
   });
 }
+
+// Opt-in scale modes (the default stays `classic`). A MacBook window (1512x982 at DPR 2) is 2.56 device pixels per art pixel.
+// Fill: every piece of art nearest neighbour (frmMain art buttons and window backgrounds were smooth-filtered), the world canvas rendered at
+// the on-screen device pixels (it was 1472 px wide, stretched again to 1882 by the CSS scale) and the window starting on a whole device pixel.
+// Whole: 2 device px per art px, letterboxed.
+for (const [mode, scale] of [['fill', 982 / 768], ['whole', 1]] as const) {
+  test(`Retina window, ?scale=${mode}: crisp art and a canvas at device pixels`, async ({ browser }, info) => {
+    test.skip(info.project.name !== 'desktop-chrome', 'desktop scaling only');
+    const context = await browser.newContext({ viewport: { width: 1512, height: 982 }, deviceScaleFactor: 2 });
+    const page = await context.newPage();
+    try {
+      await page.goto(`/?scale=${mode}`);
+      await expect(page.locator('#classic')).toHaveAttribute('data-ui-ready', 'true');
+      await page.locator('#connect').click();
+      await expect(page.locator('#viewport')).toHaveAttribute('data-rendered', 'true');
+      const frame = (await page.locator('#classic').boundingBox())!;
+      expect(frame.width).toBeCloseTo(1024 * scale, 1);
+      expect((frame.x * 2) % 1).toBeCloseTo(0, 5); expect((frame.y * 2) % 1).toBeCloseTo(0, 5);
+      await expect(page.locator('#classic')).toHaveAttribute('data-crisp', 'true');
+      expect(await page.locator('#classic').evaluate(e => getComputedStyle(e).imageRendering)).toBe('pixelated');
+      // frmMain's art buttons and the options window draw their art as CSS backgrounds.
+      expect(await page.locator('#minimap-zoom-in').evaluate(e => [getComputedStyle(e).backgroundImage !== 'none', getComputedStyle(e).imageRendering])).toEqual([true, 'pixelated']);
+      await page.locator('#settings').click();
+      await expect(page.locator('#options')).toBeVisible();
+      expect(await page.locator('#options').evaluate(e => getComputedStyle(e).imageRendering)).toBe('pixelated');
+      const canvas = await page.locator('#viewport canvas').evaluate((c: HTMLCanvasElement) => ({ backing: [c.width, c.height], shown: c.getBoundingClientRect().width * devicePixelRatio }));
+      expect(canvas.backing).toEqual([Math.round(736 * scale * 2), Math.round(608 * scale * 2)]);
+      expect(Math.abs(canvas.backing[0]! - canvas.shown)).toBeLessThan(1);
+      expect(await page.evaluate(() => JSON.parse(localStorage.getItem('ao.options.v1') ?? '{}').screenScale)).toBe(mode);
+      await mkdir('artifacts/screenshots', { recursive: true });
+      await page.screenshot({ path: `artifacts/screenshots/gui-sharpness-retina-${mode}.png` });
+    } finally { await context.close(); }
+  });
+}
