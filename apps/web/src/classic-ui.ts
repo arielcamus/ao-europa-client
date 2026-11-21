@@ -8,6 +8,7 @@ import type { Ini } from './assets.js';
 import type { Session } from './session.js';
 import type { WorldRenderer } from './renderer.js';
 import { loadInterface, loadedInterfaceUrl } from './interface-assets.js';
+import { KeysClientPacketId } from '@ao/protocol';
 import { renderMessage } from './chat-console.js';
 import { loadSpellTables, swapSpellSlots } from './spells.js';
 import { ObjectCatalog, loadObjectIni } from './object-catalog.js';
@@ -32,6 +33,7 @@ export class ClassicUI {
   private slotButtons: HTMLButtonElement[] = [];
   private menuButtons = new Map<string, HTMLButtonElement>();
   private menuActions = new Map<string, () => void>();
+  private safeButtons = new Map<string, HTMLButtonElement>();
   /** Double click on an inventory item (picInv_DblClick -> UserItemClick); set by main.ts. */
   onActivate: ((slot: number) => void) | undefined;
   private catalog: ObjectCatalog | undefined;
@@ -86,6 +88,20 @@ export class ClassicUI {
       this.menuButtons.set(name, button);
       element('menu-actions').append(button);
     }
+    // The five safe toggles of panelInf (frmMain ImgSegParty, ImgSegClan, ImgSeg, ImgSegResu, ImgLegionarySecure), 408 twips square at y=3060.
+    for (const [key, x, name, tip, act] of [
+      ['party', 7.2, 'seguro-party', 'Seguro de grupo', () => this.session?.sendAction({ id: KeysClientPacketId.PartySafeToggle })],
+      ['clan', 42.4, 'seguro-clan', 'Seguro de clan', () => this.session?.toggleSafe('clan')],
+      ['attack', 76.8, 'seguro-ciudadano', 'Seguro de ataque', () => this.session?.sendAction({ id: KeysClientPacketId.SafeToggle })],
+      ['resu', 112, 'fantasma', 'Seguro de resurrección', () => this.session?.toggleSafe('resu')],
+      ['legion', 147.2, 'demonio', 'Seguro de legión', () => this.session?.toggleSafe('legion')],
+    ] as const) {
+      const button = document.createElement('button'); button.className = 'safe-toggle'; button.type = 'button'; button.id = `safe-${key}`;
+      button.dataset.art = name; button.title = tip; button.setAttribute('aria-label', tip);
+      button.style.cssText = `position:absolute;left:${x}px;top:204px;width:27.2px;height:27.2px;border:0;padding:0;background-size:100% 100%`;
+      button.onclick = () => { try { act(); } catch (error) { this.report(String(error)); } };
+      element('menu-actions').append(button); this.safeButtons.set(key, button);
+    }
     for (const id of ['hp', 'mana', 'stamina', 'water', 'food', 'experience']) element(`${id}-fill`).style.width = '0px';
   }
   /** Wire a frmMain info-panel button to its form; buttons nobody wired keep the "aún no está disponible" line. */
@@ -100,6 +116,7 @@ export class ClassicUI {
       loadObjectIni(), fetchText('Dat/Hechizos.dat'), ...imageTasks,
       this.sheet(135), this.renderer.graphic(47743),
       ...['centrohechizo', 'centroinventario', 'ventanaprincipal_info'].map(name => loadInterface(name)),
+      ...['seguro-party', 'seguro-clan', 'seguro-ciudadano', 'fantasma', 'demonio'].flatMap(name => [`boton-${name}-on`, `boton-${name}-off`].map(file => loadInterface(file).catch(() => ''))),
     ]);
     this.objects = objects; this.catalog = new ObjectCatalog(objects); this.spells = parseIni(spells);
     await loadSpellTables(this.spells).catch(error => this.report(String(error)));
@@ -207,6 +224,12 @@ export class ClassicUI {
     if (!session) return;
     if (this.catalog) session.catalog ??= this.catalog;
     const ui = session.ui, stats = ui.stats;
+    // frmMain: the on/off picture of each safe follows the flags the server last set (all on after login).
+    const safes = { party: session.status.partySafe, clan: session.status.clanSafe, attack: session.safeMode !== false, resu: session.status.resuSafe, legion: session.status.legionSafe };
+    for (const [key, button] of this.safeButtons) {
+      const url = loadedInterfaceUrl(`boton-${button.dataset.art}-${safes[key as keyof typeof safes] ? 'on' : 'off'}`);
+      if (button.dataset.state !== url) { button.dataset.state = url; button.style.backgroundImage = `url("${url}")`; }
+    }
     element('cast').setAttribute('aria-disabled', String(!session.ready));
     const hp = stats.hp ?? session.self?.minHp, maxHp = stats.maxHp ?? session.self?.maxHp;
     const mana = stats.mana ?? session.self?.minMana, maxMana = stats.maxMana ?? session.self?.maxMana;

@@ -12,6 +12,8 @@ import type { Session } from './session.js';
 export class CombatOverlay {
   private layer = document.createElement('div');
   private texts = new Map<FloatingText, HTMLDivElement>();
+  private bars = new Map<number, HTMLDivElement>();
+  private lastUpdate = 0;
 
   constructor(host: HTMLElement, private readonly renderer: WorldRenderer) {
     Object.assign(this.layer.style, { position: 'absolute', inset: '0', overflow: 'hidden', pointerEvents: 'none', zIndex: '5' });
@@ -24,11 +26,33 @@ export class CombatOverlay {
     return character ? { x: character.x, y: character.y } : undefined;
   }
   update(session: Session | undefined, now: number) {
-    if (!session || session.phase !== 'playing') { this.layer.replaceChildren(); this.texts.clear(); return; }
+    if (!session || session.phase !== 'playing') { this.layer.replaceChildren(); this.texts.clear(); this.bars.clear(); return; }
     const combat = session.combat, camera = this.renderer.camera;
     combat.prune(now);
     for (const item of combat.floating) this.drawText(session, item, now, camera);
     for (const [item, node] of this.texts) if (!combat.floating.includes(item)) { node.remove(); this.texts.delete(item); }
+    this.drawBars(session, now, camera);
+  }
+  /**
+   * BarFx (engine.bas Char_Render "Barra de tiempo"): a 26 px wide fill, colour (3,214,166) at alpha 120, over the character that
+   * started an action with a progress bar (home, rune). BarTime grows by the elapsed seconds and the bar goes at MaxBarTime.
+   */
+  private drawBars(session: Session, now: number, camera: { x: number; y: number }) {
+    const dt = this.lastUpdate ? Math.min(0.25, (now - this.lastUpdate) / 1000) : 0; this.lastUpdate = now;
+    for (const [charIndex, bar] of session.status.bars) {
+      bar.shown += dt;
+      const tile = this.tile(session, charIndex, now), invisible = session.status.invisible.has(charIndex);
+      if (bar.shown >= bar.maxSeconds || !tile || invisible) { if (bar.shown >= bar.maxSeconds) session.status.bars.delete(charIndex); this.bars.get(charIndex)?.remove(); this.bars.delete(charIndex); continue; }
+      let node = this.bars.get(charIndex);
+      if (!node) {
+        node = document.createElement('div'); node.className = 'status-bar';
+        Object.assign(node.style, { position: 'absolute', height: '4px', background: 'rgba(3,214,166,0.47)', border: '1px solid rgba(255,255,255,0.8)', boxSizing: 'content-box' });
+        this.layer.append(node); this.bars.set(charIndex, node);
+      }
+      node.style.width = `${bar.shown / bar.maxSeconds * 26}px`;
+      node.style.left = `${tile.x * 32 + 5 - camera.x}px`; node.style.top = `${tile.y * 32 - 28 - camera.y}px`;
+    }
+    for (const [charIndex, node] of this.bars) if (!session.status.bars.has(charIndex)) { node.remove(); this.bars.delete(charIndex); }
   }
   private drawText(session: Session, item: FloatingText, now: number, camera: { x: number; y: number }) {
     const tile = this.tile(session, item.charIndex, now);

@@ -51,7 +51,8 @@ const FONT_ROWS: readonly (readonly [number, number, number, number, number])[] 
   /* 40 FONTTYPE_New_Eventos */ [0, 200, 250, 1, 1],
   /* 41 FONTTYPE_PROMEDIO_IGUAL */ [255, 255, 0, 1, 0],
   /* 42 FONTTYPE_PROMEDIO_MENOR */ [255, 0, 0, 1, 0],
-  /* 43 FONTTYPE_PROMEDIO_MAYOR */ [0, 255, 0, 1, 0],];
+  /* 43 FONTTYPE_PROMEDIO_MAYOR */ [0, 255, 0, 1, 0],
+  /* 44 party safe notices (HandlePartySafeOn/Off: AddtoRichTextBox 250,250,0 italic), not a FontTypeNames entry */ [250, 250, 0, 0, 1],];
 
 /** FontTypes(index). VB6 would raise on an out-of-range index; fall back to FONTTYPE_TALK. */
 export function fontStyle(index: number): TextStyle {

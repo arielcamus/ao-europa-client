@@ -38,6 +38,10 @@ export const MSG_CLICK_FORGE = 'Haz click sobre la fragua...';
 const AUTOMATED_SKILLS: readonly number[] = [ExtractionSkill.Talar, ExtractionSkill.Mineria, ExtractionSkill.Pescar, ExtractionSkill.Smelting];
 const WORK_PROMPT_SKILLS: readonly number[] = [ExtractionSkill.Talar, ExtractionSkill.Alquimia, ExtractionSkill.Carpinteria, ExtractionSkill.Herreria, ExtractionSkill.Mineria, ExtractionSkill.Pescar];
 const MAX_FX = 64;
+/** e_Skill.Proyectiles and Languages/1.json MENSAJE_LANZAMIENTO_RAPIDO_FLECHAS / MENSAJE_TRABAJO_PROYECTILES. */
+export const PROJECTILE_SKILL = 12;
+export const MSG_ARROWS_TOO_FAST = 'No puedes lanzar flechas tan rápido.';
+export const MSG_CLICK_VICTIM = 'Haz click sobre la victima...';
 
 /** Data tables read from the local resource mount: Dat/Hechizos.dat and init/FXs.ini. Console text is chat's (ChatLocale). */
 export interface SpellTables { spells: Ini; fx: Ini }
@@ -57,6 +61,8 @@ export class SpellState {
   revision = 0;
   private magicInterval = 0;
   private lastMagic = -Infinity;
+  private bowInterval = 0;
+  private lastArrow = -Infinity;
 
   constructor(
     private readonly send: (packet: ClientPacket) => void,
@@ -86,6 +92,11 @@ export class SpellState {
     // SinBloqueo mode (the classic default) still sends but tells the player they are too fast.
     if (skill === MAGIC_SKILL && now - this.lastMagic < this.magicInterval) this.message(MSG_TOO_FAST);
     if (skill === MAGIC_SKILL) this.lastMagic = now;
+    // ModGameplayUI.OnClick, UsingSkill = Proyectiles: SinBloqueo still shoots but warns when Intervals.bow has not elapsed (the Arrows timer).
+    if (skill === PROJECTILE_SKILL) {
+      if (now - this.lastArrow < this.bowInterval) this.message(MSG_ARROWS_TOO_FAST);
+      this.lastArrow = now;
+    }
     this.send({ id: SC.WorkLeftClick, x, y, skill, counter: this.next('workLeftClick') });
     this.targeting = undefined; this.revision++; // UsaLanzar = False: UsingSkill = 0
     return true;
@@ -97,7 +108,7 @@ export class SpellState {
 
   receive(packet: ServerPacket) {
     switch (packet.id) {
-      case S.Intervals: this.magicInterval = packet.magic; break;
+      case S.Intervals: this.magicInterval = packet.magic; this.bowInterval = packet.bow; break;
       case S.ChangeMap: this.reset(); break;
       case SS.WorkRequestTarget: {
         if (packet.skill === 0) this.targeting = undefined;
@@ -106,6 +117,7 @@ export class SpellState {
           if (packet.skill === MAGIC_SKILL) this.message(MSG_CLICK_TARGET);
           else if (packet.skill === ExtractionSkill.Smelting) this.message(MSG_CLICK_FORGE);
           else if (WORK_PROMPT_SKILLS.includes(packet.skill)) this.message(MSG_CLICK_WORK);
+          else if (packet.skill === PROJECTILE_SKILL) this.message(MSG_CLICK_VICTIM, 0);
         }
         this.revision++; break;
       }
