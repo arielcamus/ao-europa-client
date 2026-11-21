@@ -3,7 +3,8 @@
  * Adapted 2026-11-20 from client Protocol.bas HandleObjectCreate/ObjectDelete/BlockPosition, TileEngine.bas HayTecho
  * and Graficos_Renderizado.bas (layer-4 roof fade). AGPL-3.0-or-later; no warranty. See ../../../LICENSE.
  */
-import type { MapFileObject } from './assets.js';
+import { parseIni } from './assets.js';
+import type { Ini, MapFileObject } from './assets.js';
 export const ALL_SIDES = 15;
 /** Declares.bas: PRIMER_TRIGGER_TECHO. */
 export const FIRST_ROOF_TRIGGER = 60;
@@ -78,20 +79,17 @@ export function nearRoof(triggers: Uint16Array, x: number, y: number): number {
 }
 
 export interface ObjectGraphic { grh: number; type: number }
-/** Reads GrhIndex/ObjType per [OBJn] of Dat/Obj.dat (ObjType 6 = door). */
-export function parseObjectGraphics(text: string): Map<number, ObjectGraphic> {
+/** GrhIndex/ObjType per [OBJn] of the shared, already parsed Dat/Obj.dat (object-catalog.ts loads and parses it once). */
+export function objectGraphicsFromIni(ini: Ini): Map<number, ObjectGraphic> {
   const result = new Map<number, ObjectGraphic>();
-  let current: ObjectGraphic | undefined;
-  for (const raw of text.split(/\r?\n/)) {
-    const line = raw.trim();
-    const header = /^\[OBJ(\d+)\]$/i.exec(line);
-    if (header) { current = { grh: 0, type: 0 }; result.set(Number(header[1]), current); continue; }
-    if (!current) continue;
-    const grh = /^GrhIndex\s*=\s*(\d+)/i.exec(line); if (grh) { current.grh = Number(grh[1]); continue; }
-    const type = /^ObjType\s*=\s*(\d+)/i.exec(line); if (type) current.type = Number(type[1]);
+  for (const [name, section] of ini) {
+    const header = /^obj(\d+)$/.exec(name); if (!header) continue;
+    result.set(Number(header[1]), { grh: Number.parseInt(section.get('grhindex') ?? '', 10) || 0, type: Number.parseInt(section.get('objtype') ?? '', 10) || 0 });
   }
   return result;
 }
+/** Same from raw text (tests); the app goes through loadObjectIni so there is ONE parse of Obj.dat. */
+export const parseObjectGraphics = (text: string) => objectGraphicsFromIni(parseIni(text));
 export const DOOR_OBJECT_TYPE = 6;
 
 /**
