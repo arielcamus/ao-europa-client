@@ -40,7 +40,7 @@ import { execFileSync } from 'node:child_process';
  */
 export function sql(statement: string): string {
   const key = process.env.AO_DB_SSH_KEY ?? `${process.env.HOME}/Projects/ao-reference/runtime/ao-vm/id_ed25519`;
-  const cli = process.env.AO_DB_CLI ?? 'C:\\ao\\sqlite-cli\\sqlite3.exe C:\\ao\\server\\Database.db';
+  const cli = process.env.AO_DB_CLI ?? 'C:\\ao\\sqlite-cli\\sqlite3.exe C:\\ao\\server-9ccd\\Database.db';
   return execFileSync('ssh', ['-o', 'BatchMode=yes', '-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no', '-o', 'LogLevel=ERROR', '-i', key, '-p', process.env.AO_DB_SSH_PORT ?? '2222', process.env.AO_DB_SSH ?? 'aobuilder@127.0.0.1', `${cli} "${statement}"`], { encoding: 'utf8', timeout: 30_000 }).trim();
 }
 /** Log the own character out, run `UPDATE user SET <set> WHERE id = <id>`, log back in. Returns after the settle. */

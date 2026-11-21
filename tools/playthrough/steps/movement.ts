@@ -3,7 +3,7 @@ import { step } from '../harness.js';
 import { Heading, SCP, C } from '../session.js';
 import type { ClientPacket } from '@ao/protocol';
 import { KeysClientPacketId as K, ItemsClientPacketId as I, SkillsClientPacketId as SK } from '@ao/protocol';
-import { gmGoto, ensureLand, second, loadMap, walkTo, HEAD } from './util.js';
+import { gmGoto, ensureLand, dbUpdateOwn, second, loadMap, walkTo, HEAD } from './util.js';
 import { path as bfs, walkable } from '../maps.js';
 
 const DX: Record<number, [number, number]> = { [Heading.North]: [0, -1], [Heading.East]: [1, 0], [Heading.South]: [0, 1], [Heading.West]: [-1, 0] };
@@ -47,7 +47,8 @@ step('MOV-02', async c => {
     const near = [...p2.chars.values()].find(ch => ch.name === c.charName);
     void me; void near;
     // both characters spawn together on 751: the second one is wherever it stands; walk the first one next to it and into it
-    const t = [p2.x, p2.y] as [number, number];
+    const seen = [...p.chars.values()].find(ch => ch.name === p2.characters[0]?.name);
+    const t = (seen ? [seen.x, seen.y] : [p2.x, p2.y]) as [number, number]; // where the FIRST player sees it
     c.note(`second character at ${p2.map}:${t[0]},${t[1]}; first at ${p.map}:${p.x},${p.y}`);
     if (p2.map === p.map && Math.abs(t[0] - p.x) + Math.abs(t[1] - p.y) < 40) {
       const route = bfs(f.map, [p.x, p.y], t, new Set([t[1] * 101 + t[0]]));
@@ -99,9 +100,9 @@ step('MOV-15', async c => {
 
 step('MOV-16', async c => {
   await ensureLand(c);
-  const p = c.player;
+  let p = c.player;
   if (p.stats!.characterClass !== 1) c.blocked(`class ${p.stats!.characterClass} cannot meditate (only Mage-like classes); needs the fresh mage character`);
-  c.gm.gm(`/MOD ${c.charName} MANA 0`); await p.sleep(700);
+  await dbUpdateOwn(c, 'min_man=0'); p = c.player;
   const m = p.mark(); p.say('/MEDITAR'); await p.sleep(1500);
   const t = p.since(m).find(r => r.name === 'MeditateToggle');
   c.ok(!!t && (t.packet as any).fx !== 0, 'MeditateToggle with a meditation FX');

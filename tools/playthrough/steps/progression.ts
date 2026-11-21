@@ -23,8 +23,8 @@ const mage = (c: Ctx, what: string) => {
 };
 /** Drain mana through the GM, meditate until the skill moves or `ms` pass; returns the Meditar skill. */
 async function meditateRound(c: Ctx, ms: number) {
-  const p = c.player;
-  await dbUpdateOwn(c, 'min_man=0'); // the GM helper cannot /MOD other characters (Consejero/SemiDios), so the own character is edited in the DB
+  await dbUpdateOwn(c, 'min_man=0');
+  const p = c.player; // the GM helper cannot /MOD other characters (Consejero/SemiDios), so the own character is edited in the DB
   if (p.stats!.mana !== 0) c.blocked('could not drain mana through the DB');
   p.say('/MEDITAR'); await p.sleep(ms); p.say('/MEDITAR'); await p.sleep(600);
   return (await skills(p))[SKILL.Meditar]!;
