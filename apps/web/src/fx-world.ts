@@ -65,6 +65,8 @@ export interface WorldHooks {
   addFx?: (fx: { fx: number; charIndex: number | undefined; x: number; y: number; loops: number }) => void;
   /** A projectile or particle travelled to a character and has a sound (ParticleFXWithDestino wav); the audio feature subscribes. */
   playWave?: (wave: number, x: number, y: number) => void;
+  /** The player's map number (UserMap): HandleUbicacion only draws an ally that is on it. */
+  currentMap?: () => number | undefined;
   /** ModMetereologia.RevisarHoraMundo: the wolf (124) at the first night index and the rooster (137) at the first morning index, played with no position. */
   playGlobalWave?: (wave: number) => void;
   /** HandleSpeedToChar. */
@@ -166,6 +168,10 @@ export class WorldFx {
   meteo: ParticleGroup | undefined;
   /** engine.spell_particle: ONE group shared by every travelling spell particle (Engine_spell_Particle_Set). */
   spellGroup: ParticleGroup | undefined;
+  /** frmMain.MinimapDots(1..5) / personaje(1..5): the party allies' tiles from HandleUbicacion; absent = hidden (HideMinimapDot). */
+  readonly allies = new Map<number, { x: number; y: number }>();
+  /** HandleShowFrmMapa: ExpMult / OroMult and a counter the UI watches to open frmMapaGrande. */
+  mapForm = { opened: 0, expMult: 1, goldMult: 1 };
   readonly travelers: Traveler[] = [];
   readonly projectiles: Projectile[] = [];
   /** HandleAuraToChar: type 1..6 and 7 (RM) -> aura string "grh:color:giro:lado" per character. */
@@ -217,6 +223,12 @@ export class WorldFx {
       case S.ChangeMap: this.resetMap(); break;
       case W.Hora: this.clock.onHora(packet.elapsedMs, packet.dayLenMs, now); this.lights.dirty = true; break;
       case W.PauseToggle: this.paused = !this.paused; break;
+      case W.ShowFrmMapa: this.mapForm = { opened: this.mapForm.opened + 1, expMult: packet.expMult, goldMult: packet.goldMult }; break;
+      case W.Ubicacion:
+        // HandleUbicacion: x = 0 hides the slot; otherwise the dot moves only when the member is on the player's map.
+        if (packet.x === 0) this.allies.delete(packet.member);
+        else if (packet.member >= 1 && packet.member <= 5 && this.hooks.currentMap?.() === packet.map) this.allies.set(packet.member, { x: packet.x, y: packet.y });
+        break;
       case SES.FlashScreen: this.flashScreen(packet.color, packet.duration, packet.ignore); break;
       case W.AreaChanged: this.hooks.areaChanged?.(areaBounds(packet.x, packet.y)); break;
       case AU.RainToggle:

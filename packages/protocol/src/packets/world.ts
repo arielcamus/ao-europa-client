@@ -19,6 +19,8 @@ export enum WorldServerPacketId {
   Light = 118,        // WriteLight / HandleLight (the map's base light, read and ignored by the client)
   AuraToChar = 119,   // PrepareMessageAuraToChar / HandleAuraToChar
   SpeedToChar = 120,  // PrepareMessageSpeedingACT / HandleSpeedToChar
+  ShowFrmMapa = 138,  // WriteShowFrmMapa / HandleShowFrmMapa: ExpMult and OroMult (Int16), then frmMapaGrande opens
+  Ubicacion = 144,    // WriteUbicacion / HandleUbicacion: a party member's position for the minimap dot
   LightToFloor = 121, // PrepareMessageLightFXToFloor / HandleLightToFloor
   NieblaToggle = 123, // PrepareMessageNieblandoToggle / HandleNieblaToggle
 }
@@ -54,6 +56,9 @@ const bool: WorldCodec<boolean> = { read: r => r.readBool(), write: (w, v) => { 
 export const worldServerCodecs = {
   [WorldServerPacketId.AreaChanged]: struct({ x: byte, y: byte }),
   [WorldServerPacketId.PauseToggle]: struct({}),
+  [WorldServerPacketId.ShowFrmMapa]: struct({ expMult: int16, goldMult: int16 }),
+  /** member 1..5 is the minimap slot; x = 0 hides it; the dot is drawn only when `map` is the player's map. */
+  [WorldServerPacketId.Ubicacion]: struct({ member: byte, x: byte, y: byte, map: int16 }),
   /** elapsedMs into the in-game day (0..dayLenMs-1) and the day length in ms, both Int32 (WorldTime_PrepareHora). */
   [WorldServerPacketId.Hora]: struct({ elapsedMs: int32, dayLenMs: int32 }),
   [WorldServerPacketId.Light]: struct({ baseLight: string }),

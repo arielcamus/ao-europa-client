@@ -13,7 +13,10 @@ import { SignOverlay } from './sign-ui.js';
 import { sharedLocale } from './chat-locale.js';
 import { CombatOverlay } from './combat-overlay.js';
 import { characterTapTile } from './combat.js';
-import { fetchText } from './assets.js';
+import { fetchText, parseIni, parseMap, fetchBytes } from './assets.js';
+import { WorldMapUI } from './world-map-ui.js';
+import { parseWorlds } from './world-map.js';
+import type { World } from './world-map.js';
 import { ItemsUI } from './items-ui.js';
 import { CraftingUI } from './crafting-ui.js';
 import { KeyAction, keyAction } from './keymap.js';
@@ -55,6 +58,12 @@ const connect = element<HTMLButtonElement>('connect'), disconnect = element<HTML
 const errorBox = element('error'), viewport = element('viewport'), connection = element('connection');
 const chatForm = element<HTMLFormElement>('chat-form'), chat = element<HTMLInputElement>('chat');
 const minimap = new Minimap(element('minimap'));
+// Recursos.Cargarmapsworlddata and NameMaps (init/namemapa.dat): the world grid of the minimap and of frmMapaGrande. Both are optional data.
+let worlds: World[] = [];
+let mapNames = parseIni('');
+void fetchText('init/mapsworlddata.dat').then(text => { worlds = parseWorlds(parseIni(text)); minimap.worlds = worlds; }).catch(error => report(`mapsworlddata.dat: ${String(error)}`));
+void fetchText('init/namemapa.dat').then(text => { mapNames = parseIni(text); }).catch(() => undefined);
+const mapHeaderNames = new Map<number, Promise<string>>();
 const keys = new Map<string, Heading>();
 let touchHeading: Heading | undefined;
 let session: Session | undefined;
@@ -85,6 +94,24 @@ const bubbles = new ChatBubbles(element('chat-bubbles'));
 const signOverlay = new SignOverlay(viewport, renderer);
 const chatBox = new ChatBox(chatForm, chat, element('messages'), () => renderer.app.canvas.focus(), error => close(String(error)));
 const combatOverlay = new CombatOverlay(viewport, renderer);
+const runCommand = (line: string) => guard(() => chatBox.runLine(line));
+const worldMapUi = new WorldMapUI(element('classic'), {
+  worlds: () => worlds,
+  // CargarDatosMapa reads the map file's own name (MapDat.map_name).
+  mapName: map => {
+    let name = mapHeaderNames.get(map);
+    if (!name) { name = fetchBytes(`Mapas/mapa${map}.csm`).then(bytes => parseMap(bytes).name).catch(() => ''); mapHeaderNames.set(map, name); }
+    return name;
+  },
+  description: map => mapNames.get('namemapa')?.get(`mapa${map}desc`) ?? '',
+  teleport: map => runCommand(`/TELEP YO ${map} 50 50`),
+  say: text => session?.ui.message(text),
+});
+minimap.hooks = { openBigMap: () => { if (session) worldMapUi.open(session); }, teleport: (map, x, y) => runCommand(`/TELEP YO ${map} ${x} ${y}`) };
+// frmMain.btnZoomIn / btnZoomOut: ApplyMinimapZoom -20 / +20, clamped to -50..50.
+const zoomMinimap = (delta: number) => gameOptions.update({ centeredMinimapZoom: Math.max(-50, Math.min(50, gameOptions.value.centeredMinimapZoom + delta)) });
+element('minimap-zoom-in').addEventListener('click', () => zoomMinimap(-20));
+element('minimap-zoom-out').addEventListener('click', () => zoomMinimap(20));
 const itemsUi = new ItemsUI(ui, element('classic'), report);
 const craftingUi = new CraftingUI(ui, element('classic'), report);
 ui.onActivate = slot => guard(() => session?.itemActions.activate(slot));
@@ -238,6 +265,7 @@ function handleNotice(notice: SessionNotice) {
   session?.backToAccount(); // a refused LoginNewChar / LoginExistingChar leaves the player on the account screen
 }
 let shownAccount = -1;
+const shownMapForm = new WeakMap<object, number>();
 /** The VB6 screen state machine: which connect screen, the connecting form and the loading card the session phase calls for. */
 function syncConnect() {
   const s = session && session.phase !== 'closed' ? session : undefined;
@@ -263,7 +291,10 @@ function updateUi(now: number) {
   if (playing && session.self && !hotkeysLoaded.has(session)) { hotkeysLoaded.add(session); applyOptions(); session.optionsActions.loadHotkeys(session.self.name); }
   hotkeysUi.update(session, playing);
   if (gameOptions.value.showFps && now - lastFps > 500) { lastFps = now; fpsLabel.textContent = `FPS: ${Math.round(renderer.app.ticker.FPS)}`; }
-  minimap.update(session, playing);
+  minimap.options = { centered: gameOptions.value.centeredMinimap, zoom: gameOptions.value.centeredMinimapZoom };
+  minimap.update(session, playing, session.world.allies);
+  if (session.world.mapForm.opened !== shownMapForm.get(session)) { shownMapForm.set(session, session.world.mapForm.opened); if (session.world.mapForm.opened > 0) worldMapUi.open(session); }
+  worldMapUi.update(session);
   if (playing) {
     disconnect.hidden = false;
     element('map-name').textContent = renderer.mapName; element('map-name').title = renderer.mapName;

@@ -10,15 +10,23 @@ export interface GameOptions {
   moveWhileTyping: boolean;
   /** CopiarDialogoAConsola ("Copiar diálogos a consola"): player speech bubbles are also written to the console. */
   copyDialogToConsole: boolean;
+  /** OPCIONES/CenteredMinimap ("Utilizar minimapa en modo continuo"): VB6 reads `GetSettingAsByte(..., 1)`, so it is on by default. */
+  centeredMinimap: boolean;
+  /** OPCIONES/CenteredMinimapZoom: the zoom of the centred minimap, -50..50 (frmMain.ApplyMinimapZoom). */
+  centeredMinimapZoom: number;
 }
-export const DEFAULT_OPTIONS: GameOptions = { showFps: false, moveWhileTyping: false, copyDialogToConsole: true };
+export const DEFAULT_OPTIONS: GameOptions = { showFps: false, moveWhileTyping: false, copyDialogToConsole: true, centeredMinimap: true, centeredMinimapZoom: 0 };
 export const OPTIONS_KEY = 'ao.options.v1';
 
 /** Read a stored object defensively: unknown keys are dropped, non-booleans fall back to the default. */
 export function sanitizeOptions(raw: unknown): GameOptions {
   const o = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
-  const flag = (key: keyof GameOptions) => typeof o[key] === 'boolean' ? o[key] as boolean : DEFAULT_OPTIONS[key];
-  return { showFps: flag('showFps'), moveWhileTyping: flag('moveWhileTyping'), copyDialogToConsole: flag('copyDialogToConsole') };
+  const flag = (key: 'showFps' | 'moveWhileTyping' | 'copyDialogToConsole' | 'centeredMinimap') => typeof o[key] === 'boolean' ? o[key] as boolean : DEFAULT_OPTIONS[key];
+  const zoom = typeof o.centeredMinimapZoom === 'number' && Number.isFinite(o.centeredMinimapZoom) ? Math.round(o.centeredMinimapZoom) : DEFAULT_OPTIONS.centeredMinimapZoom;
+  return {
+    showFps: flag('showFps'), moveWhileTyping: flag('moveWhileTyping'), copyDialogToConsole: flag('copyDialogToConsole'),
+    centeredMinimap: flag('centeredMinimap'), centeredMinimapZoom: Math.min(50, Math.max(-50, zoom)),
+  };
 }
 
 type Store = Pick<Storage, 'getItem' | 'setItem'>;

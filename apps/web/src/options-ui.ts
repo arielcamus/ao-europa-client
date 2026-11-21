@@ -93,13 +93,13 @@ export class OptionsUI {
     this.check(panel, 'exp-buttons', 'Botones en la barra de experiencia', 18, 231);
     this.check(panel, 'map-name', 'Nombre del mapa al cambiar de zona', 18, 256);
     this.check(panel, 'confirm-pet', 'Confirmación para liberar mascotas', 18, 281);
-    this.check(panel, 'centered-minimap', 'Utilizar minimapa en modo continuo', 258, 46);
+    this.check(panel, 'centered-minimap', 'Utilizar minimapa en modo continuo', 258, 46, 'centeredMinimap');
     return panel;
   }
   private sync(options: Readonly<GameOptions>) {
     const set = (id: string, value: boolean) => { const input = this.checks.get(id); if (input) input.checked = value; };
     set('copy-dialog', options.copyDialogToConsole); set('move-typing', options.moveWhileTyping); set('fps', options.showFps);
-    set('fullscreen', Boolean(document.fullscreenElement));
+    set('centered-minimap', options.centeredMinimap); set('fullscreen', Boolean(document.fullscreenElement));
   }
   /** BtnSolapa: the selected tab shows its "default" art, the others "off". */
   select(tab: Tab) {

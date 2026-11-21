@@ -5,9 +5,12 @@ import { classicScale } from '../src/classic-layout.js';
 describe('minimap (frmMain.SetMinimapPosition, mode 0)', () => {
   it('stretches the playable area (tiles 13..87 x 10..90) over the 100px picture, centring the 5px dot', () => {
     // (50-11-2)*100/74 = 50 ; minus 5\2 + 1 = 3 ; (50-9-1)*100/80 = 50 ; minus 3
-    expect(minimapDotPosition(50, 50)).toEqual({ left: 47, top: 47 });
-    expect(minimapDotPosition(13, 10)).toEqual({ left: -3, top: -3 });
-    expect(minimapDotPosition(87, 90)).toEqual({ left: 97, top: 97 });
+    // VB6 assigns the Single to Shape.Left/Top unrounded; the page keeps the fraction and the browser snaps the box when it paints.
+    const at = (x: number, y: number) => { const p = minimapDotPosition(x, y); return [p.left, p.top]; };
+    expect(at(50, 50)[0]).toBeCloseTo(47, 9); expect(at(50, 50)[1]).toBeCloseTo(47, 9);
+    expect(at(13, 10)[0]).toBeCloseTo(-3, 9); expect(at(13, 10)[1]).toBeCloseTo(-3, 9);
+    expect(at(87, 90)[0]).toBeCloseTo(97, 9); expect(at(87, 90)[1]).toBeCloseTo(97, 9);
+    expect(minimapDotPosition(51, 50).left).not.toBe(Math.round(minimapDotPosition(51, 50).left)); // a fractional pixel survives (<= 1 px from the old rounding)
   });
   it('maps a minimap pixel back to a tile (GetMinimapPosition)', () => {
     const t = minimapTile(50, 50);
