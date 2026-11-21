@@ -59,7 +59,7 @@ export class ChatBox {
   /** MenuUser "PRIVADO": SendTxt = "\\name " and the box opens. */
   whisperTo(name: string) { if (this.session?.ready && !this.guild) { this.input.whisperTo(name); this.open(); } }
 
-  /** SendTxt_KeyUp / SendTxtCmsg_KeyUp. */
+  /** SendTxt_KeyUp / SendTxtCmsg_KeyUp: the send key always clears and hides the box (stxtbuffer = "", SendTxt.visible = False) and the keyboard returns to the game form. */
   private submit() { this.send(this.field.value); }
   private send(text: string) {
     const session = this.session;
@@ -73,7 +73,8 @@ export class ChatBox {
       for (const more of outcome.more ?? []) session.sendChat(more);
       if (outcome.open) this.onOpenWindow?.(outcome.open);
       for (const note of outcome.notes) session.ui.message(note.text, note.font);
-      if (!ok) { session.ui.message('Espera un momento o acorta el mensaje (máximo 255 bytes).'); return; }
+      // SendTxt_KeyUp hides the box whatever HandleChatMsg did: a rate-limited or refused line is dropped, the focus still goes back to the game.
+      if (!ok) session.ui.message('Espera un momento o acorta el mensaje (máximo 255 bytes).');
       this.close();
     } catch (error) { this.onFailure(error); }
   }
