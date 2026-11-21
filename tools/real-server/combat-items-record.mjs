@@ -1,7 +1,8 @@
 // AGPL-3.0-or-later. Records the combat-items (wave 3) scenarios against the classic VB6 server with a GM character (Aotest).
 // Usage: AO_EMAIL=... AO_PASSWORD=... node tools/real-server/combat-items-record.mjs <scenario> <out.jsonl>
 // Credentials are required (no defaults). The account must be an Admin of the server (Server.ini Admin2=...), see docs/CONFORMANCE.md (gm/).
-// Everything a scenario creates (NPCs, floor items) is removed again by the scenario; see the PR body for the undo of each.
+// Scenarios: paralysed-login, learn-spell-scroll, priest-revive (all need a DB set-up, see docs/DATA-PATCHES.md) and restore (re-creates native NPCs a cleanup killed).
+// 🔴 KillNPCNoRespawn removes the SELECTED NPC, native ones included: this script only ever kills NPCs it spawned itself (none of the scenarios spawn any now).
 import { Vb6Session, sleep, C, S, DC } from './bank-trade-session.mjs';
 import {
   GmClientPacketId as G, ItemsClientPacketId as IC, CombatClientPacketId as CC, SpellClientPacketId as SC,
@@ -58,35 +59,6 @@ const scenarios = {
     warp(1, 76, 54); await say(1500);
   },
   // Removes the NPCs of the given numbers around the character (cleanup after an aborted run).
-  // A snake kills the (level 1) GM character (/IGNORADO makes admins attackable): NPCHitUser x N, NPCKillUser, the ghost; then a priest (NPC 1) resurrects it (select + /RESUCITAR).
-  async 'npc-death-priest-revive'() {
-    warp(2, 50, 50); await say(1500);
-    s.send({ id: G.Ignored }); await say(500);
-    const snake = await spawnMine(502);
-    // provoke it: walk next to it, face it and hit it until it kills us
-    const H = { N: 1, E: 2, S: 3, W: 4 };
-    for (let i = 0; i < 90 && !s.packets.some(p => p.id === 16); i++) {
-      const sn = current(snake); if (!sn) break;
-      const dx = sn.x - s.pos.x, dy = sn.y - s.pos.y;
-      const heading = Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? H.E : H.W) : (dy > 0 ? H.S : H.N);
-      if (Math.abs(dx) + Math.abs(dy) > 1) { s.send({ id: C.Walk, heading, counter: s.nextCounter('walk') }); s.send({ id: C.RequestPositionUpdate }); await say(450); continue; }
-      s.send({ id: C.Walk, heading, counter: s.nextCounter('walk') }); await say(200); attack(); await say(1100);
-    }
-    log('death packets', s.packets.filter(p => p.id === 16).length, 'hp', hp());
-    const priest = await spawnMine(1); log('priest', priest && [priest.x, priest.y], 'me', s.pos);
-    if (priest) { leftClick(priest.x, priest.y); await say(1000); s.send({ id: CC.Resucitate }); await say(2500); }
-    log('hp after', hp());
-    s.send({ id: G.Ignored }); await say(300);
-    s.send({ id: G.ReviveChar, userName: s.character.name }); await say(800); // fallback only: a no-op for a living character
-    await killAllMine();
-    warp(1, 76, 54); await say(1500);
-  },
-  // Print what the server says about the map and the GM powers; no fixture value.
-  async explore() {
-    log('pos', s.map, s.pos, 'privileges seen', s.packets.filter(p => p.id === S.Privilegios).length);
-    warp(2, 50, 50); await say(1500); log('after warp', s.map, s.pos);
-    spawn(502); await say(1200); log('npcs', npcs().map(n => [n.npcNumber, n.x, n.y]));
-  },
 };
 if (!scenarios[scenario]) throw new Error(`scenarios: ${Object.keys(scenarios).join(', ')}`);
 try { await scenarios[scenario](); } finally { // whatever happened: remove what this run spawned, take the GM off the attackable list, go home
