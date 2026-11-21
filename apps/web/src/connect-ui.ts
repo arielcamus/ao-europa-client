@@ -49,6 +49,25 @@ export const ACCOUNT_COLOR: Record<number, number> = { 0: 50, 1: 49, 2: 6, 3: 8,
 /** Boats and the dwarven exoskeleton (RenderAccountCharacters enBarca): no head or equipment is drawn. */
 const BOATS = new Set([84, 85, 86, 87, 1263, 1264, 1265, 1266, 1267, 1268, 1269, 1270, 1271, 1272, 1273, 1274, 4596]);
 
+/**
+ * Downloads a picture completely and hands back an object URL for it. A CSS background that only names the file starts painting while
+ * the download is still running (a 1024x1024 sheet over a slow link shows up band by band), and the screen counts as ready only when
+ * every picture is whole. A failed download falls back to the plain URL, so a missing file must not hold the boot forever.
+ */
+const preloaded = new Map<string, Promise<string>>();
+function preload(url: string): Promise<string> {
+  let pending = preloaded.get(url);
+  if (!pending) {
+    pending = fetch(url).then(async response => {
+      if (!response.ok) throw new Error(String(response.status));
+      const blob = await response.blob(); const local = URL.createObjectURL(blob);
+      const image = new Image(); image.src = local; await image.decode();
+      return local;
+    }).catch(() => url);
+    preloaded.set(url, pending);
+  }
+  return pending;
+}
 const px = (rect: Rect) => `left:${rect[0]}px;top:${rect[1]}px;width:${rect[2]}px;height:${rect[3]}px`;
 
 export class ConnectUI {
@@ -75,13 +94,17 @@ export class ConnectUI {
   private nameInput = document.createElement('input');
   private labels = new Map<string, HTMLElement>();
   private generation = 0;
+  /** The login screen is complete: backdrop picture, logo, frame, assistant. The screen is only shown once this resolves (no bare login box). */
+  readonly ready: Promise<void>;
 
   constructor(parent: HTMLElement, private readonly renderer: WorldRenderer, private readonly hooks: ConnectHooks) {
     this.stage.id = 'connect-stage'; this.stage.hidden = true;
     this.login.className = 'cs-screen cs-login'; this.account.className = 'cs-screen cs-account'; this.create.className = 'cs-screen cs-create';
     this.stage.append(this.login, this.account, this.create);
     parent.append(this.stage);
-    void this.buildLogin(); void this.buildAccount(); void this.buildCreate();
+    const backdrop = preload('/ao-assets/Graficos/239.png').then(url => { this.stage.style.backgroundImage = `url("${url}")`; });
+    this.ready = Promise.all([this.buildLogin(), backdrop]).then(() => undefined, error => { console.error('login screen', error); });
+    void this.ready.then(() => { void this.buildAccount(); void this.buildCreate(); }); // the login screen's pictures get the bandwidth first
     void fetchText('init/sp_localindex.dat').then(text => { this.ini = parseIni(text); this.applyRace(); }).catch(() => undefined);
   }
 
@@ -314,9 +337,10 @@ export class ConnectUI {
   /** A Grh placed like Draw_Grh (the `center` flag puts the bitmap's middle on a 32 px tile: x - w/2 + 16, y - h + 32). */
   private async grh(parent: HTMLElement, id: number, x: number, y: number, center: boolean, cls = '') {
     const frame = await this.renderer.graphic(id);
+    const sheet = await preload(`/ao-assets/Graficos/${frame.file}.png`); // the screen is only complete once its pictures are whole, not just placed
     const el = document.createElement('div'); el.className = `cs-grh ${cls}`.trim();
     const left = center ? x - Math.floor(frame.width / 2) + 16 : x, top = center ? y - frame.height + 32 : y;
-    el.style.cssText = `left:${left}px;top:${top}px;width:${frame.width}px;height:${frame.height}px;background:url("/ao-assets/Graficos/${frame.file}.png") -${frame.x}px -${frame.y}px no-repeat`;
+    el.style.cssText = `left:${left}px;top:${top}px;width:${frame.width}px;height:${frame.height}px;background:url("${sheet}") -${frame.x}px -${frame.y}px no-repeat`;
     parent.prepend(el); // art goes under the controls added so far
     return el;
   }

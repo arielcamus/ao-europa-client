@@ -60,6 +60,9 @@ import type { SessionNotice } from './session.js';
 import type { VbWindow } from './vb-window.js';
 
 applyClassicLayout();
+// Frmcarga is the first thing on screen: its art is requested before every other resource so it is not queued behind the atlases.
+const loading = new LoadingCard(element('classic'));
+loading.visible = true;
 windows.install();
 const form = element<HTMLFormElement>('login'), account = element<HTMLInputElement>('email'), password = element<HTMLInputElement>('password');
 const connect = element<HTMLButtonElement>('connect'), disconnect = element<HTMLButtonElement>('disconnect');
@@ -215,7 +218,8 @@ const hotkeysLoaded = new WeakSet<Session>();
 /** IsDialogOpen: the bank, Goliath and trade windows pause walking. */
 const transacting = () => bankUi.dialogOpen || tradeUi.dialogOpen;
 // frmConnect: the login, account and character-creation screens, and the small forms of the connect flow (frmMensaje, frmConnecting, Frmcarga).
-const loading = new LoadingCard(element('classic'));
+/** False until the splash has done its job: the connect screen, the login box and the HUD stay hidden. */
+let booted = false;
 const floating = new FloatingTexts(element('chat-bubbles'));
 let connectingWindow: VbWindow | undefined;
 const connectUi = new ConnectUI(element('classic'), renderer, {
@@ -276,7 +280,10 @@ async function boot() {
     ? 'Mundo de prueba local. Objetos y estadísticas de muestra; sin combate ni persistencia.'
     : community ? 'Servidor comunitario · movimiento y persistencia. Chat aún no disponible.' : 'Cliente clásico · movimiento, combate, objetos, hechizos, banco y chat.';
   if (config.mode === 'standin') { account.value = 'standin@local'; password.value = 'testpass'; }
-  await Promise.all([renderer.init(), ui.init(), bubbles.init(), audio.init(), questWindows.init().catch(error => report(`Misiones no disponibles: ${String(error)}`))]);
+  if (new URLSearchParams(location.search).has('debug')) element('classic').classList.add('debug');
+  // Frmcarga over black while the resources load; the connect screen appears only once its art is complete.
+  await Promise.all([renderer.init(), ui.init(), bubbles.init(), audio.init(), connectUi.ready, loading.ready, questWindows.init().catch(error => report(`Misiones no disponibles: ${String(error)}`))]);
+  booted = true; element('classic').dataset.boot = 'ready'; performance.mark('ao-boot-ready');
   // Chat text that the server sends as locale ids; the console is redrawn once it arrives.
   void Promise.all([fetchText('init/sp_localindex.dat'), fetchText('init/SP_LocalMsg.dat')])
     .then(([index, messages]) => { sharedLocale.load(index, messages); if (session) { session.ui.chat.flushPending(); session.ui.revision++; } })
@@ -322,11 +329,13 @@ function syncConnect() {
   while (s?.notices.length) handleNotice(s.notices.shift()!);
   const playing = !!s && s.ready && renderer.readyMap === s.resourceMap;
   if (s?.phase === 'connecting') { if (!connectingWindow?.isOpen) connectingWindow = showConnecting(element('classic'), () => close('Disconnected', true)); } else connectingWindow?.close();
+  element('classic').classList.toggle('in-world', playing); // frmMain exists only in the world
+  if (!booted) { form.hidden = true; return; }
   if (playing) connectUi.setScreen('none');
   else if (s?.phase === 'account') {
     if (shownAccount !== s.accountRevision || connectUi.current === 'login' || connectUi.current === 'none') { shownAccount = s.accountRevision; connectUi.showAccount(s.accountCharacters); }
   } else if (!s) { shownAccount = -1; connectUi.setScreen('login'); }
-  loading.visible = !!s && (s.phase === 'login' || (s.phase === 'playing' && !playing));
+  loading.visible = !booted || (!!s && (s.phase === 'login' || (s.phase === 'playing' && !playing)));
   form.hidden = !!s || connectUi.current !== 'login';
 }
 function updateUi(now: number) {
@@ -600,4 +609,4 @@ viewport.addEventListener('pointerdown', event => {
 viewport.addEventListener('pointermove', event => { if (viewport.hasPointerCapture(event.pointerId)) aim(event); });
 for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) viewport.addEventListener(name, clearInput);
 window.addEventListener('pagehide', () => { close('Disconnected', true); renderer.destroy(); });
-void boot().then(() => { connect.disabled = false; }).catch(error => report(String(error)));
+void boot().then(() => { connect.disabled = false; }).catch(error => { element('classic').classList.add('boot-failed'); loading.visible = false; report(String(error)); });

@@ -61,9 +61,13 @@ export function showConnecting(parent: HTMLElement, cancel: () => void): VbWindo
  */
 export class LoadingCard {
   private readonly el = document.createElement('div');
+  private wanted = false;
+  private artReady = false;
+  /** Resolves when the card's artwork is decoded; the card is never drawn as a bare box before that. */
+  readonly ready: Promise<void>;
   constructor(parent: HTMLElement) {
     this.el.id = 'loading-card'; this.el.hidden = true; this.el.setAttribute('role', 'status'); this.el.setAttribute('aria-label', 'Cargando...');
-    void loadInterface('VentanaCargando').then(url => new Promise<string>((resolve, reject) => {
+    this.ready = loadInterface('VentanaCargando').then(url => new Promise<string>((resolve, reject) => {
       const image = new Image();
       image.onload = () => {
         const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = image.height;
@@ -74,11 +78,11 @@ export class LoadingCard {
       };
       image.onerror = () => reject(new Error('VentanaCargando'));
       image.src = url;
-    })).then(url => { this.el.style.backgroundImage = `url("${url}")`; }).catch(() => { this.el.style.background = '#101010'; });
+    })).then(url => { this.el.style.backgroundImage = `url("${url}")`; }).catch(() => { this.el.style.background = '#101010'; }).then(() => { this.artReady = true; this.el.hidden = !this.wanted; });
     parent.append(this.el);
   }
-  set visible(value: boolean) { this.el.hidden = !value; }
-  get visible() { return !this.el.hidden; }
+  set visible(value: boolean) { this.wanted = value; this.el.hidden = !value || !this.artReady; }
+  get visible() { return this.wanted; }
 }
 
 /** frmNewAccount (create account): 356x342 `ventanacrearcuenta`. In PYMMO=0 only the e-mail and password travel (WriteCreateAccount). */

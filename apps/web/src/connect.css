@@ -1,5 +1,5 @@
 /* Connect screens (frmConnect): login, account and character creation. AGPL-3.0-or-later; see NOTICE. */
-#connect-stage { position: absolute; inset: 0; z-index: 15; background: #000 url("/ao-assets/Graficos/239.png") 0 0 / 1024px 1024px no-repeat; font: bold 12px Tahoma, Arial, sans-serif; color: #fff; }
+#connect-stage { position: absolute; inset: 0; z-index: 15; background: #000 0 0 / 1024px 1024px no-repeat; /* the 239 backdrop is set by connect-ui once it is fully downloaded */ font: bold 12px Tahoma, Arial, sans-serif; color: #fff; }
 .cs-screen { position: absolute; inset: 0; }
 .cs-grh { position: absolute; pointer-events: none; z-index: 1; }
 .cs-bg { opacity: .9; z-index: 0; }
