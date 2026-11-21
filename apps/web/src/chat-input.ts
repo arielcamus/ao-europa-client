@@ -5,7 +5,7 @@
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; see NOTICE.
  * GM and gameplay slash commands belong to other features: they get an explicit "not available" line.
  */
-import { CombatClientPacketId as CC, ClientPacketId as C, BankTradeClientPacketId as BC, KeysClientPacketId as K, SkillsClientPacketId as SC } from '@ao/protocol';
+import { PetsTravelClientPacketId as PT, CombatClientPacketId as CC, ClientPacketId as C, BankTradeClientPacketId as BC, KeysClientPacketId as K, SkillsClientPacketId as SC } from '@ao/protocol';
 import type { ClientPacket } from '@ao/protocol';
 import { FONTTYPE } from './chat-fonts.js';
 
@@ -39,6 +39,12 @@ const readCommand = (raw: string) => {
   const cut = raw.indexOf(' ');
   const word = (cut < 0 ? raw : raw.slice(0, cut)).trim().toUpperCase();
   return { command: word === '' ? ' ' : word, hasArguments: cut >= 0, raw: cut < 0 ? '' : raw.slice(cut + 1) };
+};
+/** ParseUserCommand pet commands (both languages) and the empty packet each writes. */
+const PET_COMMANDS: Readonly<Record<string, number>> = {
+  '/QUIETO': PT.PetStand, '/STILL': PT.PetStand, '/ACOMPAÑAR': PT.PetFollow, '/ACCOMPANY': PT.PetFollow,
+  '/ACOMPAÑARTODOS': PT.PetFollowAll, '/ACCOMPANYALL': PT.PetFollowAll, '/LIBERAR': PT.PetLeave, '/RELEASE': PT.PetLeave,
+  '/LIBERARTODOS': PT.PetLeaveAll, '/LIBERARTODAS': PT.PetLeaveAll, '/LIBERARTALL': PT.PetLeaveAll,
 };
 const MESSAGES = {
   empty: 'Escriba un mensaje.',
@@ -124,6 +130,11 @@ export class ChatInput {
         // Combat (#11): act on the priest selected with a left click (WriteResucitate / WriteHeal, no fields).
         case '/RESUCITAR': case '/RESURRECT': outcome.packet = { id: CC.Resucitate }; return;
         case '/CURAR': case '/CURE': outcome.packet = { id: CC.Heal }; return;
+        // Pets (wp05): ParseUserCommand /QUIETO /ACOMPAÑAR /ACOMPAÑARTODOS /LIBERAR /LIBERARTODOS act on the pet selected with a left click.
+        case '/QUIETO': case '/STILL': case '/ACOMPAÑAR': case '/ACCOMPANY': case '/ACOMPAÑARTODOS': case '/ACCOMPANYALL':
+        case '/LIBERAR': case '/RELEASE': case '/LIBERARTODOS': case '/LIBERARTODAS': case '/LIBERARTALL':
+          if (context.dead) note(MESSAGES.dead, FONTTYPE.INFO); else outcome.packet = { id: PET_COMMANDS[command]! };
+          return;
         // Skills (feat/skills): ParseUserCommand /ENTRENAR, /DESCANSAR, /MEDITAR, /EST.
         case '/ENTRENAR': case '/TRAIN': if (context.dead) note(MESSAGES.dead, FONTTYPE.INFO); else outcome.packet = { id: SC.TrainList }; return;
         case '/DESCANSAR': case '/REST': if (context.dead) note(MESSAGES.dead, FONTTYPE.INFO); else outcome.packet = { id: SC.Rest }; return;
