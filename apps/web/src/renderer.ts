@@ -20,6 +20,7 @@ import { FxRenderer } from './fx-render.js';
 import { parseParticles } from './fx-particles.js';
 import { fxTables, parseProjectiles } from './fx-world.js';
 import type { FrameInfo } from './fx-world.js';
+import { graphicFlags } from './movement.js';
 
 class SpritePool {
   private sprites: Sprite[] = [];
@@ -224,7 +225,11 @@ export class WorldRenderer {
   }
   /** Sound data of the loaded map (tMapDat music, ambient, weather flags). */
   /** Static Blocked byte and trigger of a tile of the loaded map (MapData(x, y).Blocked / .Trigger), for the walk legality check. */
-  legalTileAt(x: number, y: number) { return this.map ? { blocked: this.map.blocked[tileIndex(x, y)]!, trigger: this.map.triggers[tileIndex(x, y)]! } : undefined; }
+  legalTileAt(x: number, y: number) {
+    if (!this.map) return undefined;
+    const i = tileIndex(x, y), l = this.map.layers;
+    return { blocked: this.map.blocked[i]! | graphicFlags(l[0]![i]!, l[1]![i]!, l[2]![i]!), trigger: this.map.triggers[i]! };
+  }
   get mapAudio() { return this.map?.audio; }
   /** TileEngine.HayTecho at a tile: the player is under a roof (indoor rain sounds). */
   roofAt(x: number, y: number) { return hayTecho(this.roofTrig[(y - 1) * 100 + x - 1] ?? 0); }

@@ -3,7 +3,7 @@ import { FrameDecoder, ClientPacketId as C, SessionClientPacketId as SCP, decode
 import type { ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
 import { Session } from '../src/session.js';
-import { legalPos, effectiveBlocked, type LegalContext } from '../src/movement.js';
+import { legalPos, effectiveBlocked, inWalkBorders, graphicFlags, type LegalContext } from '../src/movement.js';
 
 const E = 2, S = 3, W = 4;
 function harness() {
@@ -102,5 +102,50 @@ describe('against the real VB6 server (walk-into-creature fixtures)', () => {
   it('the ChangeHeading our client sends for a blocked step is byte-identical to the recorded VB6 one', () => {
     const recorded = rows('walk-into-creature-turn.jsonl').find(r => r.dir === 'c2s' && r.id === 6)!;
     expect(Buffer.from(encodeClientFrame({ id: 6, heading: Buffer.from(recorded.hex, 'hex')[2]!, counter: 1 })).subarray(2).toString('hex')).toBe(recorded.hex);
+  });
+});
+
+describe('map borders (TileEngine.Init_TileEngine MinXBorder..MaxYBorder, mirrored by the server LegalWalk)', () => {
+  const at = (x: number, y: number) => {
+    const h = harness();
+    h.recv({ ...f.CharacterCreate, speeding: 1, heading: S, x, y }); // facing south, so a north press is a real turn
+    h.recv({ ...f.PosUpdate, x, y } as ServerPacket);
+    h.decoded();
+    return h;
+  };
+  it('the box is x 12..89, y 10..91', () => {
+    expect([inWalkBorders(12, 10), inWalkBorders(89, 91), inWalkBorders(11, 50), inWalkBorders(90, 50), inWalkBorders(50, 9), inWalkBorders(50, 92)]).toEqual([true, true, false, false, false, false]);
+  });
+  it('a step past the top edge (y 10 -> 9) only turns: no Walk, no probe, one ChangeHeading', () => {
+    const h = at(40, 10);
+    expect(h.session.position).toEqual({ x: 40, y: 10 });
+    h.advance(1000); expect(h.session.walk(1)).toBe(false);
+    expect(h.session.position).toEqual({ x: 40, y: 10 });
+    expect(h.decoded().map(p => p.id)).toEqual([SCP.ChangeHeading]);
+  });
+  it('stepping onto the border row itself is allowed (Forgat 752 keeps its tile exits on y 10)', () => {
+    const h = at(40, 11);
+    h.advance(1000); expect(h.session.walk(1)).toBe(true);
+    expect(h.session.position).toEqual({ x: 40, y: 10 });
+    expect(h.decoded().map(p => p.id)).toEqual([C.Walk, C.RequestPositionUpdate]);
+  });
+});
+
+describe('FLAG_AGUA / FLAG_COSTA come from the graphics (Recursos.ReadMapGraphics), not from the CSM Blocked byte', () => {
+  it('a layer-1 water graphic sets FLAG_AGUA, a layer-2 or 3 graphic sets FLAG_COSTA, ordinary land sets neither', () => {
+    expect(graphicFlags(1505, 0, 0)).toBe(0x20);
+    expect(graphicFlags(2963, 0, 0)).toBe(0x20);
+    expect(graphicFlags(2964, 0, 0)).toBe(0);
+    expect(graphicFlags(1, 0, 0)).toBe(0);
+    expect(graphicFlags(124, 5, 0)).toBe(0x20 | 0x80);
+    expect(graphicFlags(1, 0, 7)).toBe(0x80);
+  });
+  it('so a sailor is legal on water and a walker is not (and the reverse on land)', () => {
+    const water = { blocked: graphicFlags(1505, 0, 0), trigger: 0 }, land = { blocked: graphicFlags(1, 0, 0), trigger: 0 }, shore = { blocked: graphicFlags(1505, 3, 0), trigger: 0 };
+    expect(legalPos(1, ctx({ tile: water, sailing: true }))).toBe(true);
+    expect(legalPos(1, ctx({ tile: water }))).toBe(false);
+    expect(legalPos(1, ctx({ tile: land, sailing: true }))).toBe(false);
+    expect(legalPos(1, ctx({ tile: land }))).toBe(true);
+    expect(legalPos(1, ctx({ tile: shore }))).toBe(true); // a coast tile (water under a layer-2 graphic) is walkable
   });
 });
