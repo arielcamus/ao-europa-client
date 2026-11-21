@@ -43,8 +43,25 @@ export class ChatState {
 
   constructor(private readonly push: (line: ChatLine) => void) {}
 
+  /** Locale-dependent bubbles that arrived before init/sp_localindex.dat was loaded; replayed by flushPending(). */
+  private pending: ServerPacket[] = [];
+  /** Replay what waited for the locale tables (the console needs nothing: it keeps raw lines and formats them when drawn). */
+  flushPending() {
+    if (!this.locale.ready || !this.pending.length) return;
+    const waiting = this.pending; this.pending = [];
+    for (const packet of waiting) this.receive(packet);
+  }
+  /** A bubble whose text is built from the locale tables (an id, or an LOCMSG/NPCDESC/PMAG/QUESTFIN prefix). */
+  private needsLocale(packet: ServerPacket): boolean {
+    if (packet.id === NS.LocaleChatOverHead) return true;
+    return packet.id === NS.ChatOverHead && ['LOCMSG', 'NPCDESC', 'PMAG', 'QUESTFIN'].includes(readField(1, packet.chat, '*'));
+  }
+
   /** Returns true when the packet was a chat packet. */
   receive(packet: ServerPacket): boolean {
+    // A LocaleMsg-style bubble before the locale file has loaded would be empty: queue it until the locale is ready.
+    if (!this.locale.ready && this.needsLocale(packet)) { if (this.pending.length < 200) this.pending.push(packet); return true; }
+    if (this.pending.length) this.flushPending();
     switch (packet.id) {
       case S.ConsoleMsg: this.push({ kind: 'console', message: packet.message, font: packet.font }); return true;
       case NS.LocaleMsg: this.push({ kind: 'locale', id: packet.messageId, extra: packet.text, font: packet.font }); return true;

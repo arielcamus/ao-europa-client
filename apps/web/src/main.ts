@@ -23,6 +23,7 @@ import './bank-trade.css';
 import { BankUI } from './bank-ui.js';
 import { TradeUI } from './trade-ui.js';
 import { PartyUI } from './party-ui.js';
+import { TravelUI } from './travel-ui.js';
 import { GuildUI } from './guild-ui.js';
 import { QuestWindows } from './quest-window.js';
 import { OptionsSettings } from './options-settings.js';
@@ -78,6 +79,7 @@ const partyUi = new PartyUI(viewport, element('classic'), renderer, packet => se
 // Group.HandleMouseInput: a group frame clicked while a spell is aimed casts it on that member (WriteActionOnGroupFrame).
 partyUi.onFrameClick = groupId => { if (session?.spells.targeting?.skill === 1) { sendPackets(session.party.actOnFrame(groupId)); session.spells.cancel(); } };
 const guildUi = new GuildUI(element('classic'), sendPackets);
+const travelUi = new TravelUI(element('classic'), packet => sendPackets(packet)); // FrmViajes (wp05)
 ui.bindMenu('Grupo', () => sendPackets(session?.party.requestWindow()));
 ui.bindMenu('Clanes', () => { if (session?.ready) sendPackets(session.guild.openGuildPanel()); });
 // frmOpciones (graphics, gameplay and, through audio.options, sound), frmCustomKeys and the hotkey bar (feat/options-extras).
@@ -141,7 +143,7 @@ async function boot() {
   await Promise.all([renderer.init(), ui.init(), bubbles.init(), audio.init(), questWindows.init().catch(error => report(`Misiones no disponibles: ${String(error)}`))]);
   // Chat text that the server sends as locale ids; the console is redrawn once it arrives.
   void Promise.all([fetchText('init/sp_localindex.dat'), fetchText('init/SP_LocalMsg.dat')])
-    .then(([index, messages]) => { sharedLocale.load(index, messages); if (session) session.ui.revision++; })
+    .then(([index, messages]) => { sharedLocale.load(index, messages); if (session) { session.ui.chat.flushPending(); session.ui.revision++; } })
     .catch(error => report(String(error)));
   renderer.app.ticker.add(() => {
     const now = performance.now();
@@ -169,7 +171,7 @@ async function boot() {
   });
 }
 function updateUi(now: number) {
-  ui.update(session); bankUi.update(session); tradeUi.update(session); partyUi.update(session); guildUi.update(session);
+  ui.update(session); bankUi.update(session); tradeUi.update(session); partyUi.update(session); guildUi.update(session); travelUi.update(session);
   itemsUi.update(session);
   guard(() => craftingUi.update(session));
   if (!session) { hotkeysUi.update(undefined, false); return; }
@@ -212,7 +214,7 @@ form.addEventListener('submit', event => {
   password.value = '';
   npcDialog.hide();
   const owner = session;
-  session.tracker.onNpcDescription = ({ npcNumber }) => { if (session === owner) void npcDialog.show(npcNumber, renderer.locale); };
+  session.tracker.onNpcDescription = ({ npcNumber }) => { if (session === owner) void npcDialog.showWhenReady(npcNumber, () => renderer.locale); };
   chatBox.attach(session);
   session.ui.chat.copyToConsole = gameOptions.value.copyDialogToConsole;
   audio.attach(session);
@@ -342,7 +344,7 @@ viewport.addEventListener('pointermove', event => { if (event.pointerType === 'm
 viewport.addEventListener('pointerleave', () => { renderer.hoverTile = undefined; });
 viewport.addEventListener('pointerdown', event => {
   bankUi.closeOnWorldClick(); // frmMain.renderer_MouseDown unloads frmBancoObj and frmGoliath
-  partyUi.closeWindow(); guildUi.closeOnMapClick(); // ... and FrmGrupo and frmGuildList
+  partyUi.closeWindow(); guildUi.closeOnMapClick(); travelUi.closeOnWorldClick(); // ... and FrmGrupo and frmGuildList
   if (!event.isPrimary || !session?.ready) return;
   // While the server asked for a target (UsingSkill <> 0) any click or tap is a WorkLeftClick (ModGameplayUI), never a LeftClick.
   if (session.spells.targeting) {

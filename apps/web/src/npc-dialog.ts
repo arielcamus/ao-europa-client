@@ -6,13 +6,38 @@
  */
 import type { LocaleData } from './character-data.js';
 import type { WorldRenderer } from './renderer.js';
+import { fetchText, parseIni } from './assets.js';
+import { grhCanvas } from './grh-canvas.js';
 
-/** mostrarCartel is shown for 200 + 30 * Len(text) ms. */
+/** mostrarCartel's duration argument: 200 + 30 * Len(text), in cartel units. */
 export const dialogLifeMs = (text: string) => 200 + 30 * text.length;
+/**
+ * RenderScreen_Cartel moves fade (1..255) and duration by timerTicksPerFrame * 40 each frame, i.e. 0.72 units per millisecond: the duration is
+ * counted down only once the fade-in has reached 255, and the fade-out starts when it hits 0.
+ */
+export const CARTEL_UNITS_PER_MS = 0.72;
+export const CARTEL_FADE_MS = 255 / CARTEL_UNITS_PER_MS;
+/** Real time of the whole cartel: fade in, the duration, fade out. */
+export const dialogTimeline = (text: string) => ({ fadeMs: CARTEL_FADE_MS, holdMs: dialogLifeMs(text) / CARTEL_UNITS_PER_MS });
+
+let faceTable: Promise<Map<number, number>> | undefined;
+/** NpcData(n).NpcFaceGrh from Dat/npcs.dat ([NPCn] NpcFaceGrh); 0 / missing when the NPC has none or the file cannot be read. */
+export function loadNpcFaceGrhs(): Promise<Map<number, number>> {
+  faceTable ??= fetchText('Dat/npcs.dat').then(text => {
+    const faces = new Map<number, number>();
+    for (const [section, fields] of parseIni(text)) {
+      const match = /^npc(\d+)$/.exec(section), face = Number(fields.get('npcfacegrh') ?? 0);
+      if (match && face > 0) faces.set(Number(match[1]), face);
+    }
+    return faces;
+  }).catch(() => new Map<number, number>());
+  return faceTable;
+}
 
 export class NpcDialog {
   private readonly root: HTMLElement;
   private timer: number | undefined;
+  private timer2: number | undefined;
   private sheets = new Map<number, Promise<HTMLCanvasElement>>();
   private generation = 0;
   constructor(parent: HTMLElement, private readonly renderer: WorldRenderer) {
@@ -23,21 +48,50 @@ export class NpcDialog {
     parent.append(this.root);
   }
   get visible() { return !this.root.hidden; }
-  hide() { this.generation++; this.root.hidden = true; if (this.timer !== undefined) window.clearTimeout(this.timer); this.timer = undefined; }
+  hide() { this.generation++; this.root.hidden = true; this.clearTimers(); }
+  private clearTimers() {
+    if (this.timer !== undefined) window.clearTimeout(this.timer);
+    if (this.timer2 !== undefined) window.clearTimeout(this.timer2);
+    this.timer = this.timer2 = undefined;
+  }
+
+  /** The locale (NPC names and descriptions) may still be loading when the description arrives: wait for it, at most 10 s. */
+  async showWhenReady(npcNumber: number, locale: () => LocaleData | undefined) {
+    for (let waited = 0; !locale() && waited < 10_000; waited += 250) await new Promise(resolve => window.setTimeout(resolve, 250));
+    await this.show(npcNumber, locale());
+  }
 
   async show(npcNumber: number, locale: LocaleData | undefined) {
     const npc = locale?.npcs.get(npcNumber);
     if (!npc?.desc) return;
     const generation = ++this.generation;
-    const portrait = await this.portrait(npc.body, npc.head).catch(() => undefined);
+    const portrait = await this.face(npcNumber).catch(() => undefined) ?? await this.portrait(npc.body, npc.head).catch(() => undefined);
     if (generation !== this.generation) return;
     const title = document.createElement('div'); title.className = 'npc-title'; title.textContent = npc.name.split(' <')[0]!;
     const text = document.createElement('div'); text.className = 'npc-text'; text.textContent = npc.desc;
     const body = document.createElement('div'); body.className = 'npc-body'; body.append(title, text);
     this.root.replaceChildren(...(portrait ? [portrait] : []), body);
-    this.root.hidden = false;
-    if (this.timer !== undefined) window.clearTimeout(this.timer);
-    this.timer = window.setTimeout(() => this.hide(), dialogLifeMs(npc.desc));
+    // cartel_fade 1 -> 255, hold for the duration, 255 -> 0, then cartel_visible = False.
+    const { fadeMs, holdMs } = dialogTimeline(npc.desc);
+    this.clearTimers();
+    this.root.style.transition = 'none'; this.root.style.opacity = '0'; this.root.hidden = false;
+    void this.root.offsetWidth; // commit opacity 0 before the fade-in starts
+    this.root.style.transition = `opacity ${Math.round(fadeMs)}ms linear`; this.root.style.opacity = '1';
+    this.timer = window.setTimeout(() => {
+      this.root.style.opacity = '0';
+      this.timer2 = window.setTimeout(() => this.hide(), fadeMs);
+    }, fadeMs + holdMs);
+  }
+
+  /** The NpcFaceGrh icon, used only when the Grh really has a size (useNpcFaceGrh in HandleChatOverHeadImpl). */
+  private async face(npcNumber: number): Promise<HTMLCanvasElement | undefined> {
+    const grh = (await loadNpcFaceGrhs()).get(npcNumber);
+    if (!grh) return undefined;
+    await this.renderer.graphic(1);
+    const canvas = await grhCanvas(this.renderer, grh);
+    if (!canvas.width || !canvas.height) return undefined;
+    canvas.className = 'npc-portrait npc-face';
+    return canvas;
   }
 
   private sheet(file: number) {

@@ -18,3 +18,4 @@ export * from './packets/quests.js';
 export * from './packets/party.js';
 export * from './packets/guild.js';
 export * from './packets/options.js';
+export * from './packets/pets-travel.js';

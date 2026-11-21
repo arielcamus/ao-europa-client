@@ -10,8 +10,8 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 283 of 523 = 54.1%.** Merged on main only: 283 = 54.1%.
-  - Server to client: 156 of 207. Client to server: 127 of 316. Packets with a recorded VB6 fixture: 199.
+- **Packets covered (merged + open branches): 290 of 523 = 55.4%.** Merged on main only: 290 = 55.4%.
+  - Server to client: 157 of 207. Client to server: 133 of 316. Packets with a recorded VB6 fixture: 205.
 - **Forms covered: 4 of 86 = 4.7%** (5 more partially, 10.5% started).
 
 ## (c) Feature groups, ordered by player value
@@ -23,7 +23,7 @@ Scanned refs: `main`
 | 3 | Combat | 41/41 | 100% | 41 | 0/0 | n/a | 0 |
 | 4 | Spells | 8/8 | 100% | 8 | 0/0 | n/a | 0 |
 | 5 | Items / commerce (NPC shop, inventory) | 24/27 | 88.9% | 24 | 2/4 | 50% | 0 |
-| 6 | NPCs | 0/7 | 0% | 0 | 0/2 | 0% | 0 |
+| 6 | NPCs | 7/7 | 100% | 7 | 0/2 | 0% | 0 |
 | 7 | Bank | 16/16 | 100% | 16 | 0/3 | 0% | 0 |
 | 8 | Trade (player to player) | 8/8 | 100% | 8 | 0/2 | 0% | 0 |
 | 9 | Party | 9/9 | 100% | 9 | 0/2 | 0% | 0 |
@@ -289,7 +289,7 @@ Ids only: .
 | 144 | Ubicacion | client Protocol.bas:HandleUbicacion | minimap | not started |  | yes |
 | 145 | ArmaMov | client Protocol.bas:HandleArmaMov | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 146 | EscudoMov | client Protocol.bas:HandleEscudoMov | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
-| 147 | ViajarForm | client Protocol.bas:HandleViajarForm | npcs | not started |  | no |
+| 147 | ViajarForm | client Protocol.bas:HandleViajarForm | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | no |
 | 148 | NadarToggle | client Protocol.bas:HandleNadarToggle | core | not started |  | no |
 | 149 | ShowFundarClanForm | client Protocol.bas:HandleShowFundarClanForm | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 150 | CharUpdateHP | client Protocol.bas:HandleCharUpdateHP | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
@@ -336,7 +336,7 @@ Ids only: .
 | 191 | CreateProjectile | client Protocol.bas:HandleCreateProjectile | combat | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 192 | UpdateTrap | client Protocol.bas:HandleUpdateTrapState | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 193 | UpdateGroupInfo | client Protocol.bas:HandleUpdateGroupInfo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
-| 194 | UpdateCharValue | client Protocol.bas:HandleUpdateCharValue | core | not started |  | no |
+| 194 | UpdateCharValue | client Protocol.bas:HandleUpdateCharValue | core | not started |  | yes |
 | 195 | SendClientToggles | client Protocol.bas:HandleSendClientToggles | extras | merged | `main:packages/protocol/src/packets/options.ts` | yes |
 | 196 | AntiCheatMessage | client Protocol.bas:HandleAntiCheatMessage | extras | not started |  | no |
 | 197 | AntiCheatStartSession | client Protocol.bas:HandleAntiCheatStartSession | extras | not started |  | yes |
@@ -396,9 +396,9 @@ Ids only: .
 | 39 | Quit | server Protocol.bas:HandleQuit | core | merged | `main:packages/protocol/src/packets/keys.ts` | no |
 | 40 | GuildLeave | server Protocol.bas:HandleGuildLeave | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 41 | RequestAccountState | server Protocol.bas:HandleRequestAccountState | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
-| 42 | PetStand | server Protocol.bas:HandlePetStand | npcs | not started |  | no |
-| 43 | PetFollow | server Protocol.bas:HandlePetFollow | npcs | not started |  | no |
-| 44 | PetLeave | server Protocol.bas:HandlePetLeave | npcs | not started |  | no |
+| 42 | PetStand | server Protocol.bas:HandlePetStand | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | yes |
+| 43 | PetFollow | server Protocol.bas:HandlePetFollow | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | yes |
+| 44 | PetLeave | server Protocol.bas:HandlePetLeave | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | yes |
 | 45 | GrupoMsg | server Protocol.bas:HandleGrupoMsg | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 46 | TrainList | server Protocol.bas:HandleTrainList | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 47 | Rest | server Protocol.bas:HandleRest | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
@@ -606,7 +606,7 @@ Ids only: .
 | 249 | ComenzarTorneo | server Protocol.bas:HandleComenzarTorneo | extras | not started |  | no |
 | 250 | CancelarTorneo | server Protocol.bas:HandleCancelarTorneo | extras | not started |  | no |
 | 251 | BusquedaTesoro | server Protocol.bas:HandleBusquedaTesoro | extras | not started |  | no |
-| 252 | CompletarViaje | server Protocol.bas:HandleCompletarViaje | npcs | not started |  | no |
+| 252 | CompletarViaje | server Protocol.bas:HandleCompletarViaje | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | no |
 | 253 | BovedaMoveItem | server Protocol.bas:HandleBovedaMoveItem | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 254 | QuieroFundarClan | server Protocol.bas:HandleQuieroFundarClan | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 255 | Llamadadeclan | server Protocol.bas:HandleLlamadadeClan | guild | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
@@ -636,7 +636,7 @@ Ids only: .
 | 279 | CraftItem | server Protocol.bas:HandleCraftItem | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 280 | CloseCrafting | server Protocol.bas:HandleCloseCrafting | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 281 | MoveCraftItem | server Protocol.bas:HandleMoveCraftItem | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
-| 282 | PetLeaveAll | server Protocol.bas:HandlePetLeaveAll | npcs | not started |  | no |
+| 282 | PetLeaveAll | server Protocol.bas:HandlePetLeaveAll | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | yes |
 | 283 | ResetChar | server Protocol.bas:HandleResetChar | gm | not started |  | no |
 | 284 | ResetearPersonaje | server Protocol.bas:HandleResetearPersonaje | gm | not started |  | no |
 | 285 | DeleteItem | server Protocol.bas:HandleDeleteItem | items | not started |  | no |
@@ -663,7 +663,7 @@ Ids only: .
 | 306 | DeleteCharacter | server Protocol.bas:HandleDeleteCharacter | core | not started |  | no |
 | 307 | ChangeSkinSlot | (none in dispatcher) | extras | not started |  | no |
 | 308 | StartAutomatedAction | server Protocol.bas:HandleStartAutomatedAction | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
-| 309 | PetFollowAll | server Protocol.bas:HandlePetFollowAll | npcs | not started |  | no |
+| 309 | PetFollowAll | server Protocol.bas:HandlePetFollowAll | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | yes |
 | 310 | AntiMacroMessage | server Protocol.bas:HandleAntiMacroMessage | extras | not started |  | no |
 | 311 | ModifyCastleWhiteList | server Protocol.bas:HandleModifyCastleWhiteList | extras | not started |  | no |
 | 312 | HooClientCapabilities | server Protocol.bas:HandleHooClientCapabilities | extras | not started |  | no |
@@ -708,7 +708,7 @@ Inventory moves, key ring, gamble, gold actions, amount prompts, skins.
 
 Pet commands, trainer list, NPC symbols, travel form, NPC context menus.
 
-- Packets (7): S147 ViajarForm, C42 PetStand, C43 PetFollow, C44 PetLeave, C252 CompletarViaje, C282 PetLeaveAll, C309 PetFollowAll
+- Packets (0): none left
 - Forms (2): frmEntrenador, FrmViajes
 
 ### wp06: Bank and player trade
