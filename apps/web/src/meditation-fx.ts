@@ -1,7 +1,8 @@
 /*
  * The meditation aura by level. Server: Protocol.HandleMeditate picks Char.FX from Dat/Meditaciones.dat by level and faction
  * (server 9ccd7fad, FileIO.LoadMeditations) and sends MeditateToggle(charindex, fx, x, y); the client (Protocol.HandleMeditateToggle)
- * does StartFx(ActiveAnimation, fx, -1) and draws it in engine.bas at (+BodyOffset, +4), alpha 180, normal blend, until fx 0 arrives.
+ * does StartFx(ActiveAnimation, fx, -1) and draws it in engine.bas Draw_Animation at (+BodyOffset, +4), alpha 180, until fx 0 arrives (FX 115-120 are the
+ * composed meditation animations, Recursos.LoadComposedFx).
  * AGPL-3.0-or-later; no warranty. See NOTICE.
  *
  * Pre-HOO data gap: the pinned Dat names FX 153-172 but init/FXs.ini and fxs.ind (last changed 2024-04, 150 entries) have none of
@@ -19,15 +20,17 @@ export const MEDITATION_TIERS: readonly { to: number; citizen: number; criminal:
 ];
 /** MeditationLevelMax (level 47 and up): FX 120, which FXs.ini has. */
 export const MEDITATION_MAX_FX = 120;
-/** The classic art: first level of each step and its FX (the server's old MeditarInicial 115 ... MeditarMayor47 120). */
-const CLASSIC: readonly { from: number; fx: number }[] = [{ from: 1, fx: 115 }, { from: 15, fx: 116 }, { from: 25, fx: 117 }, { from: 35, fx: 118 }, { from: 45, fx: 119 }, { from: 47, fx: 120 }];
+/**
+ * The classic art by tier: the server's e_Meditaciones before Dec 2025 was 1-14 -> 115, 15-24 -> 116, 25-35 -> 117, 36-44 -> 118, 45-46 -> 119, 47+ -> 120.
+ * The ids 153-172 encode the new server's own tiers, which do not line up at 13-14 (tier 13-17 mixes 115 and 116) and 33-35 (tier 33-36 mixes 117 and 118):
+ * each tier takes the classic art of the majority of its levels (13-17 -> 116, 33-36 -> 117).
+ */
+const CLASSIC_BY_TIER: readonly number[] = [115, 116, 116, 117, 117, 117, 118, 118, 118, 119];
 
 /** The FX to draw for the one the server sent: itself when FXs.ini has it, else the classic step of its tier (any other id is kept as it is). */
 export function meditationArt(fx: number, inTable: (fx: number) => boolean): number {
   if (inTable(fx)) return fx;
   const tier = MEDITATION_TIERS.find(t => t.citizen === fx || t.criminal === fx);
   if (!tier) return fx;
-  let art = CLASSIC[0]!.fx;
-  for (const step of CLASSIC) if (step.from <= tier.to) art = step.fx;
-  return art;
+  return CLASSIC_BY_TIER[MEDITATION_TIERS.indexOf(tier)]!;
 }

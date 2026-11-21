@@ -443,13 +443,11 @@ export class WorldRenderer {
         else if (character) { const view = session.tracker.visualPosition(character, now); x = view.x; y = view.y; }
         else if (!x || !y) continue;
       }
-      // Meditation: engine.bas Draw_Animation, (+BodyOffset, +4), alpha 180, not additive (Initialize: alpha False).
-      if (fx.meditation) { this.draw(this.pools[8]!, data.animation, x * 32 + data.offsetX, y * 32 + data.offsetY + 4 + body, now - fx.startedAt, true, 180 / 220); continue; }
-      // Pinned ordinary FX path: bottom of the frame at tile top + 20 + 32 (+ FXs.ini offsets, all 0 for FX 115-119), which is under the feet.
-      // That suits the tall auras; a short substituted one (FX 115, 116) would sit under the character, so its centre is kept at the chest: bottom = min(52, 4 + height / 2).
-      let lift = 0;
-      if (fx.aura) { const height = data.animation.frames[Math.floor((now - fx.startedAt) / data.animation.frameMs) % data.animation.frames.length]!.height; lift = Math.min(0, 4 + height / 2 - 52); }
-      this.draw(this.pools[data.png ? 8 : 7]!, data.animation, x * 32 + data.offsetX, y * 32 + data.offsetY + 20 + body + lift, now - fx.startedAt);
+      // Meditation: engine.bas Draw_Animation at (+BodyOffset, +4), alpha 180 (Initialize: alpha False, i.e. normal blend). The classic FX 115-119 are
+      // IsPNG=0 palette art that is mostly opaque in normal blend and hides the character, so they use the classic 0.13 look instead
+      // (ao-libre TileEngine: additive, alpha 180); FX 120 and any other id keep the pinned normal blend.
+      if (fx.meditation) { this.draw(this.pools[fx.fx >= 115 && fx.fx <= 119 ? 7 : 8]!, data.animation, x * 32 + data.offsetX, y * 32 + data.offsetY + 4 + body, now - fx.startedAt, true, 180 / 220); continue; }
+      this.draw(this.pools[data.png ? 8 : 7]!, data.animation, x * 32 + data.offsetX, y * 32 + data.offsetY + 20 + body, now - fx.startedAt);
     }
   }
   destroy() {

@@ -1,5 +1,5 @@
 // AGPL-3.0-or-later. Real VB6 server through tools/fx-inject-proxy.mjs: a living character, MeditateToggle injected for the six auras
-// (sent ids 153/155/159/163/171 -> classic FX 115-119, and 120 as sent), crop of each, then a labelled 3x2 grid.
+// (sent ids 153/155/159/165/171 -> classic FX 115-119, and 120 as sent), crop of each, then a labelled 3x2 grid.
 // Usage: AO_WEB_PORT=5805 AO_CONTROL=7822 AO_EMAIL=.. AO_PASSWORD=.. OUT=/abs/grid.png node tools/meditation-aura-grid.mjs
 import { chromium } from '@playwright/test';
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -15,7 +15,7 @@ const inject = body => fetch(`${control}/packet`, { method: 'POST', body: JSON.s
 const toggle = fx => inject({ id: 84, charIndex: 'self', fx, x: 0, y: 0 });
 mkdirSync('artifacts/screenshots', { recursive: true });
 const clip = { x: 278, y: 330, width: 200, height: 170 }, cells = [];
-for (const [sent, art] of [[153, 115], [155, 116], [159, 117], [163, 118], [171, 119], [120, 120]]) {
+for (const [sent, art] of [[153, 115], [155, 116], [159, 117], [165, 118], [171, 119], [120, 120]]) {
   await toggle(sent); await page.waitForTimeout(1200);
   const buf = await page.screenshot({ clip }); await toggle(0); await page.waitForTimeout(300);
   writeFileSync(`artifacts/screenshots/meditation-fx2-${art}.png`, buf); cells.push({ art, sent, data: buf.toString('base64') });

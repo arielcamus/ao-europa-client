@@ -26,8 +26,6 @@ export interface ActiveFx {
   grh?: number;
   /** The looping meditation aura (HandleMeditateToggle): drawn at +4 with alpha 180 and normal blend, like engine.bas Draw_Animation. */
   meditation?: boolean;
-  /** A classic FX 115-119 standing in for a missing meditation FX 153-172: drawn through the ordinary additive path, but centred on the body when short. */
-  aura?: boolean;
 }
 export interface Targeting { skill: number; area: boolean; radius: number }
 

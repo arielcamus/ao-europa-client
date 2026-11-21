@@ -84,13 +84,32 @@ The snapshot's `init/sp_localindex.dat` had `NUMQUESTS=255` and `[QUEST1..255]`,
 Because it rebuilds from the current `Dat/obj.dat`, the object patches of section 1 and 2 are included. Backup of the previous files (and of `FXs.ini` / `fxs.ind`) in
 `~/Projects/ao-reference/Recursos-backup-20261121/`; undo = copy them back over `init/`. The client mount only serves `sp_localindex.dat`; the page reads it at start-up, so reload.
 
-## 5. FX 153-172 (meditation aura): no art in the pre-HOO data, drawn with the classic FX 115-119 (client-side, no data patch)
-The server sends the meditation effect as `MeditateToggle` fx = 153 for levels 1..12 (155 for 13..17, 157 for 18..24, 154/156/... for criminals; `FileIO.bas` defaults and
-`Dat/Meditaciones.dat`). `init/FXs.ini` and `init/fxs.ind` have `NumFxs=150` in every copy on this Mac (and upstream, last changed 2024-04), so FX 151 and above
-have no animation definition and the pinned client draws nothing for them. No made-up `Animacion=` is added to the data. Instead `apps/web/src/meditation-fx.ts` substitutes the classic
-step of the level tier (FX 115 for 1-12, 116 for 13-24, 117 for 25-32, 118 for 33-44, 119 for 45-46; the server's pre-Dec-2025 meditation FX). Those are `IsPNG=0` palette art, so they go
-through the ordinary FX list (additive, alpha 220, +20), like the pinned client's FX path. An id that `FXs.ini` does have (FX 120 at level 47+) is the meditation animation as sent
-(normal blend, +4, alpha 180). The real 153-172 art, if it ever lands in `FXs.ini`, takes precedence automatically.
+## 5. FX 153-172 (meditation aura): no art in the pre-HOO data; client draws the classic FX 115-119 (proposal for a server data patch, NOT applied)
+`Dat/Meditaciones.dat` (read by the server's `FileIO.LoadMeditations`, start-up only) makes the server send `MeditateToggle` fx = 153 for levels 1..12, 155 for 13..17, 157 for 18..24, 159 (25..28),
+161 (29..32), 163 (33..36), 165 (37..39), 167 (40..42), 169 (43..44), 171 (45..46) and 120 from 47, with 154/156/.../172 for criminals. `init/FXs.ini` and `init/fxs.ind` have `NumFxs=150` (upstream too, last changed 2024-04),
+so the pinned client has no animation for 151 and above and draws nothing. The classic meditation art is FX 115-120 (`Recursos.LoadComposedFx` maps them to the meditation animation; the server used them as `e_Meditaciones`
+before Dec 2025: 1-14 -> 115, 15-24 -> 116, 25-35 -> 117, 36-44 -> 118, 45-46 -> 119, 47+ -> 120).
+
+**Client (done):** `apps/web/src/meditation-fx.ts` draws an id missing from `FXs.ini` as the classic art of its tier, through the meditation animation path (+4, alpha 180). FX 115-119 are IsPNG=0 palette art, drawn additive
+(the classic 0.13 look, so the character shows through); FX 120 keeps the pinned normal blend. The 10 server tiers do not line up with the classic ones at levels 13-14 (tier 13-17 mixes 115 and 116) and 33-35 (tier 33-36 mixes 117 and 118), so each tier takes the majority art (13-17 -> 116, 33-36 -> 117).
+
+**Proposal (data only, nothing applied to the live server):** the file can make the server send 115-120 directly, with the same two tier ambiguities (the keys are the server's 10 tiers; the tier boundaries live in `Protocol.HandleMeditate`, not in the file). Replace in `C:\ao\Recursos\Dat\Meditaciones.dat`:
+```
+[FXsMEDITATIONSBYLEVEL]            [FXsMEDITATIONSCRIMINALBYLEVEL]  (same value on each criminal key)
+MeditationLevel1to12=115           MeditationCriminalLevel1to12=115
+MeditationLevel13to17=116          MeditationCriminalLevel13to17=116
+MeditationLevel18to24=116          MeditationCriminalLevel18to24=116
+MeditationLevel25to28=117          MeditationCriminalLevel25to28=117
+MeditationLevel29to32=117          MeditationCriminalLevel29to32=117
+MeditationLevel33to36=117          MeditationCriminalLevel33to36=117
+MeditationLevel37to39=118          MeditationCriminalLevel37to39=118
+MeditationLevel40to42=118          MeditationCriminalLevel40to42=118
+MeditationLevel43to44=118          MeditationCriminalLevel43to44=118
+MeditationLevel45to46=119          MeditationCriminalLevel45to46=119
+MeditationLevelMax=120 (unchanged)
+```
+Restart the server to load it (`LoadMeditations` runs at start-up). The client then receives ids that `FXs.ini` has and draws them as sent, identical to the substitution above. Undo: put the previous file back (keep a `.bak`) and restart.
+Exact classic tiers would need a code change (`HandleMeditate` ranges), which is not data.
 
 # wp04 (items-2) test data on the shared VB6 server DB (`C:\ao\server\Database.db`), applied 2026-11-21
 

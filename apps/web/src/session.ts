@@ -258,12 +258,8 @@ export class Session {
         // HandleMeditateToggle: StartFx(..., Fx, -1) loops until the toggle comes back with Fx = 0.
         meditationFx: (charIndex, fx) => {
           this.spells.effects = this.spells.effects.filter(effect => !(effect.charIndex === charIndex && effect.loops < 0));
-          if (fx !== 0) {
-            // An id FXs.ini has is the meditation animation as sent (normal blend, +4, alpha 180). A substituted classic FX 115-119 is IsPNG=0
-            // palette art that the pinned client draws through the ordinary FX list (additive, alpha 220, +20): no meditation flag.
-            const art = meditationArt(fx, id => spellTables.fx.has(`fx${id}`));
-            this.spells.addFx({ fx: art, charIndex, x: 0, y: 0, loops: -1, startedAt: this.clock(), ...(art === fx ? { meditation: true } : { aura: true }) });
-          }
+          // The meditation animation (Recursos.LoadComposedFx maps FX 115-120 to it): an id FXs.ini lacks (the server's 153-172) is drawn as its classic step.
+          if (fx !== 0) this.spells.addFx({ fx: meditationArt(fx, id => spellTables.fx.has(`fx${id}`)), charIndex, x: 0, y: 0, loops: -1, startedAt: this.clock(), meditation: true });
         },
       });
       this.options.receive(packet);
