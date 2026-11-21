@@ -129,13 +129,16 @@ export function doorClickTile(
 export const ObjType = {
   Tree: 4, Door: 6, Sign: 8, CastleSpawner: 10, Teleport: 19, Decoration: 20, Deposit: 22, Anvil: 27, Forge: 28, Mailbox: 47, FishingPool: 52,
 } as const;
-/** TileEngine_Map.EsObjetoFijo: the server never sends these, the client reads them from the map file. */
+/**
+ * Client TileEngine_Map.EsObjetoFijo (signs, trees, deposits, decorations): CambioDeArea keeps these on the map, and the client reads
+ * every object of the map file anyway. The SERVER's ModAreas only skips its own GameLogic.EsObjetoFijo, which is written
+ * `OBJType = OBJType = otSignBoards Or ...`: VB6 compares `(OBJType = OBJType) = 8`, i.e. `True = 8`, always False, so signs are NOT
+ * fixed there and the server DOES send them with ObjectCreate (trees, deposits and decorations are not sent). Keeping signs in this
+ * set is harmless: a server-sent sign lands on the same tile and wins (`objects.objectAt ?? fixed`).
+ */
 const FIXED_TYPES = new Set<number>([ObjType.Sign, ObjType.Tree, ObjType.Deposit, ObjType.Decoration]);
-/** TileEngine_RenderScreen, pass under characters: the object Select Case before "Layer 4 & chars". */
-const GROUND_PASS = new Set<number>([ObjType.Tree, ObjType.Door, ObjType.Teleport, ObjType.Sign, ObjType.Deposit, ObjType.Mailbox, ObjType.Forge, ObjType.Decoration, ObjType.FishingPool]);
 /** Same file, second pass of each row (drawn after that row's characters, with layer 4): "big objects". */
 const BIG_PASS = new Set<number>([ObjType.Tree, ObjType.Door, ObjType.Sign, ObjType.Deposit, ObjType.Mailbox, ObjType.Anvil, ObjType.Forge, ObjType.Decoration, ObjType.CastleSpawner]);
-export const drawsOnGround = (type: number) => GROUND_PASS.has(type);
 export const drawsOverCharacters = (type: number) => BIG_PASS.has(type);
 
 /** Fixed objects stored in the map file, keyed by tile (CargarMapa fills MapData.OBJInfo/ObjGrh from them). */
@@ -158,8 +161,9 @@ export function objectDraws(object: GroundObject | undefined, graphics: Readonly
   const info = object ? graphics.get(object.objIndex) : undefined;
   if (!info || info.grh <= 0) return [];
   const draws: ObjectDraw[] = [];
-  // Items on the floor (any other type) are not in the ground Select Case: they use the Else branch of the same pass.
-  if (GROUND_PASS.has(info.type) || !BIG_PASS.has(info.type)) draws.push({ pass: 'ground', grh: info.grh, type: info.type });
+  // The ground pass is a Select Case whose `Case Else` draws every other type too (items on the floor, but also anvils and castle
+  // spawners), so EVERY object with a graphic is drawn once under the characters.
+  draws.push({ pass: 'ground', grh: info.grh, type: info.type });
   if (BIG_PASS.has(info.type)) draws.push({ pass: 'row', grh: info.grh, type: info.type });
   return draws;
 }

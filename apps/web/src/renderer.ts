@@ -247,34 +247,42 @@ export class WorldRenderer {
     this.pools.forEach(pool => pool.reset());
     const minX = Math.max(1, Math.floor(cameraX / 32) - 10), maxX = Math.min(100, Math.ceil((cameraX + width) / 32) + 10);
     const minY = Math.max(1, Math.floor(cameraY / 32) - 2), maxY = Math.min(100, Math.ceil((cameraY + height) / 32) + 10);
-    for (let layer = 0; layer < 5; layer++) {
-      for (let y = minY; y <= maxY; y++) for (let x = minX; x <= maxX; x++) {
-        // VB6 finishes characters in a row, then draws that row's layer 4.
-        // Split that layer around the self row; roofs remain above everything.
-        const pool = this.pools[layer < 3 ? layer : layer === 4 ? 6 : y < session.position!.y ? 3 : 5]!;
-        const tile = (y - 1) * 100 + x - 1;
-        const object = session.mapObjects.objectAt(x, y) ?? this.fixed.get(tile);
-        // Objects (doors, trees, signs, items) sit between the second and third map layers, and big ones repeat in the row pass
-        // with layer 4, over that row's characters (RenderScreen). Trees fade when they cover the player.
-        if (object && (layer === 2 || layer === 3)) {
-          for (const draw of objectDraws(object, this.objectGraphics)) {
-            if (draw.pass !== (layer === 2 ? 'ground' : 'row')) continue;
-            const alpha = draw.type === ObjType.Tree && draw.pass === 'row' ? this.trees.step(tile, treeCoversPlayer(session.position!, x, y), dt) : 1;
-            this.draw(pool, this.animation(draw.grh), x * 32, y * 32, now, true, alpha);
-          }
-        }
-        // Traps (UpdateTrap) are drawn first, at alpha 100/255 (RenderScreen: .Trap before the objects).
-        if (layer === 2 && session.status.hasTrap(x, y)) this.draw(pool, this.animation(TRAP_GRH), x * 32, y * 32, now, true, TRAP_ALPHA);
-        const id = this.map.layers[layer]![tile]!;
-        if (!id) continue;
-        if (layer === 4) {
-          // Live VB6 roof rule: one alpha per roof trigger, 3x3 NearRoof, the player's own roof fades out.
-          const trigger = nearRoof(this.roofTrig, x, y);
-          // Roofs sit above the light map and the particles, so they take their tile's light as a tint (RenderScreen draws them with light_value).
-          this.draw(pool, this.animation(id), x * 32, y * 32, now, true, trigger ? this.roofs.alphaOf(trigger) : 1, this.fx!.roofTint(session.world, x, y));
-        } else this.draw(pool, this.animation(id), x * 32, y * 32, now, layer !== 0);
-      }
+    // RenderScreen order: layer 1, then layers 2 and 3 as WHOLE passes (RenderWalkableMapLayers), then ONE pass of traps and ground
+    // objects, then the row pass (characters, big objects, layer 4), then roofs. Index 2 of `layers` is VB6 Graphic(3), index 3 Graphic(4).
+    const each = (visit: (x: number, y: number, tile: number) => void) => {
+      for (let y = minY; y <= maxY; y++) for (let x = minX; x <= maxX; x++) visit(x, y, (y - 1) * 100 + x - 1);
+    };
+    for (const layer of [0, 1, 2]) {
+      each((x, y, tile) => { const id = this.map!.layers[layer]![tile]!; if (id) this.draw(this.pools[layer]!, this.animation(id), x * 32, y * 32, now, layer !== 0); });
     }
+    each((x, y, tile) => {
+      const pool = this.pools[2]!;
+      // Traps (UpdateTrap) first, at alpha 100/255, then the object Select Case (every type, `Case Else` included).
+      if (session.status.hasTrap(x, y)) this.draw(pool, this.animation(TRAP_GRH), x * 32, y * 32, now, true, TRAP_ALPHA);
+      const object = session.mapObjects.objectAt(x, y) ?? this.fixed.get(tile);
+      for (const draw of objectDraws(object, this.objectGraphics)) if (draw.pass === 'ground') this.draw(pool, this.animation(draw.grh), x * 32, y * 32, now, true);
+    });
+    each((x, y, tile) => {
+      // VB6 finishes characters in a row, then draws that row's big objects and layer 4. Split around the self row.
+      const pool = this.pools[y < session.position!.y ? 3 : 5]!;
+      const object = session.mapObjects.objectAt(x, y) ?? this.fixed.get(tile);
+      for (const draw of objectDraws(object, this.objectGraphics)) {
+        if (draw.pass !== 'row') continue;
+        // Trees fade when they cover the player.
+        const alpha = draw.type === ObjType.Tree ? this.trees.step(tile, treeCoversPlayer(session.position!, x, y), dt) : 1;
+        this.draw(pool, this.animation(draw.grh), x * 32, y * 32, now, true, alpha);
+      }
+      const id = this.map!.layers[3]![tile]!;
+      if (id) this.draw(pool, this.animation(id), x * 32, y * 32, now, true);
+    });
+    each((x, y, tile) => {
+      const id = this.map!.layers[4]![tile]!;
+      if (!id) return;
+      // Live VB6 roof rule: one alpha per roof trigger, 3x3 NearRoof, the player's own roof fades out.
+      const trigger = nearRoof(this.roofTrig, x, y);
+      // Roofs sit above the light map and the particles, so they take their tile's light as a tint (RenderScreen draws them with light_value).
+      this.draw(this.pools[6]!, this.animation(id), x * 32, y * 32, now, true, trigger ? this.roofs.alphaOf(trigger) : 1, this.fx!.roofTint(session.world, x, y));
+    });
     this.camera = { x: cameraX, y: cameraY };
     this.drawCharacters(session, position, now, cameraX, cameraY, width, height);
     this.drawEffects(session, now, position);

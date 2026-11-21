@@ -44,6 +44,13 @@ describe('trees and other fixed objects live in the map file, not in server pack
     expect(objectDraws({ objIndex: 200, amount: 1, elementalTags: 0 }, graphics)).toEqual([{ pass: 'ground', grh: 500, type: 11 }]);
     expect(objectDraws(undefined, graphics)).toEqual([]);
   });
+  it('draws an anvil and a castle spawner in the ground pass too: the Select Case Else is not only for items', () => {
+    const dat = parseObjectGraphics('[OBJ1]\nObjType=27\nGrhIndex=700\n[OBJ2]\nObjType=10\nGrhIndex=701\n[OBJ3]\nObjType=19\nGrhIndex=702\n');
+    const of = (objIndex: number) => objectDraws({ objIndex, amount: 1, elementalTags: 0 }, dat).map(d => d.pass);
+    expect(of(1)).toEqual(['ground', 'row']); // anvil: Else under characters, big object over them
+    expect(of(2)).toEqual(['ground', 'row']); // castle spawner
+    expect(of(3)).toEqual(['ground']);        // teleport: ground list only
+  });
   it('fades a tree to 130/255 in 150 ms when it is south of the player, and back', () => {
     expect(treeCoversPlayer({ x: 28, y: 45 }, 28, 50)).toBe(true);
     expect(treeCoversPlayer({ x: 28, y: 52 }, 28, 50)).toBe(false); // player south of the tree
