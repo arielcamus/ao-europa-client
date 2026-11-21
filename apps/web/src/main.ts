@@ -22,6 +22,8 @@ import { AudioSystem } from './audio-system.js';
 import './bank-trade.css';
 import { BankUI } from './bank-ui.js';
 import { TradeUI } from './trade-ui.js';
+import { PartyUI } from './party-ui.js';
+import { GuildUI } from './guild-ui.js';
 import { QuestWindows } from './quest-window.js';
 
 applyClassicLayout();
@@ -63,6 +65,16 @@ ui.onActivate = slot => guard(() => session?.itemActions.activate(slot));
 const audio = new AudioSystem(element('classic'), renderer, report);
 const bankUi = new BankUI(element('classic'), ui, report);
 const tradeUi = new TradeUI(element('classic'), viewport, ui, report);
+// wp07: party frames / member window and the guild forms. Packets go through the session's one door (sendPacket).
+const sendPackets = (...packets: (import('@ao/protocol').ClientPacket | undefined)[]) => {
+  try { for (const packet of packets) if (packet) session?.sendPacket(packet); } catch (error) { close(error instanceof Error ? error.message : String(error)); }
+};
+const partyUi = new PartyUI(viewport, element('classic'), renderer, packet => sendPackets(packet));
+// Group.HandleMouseInput: a group frame clicked while a spell is aimed casts it on that member (WriteActionOnGroupFrame).
+partyUi.onFrameClick = groupId => { if (session?.spells.targeting?.skill === 1) { sendPackets(session.party.actOnFrame(groupId)); session.spells.cancel(); } };
+const guildUi = new GuildUI(element('classic'), sendPackets);
+ui.bindMenu('Grupo', () => sendPackets(session?.party.requestWindow()));
+ui.bindMenu('Clanes', () => { if (session?.ready) sendPackets(session.guild.openGuildPanel()); });
 /** IsDialogOpen: the bank, Goliath and trade windows pause walking. */
 const transacting = () => bankUi.dialogOpen || tradeUi.dialogOpen;
 const questWindows = new QuestWindows(element('classic'), renderer, undefined, report);
@@ -136,7 +148,7 @@ async function boot() {
   });
 }
 function updateUi(now: number) {
-  ui.update(session); bankUi.update(session); tradeUi.update(session);
+  ui.update(session); bankUi.update(session); tradeUi.update(session); partyUi.update(session); guildUi.update(session);
   itemsUi.update(session);
   guard(() => craftingUi.update(session));
   if (!session) return;
@@ -299,6 +311,7 @@ viewport.addEventListener('pointermove', event => { if (event.pointerType === 'm
 viewport.addEventListener('pointerleave', () => { renderer.hoverTile = undefined; });
 viewport.addEventListener('pointerdown', event => {
   bankUi.closeOnWorldClick(); // frmMain.renderer_MouseDown unloads frmBancoObj and frmGoliath
+  partyUi.closeWindow(); guildUi.closeOnMapClick(); // ... and FrmGrupo and frmGuildList
   if (!event.isPrimary || !session?.ready) return;
   // While the server asked for a target (UsingSkill <> 0) any click or tap is a WorkLeftClick (ModGameplayUI), never a LeftClick.
   if (session.spells.targeting) {

@@ -26,6 +26,9 @@ import { WorldFx } from './fx-world.js';
 import { QuestsState } from './quests.js';
 import { QuestClientPacketId as QC, QuestServerPacketId as QS } from '@ao/protocol';
 
+import { PartyState } from './party.js';
+import { GuildState } from './guild.js';
+
 export interface Position { x: number; y: number }
 const inMap = (p: Position) => p.x >= 1 && p.y >= 1 && p.x <= 100 && p.y <= 100;
 export interface Motion { from: Position; to: Position; started: number; duration: number }
@@ -39,6 +42,10 @@ export class Session {
   /** Everybody on the map, with names, equipment, slides and overhead text (feat/npcs). */
   readonly tracker = new CharacterTracker();
   readonly combat = new CombatState();
+  /** Party frames and the member window (wp07). */
+  readonly party = new PartyState();
+  /** Guild forms and their data (wp07). */
+  readonly guild = new GuildState();
   readonly spells: SpellState;
   readonly items = new ItemsState();
   /** Time of day, light, weather, particles and projectiles (feat/world-fx). */
@@ -148,6 +155,9 @@ export class Session {
       });
       this.quests.receive(packet);
       this.spells.receive(packet);
+      this.party.selfCharIndex = this.charIndex;
+      this.party.receive(packet);
+      this.guild.receive(packet);
       this.items.receive(packet);
       this.bankTrade.receive(packet);
       this.world.receive(packet);
@@ -400,6 +410,11 @@ export class Session {
     const family = SEQUENCED_CLIENT_PACKETS[packet.id];
     this.send(family ? { ...packet, counter: this.next(family) } as ClientPacket : packet);
     return true;
+  }
+  /** Counterless party and guild requests (RequestGrupo, GuildRequestDetails ...); `send` still refuses a sequenced id without a shared counter. */
+  sendPacket(packet: ClientPacket): boolean {
+    if (!this.ready) return false;
+    this.send(packet); return true;
   }
   finish(message = 'Disconnected'): void {
     this.phase = 'closed'; this.error = message; this.credentials = undefined;

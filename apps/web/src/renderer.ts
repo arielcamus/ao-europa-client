@@ -304,6 +304,8 @@ export class WorldRenderer {
     if (!body && id > 0) { try { body = readBody(this.bodies, this.molds, this.graphics, id); this.bodyCache.set(id, body); } catch { return 0; } }
     return body?.bodyY ?? 0;
   }
+  /** Grh index of a head facing south (cabezas.ind), for overlays that draw only the head (party frames). */
+  headGrh(head: number): number | undefined { return this.heads[head]?.[2] || undefined; }
   /** Sprites of a stationary south-facing character, for the NPC dialog portrait. */
   portraitLayers(body: number, head: number) {
     return this.sprites?.layers({ body, head, weapon: 0, shield: 0, helmet: 0 } as never, 3) ?? [];
