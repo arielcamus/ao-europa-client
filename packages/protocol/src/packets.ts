@@ -11,6 +11,7 @@
 import { ProtocolError, Reader, Writer } from './binary.js';
 import type { SafeArrayInt8 } from './binary.js';
 import { encodeFrame } from './frame.js';
+import { isPreHoo } from './profile.js';
 import { doorClientCodecs, doorServerCodecs } from './packets/doors.js';
 import { npcsServerCodecs } from './packets/npcs.js';
 import { chatClientCodecs, chatServerCodecs } from './packets/chat.js';
@@ -159,8 +160,8 @@ const accountList: Codec<{ characters: AccountCharacter[] }> = {
   },
 };
 
-// Every field, including the final clanAlignment byte, is present in both VB6 trees.
-const characterCreate = struct({
+// clanAlignment is the one field added after the pin (HOO-era server only): read when a byte remains, written only on the 'live' profile.
+const characterCreateBase = struct({
   charIndex: int16, body: int16, head: int16, heading: byte, x: byte, y: byte,
   weapon: int16, shield: int16, helmet: int16, cart: int16, backpack: int16,
   fx: int16, fxLoops: int16, name: string, status: byte, privileges: byte, particleFx: byte,
@@ -168,8 +169,18 @@ const characterCreate = struct({
   resistanceAura: string, otherAura: string, shieldAura: string,
   speeding: real32, npc: byte, appear: byte, groupIndex: int16, clanIndex: int16, clanLevel: byte,
   minHp: int32, maxHp: int32, minMana: int32, maxMana: int32,
-  symbol: byte, flags: byte, userType: byte, team: byte, flag: byte, npcNumber: int16, clanAlignment: byte,
+  symbol: byte, flags: byte, userType: byte, team: byte, flag: byte, npcNumber: int16,
 });
+const characterCreate: Codec<Value<typeof characterCreateBase> & { clanAlignment: number }> = {
+  read(reader) {
+    const base = characterCreateBase.read(reader);
+    return { ...base, clanAlignment: reader.remaining ? reader.readInt8() : 0 };
+  },
+  write(writer, value) {
+    characterCreateBase.write(writer, value);
+    if (!isPreHoo()) writer.writeInt8(value.clanAlignment ?? 0);
+  },
+};
 export type CharacterCreate = Value<typeof characterCreate>;
 
 const intervals = struct({
@@ -202,7 +213,7 @@ const consoleMessage: Codec<{ message: string; font: number; channel?: number }>
   },
   write(writer, value) {
     writer.writeString(value.message); writer.writeInt8(value.font);
-    if (value.channel !== undefined) writer.writeInt8(value.channel);
+    if (value.channel !== undefined && !isPreHoo()) writer.writeInt8(value.channel);
   },
 };
 

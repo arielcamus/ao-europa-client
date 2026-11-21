@@ -15,7 +15,12 @@ import './items.css';
 
 const BUFF_MULTIPLIER = 2, BUFF_FULL_RED = 204, BUFF_CHANNEL_MAX = 255;
 /** frmMain.GetBuffColor: white until buffed, then fading to red. */
-export function buffColor(current: number, base: number): string {
+/** UpdateBuff at 619e69d (pinned FYA has no base): >= 35 is eHighBuff RGB(204,0,0), >= 25 eMinBuff RGB(204,100,100), else white. */
+export function pinnedBuffColor(current: number): string {
+  return current >= 35 ? 'rgb(204,0,0)' : current >= 25 ? 'rgb(204,100,100)' : '#fff';
+}
+export function buffColor(current: number, base: number | undefined): string {
+  if (base === undefined) return pinnedBuffColor(current);
   if (base <= 0 || current <= base) return '#fff';
   const ratio = Math.min(1, (current - base) / (base * BUFF_MULTIPLIER - base));
   const red = Math.trunc(BUFF_CHANNEL_MAX - (BUFF_CHANNEL_MAX - BUFF_FULL_RED) * ratio), channel = Math.trunc(BUFF_CHANNEL_MAX * (1 - ratio));

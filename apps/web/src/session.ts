@@ -365,7 +365,7 @@ export class Session {
           const copy = this.characters.get(packet.charIndex);
           if (!copy) break;
           const parts = splitTag(packet.tag);
-          this.characters.set(packet.charIndex, { ...copy, clanIndex: packet.clanIndex, clanAlignment: packet.clanAlignment, ...(parts ? { name: packet.tag, status: packet.status, groupIndex: packet.groupIndex } : {}) });
+          this.characters.set(packet.charIndex, { ...copy, ...(packet.clanIndex !== undefined ? { clanIndex: packet.clanIndex } : {}), ...(packet.clanAlignment !== undefined ? { clanAlignment: packet.clanAlignment } : {}), ...(parts ? { name: packet.tag, status: packet.status, groupIndex: packet.groupIndex } : {}) });
           break;
         }
         case SS.UpdateFlag: { const copy = this.characters.get(packet.charIndex); if (copy) this.characters.set(packet.charIndex, { ...copy, flag: packet.flag }); break; }

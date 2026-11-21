@@ -10,6 +10,7 @@
  * text so a packet round-trips byte for byte.
  */
 import { Reader, Writer } from '../binary.js';
+import { isPreHoo } from '../profile.js';
 
 export enum GuildServerPacketId {
   GuildList = 56,
@@ -100,11 +101,33 @@ const guildConfig: GuildCodec<{
   },
 };
 
+/**
+ * exp and exp-needed ended both packets: Int16 pair on the pinned server (WriteGuildNews / WriteGuildLeaderInfo at 9ccd7fad), Int32 pair on
+ * the HOO-era one. Nothing follows them, so the bytes left (4 or 8) tell the two apart; the writer follows the server profile.
+ */
+function withExp<S extends Record<string, GuildCodec<unknown>>>(head: S): GuildCodec<{ [K in keyof S]: S[K] extends GuildCodec<infer T> ? T : never } & { exp: number; expNeeded: number }> {
+  const base = struct(head);
+  return {
+    read(reader) {
+      const value = base.read(reader) as Record<string, unknown>;
+      const wide = reader.remaining >= 8;
+      value['exp'] = wide ? reader.readInt32() : reader.readInt16();
+      value['expNeeded'] = wide ? reader.readInt32() : reader.readInt16();
+      return value as never;
+    },
+    write(writer, value) {
+      base.write(writer, value as never);
+      const put = isPreHoo() ? (n: number) => writer.writeInt16(n) : (n: number) => writer.writeInt32(n);
+      put(value.exp); put(value.expNeeded);
+    },
+  };
+}
+
 export const guildServerCodecs = {
   /** WriteGuildList: one String8 of "name-alignment" entries. */
   [GuildServerPacketId.GuildList]: struct({ guilds: string }),
   /** WriteGuildNews (what a non-leader member sees): news, guilds (allies/enemies list), members (leader first), level, exp, exp needed. */
-  [GuildServerPacketId.GuildNews]: struct({ news: string, guilds: string, members: string, level: byte, exp: int32, expNeeded: int32 }),
+  [GuildServerPacketId.GuildNews]: withExp({ news: string, guilds: string, members: string, level: byte }),
   [GuildServerPacketId.OfferDetails]: struct({ details: string }),
   [GuildServerPacketId.AlianceProposalsList]: struct({ guilds: string }),
   [GuildServerPacketId.PeaceProposalsList]: struct({ guilds: string }),
@@ -115,8 +138,8 @@ export const guildServerCodecs = {
     citizensKilled: int32, criminalsKilled: int32,
   }),
   /** WriteGuildLeaderInfo (frmGuildLeader). */
-  [GuildServerPacketId.GuildLeaderInfo]: struct({
-    guilds: string, members: string, news: string, joinRequests: string, level: byte, exp: int32, expNeeded: int32,
+  [GuildServerPacketId.GuildLeaderInfo]: withExp({
+    guilds: string, members: string, news: string, joinRequests: string, level: byte,
   }),
   /** WriteGuildDetails (frmGuildBrief). */
   [GuildServerPacketId.GuildDetails]: struct({

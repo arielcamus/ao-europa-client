@@ -3,8 +3,9 @@
 // forth and talks, and answers left clicks the way the VB6 LookatTile does. Use when the VB6 server is down.
 // Usage: AO_MOCK_PORT=7716 node tools/npcs-mock-server.mjs
 import net from 'node:net';
-import { FrameDecoder, decodeClientPacket, encodeServerFrame, ServerPacketId as S, NpcsServerPacketId as N } from '../packages/protocol/dist/index.js';
+import { applyWireProfileFromEnv, FrameDecoder, decodeClientPacket, encodeServerFrame, ServerPacketId as S, NpcsServerPacketId as N } from '../packages/protocol/dist/index.js';
 
+applyWireProfileFromEnv(process.env);
 const port = Number(process.env.AO_MOCK_PORT ?? 7716);
 const base = { cart: 0, backpack: 0, fx: 0, fxLoops: 0, particleFx: 0, headAura: '', weaponAura: '', bodyAura: '', damageAura: '', resistanceAura: '', otherAura: '', shieldAura: '',
   speeding: 1, appear: 0, groupIndex: 0, clanIndex: 0, clanLevel: 0, minHp: 100, maxHp: 100, minMana: 0, maxMana: 0, symbol: 0, flags: 1, userType: 0, team: 0, flag: 0, clanAlignment: 0, privileges: 0 };

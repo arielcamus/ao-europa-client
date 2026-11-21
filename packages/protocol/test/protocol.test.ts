@@ -98,6 +98,8 @@ describe('VB6 paired writer/reader field layouts against C++ goldens', () => {
       for (let length = 0; length < body.length; length++) {
         // A 2-byte Connected body is the valid non-debug variant.
         if (name === 'ConnectedDebug' && length === 2) continue;
+        // CharacterCreate without its trailing clanAlignment byte is the valid pinned (9ccd7fad) layout; see profile.ts.
+        if (name === 'CharacterCreate' && length === body.length - 1) continue;
         expect(() => decodeServerPacket(body.slice(0, length)), `${name} length=${length}`).toThrow();
       }
       expect(() => decodeServerPacket(bytes(hex(body) + '020000'))).toThrow(/id=/);
