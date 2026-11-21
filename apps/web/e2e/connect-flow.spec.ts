@@ -45,6 +45,14 @@ test('connect flow: account screen, refused then accepted character creation, ex
   await expect(page.locator('#connect-stage')).toHaveAttribute('data-screen', 'account');
   await expect(page.locator('.cs-slot-name')).toHaveText('Mockchar');
   await expect(page.locator('.cs-info')).toContainText('Nivel: 4');
+  // Select_part (stream 203) is ONE swirl centred on the selected slot, not a box: its layout box is the 128 px particle sprite at
+  // (x + 32 - 16 + 16 - 64, y + 5 + 34 - 96) of the slot origin (216, 283) and its centre lies on the centre of the slot's hit rect.
+  await expect(page.locator('.cs-select')).toHaveCount(1);
+  const glow = await page.locator('.cs-select').evaluate(el => { const h = el as HTMLElement; return { left: h.offsetLeft, top: h.offsetTop, width: h.offsetWidth, height: h.offsetHeight }; });
+  const slot = await page.locator('.cs-slot-hit:not([hidden])').first().evaluate(el => { const h = el as HTMLElement; return { left: h.offsetLeft, top: h.offsetTop, width: h.offsetWidth, height: h.offsetHeight }; });
+  expect(glow).toEqual({ left: 184, top: 226, width: 128, height: 128 });
+  expect(Math.abs(glow.left + glow.width / 2 - (slot.left + slot.width / 2))).toBeLessThanOrEqual(3);
+  expect(Math.abs(glow.top + glow.height / 2 - (slot.top + slot.height / 2))).toBeLessThanOrEqual(3);
   // Crear -> frmCrearPersonaje; a bad name is refused by the client with frmMensaje (ValidarNombre), no packet is sent.
   await page.getByRole('button', { name: 'Crear personaje' }).first().click();
   await expect(page.locator('#connect-stage')).toHaveAttribute('data-screen', 'create');

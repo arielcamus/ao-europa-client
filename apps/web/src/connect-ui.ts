@@ -10,6 +10,8 @@ import type { WorldRenderer } from './renderer.js';
 import type { NewCharacter } from './session.js';
 import { keyedSheet } from './grh-canvas.js';
 import { fetchText, parseIni } from './assets.js';
+import { fxTables } from './fx-world.js';
+import { averageTint, groupTint } from './fx-particles.js';
 import { CREATE_BODY, CREATE_BODY_SMALL, HOME_CITY, HOME_CITY_NAME, TEXT, headsFor, isSmallRace, raceModifiers, rotateClass, validateCharacterName } from './connect-text.js';
 
 export type ConnectScreen = 'login' | 'account' | 'create' | 'none';
@@ -26,6 +28,8 @@ export interface ConnectHooks {
 }
 type Rect = readonly [number, number, number, number];
 const MAX_CHARACTERS = 10;
+/** Select_part: Engine_Select_Particle_Set(203), stream "Seleccionar PJ". */
+const SELECT_PARTICLE = 203;
 
 /** Account screen hit areas (frmConnect.render_MouseUp, e_state_account_screen): left, top, width, height. */
 export const ACCOUNT_RECTS: Record<'create' | 'delete' | 'transfer' | 'logout' | 'play' | 'close', Rect> = {
@@ -56,6 +60,9 @@ export class ConnectUI {
   private characters: AccountCharacter[] = [];
   private selected = 0;
   private slotsBox = document.createElement('div');
+  private selection: HTMLElement | undefined;
+  /** A head the picker may offer: cabezas.ind gives it a south-facing Grh that exists in graficos.ind. */
+  private readonly drawableHead = (head: number) => { const grh = this.renderer.headGrh(head); return !!grh && this.renderer.hasGraphic(grh); };
   private info = document.createElement('div');
   private assistantText = document.createElement('div');
   private assistantIndex = -1;
@@ -156,13 +163,44 @@ export class ConnectUI {
     this.renderSlots();
     this.setScreen('account');
   }
+  /**
+   * RenderAccountCharacters: Particle_Group_Render(Select_part, x + 32, y + 5) for the selected slot. Select_part is stream 203
+   * "Seleccionar PJ" of particles.ind: ONE additive, tinted, slowly spinning swirl (Grh 20142, 128 px stretched to resizeX x resizeY),
+   * not a box. Its draw origin is the anchor + the particle offset (x1 - 16, y1 - 16) + the Grh_Render recentring of a frame that is
+   * not 32 px (16 - width / 2, 32 - height), so it is centred about 9 px left of and 10 px above the middle of the art frame.
+   */
+  private placeSelection(generation: number) {
+    this.selection?.remove(); this.selection = undefined;
+    const stream = fxTables.streams[SELECT_PARTICLE - 1];
+    if (!stream || !this.selectedCharacter) return;
+    const { x, y } = slotOrigin(this.selected);
+    const size = stream.resize ? { w: stream.resizeY, h: stream.resizeX } : { w: 128, h: 128 };
+    const tint = averageTint(groupTint(stream, false, false));
+    void this.renderer.graphic(stream.grhList[0]!).then(frame => {
+      if (generation !== this.generation) return;
+      const left = x + 32 + (stream.x1 - 16) + (16 - Math.floor(frame.width / 2)), top = y + 5 + (stream.y1 - 16) + (32 - frame.height);
+      const el = document.createElement('div'); el.className = 'cs-select'; el.dataset.slot = String(this.selected);
+      el.style.cssText = `left:${left}px;top:${top}px;width:${size.w}px;height:${size.h}px;--tint:rgb(${tint.r},${tint.g},${tint.b});--spin:${Math.max(1, 360 / ((stream.spinL + stream.spinH) / 2 / 5 * 60))}s`;
+      // The group tint multiplies the texture (vertex colours); the canvas keeps the alpha and scales to the resize box.
+      const swirl = document.createElement('canvas'); swirl.className = 'cs-select-swirl'; swirl.width = frame.width; swirl.height = frame.height;
+      swirl.style.cssText = `width:${size.w}px;height:${size.h}px`;
+      void keyedSheet(frame.file).then(sheet => {
+        const ctx = swirl.getContext('2d', { willReadFrequently: true })!;
+        ctx.drawImage(sheet, frame.x, frame.y, frame.width, frame.height, 0, 0, frame.width, frame.height);
+        const pixels = ctx.getImageData(0, 0, frame.width, frame.height);
+        for (let i = 0; i < pixels.data.length; i += 4) { pixels.data[i] = pixels.data[i]! * tint.r / 255; pixels.data[i + 1] = pixels.data[i + 1]! * tint.g / 255; pixels.data[i + 2] = pixels.data[i + 2]! * tint.b / 255; }
+        ctx.putImageData(pixels, 0, 0);
+      });
+      el.append(swirl); this.account.append(el); this.selection = el;
+    });
+  }
   private renderSlots() {
     const generation = ++this.generation;
     this.slotsBox.replaceChildren();
     this.account.querySelectorAll<HTMLButtonElement>('.cs-slot-hit').forEach(b => { b.hidden = Number(b.dataset.slot) > this.characters.length; b.setAttribute('aria-label', this.characters[Number(b.dataset.slot) - 1]?.name ?? ''); });
     this.characters.forEach((character, index) => {
       const slot = index + 1, { x, y } = slotOrigin(slot);
-      const box = document.createElement('div'); box.className = `cs-slot${slot === this.selected ? ' cs-selected' : ''}`; box.style.cssText = `left:${x - 8}px;top:${y - 20}px`;
+      const box = document.createElement('div'); box.className = 'cs-slot'; box.style.cssText = `left:${x - 8}px;top:${y - 20}px`;
       const canvas = document.createElement('canvas'); canvas.width = 80; canvas.height = 96; box.append(canvas);
       const color = this.renderer.pjColor(ACCOUNT_COLOR[character.status] ?? 50);
       const name = document.createElement('div'); name.className = 'cs-slot-name'; name.textContent = character.name; name.style.color = `rgb(${color.r},${color.g},${color.b})`; box.append(name);
@@ -171,6 +209,7 @@ export class ConnectUI {
       void this.drawCharacter(canvas, { body: character.body, head: boat ? 0 : character.head, helmet: boat ? 0 : character.helmet, shield: boat ? 0 : character.shield, weapon: boat ? 0 : character.weapon }, 3, 23, 30, boat ? 0 : character.backpack)
         .then(() => { if (generation !== this.generation) canvas.remove(); });
     });
+    this.placeSelection(generation);
     const character = this.selectedCharacter;
     this.info.replaceChildren();
     if (!character) return;
@@ -233,12 +272,12 @@ export class ConnectUI {
   /** IniciarCrearPj: Humano, Hombre, Mago, the second head of the list. */
   private startCreate() {
     this.race = 0; this.gender = 0; this.cls = 0; this.heading = 3; this.nameInput.value = '';
-    this.heads = headsFor(this.race, this.gender); this.head = Math.min(1, this.heads.length - 1);
+    this.heads = headsFor(this.race, this.gender, this.drawableHead); this.head = Math.min(1, this.heads.length - 1);
     this.applyRace();
   }
   /** lstRaza_Click / lstGenero_Click: DameOpciones picks a random head of the new list. */
   private applyRace(randomHead = false) {
-    this.heads = headsFor(this.race, this.gender);
+    this.heads = headsFor(this.race, this.gender, this.drawableHead);
     if (randomHead) this.head = Math.floor(Math.random() * this.heads.length);
     this.modifiers = this.ini ? raceModifiers(this.ini, this.race) : [0, 0, 0, 0, 0];
     this.refresh();

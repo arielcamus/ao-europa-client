@@ -25,6 +25,12 @@ describe('head lists (ModCabezas.DameOpciones = the server ValidarCabeza ranges)
       expect(heads.every(h => valid(race, gender, h)), `${race}/${gender}`).toBe(true);
     }
   });
+  it('a head the art never drew is not offered, while the server still accepts it', () => {
+    const undrawn = new Set([778, 779, 791]);
+    const heads = headsFor(0, 0, h => !undrawn.has(h));
+    expect(heads).toHaveLength(52); expect(heads).not.toContain(778); expect(heads).toContain(41);
+    expect(headsFor(0, 0, () => false)).toHaveLength(55); // nothing drawable: fall back to the full server list rather than an empty picker
+  });
   it('humans (male) have 41 + 14 heads, dwarves 45, gnomes 30', () => {
     expect(headsFor(0, 0)).toHaveLength(55); expect(headsFor(4, 0)).toHaveLength(45); expect(headsFor(3, 0)).toHaveLength(30);
   });

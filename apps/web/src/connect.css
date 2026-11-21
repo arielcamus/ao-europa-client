@@ -16,7 +16,10 @@
 .cs-slots, .cs-info { position: absolute; inset: 0; pointer-events: none; }
 .cs-slot { position: absolute; width: 80px; height: 96px; }
 .cs-slot canvas { position: absolute; left: 0; top: 0; }
-.cs-slot.cs-selected::before { content: ''; position: absolute; left: 4px; top: 16px; width: 71px; height: 85px; box-shadow: 0 0 10px 2px #e8b84a; background: #e8b84a22; }
+/* Select_part (stream 203): an additive, tinted swirl spinning slowly behind the character, not a box. */
+.cs-select { z-index: 2; position: absolute; isolation: isolate; mix-blend-mode: plus-lighter; pointer-events: none; animation: cs-spin var(--spin, 15s) linear infinite; }
+.cs-select-swirl { display: block; }
+@keyframes cs-spin { to { rotate: 360deg; } }
 .cs-slot-name { position: absolute; left: -14px; width: 108px; top: 82px; text-align: center; font: bold 11px/13px Tahoma, Arial, sans-serif; text-shadow: 1px 1px #000, -1px -1px #000; white-space: nowrap; overflow: hidden; }
 .cs-info > div { position: absolute; left: 391px; width: 240px; text-align: center; font: bold 12px/14px Tahoma, Arial, sans-serif; text-shadow: 1px 1px #000; }
 .cs-text { position: absolute; white-space: nowrap; font: 11px/14px Tahoma, Arial, sans-serif; color: #fff; text-shadow: 1px 1px #000; pointer-events: none; }
@@ -36,7 +39,7 @@
 #login { top: 471px !important; z-index: 16; }
 .cs-check { position: absolute; width: 17px; height: 17px; padding: 0; border: 0; background: transparent; }
 .cs-check[aria-checked="true"] { background: var(--check) center / 100% 100% no-repeat; }
-#loading-card { position: absolute; z-index: 50; left: 431px; top: 331px; width: 161px; height: 106px; background-size: 100% 100%; display: grid; place-items: end center; padding-bottom: 14px; font: bold 11px Tahoma, Arial, sans-serif; color: #fff; text-shadow: 1px 1px #000; }
+#loading-card { position: absolute; z-index: 50; left: 431px; top: 331px; width: 161px; height: 106px; background-size: 100% 100%; }
 #loading-cancel { position: absolute; z-index: 51; }
 #connect-flash { position: absolute; z-index: 4; pointer-events: none; opacity: 0; }
 /* The stage is a backdrop: clicks reach the HUD buttons below (the options window is available from the login screen, as before); only its own controls take them. */

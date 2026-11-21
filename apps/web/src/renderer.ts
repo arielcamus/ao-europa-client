@@ -306,6 +306,7 @@ export class WorldRenderer {
     return body?.bodyY ?? 0;
   }
   /** Grh index of a head facing south (cabezas.ind), for overlays that draw only the head (party frames). */
+  hasGraphic(id: number): boolean { return this.graphics.has(id); }
   headGrh(head: number): number | undefined { return this.heads[head]?.[2] || undefined; }
   /** Sprites of a stationary character with its equipment (account screen, character creation), in the VB6 layer order for `heading` (1 N, 2 E, 3 S, 4 W). */
   characterLayers(char: { body: number; head: number; weapon?: number; shield?: number; helmet?: number }, heading = 3) {
