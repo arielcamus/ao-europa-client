@@ -46,7 +46,9 @@ export function sql(statement: string): string {
 /** Log the own character out, run `UPDATE user SET <set> WHERE id = <id>`, log back in. Returns after the settle. */
 export async function dbUpdateOwn(c: Ctx, set: string) {
   if (!c.own) c.blocked('DB updates are only done on the harness\'s own character');
-  const id = c.player.characters.find(ch => ch.name === c.charName)!.id;
+  // right after creation the account session has no character list: fall back to the id the DB holds for this name
+  const id = c.player.characters.find(ch => ch.name === c.charName)?.id ?? Number(sql(`select id from user where name='${c.charName.replace(/'/g, "''")}';`));
+  if (!Number.isInteger(id) || id <= 0) throw new Error(`cannot resolve the character id of ${c.charName}`);
   // a clean /SALIR (countdown, or at once on a safe map) makes the server save and clear is_logged; a dropped socket leaves it set for minutes
   const p0 = c.player, pm = p0.mark(); p0.say('/SALIR');
   await p0.until(() => p0.closed || p0.rx.slice(pm).some(r => r.name === 'Disconnect'), 25_000, 'logout').catch(() => undefined);
@@ -95,6 +97,7 @@ export async function spawnCreature(c: Ctx, npcNumber: number) {
 /** Kills exactly the creature this run spawned: select it by clicking its CURRENT tile on the GM, check the name, then /RMATA. */
 export async function killMine(c: Ctx, mine: { charIndex: number; name: string }) {
   const g = c.gm, cur = g.chars.get(mine.charIndex); if (!cur) return false; // already gone
+  if (cur.name !== mine.name) return false; // the index was reused by something else: never kill it
   g.send({ id: DOOR.LeftClick, x: cur.x, y: cur.y, counter: 0 } as ClientPacket); await g.sleep(700);
   g.gm('/RMATA'); await g.sleep(900);
   return true;

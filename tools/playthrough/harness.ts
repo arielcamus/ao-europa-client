@@ -5,7 +5,7 @@ import { Sess, SERVER } from './session.js';
 import type { Page } from '@playwright/test';
 
 export type Outcome = 'pass' | 'fail' | 'blocked';
-export interface StepResult { id: string; outcome: Outcome; detail: string; ms: number; evidence?: string }
+export interface StepResult { id: string; outcome: Outcome; detail: string; ms: number; evidence?: string; at?: string }
 export class Blocked extends Error {}
 export interface Env { relogin: (which?: 'player' | 'gm') => Promise<void>; gmName: string; email: string; password: string; charName: string; playerFresh: boolean; own: boolean; gm: Sess; player: Sess; page?: Page; webBase: string; creation: { attempts: number; ok: boolean; errors: string[] }; fixtureDir: string; shared: Record<string, unknown>; shots: string }
 export interface Ctx extends Env {
@@ -53,7 +53,7 @@ export async function runSteps(env: Env, only: string[] | undefined, log: (m: st
       if (e instanceof Blocked) { outcome = 'blocked'; detail = e.message; }
       else { outcome = 'fail'; detail = `${e instanceof Error ? e.message : String(e)}${notes.length ? ` [ok so far: ${notes.join('; ')}]` : ''}`; }
     }
-    const r = { id, outcome, detail: detail.slice(0, 900), ms: Date.now() - t };
+    const r = { id, outcome, detail: detail.slice(0, 900), ms: Date.now() - t, at: new Date().toISOString() };
     results.push(r);
     log(`${outcome.toUpperCase().padEnd(7)} ${id} ${r.detail.slice(0, 160)}`);
   }

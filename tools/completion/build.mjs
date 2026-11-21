@@ -18,7 +18,7 @@ const esc = (s) => String(s ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
 export function ptStats(pt) {
   const steps = pt.categories.flatMap((c) => c.steps);
   const n = (f) => steps.filter(f).length;
-  return { total: steps.length, passing: n((s) => s.status === 'passing'), failing: n((s) => s.status === 'failing'), blocked: n((s) => s.status === 'blocked'), recorded: n((s) => s.status === 'recorded'), inFlight: n((s) => s.status === 'in flight'), auto: n((s) => s.mode === 'auto'), manual: n((s) => s.mode === 'manual') };
+  return { total: steps.length, passing: n((s) => s.status.startsWith('passing')), failing: n((s) => s.status === 'failing'), blocked: n((s) => s.status === 'blocked'), recorded: n((s) => s.status === 'recorded'), inFlight: n((s) => s.status === 'in flight'), auto: n((s) => s.mode === 'auto'), manual: n((s) => s.mode === 'manual') };
 }
 
 export function renderPlaythrough(pt) {
@@ -146,13 +146,18 @@ export function load() {
   // WP-D: the harness report (pnpm playthrough) overrides the hand-kept status of every step it ran.
   const reportFile = join(ROOT, 'tools', 'completion', 'playthrough-report.json');
   if (existsSync(reportFile)) {
-    const byId = new Map(JSON.parse(readFileSync(reportFile, 'utf8')).results.map((r) => [r.id, r]));
+    const results = JSON.parse(readFileSync(reportFile, 'utf8')).results;
+    const byId = new Map(results.map((r) => [r.id, r]));
+    // a partial run (AO_STEPS) merges into the report, so a step can be older than the newest run: say so (12 h tolerance, a full run takes hours)
+    const newest = Math.max(0, ...results.map((r) => Date.parse(r.at ?? '') || 0));
+    const staleNote = (r) => { const t = Date.parse(r.at ?? ''); if (!t) return 'stale (run date not recorded)'; return newest - t > 12 * 3600e3 ? `stale (from ${r.at.slice(0, 10)})` : ''; };
     for (const c of pt.categories) for (const s of c.steps) {
       const r = byId.get(s.id);
       if (!r) continue;
       // pass / fail always win; blocked only replaces 'untested' (a protocol-level 'recorded' or an 'in flight' PR stays visible)
-      if (r.outcome === 'pass') s.status = 'passing'; else if (r.outcome === 'fail') s.status = 'failing'; else if (s.status === 'untested') s.status = 'blocked';
-      s.how = `harness ${r.outcome}: ${r.detail}`.slice(0, 400) + (s.how ? ` | before: ${s.how.slice(0, 120)}` : '');
+      if (r.outcome === 'pass') s.status = r.manual ? 'passing (hand-merged)' : 'passing'; else if (r.outcome === 'fail') s.status = 'failing'; else if (s.status === 'untested') s.status = 'blocked';
+      const tags = [r.at ? `run ${r.at.slice(0, 16).replace('T', ' ')}Z` : '', staleNote(r), r.note || ''].filter(Boolean).join(', ');
+      s.how = `harness ${r.outcome}${tags ? ` (${tags})` : ''}: ${r.detail}`.slice(0, 400) + (s.how ? ` | before: ${s.how.slice(0, 120)}` : '');
     }
   }
   return { cov, data, pt };

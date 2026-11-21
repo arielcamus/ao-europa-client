@@ -34,7 +34,7 @@
     {
      "id": "ACC-04",
      "step": "Read the starting position of a new character",
-     "expected": "Code sets .Hogar = cForgat regardless of the Hogar value the client sent (the client value is only range-checked 1..CITY_COUNT), and spawns at Cities(Hogar) = Forgat map 517 x48 y65 per Dat/Ciudades.Dat. CONTRADICTS the common belief that the chosen home city decides the spawn. The /HOGAR target after death is the same Hogar.",
+     "expected": "Code sets .Hogar = cForgat regardless of the Hogar value the client sent (the client value is only range-checked 1..CITY_COUNT), and spawns at Cities(Hogar) = Forgat; Dat/Ciudades.Dat says map 517 x48 y65, but the server's documented Forgat data patch (docs/DATA-PATCHES.md section 6) moves the spawn to 751:60,57. CONTRADICTS the common belief that the chosen home city decides the spawn. The /HOGAR target after death is the same Hogar.",
      "source": "TCP.bas:ConnectNewUser (.Hogar = cForgat; .pos = Cities(.Hogar)); Ciudades.Dat [Forgat]",
      "mode": "auto",
      "how": "one bridge session on a throwaway account, create two chars with different Hogar bytes and compare first PosUpdate / map",
