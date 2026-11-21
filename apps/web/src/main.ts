@@ -473,7 +473,7 @@ window.addEventListener('keydown', event => {
 window.addEventListener('keyup', event => {
   keys.delete(event.code);
   // ModGameplayUI KeyUp: P (80) while PescandoEspecial is the try at the special fish (only when no text box has the focus).
-  if (event.code === 'KeyP' && session?.craftingState.fishing.active && !(event.target instanceof HTMLElement && event.target.closest('input, textarea'))) guard(() => session?.crafting.fishingKey());
+  if (event.code === 'KeyP' && session?.craftingState.fishing.active && !transacting() && !(session.items.shopOpen) && !(event.target instanceof HTMLElement && event.target.closest('input, textarea'))) guard(() => session?.crafting.fishingKey());
 });
 window.addEventListener('blur', clearInput);
 window.addEventListener('resize', clearInput);

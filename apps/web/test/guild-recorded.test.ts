@@ -91,5 +91,12 @@ describe('recorded guild lifecycle: accept, member news, kick', () => {
     expect(member.news).toMatchObject({ members: ['Wintest', 'Windowsapp'], level: 1, exp: 0, expNeeded: 750 });
     expect(member.news?.news).toContain('WinGuild');
     expect(member.details?.memberCount).toBe(2);
+    // Kick: the recorded c2s 32 is GuildKickMember with the member's name, and the refreshed panel no longer lists her.
+    const kicks = leader.filter(r => r.dir === 'c2s' && r.id === GC.GuildKickMember).map(client);
+    expect(kicks).toEqual([{ id: GC.GuildKickMember, userName: 'Windowsapp' }]);
+    const after = new GuildState(); let panels = 0;
+    for (const row of leader.filter(r => r.dir === 's2c')) { const packet = server(row); if (!('unknown' in packet)) after.receive(packet); if (packet.id === GS.GuildLeaderInfo) panels++; }
+    expect(panels).toBeGreaterThanOrEqual(3);
+    expect(after.leader?.members).toEqual(['Wintest']);
   });
 });

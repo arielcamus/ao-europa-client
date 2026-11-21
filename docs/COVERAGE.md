@@ -10,9 +10,15 @@ Scanned refs: `main`
 
 ## Headline
 
+<<<<<<< HEAD
 - **Packets covered (merged + open branches): 512 of 523 = 97.9%.** Merged on main only: 512 = 97.9%.
   - Server to client: 202 of 207. Client to server: 310 of 316. Packets with a recorded VB6 fixture: 262.
 - **Forms covered: 53 of 86 = 61.6%** (5 more partially, 67.4% started).
+=======
+- **Packets covered (merged + open branches): 510 of 523 = 97.5%.** Merged on main only: 510 = 97.5%.
+  - Server to client: 200 of 207. Client to server: 310 of 316. Packets with a recorded VB6 fixture: 271.
+- **Forms covered: 56 of 86 = 65.1%** (1 more partially, 66.3% started).
+>>>>>>> 6591039 (fix(windows): review fixes (P key not while a window is open, 200/130 dialog, kick assertions), strays removed, coverage map)
 
 ## (c) Feature groups, ordered by player value
 
@@ -30,7 +36,7 @@ Scanned refs: `main`
 | 10 | Guild / clan | 41/41 | 100% | 41 | 11/11 | 100% | 0 |
 | 11 | Quests | 10/10 | 100% | 10 | 2/2 | 100% | 0 |
 | 12 | Skills / training / stats | 19/19 | 100% | 19 | 2/3 | 66.7% | 0 |
-| 13 | Crafting (smith / carpenter / alchemy / tailor) | 25/25 | 100% | 25 | 2/5 | 40% | 3 |
+| 13 | Crafting (smith / carpenter / alchemy / tailor) | 25/25 | 100% | 25 | 5/5 | 100% | 0 |
 | 14 | Fishing / mining / lumber (work skills) | 10/10 | 100% | 10 | 0/0 | n/a | 0 |
 | 15 | Options / keybinds | 2/2 | 100% | 2 | 3/4 | 75% | 0 |
 | 16 | Minimap / world map | 2/2 | 100% | 2 | 0/1 | 0% | 1 |
@@ -102,11 +108,11 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | FrmEstadisticas | Character statistics and attributes | skills | merged | src/skills-window.ts |
 | frmSkills3 | Skill allocation | skills | not started | (d) Never opened by the classic client code; the skill help texts it held live in the skill window (game-text.ts) |
 | frmStatistics | Mini statistics | skills | merged | src/skills-window.ts |
-| frmAlqui | Alchemy crafting | crafting | merged (partial) | src/crafting.ts: crafting state and packets only; no alchemy window yet |
+| frmAlqui | Alchemy crafting | crafting | merged | src/crafting.ts, src/crafting-extra-ui.ts |
 | frmCarp | Carpenter crafting | crafting | merged | src/crafting-ui.ts |
-| frmCrafteo | Generic crafting window with catalyst | crafting | merged (partial) | src/crafting.ts: crafting state and packets only; no catalyst crafting window yet |
+| frmCrafteo | Generic crafting window with catalyst | crafting | merged | src/crafting.ts, src/crafting-extra-ui.ts |
 | frmHerrero | Blacksmith crafting | crafting | merged | src/crafting-ui.ts |
-| FrmSastre | Tailor crafting | crafting | merged (partial) | src/crafting.ts: crafting state and packets only; no tailor window yet |
+| FrmSastre | Tailor crafting | crafting | merged | src/crafting.ts, src/crafting-extra-ui.ts |
 | frmBindKey | Bind a key to an action | options | merged | src/keys-ui.ts |
 | frmCustomKeys | Custom key bindings | options | merged | src/keys-ui.ts |
 | frmMasOpciones | More options | options | not started | (b) Only opened from the account recovery and account creation forms |
@@ -141,7 +147,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 
 ### Genuinely missing screens
 
-32 forms have no complete screen yet.
+29 forms have no complete screen yet.
 
 **(a) Player-facing and worth building** (0)
 
@@ -183,6 +189,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 - frmMSG: Never opened by the classic client code (dead form)
 - frmProcesses: Never opened by the classic client code (anti-cheat leftover)
 
+<<<<<<< HEAD
 **Partial** (5)
 
 - frmMain: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not
@@ -190,6 +197,11 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 - frmCrafteo: crafting state and packets only; no catalyst crafting window yet
 - FrmSastre: crafting state and packets only; no tailor window yet
 - frmMapaGrande: null
+=======
+**Partial** (1)
+
+- frmMain: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not
+>>>>>>> 6591039 (fix(windows): review fixes (P key not while a window is open, 200/130 dialog, kick assertions), strays removed, coverage map)
 
 
 ## (a) VB6 packets
@@ -236,7 +248,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 36 | LocaleChatOverHead | client Protocol.bas:HandleLocaleChatOverHead | chat | merged | `main:packages/protocol/src/packets/npcs.ts` | yes |
 | 37 | ConsoleMsg | client Protocol.bas:HandleConsoleMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 38 | ConsoleFactionMessage | client Protocol.bas:HandleConsoleFactionMessage | chat | merged | `main:packages/protocol/src/packets.ts` | no |
-| 39 | GuildChat | client Protocol.bas:HandleGuildChat | chat | merged | `main:packages/protocol/src/packets.ts` | no |
+| 39 | GuildChat | client Protocol.bas:HandleGuildChat | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 40 | ShowMessageBox | client Protocol.bas:HandleShowMessageBox | chat | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 41 | MostrarCuenta | client Protocol.bas:HandleMostrarCuenta | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 42 | CharacterCreate | client Protocol.bas:HandleCharacterCreate | core | merged | `main:packages/protocol/src/packets.ts` | yes |
@@ -286,17 +298,17 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 86 | DumbNoMore | client Protocol.bas:HandleDumbNoMore | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 87 | SendSkills | client Protocol.bas:HandleSendSkills | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 88 | TrainerCreatureList | client Protocol.bas:HandleTrainerCreatureList | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
-| 89 | GuildNews | client Protocol.bas:HandleGuildNews | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
+| 89 | GuildNews | client Protocol.bas:HandleGuildNews | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 90 | OfferDetails | client Protocol.bas:HandleOfferDetails | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 91 | AlianceProposalsList | client Protocol.bas:HandleAlianceProposalsList | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 92 | PeaceProposalsList | client Protocol.bas:HandlePeaceProposalsList | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
-| 93 | CharacterInfo | client Protocol.bas:HandleCharacterInfo | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
-| 94 | GuildLeaderInfo | client Protocol.bas:HandleGuildLeaderInfo | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
-| 95 | GuildDetails | client Protocol.bas:HandleGuildDetails | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
+| 93 | CharacterInfo | client Protocol.bas:HandleCharacterInfo | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
+| 94 | GuildLeaderInfo | client Protocol.bas:HandleGuildLeaderInfo | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
+| 95 | GuildDetails | client Protocol.bas:HandleGuildDetails | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 96 | ShowGuildFundationForm | client Protocol.bas:HandleShowGuildFundationForm | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 97 | ParalizeOK | client Protocol.bas:HandleParalizeOK | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 98 | StunStart | client Protocol.bas:HandleStunStart | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
-| 99 | ShowUserRequest | client Protocol.bas:HandleShowUserRequest | trade | merged | `main:packages/protocol/src/packets/bank-trade.ts` | no |
+| 99 | ShowUserRequest | client Protocol.bas:HandleShowUserRequest | trade | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 100 | ChangeUserTradeSlot | client Protocol.bas:HandleChangeUserTradeSlot | trade | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 101 | UpdateTagAndStatus | client Protocol.bas:HandleUpdateTagAndStatus | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 102 | FYA | client Protocol.bas:HandleFYA | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
@@ -346,7 +358,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 146 | EscudoMov | client Protocol.bas:HandleEscudoMov | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 147 | ViajarForm | client Protocol.bas:HandleViajarForm | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | no |
 | 148 | NadarToggle | client Protocol.bas:HandleNadarToggle | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
-| 149 | ShowFundarClanForm | client Protocol.bas:HandleShowFundarClanForm | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
+| 149 | ShowFundarClanForm | client Protocol.bas:HandleShowFundarClanForm | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 150 | CharUpdateHP | client Protocol.bas:HandleCharUpdateHP | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 151 | CharUpdateMAN | client Protocol.bas:HandleCharUpdateMAN | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 152 | PosLLamadaDeClan | client Protocol.bas:HandlePosLLamadaDeClan | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
@@ -412,7 +424,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 |---|---|---|---|---|---|---|
 | 1 | CraftCarpenter | server Protocol.bas:HandleCraftCarpenter | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 2 | WorkLeftClick | server Protocol.bas:HandleWorkLeftClick | work | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
-| 3 | CreateNewGuild | server Protocol.bas:HandleCreateNewGuild | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
+| 3 | CreateNewGuild | server Protocol.bas:HandleCreateNewGuild | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 4 | SpellInfo | server Protocol.bas:HandleSpellInfo | spells | merged | `main:packages/protocol/src/packets/spells.ts` | yes |
 | 5 | EquipItem | server Protocol.bas:HandleEquipItem | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 6 | ChangeHeading | server Protocol.bas:HandleChange_Heading | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
@@ -434,14 +446,14 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 22 | GuildOfferAlliance | server Protocol.bas:HandleGuildOfferAlliance | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 23 | GuildAllianceDetails | server Protocol.bas:HandleGuildAllianceDetails | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 24 | GuildPeaceDetails | server Protocol.bas:HandleGuildPeaceDetails | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
-| 25 | GuildRequestJoinerInfo | server Protocol.bas:HandleGuildRequestJoinerInfo | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
+| 25 | GuildRequestJoinerInfo | server Protocol.bas:HandleGuildRequestJoinerInfo | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 26 | GuildAlliancePropList | server Protocol.bas:HandleGuildAlliancePropList | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 27 | GuildPeacePropList | server Protocol.bas:HandleGuildPeacePropList | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 28 | GuildDeclareWar | server Protocol.bas:HandleGuildDeclareWar | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 29 | GuildNewWebsite | server Protocol.bas:HandleGuildNewWebsite | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
-| 30 | GuildAcceptNewMember | server Protocol.bas:HandleGuildAcceptNewMember | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
-| 31 | GuildRejectNewMember | server Protocol.bas:HandleGuildRejectNewMember | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
-| 32 | GuildKickMember | server Protocol.bas:HandleGuildKickMember | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
+| 30 | GuildAcceptNewMember | server Protocol.bas:HandleGuildAcceptNewMember | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
+| 31 | GuildRejectNewMember | server Protocol.bas:HandleGuildRejectNewMember | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
+| 32 | GuildKickMember | server Protocol.bas:HandleGuildKickMember | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 33 | GuildUpdateNews | server Protocol.bas:HandleGuildUpdateNews | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 34 | GuildMemberInfo | server Protocol.bas:HandleGuildMemberInfo | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 35 | GuildOpenElections | server Protocol.bas:HandleGuildOpenElections | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
@@ -799,7 +811,7 @@ Skill allocation, level up, attributes, statistics forms, rest/meditate.
 Smith, carpenter, alchemy, tailor, crafting window, fishing, mining, lumber.
 
 - Packets (0): none left
-- Forms (3): frmAlqui, FrmSastre, frmCrafteo
+- Forms (0): none left
 
 ### wp11: Options, keybinds and extras
 

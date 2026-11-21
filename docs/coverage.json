@@ -16,6 +16,7 @@
   "s2cCovered": 202,
   "c2sCovered": 310,
   "forms": 86,
+<<<<<<< HEAD
   "formsCovered": 53,
   "formsPartial": 5,
   "fixturePackets": 262,
@@ -23,6 +24,15 @@
   "packetsMergedPct": 97.9,
   "formsPct": 61.6,
   "formsStartedPct": 67.4
+=======
+  "formsCovered": 56,
+  "formsPartial": 1,
+  "fixturePackets": 271,
+  "packetsPct": 97.5,
+  "packetsMergedPct": 97.5,
+  "formsPct": 65.1,
+  "formsStartedPct": 66.3
+>>>>>>> 6591039 (fix(windows): review fixes (P key not while a window is open, 200/130 dialog, kick assertions), strays removed, coverage map)
  },
  "groups": [
   {
@@ -177,9 +187,9 @@
    "packetsMerged": 25,
    "packetsPct": 100,
    "forms": 5,
-   "formsCovered": 2,
-   "formsPartial": 3,
-   "formsPct": 40
+   "formsCovered": 5,
+   "formsPartial": 0,
+   "formsPct": 100
   },
   {
    "id": "work",
@@ -296,6 +306,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -373,6 +387,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -858,6 +876,10 @@
     "tests/fixtures/vb6/extras/live-events-commands.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -1072,7 +1094,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/bank/gold-deposit-extract.jsonl",
-    "tests/fixtures/vb6/gm/admin-commands.jsonl"
+    "tests/fixtures/vb6/gm/admin-commands.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl"
    ]
   },
   {
@@ -1157,6 +1180,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -1393,6 +1420,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/papiro-sign.jsonl",
     "tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
@@ -1457,8 +1488,11 @@
    "codecFiles": [
     "main:packages/protocol/src/packets.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "s2c:40",
@@ -1555,6 +1589,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/drop-pickup.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
@@ -1747,6 +1785,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -1824,6 +1866,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -1961,6 +2007,8 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -2151,6 +2199,10 @@
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
@@ -2185,6 +2237,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -2241,6 +2294,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -2405,6 +2462,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
@@ -2519,6 +2580,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/delete-item.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/move-item.jsonl",
@@ -2656,6 +2721,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -2959,6 +3028,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
@@ -3058,6 +3131,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -3254,6 +3331,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -3313,8 +3394,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl"
+   ]
   },
   {
    "key": "s2c:90",
@@ -3389,8 +3472,11 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "s2c:94",
@@ -3408,8 +3494,11 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "s2c:95",
@@ -3427,8 +3516,11 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl"
+   ]
   },
   {
    "key": "s2c:96",
@@ -3505,8 +3597,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/bank-trade.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "s2c:100",
@@ -3553,6 +3647,10 @@
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
     "tests/fixtures/vb6/combat-spells-2/bow-shoot-snake.jsonl",
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl"
    ]
@@ -3610,6 +3708,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/items/use-items.jsonl",
@@ -3707,6 +3809,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -3937,6 +4043,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/move-item.jsonl",
     "tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
@@ -4138,6 +4248,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -4260,6 +4374,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/drop-pickup.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
@@ -4350,6 +4468,10 @@
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl"
    ]
   },
@@ -4493,6 +4615,10 @@
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl"
    ]
   },
@@ -4633,6 +4759,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
@@ -4736,6 +4866,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -4903,6 +5037,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/delete-item.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items-2/use-key-locked-door.jsonl",
@@ -5114,8 +5252,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "s2c:150",
@@ -5342,6 +5482,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -5440,6 +5584,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -5517,6 +5665,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -5890,6 +6042,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -6300,6 +6456,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -6396,6 +6556,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -6492,6 +6656,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -6588,6 +6756,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -6786,8 +6958,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:4",
@@ -7238,8 +7412,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:26",
@@ -7337,8 +7513,11 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:31",
@@ -7356,8 +7535,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:32",
@@ -7375,8 +7556,11 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/guild.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl"
+   ]
   },
   {
    "key": "c2s:33",
@@ -7415,6 +7599,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -7455,6 +7641,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -7476,6 +7664,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -8261,6 +8451,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -8549,6 +8743,10 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -11982,6 +12180,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl"
    ]
   },
@@ -13047,6 +13246,10 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-accept-leader.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-applicant.jsonl",
+    "tests/fixtures/vb6/guild/guild-flow-leader.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
@@ -14328,20 +14531,25 @@
    "group": "crafting",
    "package": "wp10",
    "lines": 460,
-   "status": "merged (partial)",
-   "covered": false,
-   "partial": true,
+   "status": "merged",
+   "covered": true,
+   "partial": false,
    "evidence": [
     {
      "ref": "main",
      "path": "apps/web/src/crafting.ts",
-     "partial": true,
-     "note": "crafting state and packets only; no alchemy window yet",
+     "note": "state, packets and the work macro",
+     "ok": true
+    },
+    {
+     "ref": "main",
+     "path": "apps/web/src/crafting-extra-ui.ts",
+     "note": "the alchemy window",
      "ok": true
     }
    ],
    "missing": null,
-   "partialNote": "crafting state and packets only; no alchemy window yet"
+   "partialNote": null
   },
   {
    "name": "FrmSastre",
@@ -14349,20 +14557,25 @@
    "group": "crafting",
    "package": "wp10",
    "lines": 438,
-   "status": "merged (partial)",
-   "covered": false,
-   "partial": true,
+   "status": "merged",
+   "covered": true,
+   "partial": false,
    "evidence": [
     {
      "ref": "main",
      "path": "apps/web/src/crafting.ts",
-     "partial": true,
-     "note": "crafting state and packets only; no tailor window yet",
+     "note": "state, packets and the work macro",
+     "ok": true
+    },
+    {
+     "ref": "main",
+     "path": "apps/web/src/crafting-extra-ui.ts",
+     "note": "the tailor window",
      "ok": true
     }
    ],
    "missing": null,
-   "partialNote": "crafting state and packets only; no tailor window yet"
+   "partialNote": null
   },
   {
    "name": "frmCrafteo",
@@ -14370,20 +14583,25 @@
    "group": "crafting",
    "package": "wp10",
    "lines": 234,
-   "status": "merged (partial)",
-   "covered": false,
-   "partial": true,
+   "status": "merged",
+   "covered": true,
+   "partial": false,
    "evidence": [
     {
      "ref": "main",
      "path": "apps/web/src/crafting.ts",
-     "partial": true,
-     "note": "crafting state and packets only; no catalyst crafting window yet",
+     "note": "state, packets and the work macro",
+     "ok": true
+    },
+    {
+     "ref": "main",
+     "path": "apps/web/src/crafting-extra-ui.ts",
+     "note": "the crafting-station window",
      "ok": true
     }
    ],
    "missing": null,
-   "partialNote": "crafting state and packets only; no catalyst crafting window yet"
+   "partialNote": null
   },
   {
    "name": "frmOpciones",
@@ -14995,11 +15213,7 @@
    "scope": "Smith, carpenter, alchemy, tailor, crafting window, fishing, mining, lumber",
    "packetIds": [],
    "packetNames": [],
-   "forms": [
-    "frmAlqui",
-    "FrmSastre",
-    "frmCrafteo"
-   ]
+   "forms": []
   },
   {
    "id": "wp11",
