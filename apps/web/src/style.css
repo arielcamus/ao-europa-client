@@ -20,9 +20,10 @@ button, input { border-radius: 0; }
 button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1px solid #e0c982; outline-offset: -1px; }
 .label { display: block; text-align: center; font: bold 11px/16px Tahoma, Arial, sans-serif; white-space: nowrap; overflow: hidden; text-shadow: 1px 1px #000; pointer-events: none; }
 .character-name { font-size: 16px; line-height: 30px; color: #ffffc0; }
-#map-name { font-size: 9px; line-height: 11px; }
+/* The label box is 75 px wide (NameMapa); a longer name ("Ciudad de Ullathorpe") overflows evenly on both sides instead of being cut. */
+#map-name { font-size: 9px; line-height: 11px; display: flex; justify-content: center; overflow: visible; }
 .coordinate { font-size: 10px; }
-#console { overflow: auto; scrollbar-width: thin; font: 13px/15px Calibri, Arial, sans-serif; color: #c8bebe; }
+#console { overflow: auto; scrollbar-width: thin; font: 13px/17px Calibri, Arial, sans-serif; color: #c8bebe; } /* RecTxt is 85 px tall: five whole lines, so the oldest visible line is never cut by the header. */
 #console strong { color: #fff3aa; font-weight: normal; }
 #error { color: #ff8c7b; }
 #messages > div { white-space: pre-wrap; overflow-wrap: anywhere; }

@@ -4,6 +4,7 @@
  * to each form; the artwork is es_ventanadetallemision.bmp / es_ventananuevamision.bmp and the *-over buttons from the local mount.
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty. See NOTICE.
  */
+import { windows } from './window-stack.js';
 import './quest-window.css';
 import { fetchText } from './assets.js';
 import { loadInterface } from './interface-assets.js';
@@ -106,7 +107,9 @@ export class QuestWindows {
     this.offers.hotspot('Cerrar', [784, 0, 33, 25], undefined, () => this.closeOffers());
     this.offers.hotspot('Rechazar', [259, 382, 132, 28], 'boton-rechazar-over', () => this.closeOffers());
     this.offers.hotspot('Aceptar', [427, 382, 132, 28], 'boton-aceptar-over', () => this.accept());
-    document.addEventListener('keydown', event => { if (event.key === 'Escape') this.closeAll(); }, true);
+    // Escape belongs to the window stack (window-stack.ts): it closes the top-most window only.
+    windows.watchElement('quest-log', this.log.root, () => this.closeLog(), true);
+    windows.watchElement('quest-offers', this.offers.root, () => this.closeOffers(), true);
   }
   async init() {
     this.catalog.load(await fetchText('init/sp_localindex.dat'));

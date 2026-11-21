@@ -3,6 +3,7 @@
  * (txConfig_KeyUp, AlreadyBinded refuses a key used elsewhere), the "Clásica" / "Moderna" presets (Option1 / Option2), Guardar and
  * Restaurar (cmdAccion 0 / 1). The mouse-action combos (ACCION1..3) are not part of this client. AGPL-3.0-or-later; see NOTICE.
  */
+import { windows } from './window-stack.js';
 import './options.css';
 import { make } from './bank-trade-dom.js';
 import { ACTION_LABELS, KeyBindings, NUM_BINDS, keyName } from './key-bindings.js';
@@ -45,6 +46,7 @@ export class KeysUI {
     for (const [label, id, run] of [['Guardar', 'keys-save', () => { this.save(); this.hide(true); }], ['Restaurar', 'keys-restore', () => this.restore()], ['Cerrar', 'keys-close', () => this.hide()]] as const) {
       const button = make('button', '', foot, id); button.type = 'button'; button.textContent = label; button.onclick = run;
     }
+    windows.watchElement('keys', root, () => this.hide());
     root.addEventListener('keydown', event => { if (event.key === 'Escape' && !(event.target as HTMLElement).classList.contains('keys-box')) { event.stopPropagation(); this.hide(); } });
   }
   /** txConfig_KeyUp: the next key pressed becomes the binding, unless another binding already uses it. */

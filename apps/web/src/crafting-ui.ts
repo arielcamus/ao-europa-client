@@ -4,6 +4,7 @@
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty. See NOTICE.
  * Artwork and object data are read only from the local mount.
  */
+import { windows } from './window-stack.js';
 import { loadInterface } from './interface-assets.js';
 import { loadObjectIni } from './object-catalog.js';
 import type { Ini } from './assets.js';
@@ -82,6 +83,7 @@ class CraftForm {
     artButton(this.root, `${kind}-build`, 'Construir', 'boton-construir', 277, 312, 132, 28, callbacks.build);
     artButton(this.root, `${kind}-accept`, 'Aceptar', 'boton-aceptar', kind === 'smith' ? 169 : 168, 382, 132, 28, callbacks.close);
     artButton(this.root, `${kind}-close`, 'Cerrar', 'boton-cerrar', 440, 0, 28, 28, callbacks.close);
+    windows.watchElement(`${kind}-window`, this.root, callbacks.close);
     this.root.addEventListener('keydown', event => { if (event.key === 'Escape') { event.stopPropagation(); callbacks.close(); } });
   }
   get visible() { return !this.root.hidden; }

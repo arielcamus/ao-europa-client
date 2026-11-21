@@ -81,6 +81,9 @@ export function playerNameColor(colors: Map<string, Rgb>, status: number, privil
 }
 export const NPC_NAME_COLOR: Rgb = { r: 0, g: 129, b: 195 };
 
+/** The name as the header shows it: an empty alias `{}` or clan `<>` renders nothing, as in VB6. */
+export const displayName = (raw: string) => raw.replace(/\s*\{\s*\}/g, '').replace(/\s*<\s*>/g, '').trim();
+
 /** HandleCharacterCreate: "Name{alias}<Clan>" -> parts. */
 export function splitName(raw: string): { name: string; alias: string; clan: string } {
   const alias = raw.indexOf('{'), aliasEnd = raw.indexOf('}'), clan = raw.indexOf('<');

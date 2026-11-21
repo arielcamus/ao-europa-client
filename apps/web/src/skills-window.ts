@@ -4,6 +4,7 @@
  * each form; artwork and *-over buttons are read from the local mount. Copyright (C) 2022-2026 Noland Studios.
  * AGPL-3.0-or-later; no warranty. See NOTICE.
  */
+import { windows } from './window-stack.js';
 import './skills-window.css';
 import { loadInterface } from './interface-assets.js';
 import { SkillAllocation, statsView } from './skills.js';
@@ -122,7 +123,10 @@ export class SkillsWindows {
     const leave = node<HTMLButtonElement>(this.trainer, 'sk-trainer-button', [164, 204, 58, 26], 'button'); leave.type = 'button'; leave.textContent = 'Salir';
     fight.addEventListener('click', () => { this.session?.train(this.creatureSelected + 1); this.session?.skills.closeTrainer(); });
     leave.addEventListener('click', () => this.session?.skills.closeTrainer());
-    document.addEventListener('keydown', event => { if (event.key === 'Escape') this.closeAll(); }, true);
+    // Escape belongs to the window stack (window-stack.ts): it closes the top-most window only, silently.
+    windows.watchElement('skills-window', this.skills, () => { this.allocation = undefined; this.session?.skills.closeSkills(); this.skills.hidden = true; }, true);
+    windows.watchElement('stats-window', this.stats, () => { this.session?.skills.closeStats(); this.stats.hidden = true; }, true);
+    windows.watchElement('trainer-window', this.trainer, () => { this.session?.skills.closeTrainer(); this.trainer.hidden = true; });
   }
   get skillsOpen() { return !this.skills.hidden; }
   get statsOpen() { return !this.stats.hidden; }
