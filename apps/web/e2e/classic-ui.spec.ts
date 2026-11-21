@@ -89,3 +89,26 @@ test('original form geometry, inventory/spells, server bars, safe chat and scale
   }
   expect(failures).toEqual([]);
 });
+
+// frmMain panelInf: the five safe toggles are Image controls without Stretch, so each one is a single 34x34 picture at its Left/Top
+// that covers the slot art baked into ventanaprincipal_info (the first three used to be drawn at 27.2 px, leaving the baked icon doubled behind).
+test('safe toggles render one native-size image each over the baked slot art', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop-chrome', 'desktop layout');
+  await page.goto('/');
+  await expect(page.locator('#classic')).toHaveAttribute('data-ui-ready', 'true');
+  await page.locator('#connect').click();
+  await expect(page.locator('#viewport')).toHaveAttribute('data-rendered', 'true');
+  await page.getByRole('button', { name: 'Menú', exact: true }).click();
+  const scale = (await page.locator('#classic').boundingBox())!.width / 1024;
+  const parent = (await page.locator('#menu-actions').boundingBox())!;
+  const expected = { party: 7.2, clan: 42.4, attack: 76.8, resu: 112, legion: 147.2 };
+  for (const [key, left] of Object.entries(expected)) {
+    const button = page.locator(`#safe-${key}`);
+    await expect(button).toBeVisible();
+    const box = (await button.boundingBox())!;
+    expect(box.width / scale, key).toBeCloseTo(34, 1); expect(box.height / scale, key).toBeCloseTo(34, 1);
+    expect((box.x - parent.x) / scale, key).toBeCloseTo(left, 1); expect((box.y - parent.y) / scale, key).toBeCloseTo(204, 1);
+    // exactly one picture: one background-image url, no child images
+    expect(await button.evaluate(node => [(getComputedStyle(node).backgroundImage.match(/url\(/g) ?? []).length, node.children.length])).toEqual([1, 0]);
+  }
+});
