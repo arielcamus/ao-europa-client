@@ -8,6 +8,8 @@
 import { PetsTravelClientPacketId as PT, CombatClientPacketId as CC, ClientPacketId as C, BankTradeClientPacketId as BC, KeysClientPacketId as K, SkillsClientPacketId as SC } from '@ao/protocol';
 import type { ClientPacket } from '@ao/protocol';
 import { FONTTYPE } from './chat-fonts.js';
+import { parseGmCommand } from './gm-commands.js';
+import type { GmWindow } from './gm-commands.js';
 
 /** frmMain SendingType: what the next opened input box starts with. */
 export enum SendingType { Talk = 1, Yell = 2, Whisper = 3, Guild = 4, Group = 5, GroupAlt = 6, Server = 8, Faction = 9 }
@@ -18,6 +20,10 @@ export interface ChatOutcome {
   /** Say text goes through the paced `Session.talk`; every other packet is sent as is. */
   talk?: string;
   packet?: ClientPacket;
+  /** Packets after `packet` (/PANELGM writes two). */
+  more?: ClientPacket[];
+  /** A client-side form the command opens (/GM, /CO). */
+  open?: GmWindow;
   /** A local console line instead of (or before) sending, with its FontTypeNames index. */
   notes: { text: string; font: number }[];
 }
@@ -30,6 +36,8 @@ export interface ChatContext {
   trading?: boolean;
   /** UserStats.minman = maxman: /MEDITAR refuses with the full-mana line. */
   manaFull?: boolean;
+  /** EsGM: HandlePrivilegios said this character is a GM. */
+  isGM?: boolean;
 }
 
 /** SendTxt_Change: keep only characters the VB6 box accepts (space..250). */
@@ -180,7 +188,17 @@ export class ChatInput {
           else if (/^\d{1,10}$/.test(args.trim()) && Number(args.trim()) <= 2147483647) outcome.packet = { id: BC.BankDepositGold, amount: Number(args.trim()) };
           else note(MESSAGES.badDepositAmount);
           return;
-        default: note(MESSAGES.unsupported, FONTTYPE.INFO); return;
+        default: {
+          // GM / admin commands (wp12): ProtocolCmdParse's GM half, in gm-commands.ts.
+          const all = hasArguments ? args.split(' ') : [];
+          const gm = parseGmCommand(command, { raw: args, all, count: all.length, filled }, { isGM: context.isGM === true });
+          if (!gm) { note(MESSAGES.unsupported, FONTTYPE.INFO); return; }
+          if (gm.packets[0]) outcome.packet = gm.packets[0];
+          if (gm.packets.length > 1) outcome.more = gm.packets.slice(1);
+          if (gm.open) outcome.open = gm.open;
+          for (const text of gm.notes) outcome.notes.push(text);
+          return;
+        }
       }
     }
     if (command.startsWith('-')) {

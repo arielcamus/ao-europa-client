@@ -24,6 +24,7 @@ import { BankUI } from './bank-ui.js';
 import { TradeUI } from './trade-ui.js';
 import { PartyUI } from './party-ui.js';
 import { TravelUI } from './travel-ui.js';
+import { GmUI } from './gm-ui.js';
 import { GuildUI } from './guild-ui.js';
 import { QuestWindows } from './quest-window.js';
 import { OptionsSettings } from './options-settings.js';
@@ -85,6 +86,8 @@ const partyUi = new PartyUI(viewport, element('classic'), renderer, packet => se
 // Group.HandleMouseInput: a group frame clicked while a spell is aimed casts it on that member (WriteActionOnGroupFrame).
 partyUi.onFrameClick = groupId => { if (session?.spells.targeting?.skill === 1) { sendPackets(session.party.actOnFrame(groupId)); session.spells.cancel(); } };
 const guildUi = new GuildUI(element('classic'), sendPackets);
+const gmUi = new GmUI(element('classic'), error => report(String(error))); // GM forms (wp12)
+chatBox.onOpenWindow = window => (window === 'objects' ? gmUi.openObjects() : gmUi.openHelp());
 const travelUi = new TravelUI(element('classic'), packet => sendPackets(packet)); // FrmViajes (wp05)
 ui.bindMenu('Grupo', () => sendPackets(session?.party.requestWindow()));
 ui.bindMenu('Clanes', () => { if (session?.ready) sendPackets(session.guild.openGuildPanel()); });
@@ -187,7 +190,7 @@ async function boot() {
   });
 }
 function updateUi(now: number) {
-  ui.update(session); bankUi.update(session); tradeUi.update(session); partyUi.update(session); guildUi.update(session); travelUi.update(session);
+  ui.update(session); bankUi.update(session); tradeUi.update(session); partyUi.update(session); guildUi.update(session); travelUi.update(session); gmUi.update(session);
   itemsUi.update(session); keyringUi.update(session); papiroUi.update(session); inventoryExtras.update(session);
   guard(() => craftingUi.update(session));
   if (!session) { hotkeysUi.update(undefined, false); return; }
