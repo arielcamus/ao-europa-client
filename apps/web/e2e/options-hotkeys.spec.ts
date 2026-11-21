@@ -188,4 +188,17 @@ test.describe('options window, key editor and hotkey bar', () => {
     await expect.poll(confirmed).toBeGreaterThan(before + 1);
     await page.keyboard.up('ArrowRight');
   });
+
+  test('clicking the game viewport draws no focus outline and keyboard movement still works', async ({ page }) => {
+    await login(page);
+    const canvas = page.locator('#viewport canvas[tabindex]');
+    await canvas.click({ position: { x: 20, y: 20 } });
+    await expect(canvas).toBeFocused();
+    expect(await canvas.evaluate(el => getComputedStyle(el).outlineStyle)).toBe('none');
+    const confirmed = async () => Number(await page.locator('#confirmed').textContent());
+    const before = await confirmed();
+    await page.keyboard.down('ArrowRight');
+    await expect.poll(confirmed).toBeGreaterThan(before);
+    await page.keyboard.up('ArrowRight');
+  });
 });
