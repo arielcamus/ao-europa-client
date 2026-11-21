@@ -15,7 +15,7 @@
 |---|---|---|---|
 | Packets with a codec | 512 | 513 | 1 |
 | Screens complete (all controls) | 58 | 58 | 0 (0 partial, 0 not started, 0 covered but missing controls) |
-| Behaviour items | 0 | 10 | **10 open** (8 to do, 1 in flight, 1 blocked on data or a decision) |
+| Behaviour items | 0 | 7 | **7 open** (5 to do, 1 in flight, 1 blocked on data or a decision) |
 | Playthrough steps passing end to end | 26 | 169 | 143 (48 recorded at protocol level on main, 0 in flight, 148 automatable, 21 manual) |
 
 Scope. Packets: the 8 post-pin packets are excluded (docs/COVERAGE.md "post-pin"); "codec" is a registered `[Table.Name]` entry, and the handling check is a name search in apps/web and the bridge. Screens: covered + partial + class a; classes b (account server), c (AO20 extras) and d (dead forms) are out. Playthrough: "passing" means an end-to-end run against the real server; none exists yet (WP-D).
@@ -24,7 +24,7 @@ In flight now: PR #54 (feat/prehoo-lock: pins, asset lock, pinned coverage map);
 
 ## 1. Packets
 
-**512 of 513 have a codec** (server to client 202/202, client to server 310/311); 288 have a recorded VB6 fixture.
+**512 of 513 have a codec** (server to client 202/202, client to server 310/311); 289 have a recorded VB6 fixture.
 
 ### Missing codecs
 
@@ -54,7 +54,7 @@ None.
 
 ## 3. Behaviour: open issues and reported bugs
 
-**10 items** from the open issues (#58 #38 #35 #34 #28 #24) and Ariel's reports. In flight: 1; blocked on data or a decision: 1.
+**7 items** from the open issues (#58 #34 #28 #24) and Ariel's reports. In flight: 1; blocked on data or a decision: 1.
 
 ### #24
 
@@ -68,15 +68,6 @@ None.
 ### #34
 
 - [ ] roofTint: roofs shaded with the 4 tile vertices need a vertex-colour mesh
-
-### #35
-
-- [ ] Work-macro key: no VB6 binding found, CraftingController.macroEnabled never set
-- [ ] ParticleFX continues after FlagTrabajar: find what stops the server's automated extraction before relying on ResetearUserMacro
-
-### #38
-
-- [ ] Record ObjQuestListSend (S174) with a level-appropriate char holding a quest item
 
 ### #58
 
