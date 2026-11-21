@@ -324,27 +324,63 @@
  {
   "name": "frmHerrero",
   "purpose": "Blacksmith crafting",
-  "group": "crafting"
+  "group": "crafting",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/crafting-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmCarp",
   "purpose": "Carpenter crafting",
-  "group": "crafting"
+  "group": "crafting",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/crafting-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmAlqui",
   "purpose": "Alchemy crafting",
-  "group": "crafting"
+  "group": "crafting",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/crafting.ts",
+    "partial": true,
+    "note": "state and sends only, no window yet"
+   }
+  ]
  },
  {
   "name": "FrmSastre",
   "purpose": "Tailor crafting",
-  "group": "crafting"
+  "group": "crafting",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/crafting.ts",
+    "partial": true,
+    "note": "state and sends only, no window yet"
+   }
+  ]
  },
  {
   "name": "frmCrafteo",
   "purpose": "Generic crafting window with catalyst",
-  "group": "crafting"
+  "group": "crafting",
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/crafting.ts",
+    "partial": true,
+    "note": "state and sends only, no window yet"
+   }
+  ]
  },
  {
   "name": "frmOpciones",
