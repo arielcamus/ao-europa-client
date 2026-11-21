@@ -60,6 +60,8 @@ async function rebindMeditar(page: Page, key: string, shown: string) {
   await expect(page.locator('#keys')).toBeHidden();
   await page.locator('#options-close').click();
   await expect(page.locator('#options')).toBeHidden();
+  // The keyboard is back with the game at once: a hidden but still focused button would swallow the first key (seen under load).
+  expect(await page.evaluate(() => document.activeElement === document.body || document.activeElement?.tagName === 'CANVAS')).toBe(true);
 }
 
 test.describe('key editor and hotkey bar, the way a Mac player uses them', () => {

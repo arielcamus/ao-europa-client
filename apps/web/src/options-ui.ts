@@ -113,6 +113,17 @@ export class OptionsUI {
   }
   get visible() { return !this.root.hidden; }
   show() { this.root.hidden = false; this.select(this.tab); this.sync(this.settings.value); this.root.focus(); }
-  hide() { this.keys.hide(true); this.root.hidden = true; this.audio.hide(); }
+  /**
+   * Closing hands the keyboard back to the game (VB6: frmMain gets the focus again). A focused button that is merely hidden keeps
+   * document.activeElement until the browser's next focus fixup, and until then the game ignores keys aimed at a button: the first key
+   * pressed right after closing could be lost.
+   */
+  hide() { this.keys.hide(true); releaseFocus(this.root); this.root.hidden = true; this.audio.hide(); }
   toggle() { if (this.visible) this.hide(); else this.show(); }
+}
+
+/** Drop the focus if it is inside `root`, so the next key goes to the page (the game) at once. */
+export function releaseFocus(root: HTMLElement) {
+  const active = document.activeElement;
+  if (active instanceof HTMLElement && root.contains(active)) active.blur();
 }

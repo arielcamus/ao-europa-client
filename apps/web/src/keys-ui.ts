@@ -4,6 +4,7 @@
  * Restaurar (cmdAccion 0 / 1). The mouse-action combos (ACCION1..3) are not part of this client. AGPL-3.0-or-later; see NOTICE.
  */
 import { windows } from './window-stack.js';
+import { releaseFocus } from './options-ui.js';
 import './options.css';
 import { make } from './bank-trade-dom.js';
 import { ACTION_LABELS, KeyBindings, NUM_BINDS, keyName } from './key-bindings.js';
@@ -79,6 +80,6 @@ export class KeysUI {
   hide(force = false) {
     if (this.root.hidden) return;
     if (!force && this.dirty) { this.ask.hidden = false; return; }
-    this.ask.hidden = true; this.root.hidden = true;
+    this.ask.hidden = true; releaseFocus(this.root); this.root.hidden = true;
   }
 }
