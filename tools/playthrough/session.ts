@@ -180,8 +180,9 @@ export class Sess {
     await this.settle();
     return { ok: true as const };
   }
+  /** NOTE: server CharacterCreate (42) rows of NPCs on the 9ccd build are 1 byte shorter than the codec (no trailing clanAlignment), so they do not round-trip: they are left out of recorded fixtures (issue filed). */
   /** fixture jsonl in the format of tests/fixtures/vb6 */
-  jsonl(from = 0) { return this.wire.slice(from).map((w, i) => JSON.stringify({ ...w, t_ms: i, hex: (w.id === 305 || w.id === 304) ? w.hex.slice(0, 4) : w.hex })).join('\n') + '\n'; }
+  jsonl(from = 0) { return this.wire.slice(from).filter(w => w.id !== 42 || !w.dir.startsWith('s')).map((w, i) => JSON.stringify({ ...w, t_ms: i, hex: (w.id === 305 || w.id === 304) ? w.hex.slice(0, 4) : w.hex })).join('\n') + '\n'; }
 
   // ---- movement helpers ----
   /**

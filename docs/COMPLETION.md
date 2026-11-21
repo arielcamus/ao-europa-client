@@ -16,7 +16,7 @@
 | Packets with a codec | 512 | 513 | 1 |
 | Screens complete (all controls) | 58 | 58 | 0 (0 partial, 0 not started, 0 covered but missing controls) |
 | Behaviour items | 0 | 19 | **19 open** (14 to do, 1 in flight, 4 blocked on data or a decision) |
-| Playthrough steps passing end to end | 14 | 169 | 155 (52 recorded at protocol level on main, 0 in flight, 148 automatable, 21 manual) |
+| Playthrough steps passing end to end | 23 | 169 | 146 (48 recorded at protocol level on main, 0 in flight, 148 automatable, 21 manual) |
 
 Scope. Packets: the 8 post-pin packets are excluded (docs/COVERAGE.md "post-pin"); "codec" is a registered `[Table.Name]` entry, and the handling check is a name search in apps/web and the bridge. Screens: covered + partial + class a; classes b (account server), c (AO20 extras) and d (dead forms) are out. Playthrough: "passing" means an end-to-end run against the real server; none exists yet (WP-D).
 
@@ -24,7 +24,7 @@ In flight now: PR #54 (feat/prehoo-lock: pins, asset lock, pinned coverage map);
 
 ## 1. Packets
 
-**512 of 513 have a codec** (server to client 202/202, client to server 310/311); 278 have a recorded VB6 fixture.
+**512 of 513 have a codec** (server to client 202/202, client to server 310/311); 279 have a recorded VB6 fixture.
 
 ### Missing codecs
 
@@ -116,12 +116,12 @@ None.
 
 ## 4. End-to-end playthrough
 
-Full list with expected results and VB6 sources: [PLAYTHROUGH.md](PLAYTHROUGH.md). **169 steps, 14 passing**, 1 failing, 18 blocked, 52 recorded, 0 in flight, 148 automatable, 21 manual.
+Full list with expected results and VB6 sources: [PLAYTHROUGH.md](PLAYTHROUGH.md). **169 steps, 23 passing**, 5 failing, 11 blocked, 48 recorded, 0 in flight, 148 automatable, 21 manual.
 
 | Category | Steps | Recorded | In flight | Auto | Manual |
 |---|---|---|---|---|---|
-| Account, character creation and session | 14 | 0 | 0 | 13 | 1 |
-| Movement and world | 27 | 8 | 0 | 23 | 4 |
+| Account, character creation and session | 14 | 1 | 0 | 13 | 1 |
+| Movement and world | 27 | 3 | 0 | 23 | 4 |
 | Survival: hunger, thirst, potions, regeneration | 15 | 5 | 0 | 13 | 2 |
 | Combat, magic, factions and pets | 26 | 9 | 0 | 23 | 3 |
 | Death, ghost state and resurrection | 16 | 2 | 0 | 15 | 1 |
