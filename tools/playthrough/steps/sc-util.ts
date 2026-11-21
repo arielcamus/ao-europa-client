@@ -6,9 +6,15 @@ import { CombatClientPacketId as CB, ItemsClientPacketId as IT, SpellClientPacke
 import type { ClientPacket } from '@ao/protocol';
 import { Sess } from '../session.js';
 import type { Ctx } from '../harness.js';
-import { sql, second, gmGoto, spawnCreature, killMine } from './util.js';
+import { sql as rawSql, second, gmGoto, spawnCreature, killMine } from './util.js';
 
-export { sql, second, gmGoto, spawnCreature, killMine };
+/** The shared DB answers 'database is locked' now and then (other agents write to it): retry a few times. */
+export function sql(statement: string): string {
+  let last: unknown;
+  for (let i = 0; i < 6; i++) { try { return rawSql(statement); } catch (e) { last = e; Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 2500); } }
+  throw last;
+}
+export { second, gmGoto, spawnCreature, killMine };
 export type Who = 'mage' | 'war';
 export const CLASS = { Mage: 1, Cleric: 2, Warrior: 3 } as const;
 
