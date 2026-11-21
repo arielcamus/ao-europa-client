@@ -12,6 +12,7 @@
 import type { Session } from './session.js';
 import { DOT_COLORS, DOT_SQUARE, MINIMAP_SIZE, cellDraws, centeredDot, centeredView, findMap } from './world-map.js';
 import type { World } from './world-map.js';
+import { assetUrl } from './assets.js';
 
 /** TileEngine: HalfWindowTileWidth/Height = (736/32)\2 and (608/32)\2. */
 const HALF_W = 11, HALF_H = 9;
@@ -46,7 +47,7 @@ export function minimapTile(px: number, py: number): { x: number; y: number } {
 /** VB6 CByte: round half to even. */
 export const cByte = (v: number) => { const r = Math.round(v); return Math.abs(v % 1) === 0.5 && r % 2 !== 0 ? r - 1 : r; };
 
-export const minimapUrl = (resourceMap: number) => `/ao-assets/Minimapas/mapa${resourceMap}.bmp`;
+export const minimapUrl = (resourceMap: number) => assetUrl(`Minimapas/mapa${resourceMap}.bmp`);
 
 /** One NPC marker of ListNPCMapData (Recursos.CargarNPCsMapData): the position is already ConvertToMinimapPosition(x, y, 2, 0), a minimap pixel. */
 export interface QuestDot { x: number; y: number; state: number }

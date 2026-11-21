@@ -238,10 +238,26 @@ export function readBody(bodies: Ini, molds: Ini, graphics: GraphicIndex, id: nu
   return { walk, bodyX, bodyY, headX: value('headoffsetx') + bodyX, headY: value('headoffsety') + bodyY };
 }
 
-export async function fetchBytes(path: string): Promise<Uint8Array> {
-  const response = await fetch(`/ao-assets/${path}`);
+/**
+ * The asset version the page carries (the server hashes every file's name, size and date): URLs pinned to it are cached as immutable,
+ * so a second visit downloads nothing (#79). Without it (tests, another server) the plain URL revalidates.
+ */
+const assetVersion = typeof document === 'undefined' ? '' : document.querySelector<HTMLMetaElement>('meta[name="ao-assets-version"]')?.content ?? '';
+/** The URL of a local resource, e.g. assetUrl('Graficos/239.png'). Every /ao-assets request goes through here. */
+export const assetUrl = (path: string) => `/ao-assets/${path}${assetVersion ? `?v=${encodeURIComponent(assetVersion)}` : ''}`;
+/** The init/, Dat/ and OUTPUT/ tables are read by several windows (sp_localindex.dat by four): one download each. */
+const shared = new Map<string, Promise<Uint8Array>>();
+async function download(path: string): Promise<Uint8Array> {
+  const response = await fetch(assetUrl(path));
   if (!response.ok) throw new Error(`Local asset unavailable: ${path} (${response.status}). Set AO_ASSETS to your Recursos directory.`);
   return new Uint8Array(await response.arrayBuffer());
+}
+export function fetchBytes(path: string): Promise<Uint8Array> {
+  if (!/^(init|dat|output)\//i.test(path)) return download(path);
+  const key = path.toLowerCase();
+  let pending = shared.get(key);
+  if (!pending) { pending = download(path); shared.set(key, pending); pending.catch(() => shared.delete(key)); }
+  return pending;
 }
 /**
  * The ONE decoder for game text files (Dat/*.dat, init/*.ini, *localindex.dat, locale messages).

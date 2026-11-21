@@ -17,7 +17,7 @@ test('items: use an apple, equip and unequip gear, projectile weapon uses; count
   test.skip(info.project.name !== 'desktop-chrome', 'desktop layout');
   const failures: string[] = [];
   page.on('pageerror', error => failures.push(error.message));
-  await page.route('**/ao-assets/Dat/Obj.dat', route => route.fulfill({ body: OBJ_DAT, contentType: 'text/plain' }));
+  await page.route('**/ao-assets/Dat/Obj.dat*', route => route.fulfill({ body: OBJ_DAT, contentType: 'text/plain' }));
   const seen: ClientPacket[] = [];
   let reply: (...packets: ServerPacket[]) => void = () => {};
   const mine = new Set<number>([IC.UseItem, IC.EquipItem, IC.UseItemU, IC.Drop, IC.PickUp]);

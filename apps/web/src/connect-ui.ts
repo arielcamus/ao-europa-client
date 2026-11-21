@@ -9,7 +9,7 @@ import type { AccountCharacter } from '@ao/protocol';
 import type { WorldRenderer } from './renderer.js';
 import type { NewCharacter } from './session.js';
 import { keyedSheet } from './grh-canvas.js';
-import { fetchText, parseIni } from './assets.js';
+import { fetchText, parseIni, assetUrl } from './assets.js';
 import { fxTables } from './fx-world.js';
 import { averageTint, groupTint } from './fx-particles.js';
 import { CREATE_BODY, CREATE_BODY_SMALL, HOME_CITIES, TEXT, homeCityId, headsFor, isSmallRace, raceModifiers, rotateClass, validateCharacterName } from './connect-text.js';
@@ -110,10 +110,20 @@ export class ConnectUI {
     this.login.className = 'cs-screen cs-login'; this.account.className = 'cs-screen cs-account'; this.create.className = 'cs-screen cs-create';
     this.stage.append(this.login, this.account, this.create);
     parent.append(this.stage);
-    const backdrop = preload('/ao-assets/Graficos/239.png').then(url => { this.stage.style.backgroundImage = `url("${url}")`; });
+    const backdrop = preload(assetUrl('Graficos/239.png')).then(url => { this.stage.style.backgroundImage = `url("${url}")`; });
     this.ready = Promise.all([this.buildLogin(), backdrop]).then(() => undefined, error => { console.error('login screen', error); });
-    void this.ready.then(() => { void this.buildAccount(); void this.buildCreate(); }); // the login screen's pictures get the bandwidth first
-    void fetchText('init/sp_localindex.dat').then(text => { this.ini = parseIni(text); this.applyRace(); }).catch(() => undefined);
+  }
+  private screensBuilt = false;
+  /**
+   * The account and creation screens (their pictures and the race texts of sp_localindex.dat). The login screen's pictures get the
+   * bandwidth first; these load when the link is idle (main.ts: the player is still on the login screen, or already on the account
+   * screen), so a player who goes straight into the world never waits for them (#79).
+   */
+  buildScreens() {
+    if (this.screensBuilt) return;
+    this.screensBuilt = true;
+    void this.ready.then(() => { void this.buildAccount(); void this.buildCreate(); });
+    void this.ready.then(() => fetchText('init/sp_localindex.dat')).then(text => { this.ini = parseIni(text); this.applyRace(); }).catch(() => undefined);
   }
 
   get current() { return this.screen; }
@@ -345,7 +355,7 @@ export class ConnectUI {
   /** A Grh placed like Draw_Grh (the `center` flag puts the bitmap's middle on a 32 px tile: x - w/2 + 16, y - h + 32). */
   private async grh(parent: HTMLElement, id: number, x: number, y: number, center: boolean, cls = '') {
     const frame = await this.renderer.graphic(id);
-    const sheet = await preload(`/ao-assets/Graficos/${frame.file}.png`); // the screen is only complete once its pictures are whole, not just placed
+    const sheet = await preload(assetUrl(`Graficos/${frame.file}.png`)); // the screen is only complete once its pictures are whole, not just placed
     const el = document.createElement('div'); el.className = `cs-grh ${cls}`.trim();
     const left = center ? x - Math.floor(frame.width / 2) + 16 : x, top = center ? y - frame.height + 32 : y;
     el.style.cssText = `left:${left}px;top:${top}px;width:${frame.width}px;height:${frame.height}px;background:url("${sheet}") -${frame.x}px -${frame.y}px no-repeat`;

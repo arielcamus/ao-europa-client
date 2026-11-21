@@ -3,6 +3,7 @@
  * like NpcDialog.portrait and ClassicUI.sheet do for their own art. AGPL-3.0-or-later; see NOTICE. Art is read only from the local mount.
  */
 import type { WorldRenderer } from './renderer.js';
+import { assetUrl } from './assets.js';
 
 const sheets = new Map<number, Promise<HTMLCanvasElement>>();
 /** `Graficos/<file>.png` with every pure-black pixel made transparent (clsTexManager colour key). */
@@ -20,7 +21,7 @@ export function keyedSheet(file: number): Promise<HTMLCanvasElement> {
         ctx.putImageData(pixels, 0, 0); resolve(canvas);
       };
       image.onerror = () => reject(new Error(`Missing local graphic ${file}`));
-      image.src = `/ao-assets/Graficos/${file}.png`;
+      image.src = assetUrl(`Graficos/${file}.png`);
     });
     sheets.set(file, pending);
   }

@@ -1,3 +1,4 @@
+import { assetUrl } from './assets.js';
 // Original BMP files remain untouched. Some true-color BI_RGB headers declare
 // important palette colors; WebKit rejects these, although there is no palette.
 // Normalize only unused palette metadata in a browser-local copy. Pixel bytes,
@@ -19,34 +20,60 @@ export function normalizeTrueColorBmp(bytes: Uint8Array): Uint8Array {
   return normalized;
 }
 
-export const interfaceUrl = (name: string, localized = true) => `/ao-assets/interface/${localized ? 'es_' : ''}${name}.bmp`;
+export const interfaceUrl = (name: string, localized = true) => assetUrl(`interface/${localized ? 'es_' : ''}${name}.bmp`);
 const pending = new Map<string, Promise<string>>();
 const urls = new Map<string, string>();
 export const loadedInterfaceUrl = (name: string) => urls.get(interfaceUrl(name)) ?? interfaceUrl(name);
 
+/*
+ * Frmcarga loads every form picture before the login; over a 1.6 Mbit/s link that is ~17 MB of BMP and two minutes (#79). Here the
+ * pictures that windows ask for while the client boots wait in a queue, except the ones the splash and the login screen show. The
+ * queue downloads a few at a time while `setInterfaceDrain(true)` (idle on the connect screens, or the world already drawn, or a
+ * window open), so it never competes with the login art or the first world frame. A picture asked for after the boot loads at once.
+ */
+const CONNECT_ART = new Set(['es_ventanacargando', 'es_boton-ingresar-over', 'es_boton-ingresar-off', 'es_check-amarillo']);
+let booting = true, draining = false, running = 0;
+const LANE = 2;
+const waiting: { original: string; start: () => void }[] = [];
+const pump = () => { while (draining && running < LANE && waiting.length) { running++; waiting.shift()!.start(); } };
+/** The connect screen is up: pictures asked for from now on are wanted now. */
+export function interfaceBootDone() { booting = false; }
+/** Let the queued window pictures download (true) or hold them (false: the world is loading). */
+export function setInterfaceDrain(on: boolean) { draining = on; pump(); }
+/** Window pictures still queued (tests). */
+export const queuedInterfaceCount = () => waiting.length;
+
 export function loadInterface(name: string, localized = true): Promise<string> {
   const original = interfaceUrl(name, localized);
   let promise = pending.get(original);
-  if (!promise) {
-    promise = (async () => {
-      const image = new Image(); image.src = original;
-      try { await image.decode(); urls.set(original, original); return original; }
-      catch {
-        const response = await fetch(original);
-        if (!response.ok) throw new Error(`Interfaz original no disponible: ${original} (${response.status})`);
-        let bytes: Uint8Array;
-        try { bytes = normalizeTrueColorBmp(new Uint8Array(await response.arrayBuffer())); }
-        catch (error) { throw new Error(`${original}: ${String(error)}`); }
-        const url = URL.createObjectURL(new Blob([bytes.buffer as ArrayBuffer], { type: 'image/bmp' }));
-        image.src = url;
-        try { await image.decode(); }
-        catch { URL.revokeObjectURL(url); throw new Error(`No se pudo decodificar la interfaz original: ${original}`); }
-        urls.set(original, url); return url;
-      }
-    })();
+  if (!promise && booting && !CONNECT_ART.has(`${localized ? 'es_' : ''}${name}`.toLowerCase())) {
+    promise = new Promise<void>(start => { waiting.push({ original, start }); pump(); })
+      .then(() => fetchInterface(original)).finally(() => { running--; pump(); });
     pending.set(original, promise);
+  } else if (promise && !booting) {
+    // Asked for again after the boot (a window opening): a queued picture jumps the queue.
+    const at = waiting.findIndex(item => item.original === original);
+    if (at >= 0) { running++; waiting.splice(at, 1)[0]!.start(); }
   }
+  if (!promise) { promise = fetchInterface(original); pending.set(original, promise); }
   return promise;
+}
+
+async function fetchInterface(original: string): Promise<string> {
+  const image = new Image(); image.src = original;
+  try { await image.decode(); urls.set(original, original); return original; }
+  catch {
+    const response = await fetch(original);
+    if (!response.ok) throw new Error(`Interfaz original no disponible: ${original} (${response.status})`);
+    let bytes: Uint8Array;
+    try { bytes = normalizeTrueColorBmp(new Uint8Array(await response.arrayBuffer())); }
+    catch (error) { throw new Error(`${original}: ${String(error)}`); }
+    const url = URL.createObjectURL(new Blob([bytes.buffer as ArrayBuffer], { type: 'image/bmp' }));
+    image.src = url;
+    try { await image.decode(); }
+    catch { URL.revokeObjectURL(url); throw new Error(`No se pudo decodificar la interfaz original: ${original}`); }
+    urls.set(original, url); return url;
+  }
 }
 
 if (typeof window !== 'undefined') window.addEventListener('pagehide', () => {
