@@ -3,7 +3,8 @@ import './style.css';
 import { Heading, parseWireProfile, setWireProfile } from '@ao/protocol';
 import { Session } from './session.js';
 import { WorldRenderer } from './renderer.js';
-import { applyClassicLayout } from './classic-layout.js';
+import { applyClassicLayout, setScreenScale, SCREEN_SCALES } from './classic-layout.js';
+import type { ScreenScale } from './classic-layout.js';
 import { ClassicUI, element } from './classic-ui.js';
 import { doorClickTile } from './map-objects.js';
 import { NpcDialog } from './npc-dialog.js';
@@ -61,7 +62,11 @@ import { FloatingTexts } from './floating-text.js';
 import type { SessionNotice } from './session.js';
 import type { VbWindow } from './vb-window.js';
 
-applyClassicLayout();
+// The saved screen scale applies from the first layout; `?scale=fill|whole` in the address changes and remembers it (see options-settings.ts).
+const gameOptions = new OptionsSettings();
+const scaleParam = new URLSearchParams(location.search).get('scale') as ScreenScale | null;
+if (scaleParam && SCREEN_SCALES.includes(scaleParam)) gameOptions.update({ screenScale: scaleParam });
+applyClassicLayout(gameOptions.value.screenScale);
 // Frmcarga is the first thing on screen: its art is requested before every other resource so it is not queued behind the atlases.
 const loading = new LoadingCard(element('classic'));
 loading.visible = true;
@@ -202,7 +207,6 @@ ui.bindMenu('Hogar', () => runCommand('/HOGAR'));
 ui.bindMenu('Retos', () => runCommand('/RETAR'));
 ui.bindMenu('Clanes', () => { if (session?.ready) sendPackets(session.guild.openGuildPanel()); });
 // frmOpciones (graphics, gameplay and, through audio.options, sound), frmCustomKeys and the hotkey bar (feat/options-extras).
-const gameOptions = new OptionsSettings();
 const keyBindings = new KeyBindings();
 const keysUi = new KeysUI(element('classic'), keyBindings, () => { /* the hotkey labels re-read the bindings on their next update */ });
 const optionsUi = new OptionsUI(element('classic'), audio.options, gameOptions, keysUi, () => audio.director.click());
@@ -225,6 +229,7 @@ let showOnline = false;
 const applyOptions = () => {
   fpsLabel.hidden = !gameOptions.value.showFps;
   if (session) session.ui.chat.copyToConsole = gameOptions.value.copyDialogToConsole;
+  setScreenScale(gameOptions.value.screenScale);
 };
 gameOptions.subscribe(applyOptions);
 applyOptions(); // the saved options (FPS label) apply from the first frame, not only after a change

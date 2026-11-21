@@ -30,29 +30,80 @@ export const controls: Record<string, readonly [number, number, number, number]>
 };
 
 /**
- * Uniform scale of the 1024x768 classic window for a browser window. Smaller than the window (phones): shrink to fit,
- * as before. Larger: grow to fill, snapping to a whole number when that wastes under 12% so the pixel art stays crisp.
+ * How the classic window grows on a screen larger than 1024x768 (option `screenScale`).
+ * - `fill`: as large as fits; a whole number of DEVICE pixels per art pixel when that wastes under 12%, otherwise fractional. The art stays
+ *   nearest neighbour (image-rendering: pixelated on #classic) and the world canvas renders at device pixels, so nothing is resampled twice.
+ * - `whole`: the largest whole number of device pixels per art pixel that fits (on a Retina screen, 1.5x is 3 device pixels), letterboxed.
  */
-export function classicScale(width: number, height: number): number {
+export type ScreenScale = 'fill' | 'whole';
+export const SCREEN_SCALES: readonly ScreenScale[] = ['fill', 'whole'];
+
+/**
+ * Uniform scale (CSS px per art px) of the 1024x768 classic window for a browser window of `width` x `height` CSS px at `dpr` device pixels per
+ * CSS px. Smaller than the window (phones): shrink to fit, as before. Larger: see ScreenScale. Whole numbers are counted in device pixels
+ * (1512x982 at DPR 2 fits 2.56 device px per art px: `whole` gives 2, i.e. CSS scale 1).
+ */
+export function classicScale(width: number, height: number, dpr = 1, mode: ScreenScale = 'fill'): number {
   const fit = Math.min(width / CLASSIC_WIDTH, height / CLASSIC_HEIGHT);
   if (!(fit > 0)) return 1;
+  const ratio = dpr > 0 && Number.isFinite(dpr) ? dpr : 1;
+  if (fit <= 1 && fit * ratio < 1) return fit; // fewer device pixels than art pixels: no whole number fits
+  const device = fit * ratio, whole = Math.floor(device + 1e-9);
+  if (mode === 'whole') return whole / ratio;
   if (fit <= 1) return fit;
-  const whole = Math.floor(fit);
-  return whole / fit >= 0.88 ? whole : fit;
+  return whole / device >= 0.88 ? whole / ratio : fit;
 }
 
-export function applyClassicLayout() {
+/** Device pixels per art pixel the world canvas should render at: the on-screen size, so the browser never resamples it (phones keep DPR, max 2). */
+export function canvasResolution(scale: number, dpr: number): number {
+  const device = scale * (dpr > 0 ? dpr : 1);
+  return device >= 1 ? Math.min(4, device) : Math.min(dpr || 1, 2);
+}
+
+/**
+ * The size of #classic-fit in CSS px: at least the scaled window, rounded up so that it and the space left around it are whole device pixels
+ * (an odd leftover would centre the art half a device pixel off and blur every edge at a whole-number scale).
+ */
+export function fitBox(scaled: number, available: number, dpr: number): number {
+  const d = dpr > 0 ? dpr : 1;
+  let device = Math.ceil(scaled * d - 1e-6);
+  const room = Math.round(available * d);
+  if (room > device && (room - device) % 2) device += 1;
+  return device / d;
+}
+
+let mode: ScreenScale = 'fill';
+let current = { scale: 1, dpr: 1 };
+const listeners = new Set<(scale: number, dpr: number) => void>();
+let resize: (() => void) | undefined;
+/** The current classic scale and devicePixelRatio. */
+export function classicScaleNow() { return current; }
+/** Called with the new scale whenever the window, the device pixel ratio or the mode changes. */
+export function onClassicScale(listener: (scale: number, dpr: number) => void) { listeners.add(listener); return () => { listeners.delete(listener); }; }
+export function setScreenScale(next: ScreenScale) { if (next !== mode && SCREEN_SCALES.includes(next)) { mode = next; resize?.(); } }
+
+export function applyClassicLayout(initial: ScreenScale = 'fill') {
+  mode = initial;
   document.querySelectorAll<HTMLElement>('[data-vb]').forEach(element => {
     const rect = controls[element.dataset.vb!];
     if (!rect) throw new Error(`Unknown classic control: ${element.dataset.vb}`);
     const [x, y, width, height] = rect;
     Object.assign(element.style, { left: `${x}px`, top: `${y}px`, width: `${width}px`, height: `${height}px` });
   });
-  const resize = () => {
-    const scale = classicScale(document.documentElement.clientWidth, window.innerHeight);
+  let watched: MediaQueryList | undefined;
+  resize = () => {
+    const dpr = window.devicePixelRatio || 1, width = document.documentElement.clientWidth, height = window.innerHeight;
+    const scale = classicScale(width, height, dpr, mode);
     document.documentElement.style.setProperty('--classic-scale', String(scale));
-    const fit = document.getElementById('classic-fit')!;
-    fit.style.width = `${CLASSIC_WIDTH * scale}px`; fit.style.height = `${CLASSIC_HEIGHT * scale}px`;
+    const fit = document.getElementById('classic-fit')!, classic = document.getElementById('classic');
+    fit.style.width = `${fitBox(CLASSIC_WIDTH * scale, width, dpr)}px`; fit.style.height = `${fitBox(CLASSIC_HEIGHT * scale, height, dpr)}px`;
+    if (classic) { classic.dataset.screenScale = mode; classic.dataset.devicePixels = (scale * dpr).toFixed(3); classic.dataset.crisp = String(scale * dpr >= 1); }
+    const changed = scale !== current.scale || dpr !== current.dpr;
+    current = { scale, dpr };
+    if (changed) for (const listener of listeners) listener(scale, dpr);
+    // Moving the window to another display changes devicePixelRatio without a resize event.
+    watched?.removeEventListener('change', resize!);
+    watched = window.matchMedia?.(`(resolution: ${dpr}dppx)`); watched?.addEventListener('change', resize!);
   };
   resize(); window.addEventListener('resize', resize);
 }

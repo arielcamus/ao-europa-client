@@ -22,6 +22,7 @@ import { parseParticles } from './fx-particles.js';
 import { fxTables, parseProjectiles } from './fx-world.js';
 import type { FrameInfo } from './fx-world.js';
 import { graphicFlags } from './movement.js';
+import { canvasResolution, classicScaleNow, onClassicScale } from './classic-layout.js';
 
 class SpritePool {
   private sprites: Sprite[] = [];
@@ -64,6 +65,7 @@ export class WorldRenderer {
   /** Layer-5 roofs as per-corner-coloured quads (RenderScreen passes the tile's four light_value colours). */
   private roofPool: RoofMeshPool | undefined;
   private observer: ResizeObserver | undefined;
+  private unscale: (() => void) | undefined;
   private readonly world = new Container();
   private objectGraphics = new Map<number, ObjectGraphic>();
   private readonly roofs = new RoofLights();
@@ -95,7 +97,7 @@ export class WorldRenderer {
   async init() {
     await this.app.init({
       background: '#000000', antialias: false, preference: 'webgl',
-      resolution: Math.min(devicePixelRatio || 1, 2), autoDensity: true,
+      resolution: canvasResolution(classicScaleNow().scale, classicScaleNow().dpr), autoDensity: true,
       width: this.host.clientWidth, height: this.host.clientHeight,
     });
     this.app.canvas.tabIndex = 0;
@@ -112,6 +114,9 @@ export class WorldRenderer {
     this.roofPool = new RoofMeshPool(this.pools[6]!.container);
     this.fx.attach(this.world, this.app.stage, this.pools[6]!.container);
     this.observer = new ResizeObserver(() => this.app.renderer.resize(this.host.clientWidth, this.host.clientHeight));
+    // The backing store follows the classic window's on-screen size (device pixels), so the browser never resamples the frame: a 736x608
+    // canvas shown at 2.56 device px per pixel renders 1882x1555, not 1472x1216 stretched again by the CSS scale (blur, uneven names).
+    this.unscale = onClassicScale((scale, dpr) => this.app.renderer.resize(this.host.clientWidth, this.host.clientHeight, canvasResolution(scale, dpr)));
     this.observer.observe(this.host);
     this.app.ticker.maxFPS = 60;
   }
@@ -396,7 +401,6 @@ export class WorldRenderer {
     let label = this.labels[this.labelsUsed++];
     if (!label) {
       label = new Text({ text, style: { fontFamily: 'Tahoma, Verdana, sans-serif', fontSize: size, fontWeight: 'bold', fill: '#ffffff', stroke: { color: '#000000', width: 3 }, align: 'center', wordWrap: true, wordWrapWidth: 170 } });
-      label.resolution = 2;
       this.labels.push(label); this.labelLayer.addChild(label);
     }
     if (label.text !== text) label.text = text;
@@ -501,7 +505,7 @@ export class WorldRenderer {
     }
   }
   destroy() {
-    this.epoch++; this.observer?.disconnect(); this.fx?.destroy();
+    this.epoch++; this.observer?.disconnect(); this.unscale?.(); this.fx?.destroy();
     this.app.destroy(true, { children: true });
     for (const texture of this.textures.values()) if (texture !== Texture.EMPTY) texture.destroy();
     for (const source of this.sources.values()) source.destroy(true);

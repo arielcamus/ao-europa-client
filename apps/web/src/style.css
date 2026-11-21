@@ -24,6 +24,10 @@ button { cursor: pointer; }
 .main-art { width: 1024px; height: 768px; }
 .panel-art { width: 100%; height: 100%; }
 img, canvas { image-rendering: pixelated; }
+/* Every piece of art in the classic window (backgrounds of art buttons and windows included: image-rendering is inherited) is scaled nearest
+   neighbour while it grows, so a fractional scale shows whole pixels instead of a blur. Shrunk below one device pixel per art pixel (phones) the
+   backgrounds keep the browser's smooth filter. See classic-layout.ts. */
+#classic[data-crisp="true"] { image-rendering: pixelated; }
 button, input { border-radius: 0; }
 .hotspot, .art-button { border: 0; padding: 0; background: transparent; color: transparent; }
 .hotspot:hover { background: #ffffff12; }
