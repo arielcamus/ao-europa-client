@@ -154,14 +154,13 @@ export class BankUI {
     this.nameBox.hidden = operation !== 3; this.depositAll.hidden = operation !== 1;
     void loadInterface(art).then(url => { this.frameArt.style.backgroundImage = `url("${url}")`; }).catch(() => {});
     this.frame.hidden = false; this.datos.focus();
-    if (operation === 3) this.session?.ui.message('Transferir oro aún no está disponible.');
   }
   private depositEverything() {
     const gold = this.session?.ui.stats.gold ?? 0;
     if (gold <= 0) { this.note.textContent = 'No tienes oro para depositar.'; return; }
     this.session?.bankTradeActions.depositGold(gold);
   }
-  /** cmdAceptar_Click, cases 1 and 2 (3, transfer, needs a packet owned by another feature). */
+  /** cmdAceptar_Click: 1 deposit, 2 withdraw, 3 transfer to another character's bank (TransFerGold, feat/options-extras). */
   private acceptFrame() {
     const actions = this.session?.bankTradeActions, state = this.session?.bankTrade; if (!actions || !state) return;
     const value = Number(this.datos.value), gold = this.session?.ui.stats.gold ?? 0;
@@ -174,7 +173,14 @@ export class BankUI {
       if (!(value >= 1)) this.note.textContent = 'Cantidad inválida.';
       if (state.bankGold <= 0) { this.note.textContent = 'No tienes oro en la cuenta.'; return; }
       if (value >= 1) actions.extractGold(Math.min(value, state.bankGold));
-    } else this.session?.ui.message('Transferir oro aún no está disponible.');
+    } else if (this.operation === 3) {
+      // Negativos y ceros, then no gold in the account, then the destination name (MENSAJE_TRANSFERIR_NOMBRE_INVALIDO).
+      if (!(value >= 1)) { this.note.textContent = 'Cantidad inválida.'; return; }
+      if (state.bankGold <= 0) { this.note.textContent = 'No tienes oro en la cuenta.'; return; }
+      const destination = this.nameBox.value.trim();
+      if (destination) { this.session?.optionsActions.transferGold(Math.min(value, state.bankGold), destination); this.closeGoliath(); }
+      else { this.note.textContent = '¡Nombre de destino inválido!'; this.datos.value = ''; }
+    }
   }
 
   update(session: Session | undefined) {

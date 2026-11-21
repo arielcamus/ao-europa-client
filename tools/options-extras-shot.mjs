@@ -1,0 +1,37 @@
+// AGPL-3.0-or-later. Headless Chrome against the REAL VB6 server: options window (3 tabs), key editor, hotkey bar, FPS label.
+// Usage: AO_WEB_PORT=5767 AO_EMAIL=aotest@local.test AO_PASSWORD=... node tools/options-extras-shot.mjs
+const need = name => process.env[name] ?? (() => { throw new Error(`Set ${name}`); })();
+import { chromium } from '@playwright/test';
+import { mkdirSync } from 'node:fs';
+const base = `http://127.0.0.1:${process.env.AO_WEB_PORT ?? 5767}/`;
+const browser = await chromium.launch({ channel: 'chrome', args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader'] }).catch(() => chromium.launch());
+const page = await browser.newPage({ viewport: { width: 1024, height: 768 } });
+const problems = []; const frames = [];
+page.on('pageerror', e => problems.push(e.message));
+page.on('websocket', ws => ws.on('framesent', f => { const b = Buffer.from(f.payload); if (b.length >= 4) frames.push(b.readUInt16LE(2)); }));
+await page.goto(base);
+await page.locator('#email').fill(need('AO_EMAIL')); await page.locator('#password').fill(need('AO_PASSWORD')); await page.locator('#connect').click();
+await page.locator('#viewport[data-rendered="true"]').waitFor({ timeout: 60_000 });
+await page.waitForTimeout(2500);
+mkdirSync('artifacts/screenshots', { recursive: true });
+const shot = name => page.screenshot({ path: `artifacts/screenshots/options-extras-${name}.png` });
+await shot('hotkeys');
+console.log('hotkey bar visible', await page.locator('#hotkeys').isVisible(), 'slot labels', await page.locator('#hotkeys .hk-label').allInnerTexts());
+await page.locator('#settings').click(); await page.waitForTimeout(800); await shot('options-jugabilidad');
+await page.locator('#options-tab-video').click(); await page.waitForTimeout(500);
+await page.locator('[data-option="fps"]').check(); await page.waitForTimeout(900); await shot('options-video');
+console.log('fps label', await page.locator('#fps').isVisible(), await page.locator('#fps').innerText());
+await page.locator('#options-tab-audio').click(); await page.waitForTimeout(500); await shot('options-audio');
+await page.locator('#options-keys').click(); await page.waitForTimeout(500); await shot('keys');
+await page.locator('#keys [data-action="2"]').focus(); await page.keyboard.press('KeyZ'); await page.waitForTimeout(200);
+console.log('loot box after Z:', await page.locator('#keys [data-action="2"]').innerText());
+await page.locator('#keys [data-action="3"]').focus(); await page.keyboard.press('KeyZ');
+console.log('drop box after Z (taken):', await page.locator('#keys [data-action="3"]').innerText(), await page.locator('#keys .keys-msg').innerText());
+await page.locator('#keys-save').click();
+await page.locator('#options-close').click();
+await page.keyboard.press('KeyZ'); await page.waitForTimeout(500);
+console.log('console tail after Z (loot):', JSON.stringify((await page.locator('#messages').innerText()).split('\n').slice(-2)));
+await page.reload(); await page.waitForTimeout(500);
+console.log('saved bindings', await page.evaluate(() => JSON.parse(localStorage.getItem('ao.keys.v1'))['2']));
+console.log('sent client ids', [...new Set(frames)].join(','), JSON.stringify({ problems }));
+await browser.close();

@@ -25,6 +25,11 @@ import { TradeUI } from './trade-ui.js';
 import { PartyUI } from './party-ui.js';
 import { GuildUI } from './guild-ui.js';
 import { QuestWindows } from './quest-window.js';
+import { OptionsSettings } from './options-settings.js';
+import { OptionsUI } from './options-ui.js';
+import { KeyBindings } from './key-bindings.js';
+import { KeysUI } from './keys-ui.js';
+import { HotkeysUI } from './hotkeys-ui.js';
 
 applyClassicLayout();
 const form = element<HTMLFormElement>('login'), account = element<HTMLInputElement>('email'), password = element<HTMLInputElement>('password');
@@ -75,6 +80,22 @@ partyUi.onFrameClick = groupId => { if (session?.spells.targeting?.skill === 1) 
 const guildUi = new GuildUI(element('classic'), sendPackets);
 ui.bindMenu('Grupo', () => sendPackets(session?.party.requestWindow()));
 ui.bindMenu('Clanes', () => { if (session?.ready) sendPackets(session.guild.openGuildPanel()); });
+// frmOpciones (graphics, gameplay and, through audio.options, sound), frmCustomKeys and the hotkey bar (feat/options-extras).
+const gameOptions = new OptionsSettings();
+const keyBindings = new KeyBindings();
+const keysUi = new KeysUI(element('classic'), keyBindings, () => { /* the hotkey labels re-read the bindings on their next update */ });
+const optionsUi = new OptionsUI(element('classic'), audio.options, gameOptions, keysUi, () => audio.director.click());
+const hotkeysUi = new HotkeysUI(element('classic'), viewport, { itemArt: grh => ui.itemArt(grh), slotBackground: grh => ui.slotBackground(grh), graphic: grh => renderer.graphic(grh) });
+const fpsLabel = document.createElement('span'); fpsLabel.id = 'fps'; fpsLabel.hidden = true; element('classic').append(fpsLabel);
+let lastFps = 0;
+/** MostrarOnline: the VB6 key only flips this flag; the original client never draws anything from it. */
+let showOnline = false;
+const applyOptions = () => {
+  fpsLabel.hidden = !gameOptions.value.showFps;
+  if (session) session.ui.chat.copyToConsole = gameOptions.value.copyDialogToConsole;
+};
+gameOptions.subscribe(applyOptions);
+const hotkeysLoaded = new WeakSet<Session>();
 /** IsDialogOpen: the bank, Goliath and trade windows pause walking. */
 const transacting = () => bankUi.dialogOpen || tradeUi.dialogOpen;
 const questWindows = new QuestWindows(element('classic'), renderer, undefined, report);
@@ -151,8 +172,12 @@ function updateUi(now: number) {
   ui.update(session); bankUi.update(session); tradeUi.update(session); partyUi.update(session); guildUi.update(session);
   itemsUi.update(session);
   guard(() => craftingUi.update(session));
-  if (!session) return;
+  if (!session) { hotkeysUi.update(undefined, false); return; }
   const playing = session.ready && renderer.readyMap === session.resourceMap;
+  // ModSettings.LoadHotkeys: once per entry into the game, send the saved slots to the server.
+  if (playing && session.self && !hotkeysLoaded.has(session)) { hotkeysLoaded.add(session); session.optionsActions.loadHotkeys(session.self.name); }
+  hotkeysUi.update(session, playing);
+  if (gameOptions.value.showFps && now - lastFps > 500) { lastFps = now; fpsLabel.textContent = `FPS: ${Math.round(renderer.app.ticker.FPS)}`; }
   minimap.update(session, playing);
   if (playing) {
     form.hidden = true; disconnect.hidden = false;
@@ -189,6 +214,7 @@ form.addEventListener('submit', event => {
   const owner = session;
   session.tracker.onNpcDescription = ({ npcNumber }) => { if (session === owner) void npcDialog.show(npcNumber, renderer.locale); };
   chatBox.attach(session);
+  session.ui.chat.copyToConsole = gameOptions.value.copyDialogToConsole;
   audio.attach(session);
   ws.onmessage = event => {
     if (socket !== ws) return;
@@ -202,8 +228,8 @@ form.addEventListener('submit', event => {
   renderer.app.canvas.focus();
 });
 disconnect.addEventListener('click', () => close());
-// frmMain OpcionesBoton opens frmOpciones; here its sound part. The classic help lines stay on the same button.
-element('settings').addEventListener('click', () => audio.options.toggle());
+// frmMain OpcionesBoton opens frmOpciones (gameplay, video, audio tabs, and the key editor).
+element('settings').addEventListener('click', () => optionsUi.toggle());
 const openChat = (guild = false) => {
   if (!session?.ready) return;
   if (!chatSupported) { session.ui.message('Este servidor aún no admite chat.'); return; }
@@ -237,7 +263,7 @@ function gameKey(action: KeyAction) {
     case KeyAction.Steal: ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Steal, counter: 0 })); return;
     case KeyAction.RefreshPosition: guard(() => s.refreshPosition()); return;
     case KeyAction.Hide: ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Hide, counter: 0 })); return;
-    case KeyAction.ShowOnline: unavailable('Mostrar usuarios online'); return;
+    case KeyAction.ShowOnline: showOnline = !showOnline; return;
     case KeyAction.ScreenShot: unavailable('Captura de pantalla'); return;
     case KeyAction.ClanCall: case KeyAction.ClanMark: { // IntervaloPermiteLLamadaClan: 5 s between clan calls/marks
       const now = performance.now();
@@ -245,7 +271,7 @@ function gameKey(action: KeyAction) {
       lastClanCall = now; guard(() => s.sendAction({ id: action === KeyAction.ClanCall ? K.ClanCall : K.ClanMark }));
       return;
     }
-    case KeyAction.GameStats: unavailable('Estadísticas (FPS)'); return;
+    case KeyAction.GameStats: gameOptions.update({ showFps: !gameOptions.value.showFps }); return;
     case KeyAction.Meditate: // WriteMeditate: not with full mana, not dead, not while walking
       if (s.ui.stats.mana !== undefined && s.ui.stats.mana === s.ui.stats.maxMana) return;
       if (s.motion) return;
@@ -255,14 +281,19 @@ function gameKey(action: KeyAction) {
     case KeyAction.Taming: ifAlive(() => s.sendAction({ id: K.Work, skill: WorkSkill.Tame, counter: 0 })); return;
     case KeyAction.SendText: openChat(); return;
     default:
-      // Hotkeys 1-0 (WriteUseHKeySlot) only exist when the server enables them (FeatureToggles eEnableHotkeys), not decoded yet.
-      if (action >= KeyAction.HotKey1 && action <= KeyAction.HotKey10) unavailable('Atajos 1-0');
+      // Hotkeys 1-0: DoHotKey (needs the server's "hotokey-enabled" toggle, see options-state.ts).
+      if (action >= KeyAction.HotKey1 && action <= KeyAction.HotKey10) guard(() => s.optionsActions.useHotkey(action - KeyAction.HotKey1));
   }
 }
 window.addEventListener('keydown', event => {
   if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); itemsUi.closeDialogs(); bankUi.closeDialogs(); tradeUi.closeDialogs(); craftingUi.closeAll(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
-  // IsDialogOpen: while the vault, Goliath or a trade window is up the game keys (attack, use, drop...) do nothing.
-  if (transacting()) return;
+  // IsDialogOpen: while the vault, Goliath or a trade window is up the game keys (attack, use, drop...) do nothing. The options and key windows are modal too.
+  if (transacting() || optionsUi.visible) return;
+  // PermitirMoverse ("Moverse al escribir"): the movement keys still walk while the chat box has focus.
+  if (gameOptions.value.moveWhileTyping && event.target === chat && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    const typingHeading = directions.get(event.code);
+    if (typingHeading) { keys.set(event.code, typingHeading); walk(typingHeading); return; }
+  }
   // The inventory slot that was just clicked keeps focus; the game keys must still work from it.
   const inInventory = event.target instanceof HTMLElement && event.target.closest('#inventory') !== null;
   if (event.target instanceof HTMLElement && !inInventory && event.target.closest('input, textarea, select, button, [role="listbox"], dialog')) return;
