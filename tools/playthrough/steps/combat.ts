@@ -1,7 +1,7 @@
 // AGPL-3.0-or-later. CMB-01..26 (combat, magic, PvP, safe zones, citizen/criminal, factions). Expected numbers come from the pinned server (9ccd7fad,
 // `git show 9ccd7fad:Codigo/<file>`) and the live server's own Dat (C:\ao\server-9ccd\Dat), cited per step. Creatures are the GM helper's own (static dummies:
 // NPC 612 "Blanco" for melee, NPC 602 "Louise" for spells) and are removed afterwards; characters are the harness's own two (mage, warrior).
-import { SessionClientPacketId as SCP, KeysClientPacketId as KEY, StatusClientPacketId as STC, Heading } from '@ao/protocol';
+import { SessionClientPacketId as SCP, KeysClientPacketId as KEY, StatusClientPacketId as STC, PetsTravelClientPacketId as PET, Heading } from '@ao/protocol';
 import type { ClientPacket } from '@ao/protocol';
 import { step } from '../harness.js';
 import type { Ctx } from '../harness.js';
@@ -105,8 +105,8 @@ async function duel(c: Ctx, map: number, cx: number, cy: number, dressed = true)
   const w0 = await actor(c, 'war'), v0 = await actor(c, 'mage');
   if (dressed) { await ensureEquipped(w0, 3500); await ensureEquipped(w0, 3487); void v0; } // done while still on the safe map; the equipment persists through the relog
   await dbEditBoth(c, {
-    mage: [setUser('is_dead=0, is_poisoned=0, status=1, min_hp=20, min_sta=60, min_ham=100, min_sed=100'), placeSet(map, x + 1, y)],
-    war: [setUser('is_dead=0, status=1, faction_score=0, min_hp=20, min_sta=60, min_ham=100, min_sed=100, heading=2'), placeSet(map, x, y)],
+    mage: [setUser('is_dead=0, is_poisoned=0, status=1, level=1, exp=0, min_hp=20, min_sta=60, min_ham=100, min_sed=100'), placeSet(map, x + 1, y)],
+    war: [setUser('is_dead=0, status=1, faction_score=0, ciudadanos_matados=0, criminales_matados=0, min_hp=20, min_sta=60, min_ham=100, min_sed=100, heading=2'), placeSet(map, x, y)],
   });
   const w = await actor(c, 'war'), v = await actor(c, 'mage');
   c.ok(w.map === map && v.map === map, `both characters on map ${map} (warrior ${w.map}:${w.x},${w.y} mage ${v.map}:${v.x},${v.y})`);
@@ -144,12 +144,12 @@ step('CMB-03', async c => {
   m = w.mark(); toggleSeguro(w); await w.sleep(1000); c.ok(w.since(m).some(r => r.name === Safe.off), `map ${PVP_MAP}: SafeModeOff after the toggle (it is ON again after every login)`);
   c.eq((await miniStats(w)).alignment, 1, 'warrior is a citizen (alignment 1) before attacking');
   const hits: { place: number; damage: number }[] = []; let swings = 0; m = w.mark(); const startHp = hpOf(v); c.note(`HP before the duel: warrior ${hpOf(w)}, mage ${hpOf(v)}`);
-  while (swings < 16 && hits.length < 4 && hpOf(v) > 6 && hpOf(w) > 6) {
+  while (swings < 24 && hpOf(v) > 0 && hpOf(w) > 6) { // until the 20 HP mage dies: CMB-09 needs the kill (a victim of level <= 12 is a newbie for ContarMuerte)
     const b = v.mark(); await w.sleep(1250); attack(w); swings++; await w.sleep(1100);
     for (const r of v.since(b)) if (r.name === 'UserHittedByUser') hits.push({ place: (r.packet as any).place, damage: Number((r.packet as any).damage) });
   }
   c.note(`locale ids during the duel (warrior): ${[...new Set(localeIds(w, m))].join(',')}`);
-  c.shared.duel = { hits, swings, startHp, endHp: hpOf(v), strength: (await attributes(w)).strength };
+  c.shared.duel = { hits, swings, startHp, endHp: hpOf(v), died: v.since(m).some(r => r.name === 'UpdateHP' && (r.packet as any).hp <= 0) || hpOf(v) <= 0, strength: (await attributes(w)).strength };
   c.ok(hits.length >= 1, `${hits.length} hits in ${swings} swings reached the mage as UserHittedByUser: ${JSON.stringify(hits)}`);
   c.ok(hpOf(v) < startHp, `the mage's HP fell ${startHp} -> ${hpOf(v)}`);
   c.shared.duelPair = { w, v };
@@ -335,3 +335,83 @@ step('CMB-20', async c => {
   // restore both characters: level 1, citizens, back in Forgat
   await dbEditBoth(c, { mage: [setUser('is_dead=0, status=1, level=1, exp=0, min_hp=20, min_man=150, min_sta=60, pos_map=751, pos_x=60, pos_y=57'), setSkill(0, 0), setSlot(8, 3502, 1)], war: [setUser('is_dead=0, status=1, faction_score=0, min_hp=20, pos_map=751, pos_x=62, pos_y=57')] });
 });
+
+step('CMB-15', async c => {
+  // Pinned Protocol.bas HandleWorkLeftClick, skill Proyectiles (12): a weapon with Proyectil = 1 and the matching arrows (otArrows, Subtipo = bow's Municion) equipped, else message 709 'no tenes municiones' and the
+  // arrows are unequipped; interval IntervaloPermiteUsarArcos (IntervaloFlechasCazadores 1200 ms); QuitarSta(RandomNumber(1, 10)) when MinSta >= 10; ConsumeAmunition takes ONE arrow per shot.
+  // Damage (GetUserDamageWithItem, bow OBJ3491 MinHIT 1 MaxHIT 2 + arrow OBJ3492 1..1, ModClase DañoProyectiles 0.87 for a Warrior, Balance.dat): (3 * (1..2 + 1) + 3 * 0.2 * max(STR - 15, 0) + RandomNumber(1, 2)) * 0.87.
+  const { w, mine, at } = await meleeSetup(c, DUMMY_MELEE);
+  try {
+    c.ok(await ensureEquipped(w, 3491), 'bow equipped'); c.ok(await ensureEquipped(w, 3492), 'arrows equipped');
+    const str = (await attributes(w)).strength, arrows0 = amountOf(w, 3492), lo = Math.round((3 * 2 + 3 * 0.2 * Math.max(str - 15, 0) + 1) * 0.87), hi = Math.round((3 * 3 + 3 * 0.2 * Math.max(str - 15, 0) + 2) * 0.87);
+    const dmg: number[] = []; let hp = 1_000_000, shots = 0, ranged = 0;
+    for (; shots < 8; shots++) {
+      const b = w.mark(); attack(w); await w.waitFor('WorkRequestTarget', b, 2500).catch(() => undefined);
+      workClick(w, at.x, at.y, 12); await w.sleep(1500);
+      const r = w.since(b); if (r.some(x => x.name === 'ArmaMov' && (x.packet as any).isRanged)) ranged++;
+      for (const x of r) if (x.name === 'CharUpdateHP' && (x.packet as any).charIndex === mine.charIndex) { dmg.push(hp - (x.packet as any).hp); hp = (x.packet as any).hp; }
+    }
+    c.ok(ranged >= 6, `${ranged} of ${shots} shots sent ArmaMov with isRanged (the arrow animation)`);
+    c.eq(arrows0 - amountOf(w, 3492), ranged, `one arrow consumed per shot (${arrows0} -> ${amountOf(w, 3492)})`);
+    c.ok(dmg.length >= 1 && dmg.length < shots, `${dmg.length} hits in ${shots} shots: ${dmg.join(',')} (chance 50%)`);
+    c.ok(dmg.every(d => d >= lo - 1 && d <= hi + 1), `every hit in [${lo}, ${hi}] (STR ${str}, DañoProyectiles 0.87)`);
+    // without arrows: message 709 and nothing is shot
+    equipSlot(w, slotOf(w, 3492)!.slot); await w.sleep(900); const nb = w.mark(); attack(w); await w.waitFor('WorkRequestTarget', nb, 2000).catch(() => undefined); workClick(w, at.x, at.y, 12); await w.sleep(1500);
+    c.ok(localeIds(w, nb).includes(709) && series(w, nb, 'ArmaMov').length === 0, `arrows unequipped: message 709 (no tenes municiones) and no shot (messages ${localeIds(w, nb).join(',')})`);
+  } finally { await killMine(c, mine); }
+});
+
+step('CMB-22', async c => {
+  // Llamado a la Naturaleza (spell 7, live Hechizos.dat: Tipo 4 uInvocacion, Magia >= 35, mana 120, stamina 30, Target 4 terrain): HechizoInvocacion (pinned modHechizos.bas) spawns the spell's creatures next to the click as the caster's PETS,
+  // at most MAXMASCOTAS = 3 per user. Safe maps refuse it (message 785, 'una gran fuerza impide invocar criaturas en este mapa': Forgat), so it runs on map 84. PetLeave (Protocol.bas HandlePetLeave) releases every pet (they are removed), PetStand and PetFollow change what they do. Magia is raised through the DB (the starter mage has 0).
+  await dbEdit(c, 'mage', setUser('is_dead=0, status=1, level=1, exp=0, min_hp=20, min_man=150, min_sta=60, min_ham=100, min_sed=100'), placeSet(PVP_MAP, ...spotOn(PVP_MAP, 50, 50, 4, 3)), setSkill(0, 100));
+  const p = await actor(c, 'mage'); await p.until(() => spellSlot(p, 7) !== undefined, 8000, 'spell list').catch(() => undefined);
+  const slot = spellSlot(p, 7); if (!slot) c.blocked('Llamado a la Naturaleza is not in the mage\'s list');
+  const before = new Set([...p.chars.keys()]); const m0 = mana(p), b = p.mark();
+  await cast(p, slot!, p.x + 1, p.y);
+  await p.until(() => p.since(b).some(r => r.name === 'CharacterCreate' && (r.packet as any).npc === 1), 6000, 'pets').catch(() => undefined); await p.sleep(1500);
+  const pets = p.since(b).filter(r => r.name === 'CharacterCreate' && (r.packet as any).charIndex !== p.charIndex).map(r => r.packet as any);
+  void before; c.note(`packets after the cast: ${[...new Set(p.since(b).map(r => r.name))].join(',')}; mage at ${p.map}:${p.x},${p.y}; CharacterCreate ${JSON.stringify(p.since(b).filter(r => r.name === 'CharacterCreate').map(r => { const q = r.packet as any; return [q.charIndex, q.name, q.npc, q.body, q.x, q.y]; }))}`);
+  c.eq(m0 - mana(p), 120, `Llamado a la Naturaleza cost 120 mana (messages ${localeIds(p, b).join(',')})`);
+  c.ok(pets.length >= 1 && pets.length <= 3, `${pets.length} creatures appeared next to the mage: ${pets.map(x => `${x.name}@${x.x},${x.y}`).join(' ')} (MAXMASCOTAS 3)`);
+  // select the first pet (left click on its tile: HandlePetStand/Follow/Leave work on flags.TargetNPC and refuse with message 757 without a target)
+  let m = p.mark(); p.send({ id: PET.PetStand } as ClientPacket); await p.sleep(700);
+  c.ok(localeIds(p, m).includes(757), `PetStand without a selected pet: message 757 (selecciona un personaje con click izquierdo), got ${localeIds(p, m).join(',')}`);
+  const first = p.chars.get(pets[0]!.charIndex)!; click(p, first.x, first.y); await p.sleep(700);
+  m = p.mark(); p.send({ id: PET.PetStand } as ClientPacket); await p.sleep(900);
+  c.ok(p.since(m).some(r => r.name === 'ChatOverHead' && (r.packet as any).charIndex === first.charIndex) || !localeIds(p, m).includes(757), 'PetStand on the selected pet was accepted (the pet answers with Expresar)');
+  m = p.mark(); p.send({ id: PET.PetFollow } as ClientPacket); await p.sleep(900); c.ok(!localeIds(p, m).includes(757), 'PetFollow on the selected pet was accepted');
+  m = p.mark(); p.send({ id: PET.PetLeave } as ClientPacket); await p.sleep(1500);
+  c.ok(series(p, m, 'CharacterRemove').some(x => x.p.charIndex === first.charIndex), 'PetLeave removed the selected pet only');
+  m = p.mark(); p.send({ id: PET.PetLeaveAll } as ClientPacket); await p.sleep(2000);
+  const gone = new Set(series(p, m, 'CharacterRemove').map(x => x.p.charIndex as number));
+  c.ok(pets.slice(1).every(x => gone.has(x.charIndex)), `PetLeaveAll removed the other ${pets.length - 1} pets (${[...gone].length} CharacterRemove)`);
+  c.ok(localeIds(p, m).includes(1278), 'message 1278 (liberaste a tus mascotas)');
+  await dbEdit(c, 'mage', setSkill(0, 0), placeSet(751, 60, 57));
+});
+
+step('CMB-09', async c => {
+  // ContarMuerte (pinned Modulo_UsUaRiOs.bas) is skipped when the victim is a newbie (ELV <= 12, LimiteNewbie), so killing the level 1 mage of CMB-03 moves NO counter: ciudadanosMatados and criminalesMatados stay 0 and the killer gains no
+  // FactionScore. The same function holds the real rules (a kill counts once per killer per FactionReKillTime 600000 ms, score 10 +/- level difference, x1.5 across Armada/Caos, cap 20, minus 1 per assist inside 8000 ms): those need
+  // a victim above level 12, which would make the starter characters unequippable (newbie items stop at 12), so they stay manual.
+  const d = c.shared.duel as { died?: boolean } | undefined, pair = c.shared.duelPair as { w: Sess } | undefined;
+  if (!d || !pair) c.blocked('needs the duel of CMB-03');
+  if (!d!.died) c.blocked('the victim of CMB-03 survived this run (the loop stops at 6 HP), so there is no kill to count');
+  const ms = await miniStats(pair!.w);
+  c.eq(ms.citizensKilled, 0, 'ciudadanosMatados after killing a newbie citizen');
+  c.eq(ms.criminalsKilled, 0, 'criminalesMatados');
+  c.eq(ms.alignment, 0, 'the killer is a criminal (CMB-05)');
+});
+
+step('CMB-07', async c => c.blocked('manual: UserCanAttackNpc sets TurnPK only against citizen-faction creatures (royal guards, which kill a level 1 character) and DoRobar needs the Ladron class and 15 stamina; neither exists as a safe fixture'));
+step('CMB-08', async c => c.blocked('manual: HandleDonateGold needs a criminal inside a city with a Revividor (priest) in 3 tiles and 2500 gold; criminals are pushed out of NoPKs maps (VolverCriminal), so the walk to the priest needs a hand-held session'));
+step('CMB-10', async c => c.blocked('manual: EnlistarArmadaReal needs ELV >= 25 and 100 FactionScore (rangos_faccion.dat), which the newbie starter items cannot survive (OBJ Newbie=1 stops at ELV 12), plus an Enlistador NPC of the faction'));
+step('CMB-11', async c => c.blocked('manual: EnlistarCaos needs a criminal with FactionScore >= 100 and ELV >= 25 next to a Caos enlister; same level problem as CMB-10'));
+step('CMB-12', async c => c.blocked('manual: /RECOMPENSA needs an enlisted character at the rank score and level of rangos_faccion.dat (25/30/35/40/43)'));
+step('CMB-13', async c => c.blocked('manual: LeaveFaction needs an enlisted character (CMB-10) beside its enlister'));
+step('CMB-14', async c => c.blocked('manual: needs an Armada member (CMB-10) next to a citizen: msgs 1055/1056 come from the Armada branch of PuedeAtacar'));
+step('CMB-21', async c => c.blocked('manual: Ceguera, Estupidez and Maldicion have no learnable scroll in the starter data and only NPC casters apply them'));
+step('CMB-23', async c => c.blocked('manual: DoDomar needs a Druid (taming points = CHA * Domar / 6 for druids, / 118 for everybody else) and a tameable creature; the harness characters are a mage and a warrior'));
+step('CMB-24', async c => c.blocked('manual: Apunalar needs a dagger user of a class with a backstab chance (Assassin, Hunter, Bard); the harness characters are a mage and a warrior'));
+step('CMB-25', async c => c.blocked('manual: Cleave, Provoke and DivineBlood come from class effects (EffectsOverTime.dat) of a Warrior or Cleric at the toggled feature level'));
+step('CMB-26', async c => c.blocked('manual: guild war declarations need two guild leaders (guild creation needs level and gold); the clan-safe toggle is asserted in CMB-06'));
