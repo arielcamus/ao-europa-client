@@ -12,6 +12,7 @@ import { ChatBubbles } from './chat-bubbles.js';
 import { SignOverlay } from './sign-ui.js';
 import { sharedLocale } from './chat-locale.js';
 import { CombatOverlay } from './combat-overlay.js';
+import { characterTapTile } from './combat.js';
 import { fetchText } from './assets.js';
 import { ItemsUI } from './items-ui.js';
 import { CraftingUI } from './crafting-ui.js';
@@ -469,6 +470,9 @@ viewport.addEventListener('pointerdown', event => {
   }
   const door = doorAt(event);
   if (door) { event.preventDefault(); clearInput(); session.leftClick(door.x, door.y); renderer.app.canvas.focus(); return; }
+  // Touch: a tap on another character selects it (LeftClick: NPC dialog, shop, attack target); anywhere else it walks.
+  const tapped = tileAt(event), target = tapped && characterTapTile(session.characters.values(), session.charIndex, tapped);
+  if (target) { event.preventDefault(); clearInput(); try { session.leftClick(target.x, target.y); } catch (error) { close(String(error)); } renderer.app.canvas.focus(); return; }
   event.preventDefault(); clearInput(); aim(event); walk(touchHeading!);
   viewport.setPointerCapture(event.pointerId); renderer.app.canvas.focus();
 });
