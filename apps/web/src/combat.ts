@@ -4,7 +4,7 @@
  * HandleCharacterRemove side effects), Protocol_Writes.bas (WriteAttack) and modBindKeys.bas.
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty. See NOTICE.
  */
-import { BodyPart, CombatServerPacketId as CS, NpcsServerPacketId as NS } from '@ao/protocol';
+import { BodyPart, CombatServerPacketId as CS } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import type { Character } from './characters.js';
 import type { ClassicState } from './ui-state.js';
@@ -89,6 +89,11 @@ export class CombatState {
     const cut = full.indexOf('<');
     return cut < 0 ? full : full.slice(0, Math.max(0, cut - 1));
   }
+  /** EraseChar: the tracker owns the character store; combat only drops its own effects (weapon swing, floating text). */
+  forgetCharacter(charIndex: number) {
+    this.swings.delete(charIndex);
+    this.floating = this.floating.filter(item => item.charIndex !== charIndex);
+  }
   receive(packet: ServerPacket, source: Source): void {
     const now = source.clock();
     switch (packet.id) {
@@ -125,11 +130,6 @@ export class CombatState {
         if (character) { character.minHp = packet.hp; character.maxHp = packet.maxHp; }
         break;
       }
-      case NS.CharacterRemove:
-        // The npcs tracker owns the character store (CharacterRemove / CharacterChange); combat only drops its own effects.
-        this.swings.delete(packet.charIndex);
-        this.floating = this.floating.filter(item => item.charIndex !== packet.charIndex);
-        break;
     }
   }
 }

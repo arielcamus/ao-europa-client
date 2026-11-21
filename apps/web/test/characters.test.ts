@@ -1,5 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { CombatServerPacketId as CS, SkillsServerPacketId as SK, StatusServerPacketId as ST } from '@ao/protocol';
+import { fxTables } from '../src/fx-world.js';
+import type { Stream } from '../src/fx-particles.js';
 import { ClientPacketId as C, DoorClientPacketId as NC, NpcsServerPacketId as N, ServerPacketId as S, Heading, FrameDecoder, decodeClientPacket, encodeServerFrame } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js';
@@ -234,5 +237,68 @@ describe('characters that step out of the area (Char_Move_by_Pos: If nY < MinLim
     recv({ id: 57, x: 74, y: 59 } as ServerPacket);
     expect(session.tracker.at(73, 59)).toBeUndefined();
     expect(session.tracker.chars.has(f.UserCharIndexInServer.charIndex)).toBe(true);
+  });
+});
+
+// Review of #107: every erase (CharacterRemove, a step out of the area, CambioDeArea) clears what VB6 EraseChar clears: the character's
+// FX (meditation aura included), particle groups, auras (ResetCharInfo), status and floating text. Re-entering must start clean.
+describe('one removal path (TileEngine_Chars.EraseChar)', () => {
+  const stream: Stream = { name: 't', numParticles: 2, x1: 0, y1: 0, x2: 0, y2: 0, angle: 0, vecX1: 0, vecX2: 0, vecY1: 0, vecY2: 0, life1: 5, life2: 5, friction: 2,
+    spin: false, spinL: 0, spinH: 0, alphaBlend: true, gravity: false, gravStrength: 0, bounceStrength: 0, xMove: false, yMove: false,
+    moveX1: 0, moveX2: 0, moveY1: 0, moveY2: 0, grhList: [100], tint: [{ r: 1, g: 1, b: 1 }, { r: 1, g: 1, b: 1 }, { r: 1, g: 1, b: 1 }, { r: 1, g: 1, b: 1 }],
+    speed: 0.5, lifeCounter: -1, resize: false, resizeX: 0, resizeY: 0 };
+  const BAT = 689;
+  function playing() {
+    fxTables.streams = Array.from({ length: 20 }, () => ({ ...stream }));
+    let now = 0;
+    const session = new Session({ email: 'a', password: 'b' }, () => {}, () => now);
+    const recv = (...packets: ServerPacket[]) => { for (const packet of packets) session.receive(encodeServerFrame(packet)); };
+    recv(f.Connected, f.AccountCharacterList, f.Intervals, f.ChangeMap, { ...f.CharacterCreate, x: 75, y: 78, speeding: 1 }, f.UserCharIndexInServer, f.Logged);
+    recv({ id: 57, x: 75, y: 78 } as ServerPacket); // AreaChanged: area 60..95 x 60..95
+    // Born with a permanent particle (MakeChar) and a head aura, meditating, invisible, with a floating damage number.
+    const enter = (aura: string, particleFx: number) => recv(create(BAT, { npc: 1, npcNumber: 506, x: 73, y: 61, particleFx, headAura: aura, weaponAura: '', bodyAura: '',
+      damageAura: '', resistanceAura: '', otherAura: '', shieldAura: '' }));
+    return { session, recv, enter, advance: (ms: number) => { now += ms; } };
+  }
+  const state = (s: Session) => ({
+    groups: s.world.charGroups.get(BAT)?.length ?? 0, aura: s.world.auras.get(BAT)?.get(4),
+    fx: s.spells.effects.filter(e => e.charIndex === BAT).length, floating: s.combat.floating.filter(e => e.charIndex === BAT).length,
+  });
+  const decorate = (h: ReturnType<typeof playing>) => h.recv(
+    { id: SK.MeditateToggle, charIndex: BAT, fx: 115, x: 73, y: 61 } as ServerPacket,
+    { id: CS.TextOverChar, text: '3', charIndex: BAT, color: 0 } as ServerPacket);
+  it('a creature with an aura steps out and re-enters: exactly one particle group and one aura, no meditation or floating text left over', () => {
+    const h = playing(); h.enter('12:255:5:0', 3); decorate(h);
+    expect(state(h.session)).toEqual({ groups: 1, aura: '12:255:5:0', fx: 1, floating: 1 });
+    h.recv({ id: S.CharacterMove, charIndex: BAT, x: 73, y: 60 }, { id: S.CharacterMove, charIndex: BAT, x: 73, y: 59 }); // out of 60..95
+    expect(h.session.tracker.chars.has(BAT)).toBe(false);
+    expect(state(h.session)).toEqual({ groups: 0, aura: undefined, fx: 0, floating: 0 });
+    h.enter('12:255:5:0', 3); // CheckUpdateNeededNpc: the server creates it again when it comes back
+    expect(state(h.session)).toEqual({ groups: 1, aura: '12:255:5:0', fx: 0, floating: 0 });
+  });
+  it('an aura or particle that ended while it was away does not come back', () => {
+    const h = playing(); h.enter('12:255:5:0', 3); decorate(h);
+    h.recv({ id: S.CharacterMove, charIndex: BAT, x: 73, y: 60 }, { id: S.CharacterMove, charIndex: BAT, x: 73, y: 59 });
+    h.enter('', 0);
+    expect(state(h.session)).toEqual({ groups: 0, aura: '', fx: 0, floating: 0 });
+  });
+  it('CambioDeArea and CharacterRemove clear the same state; the status of others goes, the own character keeps its own', () => {
+    for (const erase of [
+      (h: ReturnType<typeof playing>) => h.recv({ id: 57, x: 75, y: 90 } as ServerPacket), // new area 72..100: (73,61) is outside
+      (h: ReturnType<typeof playing>) => h.recv({ id: N.CharacterRemove, charIndex: BAT, vanish: false, warp: false }),
+    ]) {
+      const h = playing(); h.enter('12:255:5:0', 3); decorate(h);
+      h.recv({ id: ST.SetInvisible, charIndex: BAT, invisible: true, x: 73, y: 61 } as ServerPacket);
+      expect(h.session.status.invisible.has(BAT)).toBe(true);
+      erase(h);
+      expect(h.session.tracker.chars.has(BAT)).toBe(false);
+      expect(state(h.session)).toEqual({ groups: 0, aura: undefined, fx: 0, floating: 0 });
+      expect(h.session.status.invisible.has(BAT)).toBe(false);
+      h.enter('12:255:5:0', 3);
+      expect(state(h.session)).toMatchObject({ groups: 1 });
+    }
+    const h = playing(), me = f.UserCharIndexInServer.charIndex;
+    h.recv({ id: ST.SetInvisible, charIndex: me, invisible: true, x: 75, y: 78 } as ServerPacket, { id: N.CharacterRemove, charIndex: me, vanish: false, warp: true });
+    expect(h.session.status.invisible.has(me)).toBe(true); // a warp removes and re-creates the own character
   });
 });

@@ -16,7 +16,6 @@ const HEADING_INTERVAL_MS = 120;
 import { PacketCounters, SEQUENCED_CLIENT_PACKETS } from './packet-counters.js';
 import type { PacketFamily } from './packet-counters.js';
 import { CharacterTracker } from './characters.js';
-import { NpcsServerPacketId as NS } from '@ao/protocol';
 import { CombatState } from './combat.js';
 import { SpellState, spellTables } from './spells.js';
 import { meditationArt } from './meditation-fx.js';
@@ -204,6 +203,11 @@ export class Session {
       charAt: (x, y) => this.tracker.at(x, y)?.charIndex,
       charTile: charIndex => { const c = this.tracker.chars.get(charIndex); return c && { x: c.x, y: c.y }; },
     });
+    // EraseChar: every removal (CharacterRemove, a step out of the area, CambioDeArea) clears the same per-character state.
+    this.tracker.onErase = charIndex => {
+      this.combat.forgetCharacter(charIndex); this.spells.forgetCharacter(charIndex); this.world.forgetCharacter(charIndex);
+      if (charIndex !== this.charIndex) this.status.forget(charIndex); // the own character keeps its status across a warp
+    };
     this.placementDeadline = this.connectedAt + 10_000;
   }
   get self() { return this.charIndex === undefined ? undefined : this.tracker.chars.get(this.charIndex); }
@@ -352,8 +356,6 @@ export class Session {
           break;
         case DoorServer.ObjectDelete: if (inMap(packet)) this.mapObjects.delete(packet.x, packet.y); break;
         case DoorServer.BlockPosition: if (inMap(packet)) this.mapObjects.block(packet.x, packet.y, packet.sides); break;
-        // The tracker drops the character (self too, as EraseChar does; a warp's CharacterCreate follows); status forgets others.
-        case NS.CharacterRemove: if (packet.charIndex !== this.charIndex) this.status.forget(packet.charIndex); break;
         // LocaleMsg (141) reaches the console through ui.receive -> ChatState (one print, chat's pipeline).
         case KS.SafeModeOn: this.safeMode = true; break;
         case KS.SafeModeOff: this.safeMode = false; break;
@@ -397,7 +399,7 @@ export class Session {
   private leaveArea(bounds: { minX: number; maxX: number; minY: number; maxY: number }) {
     this.tracker.area = bounds; // MinLimiteX..MaxLimiteY: later steps out of it erase the character (Char_Move_by_Pos)
     const outside = (x: number, y: number) => x < bounds.minX || x > bounds.maxX || y < bounds.minY || y > bounds.maxY;
-    for (const [index, char] of [...this.tracker.chars]) if (index !== this.charIndex && outside(char.x, char.y)) this.tracker.chars.delete(index);
+    for (const [index, char] of [...this.tracker.chars]) if (index !== this.charIndex && outside(char.x, char.y)) this.tracker.erase(index);
     for (const key of [...this.mapObjects.objects.keys()]) {
       const x = (key % 100) + 1, y = Math.floor(key / 100) + 1;
       if (outside(x, y)) this.mapObjects.objects.delete(key);
