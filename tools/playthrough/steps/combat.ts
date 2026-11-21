@@ -122,6 +122,8 @@ async function duel(c: Ctx, map: number, cx: number, cy: number, dressed = true)
   heading(w, v.x > w.x ? Heading.East : v.x < w.x ? Heading.West : v.y > w.y ? Heading.South : Heading.North); await w.sleep(400);
   return { w, v };
 }
+/** An unsafe map with no creature at all (map 84 Playas del Golfo: Seguro=0 and no NPC in the map file; map 2 has 4 in view and killed a 20 HP character within seconds, maps 11 and 31 are Seguro=1). */
+const PVP_MAP = Number(process.env.AO_PVP_MAP ?? 84);
 const hpOf = (s: Sess) => s.stats!.hp;
 
 step('CMB-03', async c => {
@@ -138,14 +140,15 @@ step('CMB-03', async c => {
   c.ok(ids.includes(1062), `Forgat is a Seguro=1 map: toggle off, still refused with message 1062 (got ${ids.join(',') || 'nothing'})`);
   c.eq(hpOf(v), 20, 'still no damage on the safe map');
   // unsafe map
-  ({ w, v } = await duel(c, 2, 50, 50, false));
-  m = w.mark(); toggleSeguro(w); await w.sleep(1000); c.ok(w.since(m).some(r => r.name === Safe.off), 'map 2: SafeModeOff after the toggle (it is ON again after every login)');
+  ({ w, v } = await duel(c, PVP_MAP, 50, 50, false));
+  m = w.mark(); toggleSeguro(w); await w.sleep(1000); c.ok(w.since(m).some(r => r.name === Safe.off), `map ${PVP_MAP}: SafeModeOff after the toggle (it is ON again after every login)`);
   c.eq((await miniStats(w)).alignment, 1, 'warrior is a citizen (alignment 1) before attacking');
   const hits: { place: number; damage: number }[] = []; let swings = 0; m = w.mark(); const startHp = hpOf(v); c.note(`HP before the duel: warrior ${hpOf(w)}, mage ${hpOf(v)}`);
   while (swings < 16 && hits.length < 4 && hpOf(v) > 6 && hpOf(w) > 6) {
     const b = v.mark(); await w.sleep(1250); attack(w); swings++; await w.sleep(1100);
     for (const r of v.since(b)) if (r.name === 'UserHittedByUser') hits.push({ place: (r.packet as any).place, damage: Number((r.packet as any).damage) });
   }
+  c.note(`locale ids during the duel (warrior): ${[...new Set(localeIds(w, m))].join(',')}`);
   c.shared.duel = { hits, swings, startHp, endHp: hpOf(v), strength: (await attributes(w)).strength };
   c.ok(hits.length >= 1, `${hits.length} hits in ${swings} swings reached the mage as UserHittedByUser: ${JSON.stringify(hits)}`);
   c.ok(hpOf(v) < startHp, `the mage's HP fell ${startHp} -> ${hpOf(v)}`);
@@ -216,7 +219,7 @@ step('CMB-16', async c => {
   // AgregarHechizo (modHechizos.bas): spell already known -> 525 'tenes ese hechizo' and nothing consumed; no free slot of the 40 (MAXUSERHECHIZOS) -> 777; else the first free slot is filled
   // (ChangeSpellSlot) and ONE scroll is consumed. Scrolls come from UPDATEs of the mage's spare inventory rows: OBJ1658 Paralizar (spell 25) x2, 1659 Inmovilizar (26), 1660 Remover Paralisis (27), 1657 Invisibilidad (24), 1651 Curar heridas graves (13).
   await dbEdit(c, 'mage', setUser('is_dead=0, is_poisoned=0, status=1, level=1, exp=0, min_hp=20, min_man=150, min_sta=60, min_ham=100, min_sed=100, pos_map=751, pos_x=60, pos_y=57'),
-    setSlot(5, SC.paralizar, 2), setSlot(6, SC.inmovilizar, 1), setSlot(7, SC.remover, 1), setSlot(9, SC.invisibilidad, 1), setSlot(10, SC.curarGraves, 1));
+    'update spell set spell_id=0 where user_id={id} and spell_id in (13, 24, 25, 26, 27, 43);', setSlot(5, SC.paralizar, 2), setSlot(6, SC.inmovilizar, 1), setSlot(7, SC.remover, 1), setSlot(9, SC.invisibilidad, 1), setSlot(10, SC.curarGraves, 1));
   const p = await actor(c, 'mage'); const known0 = [...p.spells.values()].map(s => s.spell).sort((a, b) => a - b);
   c.eq(known0.includes(25), false, 'Paralizar not known yet');
   const use = async (obj: number) => { const it = slotOf(p, obj)!, m = p.mark(); useSlot(p, it.slot); await p.sleep(1400); return m; };
@@ -265,4 +268,70 @@ step('CMB-17', async c => {
     castSpell(p, dardo); workClick(p, cr.x, cr.y, 1); await p.sleep(1500);
     c.eq(m1 - mana(p), 10, 'two casts inside 1230 ms charged mana ONCE');
   } finally { await killMine(c, mine); }
+});
+
+/** Level 30 cannot wear the newbie tunic (OBJ3502 Newbie=1: usable up to level 12), and a naked character drains stamina (SUR-12); OBJ32 Vestimenta Comun (MinDef 1, MaxDef 2) has no such limit. */
+const COMMON_CLOTHES = 32;
+const HIGH = 'level=30, exp=0'; // MaxMAN 1533 and MaxSta 495 at level 30 for this mage (read from UpdateUserStats at login); the spells below need 300-500 mana and 44-200 stamina
+
+step('CMB-18', async c => {
+  // Hechizos.Tipo (live Hechizos.dat): 1 uPropiedades (HP, mana, ...), 2 uEstado (paralysis, invisibility ...). Curar heridas graves (13): Tipo 1 SubeHP 1, MinHP 20 MaxHP 50, Magia >= 38, mana 40, stamina 5, Target 3: on yourself it heals
+  // 20..50 times GetMagicHealingBonus, capped at MaxHp. Invisibilidad (24): Tipo 2, Magia >= 87, mana 500, stamina 200, Target 1: HechizoEstadoUsuario sets Counters.Invisibilidad = RandomNumber(Duration - 4, Duration + 1) = 16..21 seconds
+  // (decremented once per second in PasarSegundo), sends SetInvisible(true); EfectoInvisibilidad ends it with message 307 and SetInvisible(false).
+  await dbEdit(c, 'mage', setUser(`is_dead=0, ${HIGH}, min_hp=2, min_man=1533, min_sta=495, min_ham=100, min_sed=100, pos_map=751, pos_x=60, pos_y=57`), setSkill(0, 100), setSlot(8, COMMON_CLOTHES, 1));
+  const p = await actor(c, 'mage'); c.eq(p.stats!.level, 30, 'level 30 (DB)'); c.eq(p.stats!.maxMana, 1533, 'MaxMan 1533 at level 30');
+  const heal = spellSlot(p, 13), inv = spellSlot(p, 24); if (!heal || !inv) c.blocked('the mage does not know Curar heridas graves / Invisibilidad (CMB-16 gives the scrolls)');
+  let m0 = mana(p); const hp0 = p.stats!.hp; await cast(p, heal!, p.x, p.y);
+  c.ok(p.stats!.hp > hp0, `self-heal: HP ${hp0} -> ${p.stats!.hp} (20..50 healed, capped at MaxHp ${p.stats!.maxHp})`);
+  c.eq(m0 - mana(p), 40, 'Curar heridas graves cost 40 mana');
+  await p.sleep(1300); m0 = mana(p); const b = p.mark(); const t0 = Date.now(); await cast(p, inv!, p.x, p.y);
+  c.eq(m0 - mana(p), 500, `Invisibilidad cost 500 mana (messages ${localeIds(p, b).join(',')})`);
+  const si = series(p, b, 'SetInvisible').filter(x => x.p.charIndex === p.charIndex);
+  c.ok(si.some(x => x.p.invisible === true), 'SetInvisible(true) for the own character');
+  await p.until(() => series(p, b, 'SetInvisible').some(x => x.p.charIndex === p.charIndex && x.p.invisible === false), 30_000, 'SetInvisible(false)');
+  c.near((Date.now() - t0) / 1000, 15, 24, 'seconds invisible (16..21 expected)');
+  c.ok(localeIds(p, b).includes(MSG_VISIBLE_AGAIN), `message ${MSG_VISIBLE_AGAIN} (has vuelto a ser visible)`);
+});
+
+step('CMB-19', async c => {
+  // HechizoEstadoUsuario Paralize (pinned): needs PuedeAtacar (so the caster's safe toggle must be OFF against a citizen, and the map must be unsafe), not already unable to move; Counters.Paralisis = Duration (15) * 0.7 = 10.5 for a Warrior or Hunter target
+  // (stored as 10 or 11 and decremented once per second by EfectoParalisisUser), WriteParalizeOK + WritePosUpdate to the victim; a paralysed character cannot walk (HandleWalk answers PosUpdate). Paralizar: Magia >= 50, mana 400, stamina 87.
+  // The caster is the level 30 mage, the victim the warrior, both on map 84 for about 25 s (an unsafe map without creatures; a safe map answers 1062).
+  await dbEditBoth(c, {
+    mage: [setUser(`is_dead=0, is_poisoned=0, status=1, ${HIGH}, min_hp=20, min_man=1533, min_sta=495, min_ham=100, min_sed=100`), setSkill(0, 100), setSlot(8, COMMON_CLOTHES, 1), placeSet(PVP_MAP, ...spotOn(PVP_MAP, 50, 50, 4, 3))],
+    war: [setUser('is_dead=0, status=1, faction_score=0, min_hp=20, min_sta=60, min_ham=100, min_sed=100'), placeSet(PVP_MAP, ...(() => { const [x, y] = spotOn(PVP_MAP, 50, 50, 4, 3); return [x + 1, y] as [number, number]; })())],
+  });
+  const v = await actor(c, 'mage'), w = await actor(c, 'war');
+  await v.until(() => spellSlot(v, 25) !== undefined, 10_000, 'the spell list').catch(() => undefined);
+  const para = spellSlot(v, 25); if (!para) c.blocked(`Paralizar is not in the mage's list (CMB-16): spells ${[...v.spells.values()].map(s => s.spell).filter(Boolean).join(',')}; level ${v.stats!.level}`);
+  if (Math.abs(w.x - v.x) + Math.abs(w.y - v.y) > 3) c.blocked(`the logins landed ${Math.abs(w.x - v.x) + Math.abs(w.y - v.y)} tiles apart`);
+  let m = v.mark(); v.send({ id: KEY.SafeToggle } as ClientPacket); await v.sleep(900); c.ok(v.since(m).some(r => r.name === Safe.off), 'caster safe toggle off');
+  c.note(`caster stats at login: stamina ${sta(v)}/${v.stats!.maxStamina}, mana ${mana(v)}, level ${v.stats!.level}, hunger ${JSON.stringify(v.hunger)}`);
+  const m0 = mana(v); m = w.mark(); const t0 = Date.now(); const mk = await cast(v, para!, w.x, w.y);
+  c.eq(m0 - mana(v), 400, `Paralizar cost 400 mana (caster ${v.map}:${v.x},${v.y} target ${w.map}:${w.x},${w.y}; messages ${localeIds(v, mk).join(',')}; caster status ${JSON.stringify(v.since(mk).filter(r => ['ErrorMsg', 'ConsoleMsg'].includes(r.name)).map(r => (r.packet as any).message))})`);
+  c.ok(w.since(m).some(r => r.name === 'ParalizeOK'), 'the victim got ParalizeOK');
+  const moves: boolean[] = []; let freeAt = -1;
+  for (let i = 0; i < 16; i++) { const r = await w.step(Heading.South, 300); moves.push(r.moved); if (r.moved && freeAt < 0) { freeAt = (Date.now() - t0) / 1000; break; } await w.sleep(400); }
+  c.ok(moves.slice(0, 3).every(x => !x), `walk refused while paralysed (${moves.slice(0, 6).join(',')})`);
+  c.near(freeAt, 8, 14, `seconds until the warrior could walk again (15 x 0.7 = 10.5 expected, ${freeAt.toFixed(1)} measured)`);
+  c.shared.paraTarget = { v, w };
+});
+
+step('CMB-20', async c => {
+  // Inmovilizar (26, Magia >= 60, mana 300, stamina 45, Duration 20): Counters.Inmovilizado = Duration (x0.7 for Warrior/Hunter = 14) and InmovilizadoOK: the target can still turn and attack but not walk.
+  // Remover Parálisis (27, Magia >= 45, mana 300, stamina 44): clears Paralizado and Inmovilizado and their counters (EfectoInmoUser / EfectoParalisisUser stop). Same two characters as CMB-19.
+  const t = c.shared.paraTarget as { v: Sess; w: Sess } | undefined; if (!t) c.blocked('needs the duel of CMB-19');
+  const { v, w } = t!; const inm = spellSlot(v, 26), rem = spellSlot(v, 27); if (!inm || !rem) c.blocked('Inmovilizar / Remover Paralisis not learned (CMB-16)');
+  // a Warrior is immune to a new paralysing or immobilising effect for 3 s after CMB-19's paralysis ends (TiempoDeInmunidadParalisisNoMagicas, message 1872)
+  c.note(`caster stamina before Inmovilizar ${sta(v)}`);
+  await v.sleep(4000); let m = w.mark(); const m0 = mana(v); const mk = await cast(v, inm!, w.x, w.y);
+  c.eq(m0 - mana(v), 300, `Inmovilizar cost 300 mana (messages ${localeIds(v, mk).join(',')})`);
+  c.ok(w.since(m).some(r => r.name === 'InmovilizadoOK'), 'the victim got InmovilizadoOK');
+  const walk = await w.step(Heading.South, 400); c.ok(!walk.moved, 'immobilised: walking is refused');
+  m = w.mark(); heading(w, Heading.West); await w.sleep(700); c.ok(!w.since(m).some(r => r.name === 'PosUpdate'), 'but turning on the spot is accepted');
+  await v.sleep(900); const m1 = mana(v); m = w.mark(); await cast(v, rem!, w.x, w.y);
+  c.eq(m1 - mana(v), 300, 'Remover Paralisis cost 300 mana');
+  const walk2 = await w.step(Heading.South, 400); c.ok(walk2.moved, 'after Remover Paralisis the warrior walks at once (well before the 14 s)');
+  // restore both characters: level 1, citizens, back in Forgat
+  await dbEditBoth(c, { mage: [setUser('is_dead=0, status=1, level=1, exp=0, min_hp=20, min_man=150, min_sta=60, pos_map=751, pos_x=60, pos_y=57'), setSkill(0, 0), setSlot(8, 3502, 1)], war: [setUser('is_dead=0, status=1, faction_score=0, min_hp=20, pos_map=751, pos_x=62, pos_y=57')] });
 });

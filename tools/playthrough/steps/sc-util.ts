@@ -113,10 +113,14 @@ export async function dbEditBoth(c: Ctx, edits: { mage: string[]; war: string[] 
   await dress(c, 'mage'); await dress(c, 'war');
 }
 
-/** A character the server saved as naked (is_naked = 1: the armour came off in an earlier step) loses stamina and cannot regenerate (SUR-12): put the armour back before a test that does not want that. */
+/**
+ * Characters come back from a relog WITHOUT their armour (observed on every harness character: the creation session shows the tunic equipped, the saved row says is_naked = 1 and
+ * every inventory_item.is_equipped = 0, body 3000), and a naked character loses stamina (SUR-12) and cannot regenerate. EquipItem toggles, ensureEquipped checks the answer.
+ */
 export async function dress(c: Ctx, w: Who) {
-  const naked = sql(`select is_naked from user where name='${nameOf(c, w).replace(/'/g, "''")}';`) === '1';
   const s = w === 'mage' ? c.player : (c.shared.p2 as Sess);
-  if (!naked || !s || s.closed) return;
-  await ensureEquipped(s, w === 'mage' ? 3502 : 3500, true);
+  if (!s || s.closed) return;
+  const obj = [3502, 32, 3500].find(o => slotOf(s, o)); if (!obj) return;
+  const ok = await ensureEquipped(s, obj, true);
+  if (!ok) console.log(`dress(${w}) could not equip the armour ${obj}: ${JSON.stringify([...s.inventory.values()].map(i => [i.slot, i.object, i.equipped]))}`);
 }
