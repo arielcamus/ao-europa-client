@@ -510,7 +510,8 @@ window.addEventListener('keydown', event => {
   const action = keyAction(event.code);
   // Control is itself a binding (attack); any other Control+key is the browser's.
   if (event.ctrlKey && action !== KeyAction.Attack) return;
-  if (event.key === 'Delete') { event.preventDefault(); openChat(true); return; } // frmMain: Delete opens the guild chat box
+  // HandleKeyUp: Accionar (the bindings) runs first; only an unbound Delete opens the guild chat box.
+  if (action === undefined && event.code === 'Delete') { event.preventDefault(); openChat(true); return; }
   if (action !== undefined && action !== KeyAction.MoveUp && action !== KeyAction.MoveDown && action !== KeyAction.MoveLeft && action !== KeyAction.MoveRight) {
     event.preventDefault();
     // Attack repeats like the VB6 key (paced by Intervals.hit); every other action fires once per press.
