@@ -1,8 +1,8 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { describe, expect, it } from 'vitest';
-import { decodeClientPacket, decodeServerPacket, encodeClientPacket, encodeServerPacket } from '../src/index.js';
+import { afterAll, describe, expect, it } from 'vitest';
+import { decodeClientPacket, decodeServerPacket, encodeClientPacket, encodeServerPacket, getWireProfile, setWireProfile } from '../src/index.js';
 
 // docs/CONFORMANCE.md: `hex` is the full frame body, the 2-byte LE id included. Every known packet must re-encode byte for byte.
 const root = fileURLToPath(new URL('../../../tests/fixtures/vb6', import.meta.url));
@@ -15,9 +15,14 @@ const files = walk(root);
 const REDACTED = new Set([304, 305]);
 
 describe('VB6 fixture round-trip (all tests/fixtures/vb6/**)', () => {
+  // tests/fixtures/vb6/playthrough/ was recorded on the pre-HOO 9ccd server: re-encode it under that wire profile ('live', the default, re-appends
+  // the HOO-era clanAlignment byte to NPC CharacterCreate, issue #70). Older fixtures were recorded on the HOO-era server and keep 'live'.
+  const before = getWireProfile();
+  afterAll(() => setWireProfile(before));
   it('finds fixtures', () => { expect(files.length).toBeGreaterThan(0); });
   for (const file of files) {
     it(file.slice(root.length + 1), () => {
+      setWireProfile(file.startsWith(join(root, 'playthrough') + '/') ? 'prehoo' : before);
       const rows = readFileSync(file, 'utf8').trim().split('\n').map(line => JSON.parse(line) as { dir: string; id: number; hex: string });
       let known = 0;
       for (const [index, row] of rows.entries()) {

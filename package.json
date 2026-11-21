@@ -20,6 +20,7 @@
     "dev:standin": "pnpm build:server && node tools/dev-web.mjs --standin",
     "web:preview": "pnpm build && node tools/dev-web.mjs --standin --preview",
     "test:browser": "pnpm build && playwright test",
+    "playthrough": "pnpm build && playwright test --config apps/web/e2e/playthrough.config.ts",
     "test:browser:real": "pnpm build && playwright test --config playwright.real.config.ts"
   },
   "devDependencies": {

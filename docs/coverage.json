@@ -18,7 +18,7 @@
   "forms": 86,
   "formsCovered": 58,
   "formsPartial": 0,
-  "fixturePackets": 278,
+  "fixturePackets": 279,
   "packetsPct": 99.8,
   "packetsMergedPct": 99.8,
   "formsPct": 67.4,
@@ -316,6 +316,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -400,6 +401,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -475,6 +477,7 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -540,7 +543,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/core-session/quit-in-safe-city-disconnects.jsonl",
-    "tests/fixtures/vb6/core-session/quit-then-cancel-exit.jsonl"
+    "tests/fixtures/vb6/core-session/quit-then-cancel-exit.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl"
    ]
   },
   {
@@ -892,6 +896,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1024,7 +1029,8 @@
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
-    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl"
+    "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl"
    ]
   },
   {
@@ -1203,6 +1209,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1254,6 +1261,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
@@ -1345,6 +1355,7 @@
     "tests/fixtures/vb6/items/npc-shop.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
+    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -1450,6 +1461,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1677,6 +1689,7 @@
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -1822,6 +1835,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -1906,6 +1920,8 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2049,6 +2065,8 @@
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2157,6 +2175,8 @@
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2246,6 +2266,7 @@
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-member.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -2347,6 +2368,8 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2440,6 +2463,8 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -2521,6 +2546,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2645,6 +2671,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -2785,6 +2812,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -3096,6 +3124,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -3201,6 +3230,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -3274,7 +3304,8 @@
     "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
-    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
+    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl"
    ]
   },
   {
@@ -3406,6 +3437,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -3434,8 +3466,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/skills.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl"
+   ]
   },
   {
    "key": "s2c:89",
@@ -3891,6 +3925,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4132,6 +4167,10 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4197,6 +4236,7 @@
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/spells/cast-invalid-target.jsonl",
@@ -4336,6 +4376,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4467,6 +4508,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4854,6 +4896,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -4963,6 +5006,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -5141,6 +5185,9 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -5585,6 +5632,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -5690,6 +5738,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -5774,6 +5823,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -6156,6 +6206,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -6573,6 +6624,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -6676,6 +6728,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -6780,6 +6833,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -6883,6 +6937,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -7744,7 +7799,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/core-session/quit-in-safe-city-disconnects.jsonl",
-    "tests/fixtures/vb6/core-session/quit-then-cancel-exit.jsonl"
+    "tests/fixtures/vb6/core-session/quit-then-cancel-exit.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl"
    ]
   },
   {
@@ -7893,6 +7949,7 @@
    ],
    "fixture": true,
    "fixtureFiles": [
+    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/skills/stats-skills-rest-requests.jsonl"
    ]
   },
@@ -8506,6 +8563,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
@@ -8636,6 +8694,8 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
    ]
@@ -8678,6 +8738,9 @@
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-four-headings.jsonl",
+    "tests/fixtures/vb6/playthrough/walk-into-wall-and-player.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl",
     "tests/fixtures/vb6/world/weather-toggles.jsonl"
@@ -9059,6 +9122,7 @@
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/options/live-hotkey-cast-and-transfer.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
+    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",
     "tests/fixtures/vb6/trade/gold-offer-initiator.jsonl",
@@ -10769,7 +10833,8 @@
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/movement/walk-into-creature-no-turn.jsonl",
-    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl"
+    "tests/fixtures/vb6/movement/walk-into-creature-turn.jsonl",
+    "tests/fixtures/vb6/playthrough/trainer-train-list.jsonl"
    ]
   },
   {
@@ -13318,6 +13383,7 @@
     "tests/fixtures/vb6/party/guild-without-guild.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
     "tests/fixtures/vb6/pets/tame-empty-tile-refused.jsonl",
+    "tests/fixtures/vb6/playthrough/quit-unsafe-map-countdown.jsonl",
     "tests/fixtures/vb6/quests/empty-quest-log.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
     "tests/fixtures/vb6/quests/npc-offer-unavailable.jsonl",

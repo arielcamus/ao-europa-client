@@ -16,7 +16,7 @@ describe('completion checklist', () => {
       ids.add(s.id);
       for (const k of ['step', 'expected', 'source', 'how']) expect(String(s[k] ?? '').length, `${s.id}.${k}`).toBeGreaterThan(0);
       expect(['auto', 'manual']).toContain(s.mode);
-      expect(['untested', 'recorded', 'in flight', 'passing']).toContain(s.status);
+      expect(['untested', 'recorded', 'in flight', 'passing', 'passing (hand-merged)', 'failing', 'blocked']).toContain(s.status);
     }
     expect(ptStats(pt).total).toBe(ids.size);
   });

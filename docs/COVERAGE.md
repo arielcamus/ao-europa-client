@@ -11,7 +11,7 @@ Scanned refs: `main`
 ## Headline
 
 - **Packets covered (merged + open branches): 512 of 513 = 99.8%.** Merged on main only: 512 = 99.8%.
-  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 278.
+  - Server to client: 202 of 202. Client to server: 310 of 311. Packets with a recorded VB6 fixture: 279.
 - **Forms covered: 58 of 86 = 67.4%** (0 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
@@ -297,7 +297,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 85 | BlindNoMore | client Protocol.bas:HandleBlindNoMore | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 86 | DumbNoMore | client Protocol.bas:HandleDumbNoMore | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 87 | SendSkills | client Protocol.bas:HandleSendSkills | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
-| 88 | TrainerCreatureList | client Protocol.bas:HandleTrainerCreatureList | skills | merged | `main:packages/protocol/src/packets/skills.ts` | no |
+| 88 | TrainerCreatureList | client Protocol.bas:HandleTrainerCreatureList | skills | merged | `main:packages/protocol/src/packets/skills.ts` | yes |
 | 89 | GuildNews | client Protocol.bas:HandleGuildNews | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 90 | OfferDetails | client Protocol.bas:HandleOfferDetails | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 91 | AlianceProposalsList | client Protocol.bas:HandleAlianceProposalsList | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
