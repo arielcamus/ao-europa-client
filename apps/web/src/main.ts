@@ -26,6 +26,7 @@ import { CraftingUI } from './crafting-ui.js';
 import { CraftingExtraUI } from './crafting-extra-ui.js';
 import { FishingUI } from './fishing-ui.js';
 import { KeyAction, keyAction } from './keymap.js';
+import { MacControlClick } from './secondary-button.js';
 import { SkillsWindows } from './skills-window.js';
 import { KeysClientPacketId as K, WorkSkill } from '@ao/protocol';
 import { Minimap, parseQuestNpcDots } from './minimap.js';
@@ -541,6 +542,7 @@ function gameKey(action: KeyAction): boolean {
       return false;
   }
 }
+const macControl = new MacControlClick(); macControl.install();
 window.addEventListener('keydown', event => {
   // HandleKeyUp: Esc while UserSaliendo sends CancelarExit instead of HandleEsc (the windows keep their own Esc via the window stack).
   if (event.key === 'Escape' && session?.cancelExit()) return;
@@ -557,6 +559,8 @@ window.addEventListener('keydown', event => {
   if (event.target instanceof HTMLElement && !inInventory && event.target.closest('input, textarea, select, button, [role="listbox"], dialog')) return;
   if (event.metaKey || event.altKey) return;
   const action = keyAction(event.code);
+  // On a Mac, Control held for a Control+click drag (the Mac right button) is not an attack (secondary-button.ts, issue #103).
+  if (action === KeyAction.Attack && macControl.suppress(event)) { event.preventDefault(); return; }
   // Control is itself a binding (attack); any other Control+key is the browser's.
   if (event.ctrlKey && action !== KeyAction.Attack) return;
   // HandleKeyUp: Accionar (the bindings) runs first; only an unbound Delete opens the guild chat box.
