@@ -53,6 +53,11 @@ export class ChatLocale {
   }
   private value(section: string, key: string) { return this.data.get(section)?.get(key) ?? ''; }
   npcName(id: number) { return this.value(`npc${id}`, 'name'); }
+  /** [NPCn] of sp_localindex.dat as the NPC dialog window reads it (NpcData: Name, desc, Body, Head); undefined for an unknown NPC. */
+  npc(id: number): { name: string; desc: string; body: number; head: number } | undefined {
+    const section = this.data.get(`npc${id}`);
+    return section && { name: section.get('name') ?? '', desc: section.get('desc') ?? '', body: Number(section.get('body') ?? 0), head: Number(section.get('head') ?? 0) };
+  }
   npcDescription(id: number) { return this.value(`npc${id}`, 'desc'); }
   objectName(id: number) { return this.value(`obj${id}`, 'name'); }
   questFinalText(id: number) { return this.value(`quest${id}`, 'descfinal'); }

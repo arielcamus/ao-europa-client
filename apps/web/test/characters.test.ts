@@ -6,17 +6,13 @@ import { serverFixtures as f } from '../../../packages/protocol/test/fixtures.js
 import { ChatLocale } from '../src/chat-locale.js';
 import { Session } from '../src/session.js';
 import { CharacterTracker, TILE_MS, vbColor } from '../src/characters.js';
-import { parseColors, parseLocale, playerNameColor, privilegeTitle, splitName, readEquipment, NPC_NAME_COLOR } from '../src/character-data.js';
-import { describeUser, localeText } from '../src/look-at.js';
+import { parseColors, playerNameColor, privilegeTitle, splitName, readEquipment, NPC_NAME_COLOR } from '../src/character-data.js';
+import { describeUser } from '../src/look-at.js';
 import { dialogLifeMs } from '../src/npc-dialog.js';
 import { parseIni } from '../src/assets.js';
 
 const create = (charIndex: number, patch: Partial<Extract<ServerPacket, { id: S.CharacterCreate }>> = {}): ServerPacket =>
   ({ ...f.CharacterCreate, charIndex, x: 10, y: 10, heading: 3, speeding: 1, npc: 0, name: `P${charIndex}`, ...patch }) as ServerPacket;
-const locale = () => parseLocale(parseIni([
-  '[SP_MSG]', 'Msg1105=Ves a ¬1', 'Msg1106=No ves nada interesante.', 'Msg1622=¬1 ¬2',
-  '[NPC1]', 'BODY=117', 'DESC=Hola, hijo mio!', 'HEAD=3', 'NAME=Sacerdote <Iglesia>',
-].join('\n')));
 
 const chatLocale = () => { const l = new ChatLocale(); l.load([
   '[SP_MSG]', 'Msg1105=Ves a ¬1', 'Msg1106=No ves nada interesante.', 'Msg1622=¬1 ¬2',
@@ -51,28 +47,20 @@ describe('character tracker', () => {
     t.receive({ id: S.CharacterMove, charIndex: 2, x: 40, y: 10 }, 0); // same tile: no heading, no slide
     expect(t.chars.get(2)!.x).toBe(40);
   });
-  it('shows overhead text for its VB6 lifetime and drops it on RemoveCharDialog / RemoveDialogs', () => {
-    const t = new CharacterTracker(); t.locale = locale();
+  it('draws no overhead text of its own (ChatBubbles do) and ignores speech from unknown characters', () => {
+    const t = new CharacterTracker();
     t.receive(create(5), 0);
     t.receive({ id: N.ChatOverHead, chat: 'hola', charIndex: 5, color: 0x00ff0000, isSpell: false, x: 0, y: 0, minChatTime: 0, maxChatTime: 0 }, 100);
-    expect(t.chars.get(5)!.dialog).toMatchObject({ text: 'hola', lifeMs: 3000 + 60 * 4 });
+    expect(t.chars.get(5)).not.toHaveProperty('dialog');
     expect(vbColor(0x00ff0000)).toEqual({ r: 0, g: 0, b: 255 }); // VB colours are BGR
-    t.expireDialogs(100 + 3239); expect(t.chars.get(5)!.dialog).toBeDefined();
-    t.expireDialogs(100 + 3241); expect(t.chars.get(5)!.dialog).toBeUndefined();
-    t.receive({ id: N.ChatOverHead, chat: 'otra', charIndex: 5, color: 0, isSpell: false, x: 0, y: 0, minChatTime: 0, maxChatTime: 0 }, 0);
-    t.receive({ id: N.RemoveCharDialog, charIndex: 5 }, 1); expect(t.chars.get(5)!.dialog).toBeUndefined();
-    t.receive({ id: N.ChatOverHead, chat: 'x', charIndex: 5, color: 0, isSpell: false, x: 0, y: 0, minChatTime: 0, maxChatTime: 0 }, 0);
-    t.receive({ id: N.RemoveDialogs }, 1); expect(t.chars.get(5)!.dialog).toBeUndefined();
-    t.receive({ id: N.ChatOverHead, chat: 'fantasma', charIndex: 99, color: 0, isSpell: false, x: 0, y: 0, minChatTime: 0, maxChatTime: 0 }, 0); // unknown char: ignored
   });
-  it('turns NPCDESC into the NPC text, fires the dialog window once, and clears everything on a map change', () => {
-    const t = new CharacterTracker(); t.locale = locale();
+  it('fires the NPC dialog window once per NPCDESC, and clears everything on a map change', () => {
+    const t = new CharacterTracker();
     const seen: number[] = []; t.onNpcDescription = d => seen.push(d.npcNumber);
     t.receive(create(8, { npc: 1, npcNumber: 1, name: 'Sacerdote <Iglesia>' }), 0);
     expect(t.chars.get(8)).toMatchObject({ name: 'Sacerdote', clan: '<Iglesia>', npc: 1 });
     t.receive({ id: N.ChatOverHead, chat: 'NPCDESC*1', charIndex: 8, color: 0xffffff, isSpell: false, x: 0, y: 0, minChatTime: 0, maxChatTime: 0 }, 0);
     expect(seen).toEqual([1]);
-    expect(t.chars.get(8)!.dialog!.text).toBe('Hola, hijo mio!');
     expect(dialogLifeMs('Hola, hijo mio!')).toBe(200 + 30 * 15);
     t.receive({ id: S.ChangeMap, map: 2, resourceMap: 2 }, 0);
     expect(t.chars.size).toBe(0);
@@ -105,12 +93,12 @@ describe('names and colours', () => {
 describe('look at a tile (left click replies)', () => {
   it('prints the user description with the Spanish class and race', () => {
     expect(describeUser('Aotest--hola-Clan--3-1-20-')).toBe('Aotest <hola> <Clan> <Guerrero|Humano> <Nivel:20> ');
-    expect(localeText(1105, 'Aotest----¬0¬0'.replace('----', '-----'), locale())).toMatch(/^Ves a Aotest /);
+    expect(chatLocale().message(1105, 'Aotest----¬0¬0'.replace('----', '-----'))).toMatch(/^Ves a Aotest /);
   });
   it('prints NPC name and nothing-to-see messages from the locale templates', () => {
-    expect(localeText(1106, '', locale())).toBe('No ves nada interesante.');
+    expect(chatLocale().message(1106, '')).toBe('No ves nada interesante.');
     // Fields: npc number, elemental tags, `hp-...-mask` status block; the 1622 template prints name and tags.
-    expect(localeText(1622, '1\u00ac0\u00ac10/10-----16', locale())).toBe('Sacerdote <Iglesia> ');
+    expect(chatLocale().message(1622, '1\u00ac0\u00ac10/10-----16')).toBe('Sacerdote <Iglesia> ');
   });
 });
 

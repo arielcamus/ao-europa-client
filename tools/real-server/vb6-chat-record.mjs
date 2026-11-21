@@ -25,7 +25,7 @@ function capture(dir, payload) {
     const len = buf.readUInt16LE(0), body = buf.subarray(2, 2 + len); buf = buf.subarray(2 + len);
     const id = body.readInt16LE(0);
     const name = (dir === 's2c' ? names[id] : clientNames[id]) ?? `${dir === 's2c' ? 'S' : 'C'}${id}`;
-    // Never store the password: LoginAccount is recorded with the secret blanked to its length.
+    // Never store the password: LoginAccount keeps the email and replaces the password with a single "*" (the recorder in tools/conformance blanks the whole payload).
     let hex = body.toString('hex');
     if (dir === 'c2s' && id === 305) { const mail = Buffer.from(email); hex = Buffer.concat([body.subarray(0, 2), Buffer.from([mail.length]), mail, Buffer.from([1, 0x2a])]).toString('hex'); }
     segments[current].push({ t_ms: Date.now() - opened, dir, id, name, hex });

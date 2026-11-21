@@ -10,8 +10,8 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 463 of 523 = 88.5%.** Merged on main only: 463 = 88.5%.
-  - Server to client: 190 of 207. Client to server: 273 of 316. Packets with a recorded VB6 fixture: 237.
+- **Packets covered (merged + open branches): 464 of 523 = 88.7%.** Merged on main only: 464 = 88.7%.
+  - Server to client: 190 of 207. Client to server: 274 of 316. Packets with a recorded VB6 fixture: 238.
 - **Forms covered: 4 of 86 = 4.7%** (5 more partially, 10.5% started).
 
 ## (c) Feature groups, ordered by player value
@@ -34,7 +34,7 @@ Scanned refs: `main`
 | 14 | Fishing / mining / lumber (work skills) | 10/10 | 100% | 10 | 0/0 | n/a | 0 |
 | 15 | Options / keybinds | 1/2 | 50% | 1 | 0/4 | 0% | 0 |
 | 16 | Minimap / world map | 0/2 | 0% | 0 | 0/1 | 0% | 0 |
-| 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 3/60 | 5% | 3 | 0/13 | 0% | 0 |
+| 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 4/60 | 6.7% | 4 | 0/13 | 0% | 0 |
 | 18 | GM / admin (lowest) | 142/142 | 100% | 142 | 0/13 | 0% | 0 |
 
 ## DUPLICATES
@@ -601,7 +601,7 @@ Ids only: .
 | 244 | EventoInfo | server Protocol.bas:HandleEventoInfo | extras | not started |  | no |
 | 245 | CrearEvento | server Protocol.bas:HandleCrearEvento | extras | not started |  | no |
 | 246 | BanTemporal | server Protocol.bas:HandleBanTemporal | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 247 | CancelarExit | server Protocol.bas:HandleCancelarExit | extras | not started |  | no |
+| 247 | CancelarExit | server Protocol.bas:HandleCancelarExit | extras | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 248 | CrearTorneo | server Protocol.bas:HandleCrearTorneo | extras | not started |  | no |
 | 249 | ComenzarTorneo | server Protocol.bas:HandleComenzarTorneo | extras | not started |  | no |
 | 250 | CancelarTorneo | server Protocol.bas:HandleCancelarTorneo | extras | not started |  | no |
@@ -750,7 +750,7 @@ Smith, carpenter, alchemy, tailor, crafting window, fishing, mining, lumber.
 
 Options forms, custom keys, hotkeys, events, battlegrounds, duels, premium shop, remort.
 
-- Packets (58): S165 InvasionInfo, S178 ShopInit, S179 UpdateShopClienteCredits, S183 NotificarClienteSeguido, S184 GetInventarioHechizos, S189 ShopPjsInit, S196 AntiCheatMessage, S197 AntiCheatStartSession, S198 ReportLobbyList, S200 ChangeSkinSlot, S203 RemortState, S204 RemortResult, S205 HooTargetedSpellCastResult, S206 HooHouseDoorActionResult, S207 AutoCombatState, C64 ChangeDescription, C67 Gamble, C68 MapPriceEntrance, C69 LeaveFaction, C185 Participar, C213 OfertaInicial, C214 OfertaDeSubasta, C216 CuentaRegresiva, C218 Duel, C219 AcceptDuel, C220 CancelDuel, C221 QuitDuel, C227 Casarse, C239 MacroPossent, C240 SubastaInfo, C244 EventoInfo, C245 CrearEvento, C247 CancelarExit, C248 CrearTorneo, C249 ComenzarTorneo, C250 CancelarTorneo, C251 BusquedaTesoro, C267 FinEvento, C272 CreateEvent, C274 LogMacroClickHechizo, C290 BuyShopItem, C291 StartEvent, C292 CancelarEvento, C293 NotifyInventarioHechizos, C294 PublicarPersonajeMAO, C295 EventoFaccionario, C297 LobbyCommand, C298 FeatureToggle, C302 AntiCheatMessage, C303 RequestLobbyList, C307 ChangeSkinSlot, C310 AntiMacroMessage, C311 ModifyCastleWhiteList, C312 HooClientCapabilities, C313 RequestRemort, C314 HooTargetedSpellCast, C315 HooHouseDoorAction, C316 ToggleAutoCombat
+- Packets (57): S165 InvasionInfo, S178 ShopInit, S179 UpdateShopClienteCredits, S183 NotificarClienteSeguido, S184 GetInventarioHechizos, S189 ShopPjsInit, S196 AntiCheatMessage, S197 AntiCheatStartSession, S198 ReportLobbyList, S200 ChangeSkinSlot, S203 RemortState, S204 RemortResult, S205 HooTargetedSpellCastResult, S206 HooHouseDoorActionResult, S207 AutoCombatState, C64 ChangeDescription, C67 Gamble, C68 MapPriceEntrance, C69 LeaveFaction, C185 Participar, C213 OfertaInicial, C214 OfertaDeSubasta, C216 CuentaRegresiva, C218 Duel, C219 AcceptDuel, C220 CancelDuel, C221 QuitDuel, C227 Casarse, C239 MacroPossent, C240 SubastaInfo, C244 EventoInfo, C245 CrearEvento, C248 CrearTorneo, C249 ComenzarTorneo, C250 CancelarTorneo, C251 BusquedaTesoro, C267 FinEvento, C272 CreateEvent, C274 LogMacroClickHechizo, C290 BuyShopItem, C291 StartEvent, C292 CancelarEvento, C293 NotifyInventarioHechizos, C294 PublicarPersonajeMAO, C295 EventoFaccionario, C297 LobbyCommand, C298 FeatureToggle, C302 AntiCheatMessage, C303 RequestLobbyList, C307 ChangeSkinSlot, C310 AntiMacroMessage, C311 ModifyCastleWhiteList, C312 HooClientCapabilities, C313 RequestRemort, C314 HooTargetedSpellCast, C315 HooHouseDoorAction, C316 ToggleAutoCombat
 - Forms (17): frmSkins, frmEligeAlineacion, frmOpciones, frmMasOpciones, frmCustomKeys, frmBindKey, frmCollectibleCard, frmCreateBattleground, frmLobbyBattleground, frmRetos, frmShop, frmShopPjsAO20, frmTransferChar, frmTransferChar2FA, frmPatchNotes, frmNoticia, frmForo
 
 ### wp12: GM / admin (last)

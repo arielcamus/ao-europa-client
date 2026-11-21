@@ -20,7 +20,7 @@ export class SessionWorld implements AudioWorld {
   get position() { return this.session?.position; }
   get charIndex() { return this.session?.charIndex; }
   get dead() { return this.session?.dead ?? false; }
-  get motion() { const m = this.session?.motion; return m ? { started: m.started, to: m.to } : undefined; }
+  get motion() { const m = this.session?.motion; return m && !m.translate ? { started: m.started, to: m.to } : undefined; }
   get mapReady() { return Boolean(this.session) && this.renderer.readyMap === this.session!.resourceMap; }
   char(index: number) {
     const char = this.session?.tracker.chars.get(index);

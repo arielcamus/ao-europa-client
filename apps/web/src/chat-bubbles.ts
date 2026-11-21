@@ -40,7 +40,8 @@ export class ChatBubbles {
     if (session && position) {
       const width = this.layer.clientWidth, height = this.layer.clientHeight;
       for (const { charIndex, dialog, opacity } of visible) {
-        const character = session.characters.get(charIndex);
+        // The tracker is the one character store: a walking NPC's bubble slides with it instead of jumping from tile to tile.
+        const character = session.tracker.chars.get(charIndex);
         if (!character) continue;
         seen.add(charIndex);
         let bubble = this.bubbles.get(charIndex);
@@ -53,7 +54,7 @@ export class ChatBubbles {
           bubble.style.color = `rgb(${dialog.color[0]}, ${dialog.color[1]}, ${dialog.color[2]})`;
         }
         const self = charIndex === session.charIndex;
-        const { left, top } = bubblePlacement(width, height, position, self ? position : character, this.headOffsetY(character.body), now - dialog.start);
+        const { left, top } = bubblePlacement(width, height, position, self ? position : session.tracker.visualPosition(character, now), this.headOffsetY(character.body), now - dialog.start);
         bubble.style.transform = `translate(${left}px, ${top}px) translate(-50%, -100%)`;
         bubble.style.opacity = String(opacity);
       }

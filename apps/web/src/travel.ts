@@ -3,7 +3,7 @@
  * FrmViajes.cmdViajar_Click. No DOM here: travel-ui.ts draws it. Copyright (C) 2022-2026 Noland Studios.
  * AGPL-3.0-or-later; no warranty. See NOTICE.
  */
-import { PetsTravelServerPacketId as PS, ServerPacketId as S } from '@ao/protocol';
+import { PetsTravelClientPacketId, PetsTravelServerPacketId as PS, ServerPacketId as S } from '@ao/protocol';
 import type { ClientPacket, ServerPacket, TravelDestination } from '@ao/protocol';
 
 export class TravelState {
@@ -25,7 +25,7 @@ export class TravelState {
     const row = this.destinations?.[destination - 1];
     if (!row || destination <= 0) return undefined;
     this.close();
-    return { id: 252, destination, cost: row.cost };
+    return { id: PetsTravelClientPacketId.CompletarViaje, destination, cost: row.cost };
   }
   close(): void { if (this.destinations) { this.destinations = undefined; this.revision++; } }
 }

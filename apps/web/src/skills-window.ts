@@ -190,7 +190,8 @@ export class SkillsWindows {
     if (s.statsOpen) this.drawStats();
     if (s.trainerCreatures && this.trainer.hidden) {
       this.creatureSelected = -1; this.creatureList.replaceChildren();
-      s.trainerCreatures.forEach((name, index) => {
+      // VB6 Split("", SEPARATOR) is one empty string, so a trainer with no creatures still lists one empty row (HandleTrainerCreatureList).
+      (s.trainerCreatures.length ? s.trainerCreatures : ['']).forEach((name, index) => {
         const row = node(this.creatureList, 'sk-trainer-row'); row.textContent = name; row.setAttribute('role', 'option'); row.setAttribute('aria-selected', 'false');
         row.addEventListener('click', () => {
           this.creatureSelected = index;
