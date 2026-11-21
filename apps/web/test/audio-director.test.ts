@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { AudioServerPacketId as A, CombatServerPacketId as C, ServerPacketId as S, SpellServerPacketId as SP } from '@ao/protocol';
+import { AudioServerPacketId as A, CombatServerPacketId as C, ServerPacketId as S, SkillsServerPacketId as SK, SpellServerPacketId as SP } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import { AudioDirector } from '../src/audio-director.js';
 import type { AudioWorld, PlayWavePacket } from '../src/audio-director.js';
 import { AudioEngine } from '../src/audio-engine.js';
 import { fakeAudio } from './audio-fakes.js';
 
-type Char = { x: number; y: number; body: number; privileges: number; sailing: boolean; speeding: number };
+type Char = { x: number; y: number; body: number; privileges: number; sailing: boolean; speeding: number; npc?: number };
 function setup(over: Partial<{ audio: ReturnType<AudioWorld['mapAudio']>; ground: number; roof: boolean }> = {}) {
   const f = fakeAudio();
   const engine = new AudioEngine(f.deps); engine.unlock();
@@ -15,11 +15,11 @@ function setup(over: Partial<{ audio: ReturnType<AudioWorld['mapAudio']>; ground
     resourceMap: 7 as number | undefined, position: { x: 50, y: 50 } as { x: number; y: number } | undefined, charIndex: 1 as number | undefined,
     dead: false, motion: undefined as { started: number; to: { x: number; y: number } } | undefined, mapReady: true,
     audio: over.audio === undefined && 'audio' in over ? undefined : over.audio ?? { music: 5, ambient: '3-4', rain: true, snow: false, fog: false },
-    ground: over.ground ?? 1, roof: over.roof ?? false,
+    ground: over.ground ?? 1, roof: over.roof ?? false, night: false,
   };
   const world: AudioWorld = {
     get resourceMap() { return state.resourceMap; }, get position() { return state.position; }, get charIndex() { return state.charIndex; },
-    get dead() { return state.dead; }, get motion() { return state.motion; }, get mapReady() { return state.mapReady; },
+    get dead() { return state.dead; }, get motion() { return state.motion; }, get mapReady() { return state.mapReady; }, get night() { return state.night; },
     char: index => chars.get(index), mapAudio: () => state.audio, terrainAt: () => ({ file: state.ground, overlay: 0 }), roofAt: () => state.roof,
   };
   const director = new AudioDirector(engine, world);
@@ -168,6 +168,42 @@ describe('map music, ambient and weather', () => {
     const t = setup(); t.director.receive({ id: A.RainToggle, raining: true } as ServerPacket);
     t.director.tick();
     expect(t.engine.events.filter(e => e.kind === 'ambient').map(e => e.id)).toEqual(['194']);
+  });
+});
+
+describe('night ambient, meditation, pets and global waves (#28)', () => {
+  it('picks the first ambient field at night and the second by day (PlayAmbientAudio, EsNoche)', () => {
+    const night = setup(); night.state.night = true; night.director.tick();
+    expect(night.engine.events.filter(e => e.kind === 'ambient').map(e => e.id)).toEqual(['3']);
+    const day = setup(); day.director.tick();
+    expect(day.engine.events.filter(e => e.kind === 'ambient').map(e => e.id)).toEqual(['4']);
+    // Real map data is a single number ("514"): the VB6 client plays it at night and is silent by day.
+    const single = setup({ audio: { music: 0, ambient: '514', rain: false, snow: false, fog: false } }); single.state.night = true; single.director.tick();
+    expect(single.engine.events.filter(e => e.kind === 'ambient').map(e => e.id)).toEqual(['514']);
+  });
+  it('does not restart the ambient when the hour flips on a map that is already playing', () => {
+    const t = setup(); t.director.tick(); t.state.night = true; t.director.tick(); t.director.tick();
+    expect(t.engine.events.filter(e => e.kind === 'ambient')).toHaveLength(1);
+  });
+  it('loops the meditation wave 158 under "meditate<char>" for a character in the area and stops it when the toggle comes back with fx 0', () => {
+    const t = setup(); t.chars.set(2, { x: 53, y: 50, body: 1, privileges: 0, sailing: false, speeding: 1 });
+    t.director.receive({ id: SK.MeditateToggle, charIndex: 2, fx: 12, x: 0, y: 0 } as ServerPacket);
+    expect(t.engine.events.at(-1)).toMatchObject({ kind: 'wave', id: '158', label: 'meditate2' });
+    t.director.receive({ id: SK.MeditateToggle, charIndex: 2, fx: 0, x: 0, y: 0 } as ServerPacket);
+    expect(t.engine.events.at(-1)).toMatchObject({ kind: 'stop', id: '158', label: 'meditate2' });
+    t.chars.set(3, { x: 90, y: 50, body: 1, privileges: 0, sailing: false, speeding: 1 }); // outside the area: no sound
+    const before = t.engine.events.length; t.director.receive({ id: SK.MeditateToggle, charIndex: 3, fx: 12, x: 0, y: 0 } as ServerPacket);
+    expect(t.engine.events).toHaveLength(before);
+  });
+  it('pets make no footsteps (EsMascota = FlagNpc 2), other NPCs do', () => {
+    const t = setup(); t.chars.set(2, { x: 52, y: 50, body: 5, privileges: 0, sailing: false, speeding: 1, npc: 2 });
+    t.director.step(2, 52, 50); expect(t.waves()).toEqual([]);
+    t.chars.set(3, { x: 52, y: 50, body: 5, privileges: 0, sailing: false, speeding: 1, npc: 1 });
+    t.director.step(3, 52, 50); expect(t.waves()).toHaveLength(1);
+  });
+  it('plays a global wave with no position', () => {
+    const t = setup(); t.director.global(124);
+    expect(t.engine.events.at(-1)).toMatchObject({ kind: 'wave', id: '124' });
   });
 });
 

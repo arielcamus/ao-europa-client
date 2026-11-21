@@ -8,7 +8,7 @@ export const CLASSIC_WIDTH = 1024;
 export const CLASSIC_HEIGHT = 768;
 export const controls: Record<string, readonly [number, number, number, number]> = {
   renderer: [10, 150, 736, 608], RecTxt: [16, 32, 612, 85], SendTxt: [40, 120, 545.6, 24],
-  MiniMap: [638.4, 40, 100, 100], NameMapa: [651, 3, 75, 11], Coord: [648, 14, 81, 15],
+  MiniMap: [638.4, 40, 100, 100], btnZoomIn: [745, 70, 13, 13], btnZoomOut: [745, 98, 13, 13], NameMapa: [651, 3, 75, 11], Coord: [648, 14, 81, 15],
   NombrePJ: [752, 35, 271, 33], lblLvl: [832, 65, 119, 18], lblhora: [878, 134, 33, 15],
   ExpBar: [772, 103.2, 235, 16], exp: [772, 103, 236, 17],
   panel: [768, 160, 247, 325], picInv: [280 / 15, 740 / 15, 210, 256],

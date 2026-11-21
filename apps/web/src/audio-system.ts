@@ -27,6 +27,7 @@ export class SessionWorld implements AudioWorld {
     // The tracker never moves the player's own character (the session predicts it), so its tile comes from the session.
     return char && index === this.session?.charIndex && this.session.position ? { ...char, ...this.session.position } : char;
   }
+  get night() { return this.session?.world.isNight ?? false; }
   mapAudio() { return this.renderer.mapAudio; }
   terrainAt(x: number, y: number) { return this.renderer.terrainAt(x, y); }
   roofAt(x: number, y: number) { return this.renderer.roofAt(x, y); }
@@ -44,7 +45,11 @@ export class AudioSystem {
     this.director.terrainOfGrh = (grh, overlay) => terrainOf(renderer.grhFile(grh), overlay);
     this.options = new AudioOptions(root, this.engine, () => this.director.click());
     // Browsers keep an AudioContext suspended until a user gesture; the login click or the first key press unlocks it.
-    const unlock = () => this.engine.unlock();
+    // Once the context exists the listeners have done their job and are removed (a suspended one is resumed by visibilitychange / the engine).
+    const unlock = () => {
+      this.engine.unlock();
+      if (this.engine.isUnlocked) { window.removeEventListener('pointerdown', unlock, { capture: true }); window.removeEventListener('keydown', unlock, { capture: true }); }
+    };
     window.addEventListener('pointerdown', unlock, { capture: true });
     window.addEventListener('keydown', unlock, { capture: true });
     document.addEventListener('visibilitychange', () => this.engine.setSuspended(document.hidden));
@@ -66,9 +71,14 @@ export class AudioSystem {
     try { this.director.zones = parseZones(await fetchText('Dat/zonas.dat')); }
     catch (error) { this.report(`Zonas de música no disponibles: ${String(error)}`); }
   }
-  attach(session: Session) { this.world.session = session; session.onPacket = packet => {
+  attach(session: Session) {
+    this.world.session = session;
+    // Waves the world FX decide: a travelling spell's arrival (positional) and RevisarHoraMundo's wolf / rooster (no position).
+    session.world.setHooks({ playWave: (wave, x, y) => this.director.at(wave, x, y), playGlobalWave: wave => this.director.global(wave) });
+    session.onPacket = packet => {
       try { this.director.receive(packet); } catch (error) { this.report(`Audio: ${String(error)}`); } // sound must never drop the session
-    }; }
+    };
+  }
   detach() { this.world.session = undefined; this.director.reset(); }
   tick() { try { this.director.tick(); } catch (error) { this.report(`Audio: ${String(error)}`); } }
 }

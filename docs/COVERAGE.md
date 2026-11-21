@@ -10,9 +10,9 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 510 of 523 = 97.5%.** Merged on main only: 510 = 97.5%.
-  - Server to client: 200 of 207. Client to server: 310 of 316. Packets with a recorded VB6 fixture: 259.
-- **Forms covered: 53 of 86 = 61.6%** (4 more partially, 66.3% started).
+- **Packets covered (merged + open branches): 512 of 523 = 97.9%.** Merged on main only: 512 = 97.9%.
+  - Server to client: 202 of 207. Client to server: 310 of 316. Packets with a recorded VB6 fixture: 262.
+- **Forms covered: 53 of 86 = 61.6%** (5 more partially, 67.4% started).
 
 ## (c) Feature groups, ordered by player value
 
@@ -33,7 +33,7 @@ Scanned refs: `main`
 | 13 | Crafting (smith / carpenter / alchemy / tailor) | 25/25 | 100% | 25 | 2/5 | 40% | 3 |
 | 14 | Fishing / mining / lumber (work skills) | 10/10 | 100% | 10 | 0/0 | n/a | 0 |
 | 15 | Options / keybinds | 2/2 | 100% | 2 | 3/4 | 75% | 0 |
-| 16 | Minimap / world map | 0/2 | 0% | 0 | 0/1 | 0% | 0 |
+| 16 | Minimap / world map | 2/2 | 100% | 2 | 0/1 | 0% | 1 |
 | 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 49/60 | 81.7% | 49 | 2/13 | 15.4% | 0 |
 | 18 | GM / admin (lowest) | 142/142 | 100% | 142 | 9/13 | 69.2% | 0 |
 
@@ -111,7 +111,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | frmCustomKeys | Custom key bindings | options | merged | src/keys-ui.ts |
 | frmMasOpciones | More options | options | not started | (b) Only opened from the account recovery and account creation forms |
 | frmOpciones | Options (sound, light, display) | options | merged | src/options-ui.ts |
-| frmMapaGrande | Large world map | minimap | not started | (a) Large world map (ShowFrmMapa): world agent |
+| frmMapaGrande | Large world map | minimap | merged (partial) | src/world-map-ui.ts |
 | frmCollectibleCard | Collectible card viewer | extras | not started | (c) AO20 collectible card viewer, local to the AO20 client |
 | frmCreateBattleground | Create battleground | extras | not started | (c) AO20 battleground creation (LobbyCommand) |
 | frmEligeAlineacion | Faction alignment choice | extras | not started | (d) Never opened by the classic client code (dead form) |
@@ -143,9 +143,8 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 
 32 forms have no complete screen yet.
 
-**(a) Player-facing and worth building** (1)
+**(a) Player-facing and worth building** (0)
 
-- frmMapaGrande: Large world map (ShowFrmMapa): world agent
 
 **(b) Needs a login/account server, not used with PYMMO=0** (12)
 
@@ -184,12 +183,13 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 - frmMSG: Never opened by the classic client code (dead form)
 - frmProcesses: Never opened by the classic client code (anti-cheat leftover)
 
-**Partial** (4)
+**Partial** (5)
 
 - frmMain: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not
 - frmAlqui: crafting state and packets only; no alchemy window yet
 - frmCrafteo: crafting state and packets only; no catalyst crafting window yet
 - FrmSastre: crafting state and packets only; no tailor window yet
+- frmMapaGrande: null
 
 
 ## (a) VB6 packets
@@ -335,13 +335,13 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 135 | MacroTrabajoToggle | client Protocol.bas:HandleMacroTrabajoToggle | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 136 | BindKeys | client Protocol.bas:HandleBindKeys | options | merged | `main:packages/protocol/src/packets/options.ts` | yes |
 | 137 | ShowFrmLogear | client Protocol.bas:HandleShowFrmLogear | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
-| 138 | ShowFrmMapa | client Protocol.bas:HandleShowFrmMapa | minimap | not started |  | no |
+| 138 | ShowFrmMapa | client Protocol.bas:HandleShowFrmMapa | minimap | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 139 | InmovilizadoOK | client Protocol.bas:HandleInmovilizadoOK | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 140 | BarFx | client Protocol.bas:HandleBarFx | spells | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 141 | LocaleMsg | client Protocol.bas:HandleLocaleMsg | chat | merged | `main:packages/protocol/src/packets/npcs.ts` | yes |
 | 142 | ShowPregunta | client Protocol.bas:HandleShowPregunta | party | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 143 | DatosGrupo | client Protocol.bas:HandleDatosGrupo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
-| 144 | Ubicacion | client Protocol.bas:HandleUbicacion | minimap | not started |  | yes |
+| 144 | Ubicacion | client Protocol.bas:HandleUbicacion | minimap | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 145 | ArmaMov | client Protocol.bas:HandleArmaMov | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
 | 146 | EscudoMov | client Protocol.bas:HandleEscudoMov | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 147 | ViajarForm | client Protocol.bas:HandleViajarForm | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | no |
@@ -559,7 +559,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 147 | GuildOnlineMembers | server Protocol.bas:HandleGuildOnlineMembers | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 148 | TeleportCreate | server Protocol.bas:HandleTeleportCreate | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 149 | TeleportDestroy | server Protocol.bas:HandleTeleportDestroy | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 150 | RainToggle | server Protocol.bas:HandleRainToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
+| 150 | RainToggle | server Protocol.bas:HandleRainToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 151 | SetCharDescription | server Protocol.bas:HandleSetCharDescription | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 152 | ForceMIDIToMap | server Protocol.bas:HandleForceWAVEToMap | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 153 | ForceWAVEToMap | server Protocol.bas:HandleForceWAVEToMap | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
@@ -631,7 +631,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 219 | AcceptDuel | server Protocol.bas:HandleAcceptDuel | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 220 | CancelDuel | server Protocol.bas:HandleCancelDuel | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 221 | QuitDuel | server Protocol.bas:HandleQuitDuel | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
-| 222 | NieveToggle | server Protocol.bas:HandleNieveToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
+| 222 | NieveToggle | server Protocol.bas:HandleNieveToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | yes |
 | 223 | NieblaToggle | server Protocol.bas:HandleNieblaToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
 | 224 | TransFerGold | server Protocol.bas:HandleTransFerGold | extras | merged | `main:packages/protocol/src/packets/options.ts` | yes |
 | 225 | Moveitem | server Protocol.bas:HandleMoveItem | items | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
@@ -742,7 +742,7 @@ Account create/select/delete, character create, loading screens, HUD stat update
 
 Light, weather, particles, sound, projectiles, auras, area changes, world map form.
 
-- Packets (2): S138 ShowFrmMapa, S144 Ubicacion
+- Packets (0): none left
 - Forms (1): frmMapaGrande
 
 ### wp03: Combat and spells completion

@@ -178,6 +178,7 @@ export class Session {
     this.world = new WorldFx(clock, {
       // CambioDeArea: characters and non-fixed objects outside the new area go (self stays).
       areaChanged: bounds => this.leaveArea(bounds),
+      currentMap: () => this.map,
       // Effect_Render_Slot arrival: the end effect is an FXs.ini FX on a character or tile.
       addFx: fx => this.spells.addFx({ ...fx, startedAt: this.clock() }),
       speedToChar: (charIndex, speeding) => this.setSpeeding(charIndex, speeding),
@@ -344,7 +345,7 @@ export class Session {
           break;
         case SS.ShowMessageBox: this.notify({ kind: 'box', messageId: packet.messageId, extra: packet.extra }); break;
         case SS.CerrarleCliente: this.onCloseClient?.(); break;
-        case SS.MostrarCuenta: this.phase = 'account'; this.status.resetOnLeave(); this.world.blind = false; this.accountRevision++; this.onShowAccount?.(); break;
+        case SS.MostrarCuenta: this.phase = 'account'; this.status.resetOnLeave(); this.world.blind = false; this.world.allies.clear(); /* HandleMostrarCuenta: HideMinimapDot 1..5 */ this.accountRevision++; this.onShowAccount?.(); break;
         case SS.NavigateToggle: this.movement.sailing = packet.sailing; break;
         case SS.EquiteToggle: this.movement.riding = !this.movement.riding; break; // HandleEquiteToggle flips it
         case SS.NadarToggle: this.movement.swimming = packet.swimming; this.movement.rubberSuit = packet.rubberSuit; break;

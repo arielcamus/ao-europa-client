@@ -113,13 +113,15 @@ describe('Goliath Transferir (WriteTransFerGold)', () => {
 
 describe('game options (frmOpciones)', () => {
   it('defaults, persistence and hostile stored values', () => {
-    expect(DEFAULT_OPTIONS).toEqual({ showFps: false, moveWhileTyping: false, copyDialogToConsole: true });
+    expect(DEFAULT_OPTIONS).toEqual({ showFps: false, moveWhileTyping: false, copyDialogToConsole: true, centeredMinimap: true, centeredMinimapZoom: 0 });
     const store = new MemoryStore();
     const a = new OptionsSettings(store); const seen: unknown[] = []; a.subscribe(o => seen.push(o));
     a.update({ showFps: true });
-    expect(JSON.parse(store.getItem(OPTIONS_KEY)!)).toEqual({ showFps: true, moveWhileTyping: false, copyDialogToConsole: true });
+    expect(JSON.parse(store.getItem(OPTIONS_KEY)!)).toEqual({ showFps: true, moveWhileTyping: false, copyDialogToConsole: true, centeredMinimap: true, centeredMinimapZoom: 0 });
     expect(seen).toHaveLength(1); expect(new OptionsSettings(store).value.showFps).toBe(true);
     expect(sanitizeOptions({ showFps: 'yes', moveWhileTyping: 1, extra: true })).toEqual(DEFAULT_OPTIONS);
+    expect(sanitizeOptions({ centeredMinimap: false, centeredMinimapZoom: 999 })).toMatchObject({ centeredMinimap: false, centeredMinimapZoom: 50 }); // the zoom is clamped to -50..50
+    expect(sanitizeOptions({ centeredMinimapZoom: 'x' }).centeredMinimapZoom).toBe(0);
     store.setItem(OPTIONS_KEY, '{broken'); expect(new OptionsSettings(store).value).toEqual(DEFAULT_OPTIONS);
   });
 });

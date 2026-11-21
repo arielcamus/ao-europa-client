@@ -700,10 +700,13 @@
   "name": "frmMapaGrande",
   "purpose": "Large world map",
   "group": "minimap",
-  "missing": {
-   "class": "a",
-   "note": "Large world map (ShowFrmMapa): world agent"
-  }
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/world-map-ui.ts",
+    "partial": true
+   }
+  ]
  },
  {
   "name": "frmCollectibleCard",

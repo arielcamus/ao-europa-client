@@ -9,20 +9,20 @@
  ],
  "headline": {
   "packets": 523,
-  "packetsCovered": 510,
-  "packetsMerged": 510,
+  "packetsCovered": 512,
+  "packetsMerged": 512,
   "s2c": 207,
   "c2s": 316,
-  "s2cCovered": 200,
+  "s2cCovered": 202,
   "c2sCovered": 310,
   "forms": 86,
   "formsCovered": 53,
-  "formsPartial": 4,
-  "fixturePackets": 259,
-  "packetsPct": 97.5,
-  "packetsMergedPct": 97.5,
+  "formsPartial": 5,
+  "fixturePackets": 262,
+  "packetsPct": 97.9,
+  "packetsMergedPct": 97.9,
   "formsPct": 61.6,
-  "formsStartedPct": 66.3
+  "formsStartedPct": 67.4
  },
  "groups": [
   {
@@ -209,12 +209,12 @@
    "id": "minimap",
    "title": "Minimap / world map",
    "packets": 2,
-   "packetsCovered": 0,
-   "packetsMerged": 0,
-   "packetsPct": 0,
+   "packetsCovered": 2,
+   "packetsMerged": 2,
+   "packetsPct": 100,
    "forms": 1,
    "formsCovered": 0,
-   "formsPartial": 0,
+   "formsPartial": 1,
    "formsPct": 0
   },
   {
@@ -2302,7 +2302,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/world/weather-toggles.jsonl"
    ]
   },
   {
@@ -4324,7 +4325,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl"
+    "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
+    "tests/fixtures/vb6/world/weather-toggles.jsonl"
    ]
   },
   {
@@ -4786,13 +4788,17 @@
    "writer": "server Protocol_Writes.bas:WriteShowFrmMapa",
    "group": "minimap",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/world/map-item-show-form.jsonl"
+   ]
   },
   {
    "key": "s2c:139",
@@ -4996,11 +5002,13 @@
    "writer": "server Protocol_Writes.bas:WriteUbicacion",
    "group": "minimap",
    "package": "wp02",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/world.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/party/group-lifecycle-leader.jsonl",
@@ -8432,7 +8440,8 @@
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
     "tests/fixtures/vb6/quests/npc-accept-log-abandon.jsonl",
-    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl"
+    "tests/fixtures/vb6/world-fx/login-idle-area-border.jsonl",
+    "tests/fixtures/vb6/world/weather-toggles.jsonl"
    ]
   },
   {
@@ -9910,8 +9919,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/world.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/world/weather-toggles.jsonl"
+   ]
   },
   {
    "key": "c2s:151",
@@ -11305,8 +11316,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/world.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/world/weather-toggles.jsonl"
+   ]
   },
   {
    "key": "c2s:223",
@@ -14451,14 +14464,18 @@
    "group": "minimap",
    "package": "wp02",
    "lines": 1209,
-   "status": "not started",
+   "status": "merged (partial)",
    "covered": false,
-   "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "a",
-    "note": "Large world map (ShowFrmMapa): world agent"
-   },
+   "partial": true,
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/world-map-ui.ts",
+     "partial": true,
+     "ok": true
+    }
+   ],
+   "missing": null,
    "partialNote": null
   },
   {
@@ -14906,14 +14923,8 @@
    "id": "wp02",
    "title": "World FX, environment and minimap",
    "scope": "Light, weather, particles, sound, projectiles, auras, area changes, world map form",
-   "packetIds": [
-    "s2c:138",
-    "s2c:144"
-   ],
-   "packetNames": [
-    "S138 ShowFrmMapa",
-    "S144 Ubicacion"
-   ],
+   "packetIds": [],
+   "packetNames": [],
    "forms": [
     "frmMapaGrande"
    ]

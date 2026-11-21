@@ -8,12 +8,12 @@
  *
  * Pure logic with an injected clock and random source, so the behaviour is testable without a browser. Drawing is fx-render.ts.
  */
-import { ServerPacketId as S, SpellServerPacketId as SS, WorldServerPacketId as W, NpcsServerPacketId as NS, AudioServerPacketId as AU } from '@ao/protocol';
+import { ServerPacketId as S, SessionServerPacketId as SES, SpellServerPacketId as SS, WorldServerPacketId as W, NpcsServerPacketId as NS, AudioServerPacketId as AU } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import type { MapInfo, MapLight, MapParticle, Ini } from './assets.js';
 import { ENGINE_BASE_SPEED, ParticleGroup } from './fx-particles.js';
 import type { Random, Stream } from './fx-particles.js';
-import { LightGrid, WorldClock, ambientLight } from './fx-lights.js';
+import { DAY_LIGHT, DEATH_COLOR, BLIND_COLOR, DUNGEON_COLOR, LightGrid, NIGHT_LIGHT, WHITE, WorldClock } from './fx-lights.js';
 import type { LightMode, Rgb } from './fx-lights.js';
 
 /** Declares.bas Particula_Lluvia / Particula_Nieve: the stream ids of the weather. */
@@ -65,6 +65,10 @@ export interface WorldHooks {
   addFx?: (fx: { fx: number; charIndex: number | undefined; x: number; y: number; loops: number }) => void;
   /** A projectile or particle travelled to a character and has a sound (ParticleFXWithDestino wav); the audio feature subscribes. */
   playWave?: (wave: number, x: number, y: number) => void;
+  /** The player's map number (UserMap): HandleUbicacion only draws an ally that is on it. */
+  currentMap?: () => number | undefined;
+  /** ModMetereologia.RevisarHoraMundo: the wolf (124) at the first night index and the rooster (137) at the first morning index, played with no position. */
+  playGlobalWave?: (wave: number) => void;
   /** HandleSpeedToChar. */
   speedToChar?: (charIndex: number, speeding: number) => void;
   /** MapData(x, y).charindex: ParticleFXToFloor on a tile that already has a particle group attaches the effect to the character standing there. */
@@ -134,6 +138,8 @@ export function stepProjectile(p: Projectile, dt: number): boolean {
 }
 
 const MAX_PROJECTILES = 64;
+/** ModMetereologia.NightIndex / MorningIndex (the last assignments in IniciarMeteorologia) and ModUtils FXSound Lobo_Sound / Gallo_Sound. */
+export const NIGHT_INDEX = 0, MORNING_INDEX = 3, WOLF_WAVE = 124, ROOSTER_WAVE = 137;
 
 export class WorldFx {
   readonly clock = new WorldClock();
@@ -162,6 +168,10 @@ export class WorldFx {
   meteo: ParticleGroup | undefined;
   /** engine.spell_particle: ONE group shared by every travelling spell particle (Engine_spell_Particle_Set). */
   spellGroup: ParticleGroup | undefined;
+  /** frmMain.MinimapDots(1..5) / personaje(1..5): the party allies' tiles from HandleUbicacion; absent = hidden (HideMinimapDot). */
+  readonly allies = new Map<number, { x: number; y: number }>();
+  /** HandleShowFrmMapa: ExpMult / OroMult and a counter the UI watches to open frmMapaGrande. */
+  mapForm = { opened: 0, expMult: 1, goldMult: 1 };
   readonly travelers: Traveler[] = [];
   readonly projectiles: Projectile[] = [];
   /** HandleAuraToChar: type 1..6 and 7 (RM) -> aura string "grh:color:giro:lado" per character. */
@@ -173,6 +183,15 @@ export class WorldFx {
   private lastBlind = false;
   private lastDungeon = false;
   private lastAmbientAt = -Infinity;
+  /** ModMetereologia.TimeIndex: hour \ 2 of the last RevisarHoraMundo, -1 until the first one (EsNoche reads it). */
+  timeIndex = -1;
+  /** The VB6 `global_light`; `ambient` is what the lightmap last took from it (RenderScreen: `If UpdateLights Then RestaurarLuz`). */
+  private globalLight: Rgb = WHITE;
+  /** `UpdateLights`: set by RevisarHoraMundo (500 ms) and by every map load, consumed by the next render. */
+  private updateLights = true;
+  /** frmMain.Efecto timer (FlashScreen): the instant EfectoEnPantalla's colour is meant to end, or undefined. */
+  private efectoEndsAt: number | undefined;
+  private lastSelfDead = false;
 
   constructor(private readonly clockNow: () => number, private readonly hooks: WorldHooks = {}, private readonly rnd: Random = Math.random) {}
   setHooks(hooks: WorldHooks) { Object.assign(this.hooks, hooks); }
@@ -204,6 +223,13 @@ export class WorldFx {
       case S.ChangeMap: this.resetMap(); break;
       case W.Hora: this.clock.onHora(packet.elapsedMs, packet.dayLenMs, now); this.lights.dirty = true; break;
       case W.PauseToggle: this.paused = !this.paused; break;
+      case W.ShowFrmMapa: this.mapForm = { opened: this.mapForm.opened + 1, expMult: packet.expMult, goldMult: packet.goldMult }; break;
+      case W.Ubicacion:
+        // HandleUbicacion: x = 0 hides the slot; otherwise the dot moves only when the member is on the player's map.
+        if (packet.x === 0) this.allies.delete(packet.member);
+        else if (packet.member >= 1 && packet.member <= 5 && this.hooks.currentMap?.() === packet.map) this.allies.set(packet.member, { x: packet.x, y: packet.y });
+        break;
+      case SES.FlashScreen: this.flashScreen(packet.color, packet.duration, packet.ignore); break;
       case W.AreaChanged: this.hooks.areaChanged?.(areaBounds(packet.x, packet.y)); break;
       case AU.RainToggle:
         this.raining = packet.raining;
@@ -320,9 +346,58 @@ export class WorldFx {
   }
   private removeMeteo() { this.meteo?.remove(); }
 
-  /** Ambient colour inputs that change outside the packets (death comes from the session's HP). */
-  private currentAmbient(now: number, dead: boolean): Rgb {
-    return ambientLight(this.clock, now, { dead, blind: this.blind, dungeon: this.info.zone === 'DUNGEON', mode: this.lightMode, disableDungeonLighting: this.disableDungeonLighting });
+  /**
+   * EsNoche: TimeIndex 0..2 (hours 0..5). The VB6 constants end up NightIndex = 0 and MorningIndex = 3 (IniciarMeteorologia assigns
+   * each twice, the same value), so the evening hours 18..23 count as day.
+   */
+  get isNight() { return this.timeIndex >= NIGHT_INDEX && this.timeIndex < MORNING_INDEX; }
+
+  /**
+   * HandleFlashScreen -> EngineEfectoEnPantalla: with the map's fog flag (MapDat.niebla = 1) or the packet's ignore flag, `global_light` takes the
+   * colour (alpha 255) and the Efecto timer runs for `durationMs`. NOTE (VB6 behaviour, kept): the lightmap only reads `global_light` when
+   * `UpdateLights` is set, and RevisarHoraMundo (every 500 ms) overwrites `global_light` with the hour colour BEFORE it sets that flag, so in the
+   * stock client the flash colour is replaced before any frame uses it. It is modelled exactly (state, timer, end rule) so a flash that lands
+   * in the same frame as `UpdateLights` would show.
+   */
+  flashScreen(colorLong: number, durationMs: number, ignore: boolean) {
+    if (!this.info.fog && !ignore) return;
+    // The packet's Long is BGR (R in the low byte); `color And 255` is R.
+    this.globalLight = { r: colorLong & 255, g: (colorLong >> 8) & 255, b: (colorLong >> 16) & 255 };
+    this.efectoEndsAt = this.clockNow() + Math.max(1, durationMs);
+  }
+  /** frmMain.Efecto_Timer: the map's base light wins, else RestaurarLuz. */
+  private endEfecto(dead: boolean) {
+    this.efectoEndsAt = undefined;
+    if (this.info.baseLight > 0) {
+      const long = this.info.baseLight;
+      this.globalLight = { r: (long >> 16) & 255, g: (long >> 8) & 255, b: long & 255 };
+    } else this.globalLight = this.restaurarLuz(dead);
+  }
+  /** ModMetereologia.RestaurarLuz (before the first RevisarHoraMundo the light is white; afterwards the hour colour is left as it is). */
+  private restaurarLuz(dead: boolean): Rgb {
+    if (dead) return DEATH_COLOR;
+    if (this.blind) return BLIND_COLOR;
+    if (this.info.zone === 'DUNGEON' && !this.disableDungeonLighting) return DUNGEON_COLOR;
+    return this.timeIndex >= 0 ? this.globalLight : WHITE;
+  }
+  /**
+   * RevisarHoraMundo (UpdateDaytime, every 500 ms). `ActualizarLuz` (last_light / next_light / light_transition) is not ported on purpose:
+   * its only reader is frmMain.UpdateLight_Timer and nothing in the client ever sets `UpdateLight.enabled = True` (it is only set to False,
+   * Protocol.HandleDisconnect), so the 5 s easing never runs and the colour is the hour lerp alone.
+   */
+  private revisarHora(now: number) {
+    if (!this.clock.inited) return; // WorldTime_DayLenMs <= 0: not initialised yet
+    const hour = this.clock.time(now).hour;
+    const index = hour >> 1;
+    if (index !== this.timeIndex) {
+      this.timeIndex = index;
+      if (this.info.baseLight === 0) {
+        if (index === NIGHT_INDEX) this.hooks.playGlobalWave?.(WOLF_WAVE);
+        else if (index === MORNING_INDEX) this.hooks.playGlobalWave?.(ROOSTER_WAVE);
+      }
+    }
+    this.globalLight = this.lightMode === 'day' ? DAY_LIGHT : this.lightMode === 'night' ? NIGHT_LIGHT : this.clock.hourLight(now);
+    this.updateLights = true;
   }
 
   /**
@@ -340,11 +415,17 @@ export class WorldFx {
     }
     if (this.info.fog && this.fogAlpha) this.scrollFog(dt);
 
-    // RevisarHoraMundo runs every 500 ms and flags UpdateLights; RestaurarLuz then applies death / blind / dungeon.
+    // RevisarHoraMundo runs every 500 ms and flags UpdateLights; RestaurarLuz then applies death / blind / dungeon when the lightmap is rebuilt.
     const dungeon = this.info.zone === 'DUNGEON';
-    if (now - this.lastAmbientAt >= 500 || frame.selfDead !== this.lastDead || this.blind !== this.lastBlind || dungeon !== this.lastDungeon) {
-      this.lastAmbientAt = now; this.lastDead = frame.selfDead; this.lastBlind = this.blind; this.lastDungeon = dungeon;
-      this.ambient = this.currentAmbient(now, frame.selfDead);
+    if (now - this.lastAmbientAt >= 500) { this.lastAmbientAt = now; this.revisarHora(now); }
+    if (frame.selfDead !== this.lastDead || this.blind !== this.lastBlind || dungeon !== this.lastDungeon) {
+      this.lastDead = frame.selfDead; this.lastBlind = this.blind; this.lastDungeon = dungeon; this.updateLights = true;
+    }
+    if (this.efectoEndsAt !== undefined && this.clockNow() >= this.efectoEndsAt) this.endEfecto(frame.selfDead);
+    if (this.updateLights) {
+      this.updateLights = false;
+      this.globalLight = this.restaurarLuz(frame.selfDead);
+      this.ambient = this.globalLight;
     }
     if (!this.lights.isCurrent(this.ambient)) this.lights.recompute(this.ambient);
 
@@ -410,6 +491,8 @@ export class WorldFx {
       } else if (t.endFx > 0) {
         this.hooks.addFx?.({ fx: t.endFx, charIndex: t.destChar || undefined, x: t.destX, y: t.destY, loops: t.destChar ? t.endLoops : 0 });
       }
+      // Effect_Render_Slot: a tile explosion also plays its wave with no position (`PlayWav(.wav)`) before the positional one.
+      if (t.wave > 0 && t.endStream && !t.destChar) this.hooks.playGlobalWave?.(t.wave);
       if (t.wave > 0) this.hooks.playWave?.(t.wave, t.destChar ? Math.round(to.x / 32) : t.destX, t.destChar ? Math.round(to.y / 32) : t.destY);
       this.travelers.splice(i, 1);
     }

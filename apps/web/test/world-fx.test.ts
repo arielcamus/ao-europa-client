@@ -275,6 +275,56 @@ describe('WorldFx packets', () => {
     world.update(40, frame());
     expect(world.ambient).toEqual({ r: 190, g: 190, b: 190 });
   });
+  it('before the first Hora the light is white (RestaurarLuz with TimeIndex = -1); RevisarHoraMundo then sets TimeIndex = hour \\ 2', () => {
+    world.setMap(map(false), [], []);
+    world.update(0, frame());
+    expect(world.ambient).toEqual({ r: 255, g: 255, b: 255 }); expect(world.timeIndex).toBe(-1); expect(world.isNight).toBe(false);
+    now = 1000; world.receive({ id: W.Hora, elapsedMs: 3_900_000, dayLenMs: 7_200_000 }); // 13:00
+    world.update(1000, frame());
+    expect(world.timeIndex).toBe(6);
+  });
+  it('EsNoche is TimeIndex 0..2 (hours 0..5): the wolf and the rooster play on the 500 ms tick that changes the index, never on a base-light map', () => {
+    const waves: number[] = [];
+    world = new WorldFx(() => now, { playGlobalWave: w => waves.push(w) }, seeded(5));
+    world.setMap(map(false), [], []);
+    world.receive({ id: W.Hora, elapsedMs: 3_600_000 * 0 + 100_000, dayLenMs: 7_200_000 }); // 00:20
+    world.update(0, frame()); expect(world.isNight).toBe(true); expect(waves).toEqual([124]);
+    now = 600; world.update(600, frame()); expect(waves).toEqual([124]);                   // same index: silent
+    world.receive({ id: W.Hora, elapsedMs: 1_950_000, dayLenMs: 7_200_000 }); now = 1200;       // 06:30 -> index 3 (MorningIndex)
+    world.update(1200, frame()); expect(world.isNight).toBe(false); expect(waves).toEqual([124, 137]);
+    const quiet = new WorldFx(() => now, { playGlobalWave: w => waves.push(w) }, seeded(5));
+    quiet.setMap({ ...map(false), baseLight: 0x808080 }, [], []); quiet.receive({ id: W.Hora, elapsedMs: 100_000, dayLenMs: 7_200_000 });
+    quiet.update(2000, frame()); expect(waves).toEqual([124, 137]);
+  });
+  it('FlashScreen: global_light takes the colour for the Efecto time, but the 500 ms hour tick replaces it before the lightmap reads it (VB6)', () => {
+    world.receive({ id: W.Hora, elapsedMs: 3_900_000, dayLenMs: 7_200_000 });
+    world.setMap(map(false, false, true), [], []); world.update(0, frame());
+    const day = { ...world.ambient };
+    // BGR long: R low byte.
+    world.receive({ id: 129, color: 0xff0000 | 0x00ff00 | 0x00ff, duration: 300, ignore: false } as never);
+    now = 100; world.update(100, frame());               // no tick yet, UpdateLights unset: the grid is untouched
+    expect(world.ambient).toEqual(day);
+    now = 600; world.update(600, frame());               // tick: global_light = hour colour, the flash never rendered
+    expect(world.ambient).toEqual(day);
+  });
+  it('FlashScreen without fog on the map and without the ignore flag does nothing; the Efecto end uses the map base light, else RestaurarLuz', () => {
+    world.receive({ id: W.Hora, elapsedMs: 3_900_000, dayLenMs: 7_200_000 });
+    world.setMap(map(false), [], []); world.update(0, frame());
+    world.receive({ id: 129, color: 0x0000ff, duration: 50, ignore: false } as never);
+    expect((world as unknown as { efectoEndsAt?: number }).efectoEndsAt).toBeUndefined();
+    world.receive({ id: 129, color: 0x0000ff, duration: 50, ignore: true } as never);
+    expect((world as unknown as { efectoEndsAt?: number }).efectoEndsAt).toBe(50);
+    now = 60; world.update(60, frame());                 // Efecto_Timer: no base light -> RestaurarLuz leaves global_light, the lightmap keeps its colour
+    expect((world as unknown as { efectoEndsAt?: number }).efectoEndsAt).toBeUndefined();
+    expect(world.ambient).toEqual({ r: 255, g: 255, b: 255 });
+  });
+  it('PauseToggle is a plain toggle on a fresh connection (HandleDisconnect resets pausa; the browser builds a new WorldFx per connection)', () => {
+    expect(world.paused).toBe(false);
+    world.receive({ id: W.PauseToggle } as never); expect(world.paused).toBe(true);
+    world.receive({ id: W.PauseToggle } as never); expect(world.paused).toBe(false);
+    world.receive({ id: W.PauseToggle } as never); // a client that logs in between the server's save pair gets one toggle: paused, like the VB6 client
+    expect(new WorldFx(() => now).paused).toBe(false);
+  });
 });
 
 describe('VB6 recording: login, idle, cross the area border (tests/fixtures/vb6/world-fx)', () => {
@@ -294,5 +344,32 @@ describe('VB6 recording: login, idle, cross the area border (tests/fixtures/vb6/
     expect(bounds).toHaveLength(3);
     expect(bounds[0]).toMatchObject({ minX: expect.any(Number), maxX: expect.any(Number) });
     expect(speeds.length).toBeGreaterThan(0);
+  });
+});
+
+describe('VB6 recording: rain and snow toggles (tests/fixtures/vb6/world/weather-toggles.jsonl, #28)', () => {
+  it('RainToggle (59) and NieveToggle (122) decode from the real server frames and drive the weather flags', async () => {
+    const { decodeServerPacket } = await import('@ao/protocol');
+    const rows = readFileSync(new URL('../../../tests/fixtures/vb6/world/weather-toggles.jsonl', import.meta.url), 'utf8').trim().split('\n')
+      .map(line => JSON.parse(line) as { dir: string; id: number; hex: string });
+    const world = new WorldFx(() => 0);
+    const seen: string[] = [];
+    for (const row of rows.filter(r => r.dir === 's2c')) {
+      const packet = decodeServerPacket(Uint8Array.from(Buffer.from(row.hex, 'hex')));
+      expect('unknown' in packet).toBe(false);
+      world.receive(packet);
+      seen.push(`${row.id}:${world.raining ? 'R' : '-'}${world.snowing ? 'S' : '-'}`);
+    }
+    expect(seen).toEqual(['59:--', '122:--', '59:R-', '122:RS', '122:R-', '122:RS']);
+  });
+});
+
+describe('VB6 recording: using the Mapa item (tests/fixtures/vb6/world/map-item-show-form.jsonl)', () => {
+  it('ShowFrmMapa (138) carries ExpMult and GoldMult and opens the form once', async () => {
+    const { decodeServerPacket } = await import('@ao/protocol');
+    const row = JSON.parse(readFileSync(new URL('../../../tests/fixtures/vb6/world/map-item-show-form.jsonl', import.meta.url), 'utf8').trim().split('\n')[0]!) as { hex: string };
+    const world = new WorldFx(() => 0);
+    world.receive(decodeServerPacket(Uint8Array.from(Buffer.from(row.hex, 'hex'))) as never);
+    expect(world.mapForm).toEqual({ opened: 1, expMult: 1, goldMult: 1 });
   });
 });
