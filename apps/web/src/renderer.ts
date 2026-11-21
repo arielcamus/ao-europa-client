@@ -97,7 +97,7 @@ export class WorldRenderer {
   async init() {
     await this.app.init({
       background: '#000000', antialias: false, preference: 'webgl',
-      resolution: canvasResolution(classicScaleNow().scale, classicScaleNow().dpr), autoDensity: true,
+      resolution: canvasResolution(classicScaleNow().scale, classicScaleNow().dpr, classicScaleNow().mode), autoDensity: true,
       width: this.host.clientWidth, height: this.host.clientHeight,
     });
     this.app.canvas.tabIndex = 0;
@@ -114,9 +114,9 @@ export class WorldRenderer {
     this.roofPool = new RoofMeshPool(this.pools[6]!.container);
     this.fx.attach(this.world, this.app.stage, this.pools[6]!.container);
     this.observer = new ResizeObserver(() => this.app.renderer.resize(this.host.clientWidth, this.host.clientHeight));
-    // The backing store follows the classic window's on-screen size (device pixels), so the browser never resamples the frame: a 736x608
-    // canvas shown at 2.56 device px per pixel renders 1882x1555, not 1472x1216 stretched again by the CSS scale (blur, uneven names).
-    this.unscale = onClassicScale((scale, dpr) => this.app.renderer.resize(this.host.clientWidth, this.host.clientHeight, canvasResolution(scale, dpr)));
+    // With ?scale=fill|whole the backing store follows the classic window's on-screen size (device pixels), so the browser never resamples the
+    // frame: a 736x608 canvas shown at 2.56 device px per pixel renders 1882x1555, not 1472x1216 stretched again by the CSS scale.
+    this.unscale = onClassicScale((scale, dpr, mode) => this.app.renderer.resize(this.host.clientWidth, this.host.clientHeight, canvasResolution(scale, dpr, mode)));
     this.observer.observe(this.host);
     this.app.ticker.maxFPS = 60;
   }

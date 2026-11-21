@@ -3,6 +3,7 @@ import './style.css';
 import { Heading, parseWireProfile, setWireProfile } from '@ao/protocol';
 import { Session } from './session.js';
 import { WorldRenderer } from './renderer.js';
+import { installCaptions } from './ui-captions.js';
 import { applyClassicLayout, setScreenScale, SCREEN_SCALES } from './classic-layout.js';
 import type { ScreenScale } from './classic-layout.js';
 import { ClassicUI, element } from './classic-ui.js';
@@ -62,11 +63,13 @@ import { FloatingTexts } from './floating-text.js';
 import type { SessionNotice } from './session.js';
 import type { VbWindow } from './vb-window.js';
 
-// The saved screen scale applies from the first layout; `?scale=fill|whole` in the address changes and remembers it (see options-settings.ts).
+// The saved screen scale applies from the first layout; `?scale=classic|fill|whole` in the address changes and remembers it (see options-settings.ts).
 const gameOptions = new OptionsSettings();
 const scaleParam = new URLSearchParams(location.search).get('scale') as ScreenScale | null;
 if (scaleParam && SCREEN_SCALES.includes(scaleParam)) gameOptions.update({ screenScale: scaleParam });
 applyClassicLayout(gameOptions.value.screenScale);
+// Captions baked into the interface bitmaps are redrawn as live text (crisp at any scale), see ui-captions.ts.
+installCaptions(element('classic'));
 // Frmcarga is the first thing on screen: its art is requested before every other resource so it is not queued behind the atlases.
 const loading = new LoadingCard(element('classic'));
 loading.visible = true;

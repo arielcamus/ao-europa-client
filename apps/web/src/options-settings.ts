@@ -24,12 +24,12 @@ export interface GameOptions {
   centeredMinimapZoom: number;
   /**
    * Web client only (VB6 runs in a fixed 1024x768 window): how the classic window grows on a large screen, see ScreenScale in classic-layout.ts.
-   * `fill` (default) fills the window with crisp nearest-neighbour art; `whole` keeps a whole number of device pixels per art pixel, letterboxed.
-   * Set with `?scale=fill` / `?scale=whole` in the address; remembered.
+   * `classic` (default) as before; `fill` fills the window with nearest-neighbour art at device pixels; `whole` keeps a whole number of device
+   * pixels per art pixel, letterboxed. Set with `?scale=classic|fill|whole` in the address; remembered.
    */
   screenScale: ScreenScale;
 }
-export const DEFAULT_OPTIONS: GameOptions = { showFps: false, moveWhileTyping: false, copyDialogToConsole: true, centeredMinimap: false, centeredMinimapZoom: 0, screenScale: 'fill' };
+export const DEFAULT_OPTIONS: GameOptions = { showFps: false, moveWhileTyping: false, copyDialogToConsole: true, centeredMinimap: false, centeredMinimapZoom: 0, screenScale: 'classic' };
 export const OPTIONS_KEY = 'ao.options.v1';
 
 /** Read a stored object defensively: unknown keys are dropped, non-booleans fall back to the default. */

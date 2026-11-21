@@ -1,4 +1,5 @@
 import { assetUrl } from './assets.js';
+import { captionedUrl, captionsFor } from './ui-captions.js';
 // Original BMP files remain untouched. Some true-color BI_RGB headers declare
 // important palette colors; WebKit rejects these, although there is no palette.
 // Normalize only unused palette metadata in a browser-local copy. Pixel bytes,
@@ -48,14 +49,14 @@ export function loadInterface(name: string, localized = true): Promise<string> {
   let promise = pending.get(original);
   if (!promise && booting && !CONNECT_ART.has(`${localized ? 'es_' : ''}${name}`.toLowerCase())) {
     promise = new Promise<void>(start => { waiting.push({ original, start }); pump(); })
-      .then(() => fetchInterface(original)).finally(() => { running--; pump(); });
+      .then(() => fetchInterface(original)).then(url => withCaptions(name, original, url)).finally(() => { running--; pump(); });
     pending.set(original, promise);
   } else if (promise && !booting) {
     // Asked for again after the boot (a window opening): a queued picture jumps the queue.
     const at = waiting.findIndex(item => item.original === original);
     if (at >= 0) { running++; waiting.splice(at, 1)[0]!.start(); }
   }
-  if (!promise) { promise = fetchInterface(original); pending.set(original, promise); }
+  if (!promise) { promise = fetchInterface(original).then(url => withCaptions(name, original, url)); pending.set(original, promise); }
   return promise;
 }
 
@@ -74,6 +75,19 @@ async function fetchInterface(original: string): Promise<string> {
     catch { URL.revokeObjectURL(url); throw new Error(`No se pudo decodificar la interfaz original: ${original}`); }
     urls.set(original, url); return url;
   }
+}
+
+/** A bitmap with captions baked in (ui-captions.ts): hand out the copy with the letters painted over; the overlay draws them as text. */
+async function withCaptions(name: string, original: string, url: string): Promise<string> {
+  const specs = captionsFor(name);
+  // `?captions=off` shows the bitmaps exactly as shipped (comparisons, a caption that looks wrong).
+  if (!specs || typeof document === 'undefined' || new URLSearchParams(location.search).get('captions') === 'off') return url;
+  try {
+    const image = new Image(); image.src = url; await image.decode();
+    const captioned = await captionedUrl(image, specs);
+    if (!captioned) return url;
+    urls.set(original, captioned); return captioned;
+  } catch { return url; } // the original picture, letters and all
 }
 
 if (typeof window !== 'undefined') window.addEventListener('pagehide', () => {

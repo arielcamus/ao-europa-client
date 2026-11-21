@@ -1,3 +1,6 @@
+/* Cinzel (SIL OFL 1.1, see NOTICE): the engraved capitals of the original button and title captions, redrawn as text by ui-captions.ts. */
+@font-face { font-family: Cinzel; font-weight: 600; font-display: block; src: url('./fonts/cinzel-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: Cinzel; font-weight: 700; font-display: block; src: url('./fonts/cinzel-latin-700-normal.woff2') format('woff2'); }
 :root { color-scheme: dark; font-family: Tahoma, Arial, sans-serif; color: #c8bebe; background: #000; --classic-scale: 1; }
 * { box-sizing: border-box; }
 /* The pinned client has no browser text: a drag (right button, see inventory-extras / hotkeys-ui) must never start a selection or a native image drag. */
@@ -24,10 +27,10 @@ button { cursor: pointer; }
 .main-art { width: 1024px; height: 768px; }
 .panel-art { width: 100%; height: 100%; }
 img, canvas { image-rendering: pixelated; }
-/* Every piece of art in the classic window (backgrounds of art buttons and windows included: image-rendering is inherited) is scaled nearest
-   neighbour while it grows, so a fractional scale shows whole pixels instead of a blur. Shrunk below one device pixel per art pixel (phones) the
-   backgrounds keep the browser's smooth filter. See classic-layout.ts. */
+/* ?scale=fill|whole: every piece of art in the classic window (backgrounds of art buttons and windows included: image-rendering is inherited)
+   is scaled nearest neighbour while it grows. Shrunk below one device pixel per art pixel (phones) the backgrounds keep the smooth filter. */
 #classic[data-crisp="true"] { image-rendering: pixelated; }
+.ui-caption { overflow: visible; text-rendering: geometricPrecision; }
 button, input { border-radius: 0; }
 .hotspot, .art-button { border: 0; padding: 0; background: transparent; color: transparent; }
 .hotspot:hover { background: #ffffff12; }

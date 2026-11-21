@@ -73,7 +73,7 @@ for (const [name, width, height, scale] of [['1x', 1024, 768, 1], ['1.5x', 1536,
   });
 }
 
-// Ariel, 21 Nov: "Many items in the GUI look pixeled/blurry". A MacBook window (1512x982 at DPR 2) is 2.56 device pixels per art pixel.
+// Opt-in scale modes (the default stays `classic`). A MacBook window (1512x982 at DPR 2) is 2.56 device pixels per art pixel.
 // Fill: every piece of art nearest neighbour (frmMain art buttons and window backgrounds were smooth-filtered), the world canvas rendered at
 // the on-screen device pixels (it was 1472 px wide, stretched again to 1882 by the CSS scale) and the window starting on a whole device pixel.
 // Whole: 2 device px per art px, letterboxed.

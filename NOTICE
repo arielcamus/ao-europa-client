@@ -39,3 +39,8 @@ The added classic_profile.ex adapter is AGPL-3.0-or-later.
 No game assets are included. The stand-in is a test fixture. The real community
 server uses the optional classic adapter; the original ao-org VB6 executable
 remains a separate interoperability target that has not yet been verified.
+
+Cinzel font (apps/web/src/fonts/cinzel-latin-*.woff2)
+Copyright Google Inc. and the Cinzel Project Authors (https://github.com/NDISCOVER/Cinzel).
+Licensed under the SIL Open Font License, Version 1.1. See LICENSES/OFL-1.1-Cinzel.txt.
+Used to redraw the captions of the original interface bitmaps as live text (ui-captions.ts).

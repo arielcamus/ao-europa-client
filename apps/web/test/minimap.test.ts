@@ -55,18 +55,20 @@ describe('classic window scale', () => {
   });
   it('counts whole numbers in device pixels: a Retina 1.5x is 3 device pixels per art pixel', () => {
     // MacBook 14" window, 1512x982 at DPR 2: 2.56 device px per art px. Fill keeps 1.279 (whole 2 would waste 22%); whole letterboxes at CSS 1.
-    expect(classicScale(1512, 982, 2)).toBeCloseTo(982 / 768); expect(classicScale(1512, 982, 2, 'whole')).toBe(1);
-    expect(classicScale(1600, 1180, 2)).toBe(1.5); // 3.07 device px: snaps to 3 (wastes 2%)
-    expect(classicScale(1920, 1080, 1)).toBeCloseTo(1080 / 768); expect(classicScale(1920, 1080, 1, 'whole')).toBe(1);
+    expect(classicScale(1512, 982, 2, 'fill')).toBeCloseTo(982 / 768); expect(classicScale(1512, 982, 2, 'whole')).toBe(1);
+    expect(classicScale(1600, 1180, 2, 'fill')).toBe(1.5); // 3.07 device px: snaps to 3 (wastes 2%)
+    expect(classicScale(1600, 1180, 2)).toBeCloseTo(1180 / 768); // the default counts CSS pixels, as before
+    expect(classicScale(1920, 1080, 1, 'fill')).toBeCloseTo(1080 / 768); expect(classicScale(1920, 1080, 1, 'whole')).toBe(1);
     expect(classicScale(2560, 1440, 1, 'whole')).toBe(1); expect(classicScale(2100, 1600, 1, 'whole')).toBe(2);
-    // Phones shrink exactly as before in both modes (fewer device pixels than art pixels).
-    expect(classicScale(390, 844, 2)).toBeCloseTo(390 / 1024); expect(classicScale(390, 844, 2, 'whole')).toBeCloseTo(390 / 1024);
-    expect(classicScale(800, 700, 2)).toBeCloseTo(800 / 1024); expect(classicScale(800, 700, 2, 'whole')).toBe(0.5);
+    // Phones shrink exactly as before (fewer device pixels than art pixels).
+    expect(classicScale(390, 844, 2, 'fill')).toBeCloseTo(390 / 1024); expect(classicScale(390, 844, 2, 'whole')).toBeCloseTo(390 / 1024);
+    expect(classicScale(800, 700, 2, 'fill')).toBeCloseTo(800 / 1024); expect(classicScale(800, 700, 2, 'whole')).toBe(0.5);
   });
-  it('renders the world canvas at the on-screen device pixels, phones keep DPR (max 2)', () => {
-    expect(canvasResolution(982 / 768, 2)).toBeCloseTo(2 * 982 / 768); expect(canvasResolution(1, 1)).toBe(1);
-    expect(canvasResolution(1.40625, 1)).toBe(1.40625); expect(canvasResolution(3, 2)).toBe(4);
-    expect(canvasResolution(390 / 1024, 2)).toBe(2); expect(canvasResolution(390 / 1024, 1)).toBe(1); expect(canvasResolution(390 / 1024, 3)).toBeCloseTo(390 * 3 / 1024);
+  it('renders the world canvas at the on-screen device pixels with fill/whole, phones and the default keep DPR (max 2)', () => {
+    expect(canvasResolution(982 / 768, 2)).toBe(2); expect(canvasResolution(1.40625, 1)).toBe(1); // default: as before
+    expect(canvasResolution(982 / 768, 2, 'fill')).toBeCloseTo(2 * 982 / 768); expect(canvasResolution(1, 1, 'whole')).toBe(1);
+    expect(canvasResolution(1.40625, 1, 'fill')).toBe(1.40625); expect(canvasResolution(3, 2, 'fill')).toBe(4);
+    expect(canvasResolution(390 / 1024, 2, 'fill')).toBe(2); expect(canvasResolution(390 / 1024, 1, 'fill')).toBe(1); expect(canvasResolution(390 / 1024, 3, 'fill')).toBeCloseTo(390 * 3 / 1024);
   });
   it('sizes the centring box so the art starts on a whole device pixel', () => {
     expect(fitBox(1024, 1920, 1)).toBe(1024); expect(fitBox(1024, 1921, 1)).toBe(1025); // 897 left over would centre at x 448.5
