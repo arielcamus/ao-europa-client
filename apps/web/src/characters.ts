@@ -81,6 +81,17 @@ export class CharacterTracker {
   area: { minX: number; maxX: number; minY: number; maxY: number } | undefined;
   /** UserCharIndex: EraseChar never erases the player's own character. */
   selfIndex: number | undefined;
+  /** Everything else EraseChar clears for a character (its FX, particle groups, auras, status, floating text); Session wires it. */
+  onErase: ((charIndex: number) => void) | undefined;
+
+  /**
+   * TileEngine_Chars.EraseChar, the ONE removal path: CharacterRemove, a step or translate out of the area (Char_Move_by_Pos) and
+   * CambioDeArea all come here, so a character that later re-enters starts clean (one particle group, no stale aura).
+   */
+  erase(charIndex: number) {
+    if (this.chars.delete(charIndex)) this.revision++;
+    this.onErase?.(charIndex);
+  }
 
   clear() { this.chars.clear(); this.revision++; }
 
@@ -88,7 +99,7 @@ export class CharacterTracker {
   private eraseOutsideArea(charIndex: number, x: number, y: number): boolean {
     const a = this.area;
     if (!a || charIndex === this.selfIndex || (x >= a.minX && x <= a.maxX && y >= a.minY && y <= a.maxY)) return false;
-    this.chars.delete(charIndex); this.revision++;
+    this.erase(charIndex);
     return true;
   }
 
@@ -109,9 +120,7 @@ export class CharacterTracker {
         this.revision++;
         break;
       }
-      case N.CharacterRemove:
-        if (this.chars.delete(packet.charIndex)) this.revision++;
-        break;
+      case N.CharacterRemove: this.erase(packet.charIndex); break;
       case N.CharacterChange: {
         const char = this.chars.get(packet.charIndex);
         if (!char) break;

@@ -8,7 +8,7 @@
  *
  * Pure logic with an injected clock and random source, so the behaviour is testable without a browser. Drawing is fx-render.ts.
  */
-import { ServerPacketId as S, SessionServerPacketId as SES, SpellServerPacketId as SS, WorldServerPacketId as W, NpcsServerPacketId as NS, AudioServerPacketId as AU } from '@ao/protocol';
+import { ServerPacketId as S, SessionServerPacketId as SES, SpellServerPacketId as SS, WorldServerPacketId as W, AudioServerPacketId as AU } from '@ao/protocol';
 import type { ServerPacket } from '@ao/protocol';
 import type { MapInfo, MapLight, MapParticle, Ini } from './assets.js';
 import { ENGINE_BASE_SPEED, ParticleGroup } from './fx-particles.js';
@@ -265,10 +265,12 @@ export class WorldFx {
           this.setAura(packet.charIndex, type, aura, false);
         }
         break;
-      case NS.CharacterRemove: this.charGroups.delete(packet.charIndex); this.auras.delete(packet.charIndex); break;
       default: break;
     }
   }
+
+  /** EraseChar (ResetCharInfo): the character's particle groups and auras go with it. */
+  forgetCharacter(charIndex: number) { this.charGroups.delete(charIndex); this.auras.delete(charIndex); }
 
   private setAura(charIndex: number, type: number, aura: string, remove: boolean) {
     let kinds = this.auras.get(charIndex);

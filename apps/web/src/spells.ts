@@ -5,7 +5,7 @@
  * HandleCreateFX and HandleFxPiso. Spell console tokens (HECINF, HecMSG...) are expanded by chat-console.ts.
  * Copyright (C) 2022-2026 Noland Studios. AGPL-3.0-or-later; no warranty. See NOTICE.
  */
-import { NpcsServerPacketId as NS, ServerPacketId as S, SpellClientPacketId as SC, SpellServerPacketId as SS, MAGIC_SKILL, CraftingClientPacketId as CC, ExtractionSkill } from '@ao/protocol';
+import { ServerPacketId as S, SpellClientPacketId as SC, SpellServerPacketId as SS, MAGIC_SKILL, CraftingClientPacketId as CC, ExtractionSkill } from '@ao/protocol';
 import type { ClientPacket, ServerPacket } from '@ao/protocol';
 import { fetchText, parseIni } from './assets.js';
 import type { Ini } from './assets.js';
@@ -117,13 +117,13 @@ export class SpellState {
   move(up: boolean, slot: number) { this.send({ id: SC.MoveSpell, up, slot }); }
   cancel() { if (this.targeting) { this.targeting = undefined; this.revision++; } }
   reset() { this.targeting = undefined; this.effects = []; this.revision++; }
+  /** EraseChar: a removed character takes its FX along (they are drawn on that character), the meditation aura included. */
+  forgetCharacter(charIndex: number) { this.effects = this.effects.filter(fx => fx.charIndex !== charIndex); }
 
   receive(packet: ServerPacket) {
     switch (packet.id) {
       case S.Intervals: this.magicInterval = packet.magic; this.bowInterval = packet.bow; break;
       case S.ChangeMap: this.reset(); break;
-      // A removed character takes its FX along (they are drawn on that character).
-      case NS.CharacterRemove: this.effects = this.effects.filter(fx => fx.charIndex !== packet.charIndex); break;
       case SS.WorkRequestTarget: {
         if (packet.skill === 0) this.targeting = undefined;
         else if (!this.targeting || this.targeting.skill !== packet.skill) {
