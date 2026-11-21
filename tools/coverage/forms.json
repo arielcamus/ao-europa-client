@@ -8,55 +8,55 @@
     "ref": "main",
     "path": "apps/web/src/classic-layout.ts",
     "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    },
    {
     "ref": "main",
     "path": "apps/web/src/chat-box.ts",
     "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    },
    {
     "ref": "main",
     "path": "apps/web/src/items-ui.ts",
     "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    },
    {
     "ref": "main",
     "path": "apps/web/src/spells.ts",
     "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    },
    {
     "ref": "main",
     "path": "apps/web/src/look-at.ts",
     "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    },
    {
     "ref": "main",
     "path": "apps/web/src/map-objects.ts",
     "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    },
    {
     "ref": "main",
     "path": "apps/web/src/hotkeys-ui.ts",
     "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    },
    {
     "ref": "main",
     "path": "apps/web/src/inventory-extras.ts",
     "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    },
    {
     "ref": "main",
     "path": "apps/web/src/minimap.ts",
     "partial": true,
-    "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not"
+    "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
    }
   ]
  },
@@ -727,19 +727,23 @@
   "name": "frmLobbyBattleground",
   "purpose": "Battleground lobby",
   "group": "extras",
-  "missing": {
-   "class": "c",
-   "note": "AO20 battleground lobby (ReportLobbyList, LobbyCommand)"
-  }
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/extras-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmRetos",
   "purpose": "Challenges / duels",
   "group": "extras",
-  "missing": {
-   "class": "a",
-   "note": "Duels (Duel / AcceptDuel / CancelDuel / QuitDuel packets)"
-  }
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/extras-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmShop",
@@ -808,10 +812,12 @@
   "name": "FrmTorneo",
   "purpose": "Tournament organiser",
   "group": "gm",
-  "missing": {
-   "class": "a",
-   "note": "GM tournament organiser (CrearTorneo, ComenzarTorneo, CancelarTorneo), GM only"
-  }
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/extras-ui.ts"
+   }
+  ]
  },
  {
   "name": "frmCambiaMotd",
@@ -908,27 +914,33 @@
   "name": "MenuGM",
   "purpose": "GM context menu",
   "group": "gm",
-  "missing": {
-   "class": "a",
-   "note": "Right-click GM menu (ban, jail, summon...), GM only"
-  }
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/extras-ui.ts"
+   }
+  ]
  },
  {
   "name": "MenuNPC",
   "purpose": "NPC context menu",
   "group": "gm",
-  "missing": {
-   "class": "a",
-   "note": "Right-click pet menu: release, release all, follow"
-  }
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/extras-ui.ts"
+   }
+  ]
  },
  {
   "name": "MenuUser",
   "purpose": "Player context menu",
   "group": "gm",
-  "missing": {
-   "class": "a",
-   "note": "Right-click player menu: report, challenge, whisper, invite to party, trade"
-  }
+  "evidence": [
+   {
+    "ref": "main",
+    "path": "apps/web/src/extras-ui.ts"
+   }
+  ]
  }
 ]

@@ -10,9 +10,9 @@ Scanned refs: `main`
 
 ## Headline
 
-- **Packets covered (merged + open branches): 466 of 523 = 89.1%.** Merged on main only: 466 = 89.1%.
-  - Server to client: 191 of 207. Client to server: 275 of 316. Packets with a recorded VB6 fixture: 239.
-- **Forms covered: 47 of 86 = 54.7%** (4 more partially, 59.3% started).
+- **Packets covered (merged + open branches): 510 of 523 = 97.5%.** Merged on main only: 510 = 97.5%.
+  - Server to client: 200 of 207. Client to server: 310 of 316. Packets with a recorded VB6 fixture: 259.
+- **Forms covered: 53 of 86 = 61.6%** (4 more partially, 66.3% started).
 
 ## (c) Feature groups, ordered by player value
 
@@ -32,10 +32,10 @@ Scanned refs: `main`
 | 12 | Skills / training / stats | 19/19 | 100% | 19 | 2/3 | 66.7% | 0 |
 | 13 | Crafting (smith / carpenter / alchemy / tailor) | 25/25 | 100% | 25 | 2/5 | 40% | 3 |
 | 14 | Fishing / mining / lumber (work skills) | 10/10 | 100% | 10 | 0/0 | n/a | 0 |
-| 15 | Options / keybinds | 1/2 | 50% | 1 | 3/4 | 75% | 0 |
+| 15 | Options / keybinds | 2/2 | 100% | 2 | 3/4 | 75% | 0 |
 | 16 | Minimap / world map | 0/2 | 0% | 0 | 0/1 | 0% | 0 |
-| 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 6/60 | 10% | 6 | 0/13 | 0% | 0 |
-| 18 | GM / admin (lowest) | 142/142 | 100% | 142 | 5/13 | 38.5% | 0 |
+| 17 | Events, battlegrounds, premium shop, remort, anti-cheat | 49/60 | 81.7% | 49 | 2/13 | 15.4% | 0 |
+| 18 | GM / admin (lowest) | 142/142 | 100% | 142 | 9/13 | 69.2% | 0 |
 
 ## DUPLICATES
 
@@ -63,7 +63,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | frmDeleteChar | Delete character confirmation | core | not started | (b) DeleteCharacter needs the account server; PYMMO=0 does nothing, the client says so (connect-text.ts deleteUnsupported) |
 | frmKeypad | On-screen keypad for character password | core | not started | (b) On-screen password keypad, only opened from frmOldPersonaje |
 | FrmLogear | Server/port connection dialog | core | merged | src/main.ts |
-| frmMain | Main game window: viewport, HUD bars, inventory/spell panels, chat console and input | core | merged (partial) | src/classic-layout.ts, src/chat-box.ts, src/items-ui.ts, src/spells.ts, src/look-at.ts, src/map-objects.ts, src/hotkeys-ui.ts, src/inventory-extras.ts, src/minimap.ts: viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not |
+| frmMain | Main game window: viewport, HUD bars, inventory/spell panels, chat console and input | core | merged (partial) | src/classic-layout.ts, src/chat-box.ts, src/items-ui.ts, src/spells.ts, src/look-at.ts, src/map-objects.ts, src/hotkeys-ui.ts, src/inventory-extras.ts, src/minimap.ts: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not |
 | frmMensaje | Generic message box | core | merged | src/session-windows.ts |
 | frmNewAccount | New account details | core | merged | src/session-windows.ts |
 | frmNewPassword | Set new password | core | not started | (b) Set new password: account server |
@@ -116,10 +116,10 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | frmCreateBattleground | Create battleground | extras | not started | (c) AO20 battleground creation (LobbyCommand) |
 | frmEligeAlineacion | Faction alignment choice | extras | not started | (d) Never opened by the classic client code (dead form) |
 | frmForo | Forum message list | extras | not started | (d) Never opened by the classic client code (dead form) |
-| frmLobbyBattleground | Battleground lobby | extras | not started | (c) AO20 battleground lobby (ReportLobbyList, LobbyCommand) |
+| frmLobbyBattleground | Battleground lobby | extras | merged | src/extras-ui.ts |
 | frmNoticia | News at login | extras | not started | (d) Never opened by the classic client code (dead form) |
 | frmPatchNotes | Patch notes | extras | not started | (b) Patch notes sent by the login server at login |
-| frmRetos | Challenges / duels | extras | not started | (a) Duels (Duel / AcceptDuel / CancelDuel / QuitDuel packets) |
+| frmRetos | Challenges / duels | extras | merged | src/extras-ui.ts |
 | frmShop | Premium shop | extras | not started | (d) Dead form: the premium shop the server opens is frmShopAO20, which is not in the classic source |
 | frmShopPjsAO20 | Character marketplace | extras | not started | (c) AO20 character marketplace (ShopPjsInit, PublicarPersonajeMAO) |
 | frmSkins | Item skins / appearance | extras | not started | (c) AO20 item skins window (ChangeSkinSlot) |
@@ -134,23 +134,18 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | frmPanelGm | GM panel | gm | merged | src/gm-ui.ts |
 | frmProcesses | User processes list (anti-cheat) | gm | not started | (d) Never opened by the classic client code (anti-cheat leftover) |
 | frmSpawnList | Spawn NPC list | gm | merged | src/gm-ui.ts |
-| FrmTorneo | Tournament organiser | gm | not started | (a) GM tournament organiser (CrearTorneo, ComenzarTorneo, CancelarTorneo), GM only |
-| MenuGM | GM context menu | gm | not started | (a) Right-click GM menu (ban, jail, summon...), GM only |
-| MenuNPC | NPC context menu | gm | not started | (a) Right-click pet menu: release, release all, follow |
-| MenuUser | Player context menu | gm | not started | (a) Right-click player menu: report, challenge, whisper, invite to party, trade |
+| FrmTorneo | Tournament organiser | gm | merged | src/extras-ui.ts |
+| MenuGM | GM context menu | gm | merged | src/extras-ui.ts |
+| MenuNPC | NPC context menu | gm | merged | src/extras-ui.ts |
+| MenuUser | Player context menu | gm | merged | src/extras-ui.ts |
 
 ### Genuinely missing screens
 
-38 forms have no complete screen yet.
+32 forms have no complete screen yet.
 
-**(a) Player-facing and worth building** (6)
+**(a) Player-facing and worth building** (1)
 
 - frmMapaGrande: Large world map (ShowFrmMapa): world agent
-- frmRetos: Duels (Duel / AcceptDuel / CancelDuel / QuitDuel packets)
-- FrmTorneo: GM tournament organiser (CrearTorneo, ComenzarTorneo, CancelarTorneo), GM only
-- MenuGM: Right-click GM menu (ban, jail, summon...), GM only
-- MenuNPC: Right-click pet menu: release, release all, follow
-- MenuUser: Right-click player menu: report, challenge, whisper, invite to party, trade
 
 **(b) Needs a login/account server, not used with PYMMO=0** (12)
 
@@ -167,11 +162,10 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 - frmTransferChar: Character transfer between accounts: account server
 - frmTransferChar2FA: Character transfer two-factor step: account server
 
-**(c) AO20 premium / online extras (shop, marketplace, battlegrounds, transfer)** (5)
+**(c) AO20 premium / online extras (shop, marketplace, battlegrounds, transfer)** (4)
 
 - frmCollectibleCard: AO20 collectible card viewer, local to the AO20 client
 - frmCreateBattleground: AO20 battleground creation (LobbyCommand)
-- frmLobbyBattleground: AO20 battleground lobby (ReportLobbyList, LobbyCommand)
 - frmShopPjsAO20: AO20 character marketplace (ShopPjsInit, PublicarPersonajeMAO)
 - frmSkins: AO20 item skins window (ChangeSkinSlot)
 
@@ -192,7 +186,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 
 **Partial** (4)
 
-- frmMain: viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not
+- frmMain: viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not
 - frmAlqui: crafting state and packets only; no alchemy window yet
 - frmCrafteo: crafting state and packets only; no catalyst crafting window yet
 - FrmSastre: crafting state and packets only; no tailor window yet
@@ -251,7 +245,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 45 | CharacterTranslate | client Protocol.bas:HandleCharacterTranslate | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 46 | UserIndexInServer | client Protocol.bas:HandleUserIndexInServer | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 47 | UserCharIndexInServer | client Protocol.bas:HandleUserCharIndexInServer | core | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 48 | ForceCharMove | client Protocol.bas:HandleForceCharMove | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
+| 48 | ForceCharMove | client Protocol.bas:HandleForceCharMove | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 49 | CharacterChange | client Protocol.bas:HandleCharacterChange | core | merged | `main:packages/protocol/src/packets/npcs.ts` | yes |
 | 50 | ObjectCreate | client Protocol.bas:HandleObjectCreate | items | merged | `main:packages/protocol/src/packets/doors.ts` | yes |
 | 51 | Fxpiso | client Protocol.bas:HandleFxPiso | core | merged | `main:packages/protocol/src/packets/spells.ts` | no |
@@ -342,7 +336,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 136 | BindKeys | client Protocol.bas:HandleBindKeys | options | merged | `main:packages/protocol/src/packets/options.ts` | yes |
 | 137 | ShowFrmLogear | client Protocol.bas:HandleShowFrmLogear | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 138 | ShowFrmMapa | client Protocol.bas:HandleShowFrmMapa | minimap | not started |  | no |
-| 139 | InmovilizadoOK | client Protocol.bas:HandleInmovilizadoOK | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
+| 139 | InmovilizadoOK | client Protocol.bas:HandleInmovilizadoOK | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 140 | BarFx | client Protocol.bas:HandleBarFx | spells | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 141 | LocaleMsg | client Protocol.bas:HandleLocaleMsg | chat | merged | `main:packages/protocol/src/packets/npcs.ts` | yes |
 | 142 | ShowPregunta | client Protocol.bas:HandleShowPregunta | party | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
@@ -366,9 +360,9 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 160 | UpdateRM | client Protocol.bas:HandleUpdateRM | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 161 | UpdateDM | client Protocol.bas:HandleUpdateDM | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 162 | SeguroResu | client Protocol.bas:HandleSeguroResu | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
-| 163 | LegionarySecure | client Protocol.bas:HandleLegionarySecure | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
+| 163 | LegionarySecure | client Protocol.bas:HandleLegionarySecure | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 164 | Stopped | client Protocol.bas:HandleStopped | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
-| 165 | InvasionInfo | client Protocol.bas:HandleInvasionInfo | extras | not started |  | no |
+| 165 | InvasionInfo | client Protocol.bas:HandleInvasionInfo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 166 | CommerceRecieveChatMessage | client Protocol.bas:HandleCommerceRecieveChatMessage | chat | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 167 | DoAnimation | client Protocol.bas:HandleDoAnimation | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 168 | OpenCrafting | client Protocol.bas:HandleOpenCrafting | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
@@ -381,29 +375,29 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 175 | UpdateBankGld | client Protocol.bas:HandleUpdateBankGld | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 176 | PelearConPezEspecial | client Protocol.bas:HandlePelearConPezEspecial | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 177 | Privilegios | client Protocol.bas:HandlePrivilegios | gm | merged | `main:packages/protocol/src/packets/gm.ts` | yes |
-| 178 | ShopInit | client Protocol.bas:HandleShopInit | extras | not started |  | no |
-| 179 | UpdateShopClienteCredits | client Protocol.bas:HandleUpdateShopClienteCredits | extras | not started |  | no |
+| 178 | ShopInit | client Protocol.bas:HandleShopInit | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 179 | UpdateShopClienteCredits | client Protocol.bas:HandleUpdateShopClienteCredits | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 180 | SendSkillCdUpdate | client Protocol.bas:HandleSendSkillCdUpdate | combat | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 181 | UpdateFlag | client Protocol.bas:HandleUpdateFlag | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 182 | CharAtaca | client Protocol.bas:HandleCharAtaca | combat | merged | `main:packages/protocol/src/packets/combat.ts` | yes |
-| 183 | NotificarClienteSeguido | client Protocol.bas:HandleNotificarClienteSeguido | extras | not started |  | no |
+| 183 | NotificarClienteSeguido | client Protocol.bas:HandleNotificarClienteSeguido | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 184 | GetInventarioHechizos | client Protocol.bas:HandleGetInventarioHechizos | extras | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 185 | NotificarClienteCasteo | client Protocol.bas:HandleNotificarClienteCasteo | extras | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 186 | PosUpdateUserChar | client Protocol.bas:HandlePosUpdateUserChar | core | merged | `main:packages/protocol/src/packets.ts` | no |
 | 187 | PosUpdateChar | client Protocol.bas:HandlePosUpdateChar | core | merged | `main:packages/protocol/src/packets.ts` | no |
 | 188 | PlayWaveStep | client Protocol.bas:HandlePlayWaveStep | core | merged | `main:packages/protocol/src/packets/audio.ts` | no |
-| 189 | ShopPjsInit | client Protocol.bas:HandleShopPjsInit | extras | not started |  | no |
+| 189 | ShopPjsInit | client Protocol.bas:HandleShopPjsInit | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 190 | DebugDataResponse | client Protocol.bas:HandleDebugDataResponse | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 191 | CreateProjectile | client Protocol.bas:HandleCreateProjectile | combat | merged | `main:packages/protocol/src/packets/spells.ts` | no |
 | 192 | UpdateTrap | client Protocol.bas:HandleUpdateTrapState | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 193 | UpdateGroupInfo | client Protocol.bas:HandleUpdateGroupInfo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
 | 194 | UpdateCharValue | client Protocol.bas:HandleUpdateCharValue | core | merged | `main:packages/protocol/src/packets/session.ts` | yes |
 | 195 | SendClientToggles | client Protocol.bas:HandleSendClientToggles | extras | merged | `main:packages/protocol/src/packets/options.ts` | yes |
-| 196 | AntiCheatMessage | client Protocol.bas:HandleAntiCheatMessage | extras | not started |  | no |
-| 197 | AntiCheatStartSession | client Protocol.bas:HandleAntiCheatStartSession | extras | not started |  | yes |
-| 198 | ReportLobbyList | client Protocol.bas:HandleReportLobbyList | extras | not started |  | no |
+| 196 | AntiCheatMessage | client Protocol.bas:HandleAntiCheatMessage | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 197 | AntiCheatStartSession | client Protocol.bas:HandleAntiCheatStartSession | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 198 | ReportLobbyList | client Protocol.bas:HandleReportLobbyList | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 199 | AccountCharacterList | client Protocol.bas:HandleAccountCharacterList | core | merged | `main:packages/protocol/src/packets.ts` | yes |
-| 200 | ChangeSkinSlot | client Protocol.bas:HandleChangeSkinSlot | extras | not started |  | no |
+| 200 | ChangeSkinSlot | client Protocol.bas:HandleChangeSkinSlot | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 201 | GuildConfig | client Protocol.bas:HandleGuildConfig | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
 | 202 | ShowPickUpObj | client Protocol.bas:HandleShowPickUpObj | items | merged | `main:packages/protocol/src/packets/items.ts` | no |
 | 203 | RemortState | (none in dispatcher) | extras | not started |  | no |
@@ -479,12 +473,12 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 61 | CouncilMessage | server Protocol.bas:HandleCouncilMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 62 | FactionMessage | server Protocol.bas:HandleFactionMessage | chat | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 63 | RoleMasterRequest | server Protocol.bas:HandleRoleMasterRequest | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 64 | ChangeDescription | server Protocol.bas:HandleChangeDescription | options | not started |  | no |
+| 64 | ChangeDescription | server Protocol.bas:HandleChangeDescription | options | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 65 | GuildVote | server Protocol.bas:HandleGuildVote | guild | merged | `main:packages/protocol/src/packets/guild.ts` | no |
 | 66 | Punishments | server Protocol.bas:HandlePunishments | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 67 | Gamble | server Protocol.bas:HandleGamble | extras | not started |  | no |
-| 68 | MapPriceEntrance | server Protocol.bas:HandleMapPriceEntrance | extras | not started |  | no |
-| 69 | LeaveFaction | server Protocol.bas:HandleLeaveFaction | extras | not started |  | no |
+| 67 | Gamble | server Protocol.bas:HandleGamble | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 68 | MapPriceEntrance | server Protocol.bas:HandleMapPriceEntrance | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 69 | LeaveFaction | server Protocol.bas:HandleLeaveFaction | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 70 | BankExtractGold | server Protocol.bas:HandleBankExtractGold | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 71 | BankDepositGold | server Protocol.bas:HandleBankDepositGold | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 72 | Denounce | server Protocol.bas:HandleDenounce | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
@@ -600,7 +594,7 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 182 | CreateNPCWithRespawn | server Protocol.bas:HandleCreateNPCWithRespawn | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 183 | NavigateToggle | server Protocol.bas:HandleNavigateToggle | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 184 | ServerOpenToUsersToggle | server Protocol.bas:HandleServerOpenToUsersToggle | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 185 | Participar | server Protocol.bas:HandleParticipar | extras | not started |  | no |
+| 185 | Participar | server Protocol.bas:HandleParticipar | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 186 | RemoveCharFromGuild | server Protocol.bas:HandleRemoveCharFromGuild | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 187 | AlterName | server Protocol.bas:HandleAlterName | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 188 | DoBackUp | server Protocol.bas:HandleDoBackUp | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
@@ -628,21 +622,21 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 210 | DonateGold | server Protocol.bas:HandleDonateGold | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 211 | Promedio | server Protocol.bas:HandlePromedio | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 212 | GiveItem | server Protocol.bas:HandleGiveItem | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 213 | OfertaInicial | server Protocol.bas:HandleOfertaInicial | extras | not started |  | no |
-| 214 | OfertaDeSubasta | server Protocol.bas:HandleOfertaDeSubasta | extras | not started |  | no |
+| 213 | OfertaInicial | server Protocol.bas:HandleOfertaInicial | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 214 | OfertaDeSubasta | server Protocol.bas:HandleOfertaDeSubasta | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 215 | QuestionGM | server Protocol.bas:HandleQuestionGM | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 216 | CuentaRegresiva | server Protocol.bas:HandleCuentaRegresiva | extras | not started |  | no |
+| 216 | CuentaRegresiva | server Protocol.bas:HandleCuentaRegresiva | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 217 | PossUser | server Protocol.bas:HandlePossUser | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 218 | Duel | server Protocol.bas:HandleDuel | extras | not started |  | no |
-| 219 | AcceptDuel | server Protocol.bas:HandleAcceptDuel | extras | not started |  | no |
-| 220 | CancelDuel | server Protocol.bas:HandleCancelDuel | extras | not started |  | no |
-| 221 | QuitDuel | server Protocol.bas:HandleQuitDuel | extras | not started |  | no |
+| 218 | Duel | server Protocol.bas:HandleDuel | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 219 | AcceptDuel | server Protocol.bas:HandleAcceptDuel | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 220 | CancelDuel | server Protocol.bas:HandleCancelDuel | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 221 | QuitDuel | server Protocol.bas:HandleQuitDuel | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 222 | NieveToggle | server Protocol.bas:HandleNieveToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
 | 223 | NieblaToggle | server Protocol.bas:HandleNieblaToggle | core | merged | `main:packages/protocol/src/packets/world.ts` | no |
 | 224 | TransFerGold | server Protocol.bas:HandleTransFerGold | extras | merged | `main:packages/protocol/src/packets/options.ts` | yes |
 | 225 | Moveitem | server Protocol.bas:HandleMoveItem | items | merged | `main:packages/protocol/src/packets/keyring.ts` | yes |
 | 226 | Genio | server Protocol.bas:HandleGenio | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 227 | Casarse | server Protocol.bas:HandleCasamiento | extras | not started |  | no |
+| 227 | Casarse | server Protocol.bas:HandleCasamiento | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 228 | CraftAlquimista | server Protocol.bas:HandleCraftAlquimia | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 229 | FlagTrabajar | server Protocol.bas:HandleFlagTrabajar | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 230 | CraftSastre | server Protocol.bas:HandleCraftSastre | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
@@ -654,19 +648,19 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 236 | RequestGrupo | server Protocol.bas:HandleRequestGrupo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
 | 237 | AbandonarGrupo | server Protocol.bas:HandleAbandonarGrupo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
 | 238 | HecharDeGrupo | server Protocol.bas:HandleHecharDeGrupo | party | merged | `main:packages/protocol/src/packets/party.ts` | yes |
-| 239 | MacroPossent | server Protocol.bas:HandleMacroPos | extras | not started |  | no |
-| 240 | SubastaInfo | server Protocol.bas:HandleSubastaInfo | extras | not started |  | no |
+| 239 | MacroPossent | server Protocol.bas:HandleMacroPos | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 240 | SubastaInfo | server Protocol.bas:HandleSubastaInfo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 241 | BanCuenta | server Protocol.bas:HandleBanCuenta | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 242 | UnbanCuenta | server Protocol.bas:HandleUnBanCuenta | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 243 | CerrarCliente | server Protocol.bas:HandleCerrarCliente | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 244 | EventoInfo | server Protocol.bas:HandleEventoInfo | extras | not started |  | no |
-| 245 | CrearEvento | server Protocol.bas:HandleCrearEvento | extras | not started |  | no |
+| 244 | EventoInfo | server Protocol.bas:HandleEventoInfo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 245 | CrearEvento | server Protocol.bas:HandleCrearEvento | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 246 | BanTemporal | server Protocol.bas:HandleBanTemporal | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 247 | CancelarExit | server Protocol.bas:HandleCancelarExit | extras | merged | `main:packages/protocol/src/packets/session.ts` | yes |
-| 248 | CrearTorneo | server Protocol.bas:HandleCrearTorneo | extras | not started |  | no |
-| 249 | ComenzarTorneo | server Protocol.bas:HandleComenzarTorneo | extras | not started |  | no |
-| 250 | CancelarTorneo | server Protocol.bas:HandleCancelarTorneo | extras | not started |  | no |
-| 251 | BusquedaTesoro | server Protocol.bas:HandleBusquedaTesoro | extras | not started |  | no |
+| 248 | CrearTorneo | server Protocol.bas:HandleCrearTorneo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 249 | ComenzarTorneo | server Protocol.bas:HandleComenzarTorneo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 250 | CancelarTorneo | server Protocol.bas:HandleCancelarTorneo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 251 | BusquedaTesoro | server Protocol.bas:HandleBusquedaTesoro | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 252 | CompletarViaje | server Protocol.bas:HandleCompletarViaje | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | no |
 | 253 | BovedaMoveItem | server Protocol.bas:HandleBovedaMoveItem | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
 | 254 | QuieroFundarClan | server Protocol.bas:HandleQuieroFundarClan | guild | merged | `main:packages/protocol/src/packets/guild.ts` | yes |
@@ -682,14 +676,14 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 264 | Home | server Protocol.bas:HandleHome | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 265 | Consulta | server Protocol.bas:HandleConsulta | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
 | 266 | GetMapInfo | server Protocol.bas:HandleGetMapInfo | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 267 | FinEvento | server Protocol.bas:HandleFinEvento | extras | not started |  | no |
+| 267 | FinEvento | server Protocol.bas:HandleFinEvento | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 268 | SeguroResu | server Protocol.bas:HandleSeguroResu | combat | merged | `main:packages/protocol/src/packets/status.ts` | yes |
 | 269 | LegionarySecure | server Protocol.bas:HandleLegionarySecure | combat | merged | `main:packages/protocol/src/packets/status.ts` | no |
 | 270 | CuentaExtractItem | server Protocol.bas:HandleCuentaExtractItem | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | no |
 | 271 | CuentaDeposit | server Protocol.bas:HandleCuentaDeposit | bank | merged | `main:packages/protocol/src/packets/bank-trade.ts` | no |
-| 272 | CreateEvent | server Protocol.bas:HandleCreateEvent | extras | not started |  | no |
+| 272 | CreateEvent | server Protocol.bas:HandleCreateEvent | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 273 | CommerceSendChatMessage | server Protocol.bas:HandleCommerceSendChatMessage | chat | merged | `main:packages/protocol/src/packets/bank-trade.ts` | yes |
-| 274 | LogMacroClickHechizo | server Protocol.bas:HandleLogMacroClickHechizo | extras | not started |  | no |
+| 274 | LogMacroClickHechizo | server Protocol.bas:HandleLogMacroClickHechizo | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 275 | AddItemCrafting | server Protocol.bas:HandleAddItemCrafting | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 276 | RemoveItemCrafting | server Protocol.bas:HandleRemoveItemCrafting | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 277 | AddCatalyst | server Protocol.bas:HandleAddCatalyst | crafting | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
@@ -705,28 +699,28 @@ Status is evidence-based: `covered` means every file listed in `tools/coverage/f
 | 287 | RomperCania | server Protocol.bas:HandleRomperCania | work | merged | `main:packages/protocol/src/packets/crafting.ts` | no |
 | 288 | UseItemU | server Protocol.bas:HandleUseItemU | items | merged | `main:packages/protocol/src/packets/items.ts` | yes |
 | 289 | RepeatMacro | server Protocol.bas:HandleRepeatMacro | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
-| 290 | BuyShopItem | server Protocol.bas:HandleBuyShopItem | extras | not started |  | no |
-| 291 | StartEvent | server Protocol.bas:HandleStartEvent | extras | not started |  | no |
-| 292 | CancelarEvento | server Protocol.bas:HandleCancelarEvento | extras | not started |  | no |
+| 290 | BuyShopItem | server Protocol.bas:HandleBuyShopItem | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 291 | StartEvent | server Protocol.bas:HandleStartEvent | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 292 | CancelarEvento | server Protocol.bas:HandleCancelarEvento | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 293 | NotifyInventarioHechizos | server Protocol.bas:HandleNotifyInventariohechizos | extras | merged | `main:packages/protocol/src/packets/spells.ts` | no |
-| 294 | PublicarPersonajeMAO | server Protocol.bas:HandlePublicarPersonajeMAO | extras | not started |  | no |
-| 295 | EventoFaccionario | server Protocol.bas:HandleEventoFaccionario | extras | not started |  | no |
+| 294 | PublicarPersonajeMAO | server Protocol.bas:HandlePublicarPersonajeMAO | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 295 | EventoFaccionario | server Protocol.bas:HandleEventoFaccionario | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
 | 296 | RequestDebug | server Protocol.bas:HandleDebugRequest | gm | merged | `main:packages/protocol/src/packets/gm.ts` | no |
-| 297 | LobbyCommand | server Protocol.bas:HandleLobbyCommand | extras | not started |  | no |
-| 298 | FeatureToggle | server Protocol.bas:HandleFeatureToggle | extras | not started |  | no |
+| 297 | LobbyCommand | server Protocol.bas:HandleLobbyCommand | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 298 | FeatureToggle | server Protocol.bas:HandleFeatureToggle | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 299 | ActionOnGroupFrame | server Protocol.bas:HandleActionOnGroupFrame | party | merged | `main:packages/protocol/src/packets/party.ts` | no |
 | 300 | SetHotkeySlot | server Protocol.bas:HandleSetHotkeySlot | items | merged | `main:packages/protocol/src/packets/options.ts` | yes |
 | 301 | UseHKeySlot | server Protocol.bas:HandleUseHKeySlot | items | merged | `main:packages/protocol/src/packets/keys.ts` | yes |
-| 302 | AntiCheatMessage | server Protocol.bas:HandleAntiCheatMessage | extras | not started |  | no |
-| 303 | RequestLobbyList | (none in dispatcher) | extras | not started |  | no |
+| 302 | AntiCheatMessage | server Protocol.bas:HandleAntiCheatMessage | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
+| 303 | RequestLobbyList | (none in dispatcher) | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 304 | CreateAccount | server Protocol.bas:HandleCreateAccount | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 305 | LoginAccount | server Protocol.bas:HandleLoginAccount | core | merged | `main:packages/protocol/src/packets.ts` | yes |
 | 306 | DeleteCharacter | server Protocol.bas:HandleDeleteCharacter | core | merged | `main:packages/protocol/src/packets/session.ts` | no |
 | 307 | ChangeSkinSlot | (none in dispatcher) | extras | not started |  | no |
 | 308 | StartAutomatedAction | server Protocol.bas:HandleStartAutomatedAction | work | merged | `main:packages/protocol/src/packets/crafting.ts` | yes |
 | 309 | PetFollowAll | server Protocol.bas:HandlePetFollowAll | npcs | merged | `main:packages/protocol/src/packets/pets-travel.ts` | yes |
-| 310 | AntiMacroMessage | server Protocol.bas:HandleAntiMacroMessage | extras | not started |  | no |
-| 311 | ModifyCastleWhiteList | server Protocol.bas:HandleModifyCastleWhiteList | extras | not started |  | no |
+| 310 | AntiMacroMessage | server Protocol.bas:HandleAntiMacroMessage | extras | merged | `main:packages/protocol/src/packets/extras.ts` | yes |
+| 311 | ModifyCastleWhiteList | server Protocol.bas:HandleModifyCastleWhiteList | extras | merged | `main:packages/protocol/src/packets/extras.ts` | no |
 | 312 | HooClientCapabilities | server Protocol.bas:HandleHooClientCapabilities | extras | not started |  | no |
 | 313 | RequestRemort | server Protocol.bas:HandleRequestRemort | extras | not started |  | no |
 | 314 | HooTargetedSpellCast | server Protocol.bas:HandleHooTargetedSpellCast | extras | not started |  | no |
@@ -811,13 +805,13 @@ Smith, carpenter, alchemy, tailor, crafting window, fishing, mining, lumber.
 
 Options forms, custom keys, hotkeys, events, battlegrounds, duels, premium shop, remort.
 
-- Packets (55): S165 InvasionInfo, S178 ShopInit, S179 UpdateShopClienteCredits, S183 NotificarClienteSeguido, S189 ShopPjsInit, S196 AntiCheatMessage, S197 AntiCheatStartSession, S198 ReportLobbyList, S200 ChangeSkinSlot, S203 RemortState, S204 RemortResult, S205 HooTargetedSpellCastResult, S206 HooHouseDoorActionResult, S207 AutoCombatState, C64 ChangeDescription, C67 Gamble, C68 MapPriceEntrance, C69 LeaveFaction, C185 Participar, C213 OfertaInicial, C214 OfertaDeSubasta, C216 CuentaRegresiva, C218 Duel, C219 AcceptDuel, C220 CancelDuel, C221 QuitDuel, C227 Casarse, C239 MacroPossent, C240 SubastaInfo, C244 EventoInfo, C245 CrearEvento, C248 CrearTorneo, C249 ComenzarTorneo, C250 CancelarTorneo, C251 BusquedaTesoro, C267 FinEvento, C272 CreateEvent, C274 LogMacroClickHechizo, C290 BuyShopItem, C291 StartEvent, C292 CancelarEvento, C294 PublicarPersonajeMAO, C295 EventoFaccionario, C297 LobbyCommand, C298 FeatureToggle, C302 AntiCheatMessage, C303 RequestLobbyList, C307 ChangeSkinSlot, C310 AntiMacroMessage, C311 ModifyCastleWhiteList, C312 HooClientCapabilities, C313 RequestRemort, C314 HooTargetedSpellCast, C315 HooHouseDoorAction, C316 ToggleAutoCombat
-- Forms (14): frmSkins, frmEligeAlineacion, frmMasOpciones, frmCollectibleCard, frmCreateBattleground, frmLobbyBattleground, frmRetos, frmShop, frmShopPjsAO20, frmTransferChar, frmTransferChar2FA, frmPatchNotes, frmNoticia, frmForo
+- Packets (11): S203 RemortState, S204 RemortResult, S205 HooTargetedSpellCastResult, S206 HooHouseDoorActionResult, S207 AutoCombatState, C307 ChangeSkinSlot, C312 HooClientCapabilities, C313 RequestRemort, C314 HooTargetedSpellCast, C315 HooHouseDoorAction, C316 ToggleAutoCombat
+- Forms (12): frmSkins, frmEligeAlineacion, frmMasOpciones, frmCollectibleCard, frmCreateBattleground, frmShop, frmShopPjsAO20, frmTransferChar, frmTransferChar2FA, frmPatchNotes, frmNoticia, frmForo
 
 ### wp12: GM / admin (last)
 
 All GM commands, GM panel, SOS, MOTD edit, debug.
 
 - Packets (0): none left
-- Forms (8): FrmTorneo, frmDebug, frmMessageTxt, frmMSG, frmProcesses, MenuGM, MenuNPC, MenuUser
+- Forms (4): frmDebug, frmMessageTxt, frmMSG, frmProcesses
 

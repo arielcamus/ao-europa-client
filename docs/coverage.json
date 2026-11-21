@@ -9,20 +9,20 @@
  ],
  "headline": {
   "packets": 523,
-  "packetsCovered": 466,
-  "packetsMerged": 466,
+  "packetsCovered": 510,
+  "packetsMerged": 510,
   "s2c": 207,
   "c2s": 316,
-  "s2cCovered": 191,
-  "c2sCovered": 275,
+  "s2cCovered": 200,
+  "c2sCovered": 310,
   "forms": 86,
-  "formsCovered": 47,
+  "formsCovered": 53,
   "formsPartial": 4,
-  "fixturePackets": 239,
-  "packetsPct": 89.1,
-  "packetsMergedPct": 89.1,
-  "formsPct": 54.7,
-  "formsStartedPct": 59.3
+  "fixturePackets": 259,
+  "packetsPct": 97.5,
+  "packetsMergedPct": 97.5,
+  "formsPct": 61.6,
+  "formsStartedPct": 66.3
  },
  "groups": [
   {
@@ -197,9 +197,9 @@
    "id": "options",
    "title": "Options / keybinds",
    "packets": 2,
-   "packetsCovered": 1,
-   "packetsMerged": 1,
-   "packetsPct": 50,
+   "packetsCovered": 2,
+   "packetsMerged": 2,
+   "packetsPct": 100,
    "forms": 4,
    "formsCovered": 3,
    "formsPartial": 0,
@@ -221,13 +221,13 @@
    "id": "extras",
    "title": "Events, battlegrounds, premium shop, remort, anti-cheat",
    "packets": 60,
-   "packetsCovered": 6,
-   "packetsMerged": 6,
-   "packetsPct": 10,
+   "packetsCovered": 49,
+   "packetsMerged": 49,
+   "packetsPct": 81.7,
    "forms": 13,
-   "formsCovered": 0,
+   "formsCovered": 2,
    "formsPartial": 0,
-   "formsPct": 0
+   "formsPct": 15.4
   },
   {
    "id": "gm",
@@ -237,9 +237,9 @@
    "packetsMerged": 142,
    "packetsPct": 100,
    "forms": 13,
-   "formsCovered": 5,
+   "formsCovered": 9,
    "formsPartial": 0,
-   "formsPct": 38.5
+   "formsPct": 69.2
   }
  ],
  "packets": [
@@ -292,6 +292,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -367,6 +369,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -413,6 +417,7 @@
    "fixtureFiles": [
     "tests/fixtures/vb6/buildings/bank-castle-trigger-bounce.jsonl",
     "tests/fixtures/vb6/buildings/carpentry-castle-trigger-bounce.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl"
    ]
   },
@@ -446,6 +451,7 @@
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/station-not-open.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
@@ -849,6 +855,7 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -893,7 +900,8 @@
    ],
    "fixture": true,
    "fixtureFiles": [
-    "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl"
+    "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl"
    ]
   },
   {
@@ -1145,6 +1153,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -1204,6 +1214,7 @@
     "tests/fixtures/vb6/crafting/carpenter-craft-walk-south.jsonl",
     "tests/fixtures/vb6/crafting/mine-extraction-then-walk.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/npcs/session-npcdesc.jsonl",
@@ -1378,6 +1389,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -1538,6 +1551,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -1598,6 +1613,7 @@
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/station-not-open.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
@@ -1645,6 +1661,8 @@
     "tests/fixtures/vb6/combat-spells-2/snake-poison-antidote.jsonl",
     "tests/fixtures/vb6/combat/resucitar-without-target.jsonl",
     "tests/fixtures/vb6/combat/safezone-attack-blocked.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/npcs/session-npc-dialog.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
@@ -1725,6 +1743,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -1800,6 +1820,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -1842,8 +1864,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/session.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "s2c:49",
@@ -1876,6 +1900,8 @@
     "tests/fixtures/vb6/crafting/smelt-extraction.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/npcs/session-full.jsonl",
     "tests/fixtures/vb6/pets/tame-and-pet-commands.jsonl",
@@ -1931,6 +1957,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -2035,6 +2063,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -2207,6 +2237,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -2302,6 +2334,7 @@
     "tests/fixtures/vb6/core-session/quit-then-cancel-exit.jsonl",
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/station-not-open.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/items/equip-unequip.jsonl",
     "tests/fixtures/vb6/items/login.jsonl",
@@ -2367,6 +2400,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -2479,6 +2514,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/delete-item.jsonl",
@@ -2614,6 +2651,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -2915,6 +2954,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -3012,6 +3053,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -3095,6 +3138,8 @@
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/combat-spells-2/hide-key.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl"
    ]
   },
@@ -3204,6 +3249,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -3558,6 +3605,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -3653,6 +3702,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -3881,6 +3932,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -4080,6 +4133,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -4200,6 +4255,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -4570,6 +4627,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -4671,6 +4730,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -4749,8 +4810,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/status.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "s2c:140",
@@ -4830,6 +4893,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/delete-item.jsonl",
@@ -5265,6 +5330,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -5361,6 +5428,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -5436,6 +5505,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -5499,8 +5570,10 @@
    "codecFiles": [
     "main:packages/protocol/src/packets/status.ts"
    ],
-   "fixture": false,
-   "fixtureFiles": []
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-lobby.jsonl"
+   ]
   },
   {
    "key": "s2c:164",
@@ -5530,11 +5603,13 @@
    "writer": "server Protocol_Writes.bas:WriteInvasionInfo",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5803,6 +5878,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -5838,11 +5915,13 @@
    "writer": "server Protocol_Writes.bas:WriteShopInit",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5855,11 +5934,13 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -5934,11 +6015,13 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6046,11 +6129,13 @@
    "writer": "server Protocol_Writes.bas:WriteShopPjsInit",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6203,6 +6288,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -6238,11 +6325,13 @@
    "writer": "server Protocol_Writes.bas:WriteAntiCheatMessage",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6255,11 +6344,13 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": true,
    "fixtureFiles": [
     "tests/fixtures/vb6/audio/walk-dummy-door.jsonl",
@@ -6293,6 +6384,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -6328,11 +6421,13 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6385,6 +6480,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -6420,11 +6517,13 @@
    "writer": "server Protocol_Writes.bas:WriteChangeSkinSlot",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -6477,6 +6576,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -7927,11 +8028,13 @@
    "writer": "client Protocol_Writes.bas:WriteChangeDescription",
    "group": "options",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -7982,11 +8085,13 @@
    "writer": "client Protocol_Writes.bas:WriteGamble",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -7999,13 +8104,17 @@
    "writer": "client Protocol_Writes.bas:WriteMapPriceEntrance",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "c2s:69",
@@ -8016,11 +8125,13 @@
    "writer": "client Protocol_Writes.bas:WriteLeaveFaction",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -8138,6 +8249,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -10464,13 +10577,18 @@
    "writer": "client Protocol_Writes.bas:WriteParticipar",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl"
+   ]
   },
   {
    "key": "c2s:186",
@@ -10997,13 +11115,17 @@
    "writer": "client Protocol_Writes.bas:WriteOfertaInicial",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "c2s:214",
@@ -11014,11 +11136,13 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11050,13 +11174,17 @@
    "writer": "client Protocol_Writes.bas:WriteCuentaRegresiva",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "c2s:217",
@@ -11086,13 +11214,17 @@
    "writer": "client Protocol_Writes.bas:WriteDuel",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "c2s:219",
@@ -11103,13 +11235,17 @@
    "writer": "client Protocol_Writes.bas:WriteAcceptDuel",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "c2s:220",
@@ -11120,13 +11256,17 @@
    "writer": "client Protocol_Writes.bas:WriteCancelDuel",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "c2s:221",
@@ -11137,13 +11277,17 @@
    "writer": "client Protocol_Writes.bas:WriteQuitDuel",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "c2s:222",
@@ -11254,13 +11398,17 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "c2s:228",
@@ -11518,11 +11666,13 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11535,13 +11685,17 @@
    "writer": "client Protocol_Writes.bas:WriteSubastaInfo",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "c2s:241",
@@ -11609,13 +11763,17 @@
    "writer": "client Protocol_Writes.bas:WriteEventoInfo",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "c2s:245",
@@ -11626,11 +11784,13 @@
    "writer": "client Protocol_Writes.bas:WriteCrearEvento",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11683,11 +11843,13 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11700,11 +11862,13 @@
    "writer": "client Protocol_Writes.bas:WriteComenzarTorneo",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11717,11 +11881,13 @@
    "writer": "client Protocol_Writes.bas:WriteCancelarTorneo",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -11734,11 +11900,13 @@
    "writer": "client Protocol_Writes.bas:WriteBusquedaTesoro",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12057,13 +12225,17 @@
    "writer": "client Protocol_Writes.bas:WriteFinEvento",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "c2s:268",
@@ -12152,11 +12324,13 @@
    "writer": "client Protocol_Writes.bas:WriteCreateEvent",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12190,11 +12364,13 @@
    "writer": "client Protocol_Writes.bas:WriteLogMacroClickHechizo",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12514,11 +12690,13 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12531,13 +12709,17 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-lobby.jsonl"
+   ]
   },
   {
    "key": "c2s:292",
@@ -12548,13 +12730,17 @@
    "writer": "client Protocol_Writes.bas:WriteCancelarEvento",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-lobby.jsonl"
+   ]
   },
   {
    "key": "c2s:293",
@@ -12584,11 +12770,13 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12601,13 +12789,17 @@
    "writer": "client Protocol_Writes.bas:WriteEventoFaccionario",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "c2s:296",
@@ -12637,13 +12829,18 @@
    "writer": "client Protocol_Writes.bas:WriteLobbyCommand",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl"
+   ]
   },
   {
    "key": "c2s:298",
@@ -12654,11 +12851,13 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12734,11 +12933,13 @@
    "writer": "client Protocol_Writes.bas:WriteAntiCheatMessage",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12751,11 +12952,13 @@
    "writer": null,
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -12827,6 +13030,8 @@
     "tests/fixtures/vb6/crafting/smith-alchemy-tailor-build.jsonl",
     "tests/fixtures/vb6/crafting/smith-refused-carpenter-build.jsonl",
     "tests/fixtures/vb6/doors/open-door-castle-entry-refused.jsonl",
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl",
+    "tests/fixtures/vb6/extras/live-lobby.jsonl",
     "tests/fixtures/vb6/gm/admin-commands.jsonl",
     "tests/fixtures/vb6/gm/non-gm-commands-refused.jsonl",
     "tests/fixtures/vb6/items-2/login-keys.jsonl",
@@ -12944,13 +13149,17 @@
    "writer": "client Protocol_Writes.bas:WriteAntiMacroMessage",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
-   "fixture": false,
-   "fixtureFiles": []
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
+   "fixture": true,
+   "fixtureFiles": [
+    "tests/fixtures/vb6/extras/live-events-commands.jsonl"
+   ]
   },
   {
    "key": "c2s:311",
@@ -12961,11 +13170,13 @@
    "writer": "client Protocol_Writes.bas:WriteModifyCastleWhiteList",
    "group": "extras",
    "package": "wp11",
-   "status": "not started",
-   "covered": false,
-   "merged": false,
+   "status": "merged",
+   "covered": true,
+   "merged": true,
    "branches": [],
-   "codecFiles": [],
+   "codecFiles": [
+    "main:packages/protocol/src/packets/extras.ts"
+   ],
    "fixture": false,
    "fixtureFiles": []
   },
@@ -13070,68 +13281,68 @@
      "ref": "main",
      "path": "apps/web/src/classic-layout.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/chat-box.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/items-ui.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/spells.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/look-at.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/map-objects.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/hotkeys-ui.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/inventory-extras.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     },
     {
      "ref": "main",
      "path": "apps/web/src/minimap.ts",
      "partial": true,
-     "note": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not",
+     "note": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not",
      "ok": true
     }
    ],
    "missing": null,
-   "partialNote": "viewport, HUD, inventory, spells, chat, hotkeys and minimap are built; the interaction menu and a few frmMain buttons are not"
+   "partialNote": "viewport, HUD, inventory, spells, chat, hotkeys, minimap, invasion bar and the right-click menus are built; a few frmMain buttons are not"
   },
   {
    "name": "frmConnect",
@@ -14288,14 +14499,17 @@
    "group": "extras",
    "package": "wp11",
    "lines": 243,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "c",
-    "note": "AO20 battleground lobby (ReportLobbyList, LobbyCommand)"
-   },
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/extras-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
    "partialNote": null
   },
   {
@@ -14304,14 +14518,17 @@
    "group": "extras",
    "package": "wp11",
    "lines": 722,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "a",
-    "note": "Duels (Duel / AcceptDuel / CancelDuel / QuitDuel packets)"
-   },
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/extras-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
    "partialNote": null
   },
   {
@@ -14432,14 +14649,17 @@
    "group": "gm",
    "package": "wp12",
    "lines": 1507,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "a",
-    "note": "GM tournament organiser (CrearTorneo, ComenzarTorneo, CancelarTorneo), GM only"
-   },
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/extras-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
    "partialNote": null
   },
   {
@@ -14607,14 +14827,17 @@
    "group": "gm",
    "package": "wp12",
    "lines": 619,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "a",
-    "note": "Right-click GM menu (ban, jail, summon...), GM only"
-   },
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/extras-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
    "partialNote": null
   },
   {
@@ -14623,14 +14846,17 @@
    "group": "gm",
    "package": "wp12",
    "lines": 239,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "a",
-    "note": "Right-click pet menu: release, release all, follow"
-   },
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/extras-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
    "partialNote": null
   },
   {
@@ -14639,14 +14865,17 @@
    "group": "gm",
    "package": "wp12",
    "lines": 243,
-   "status": "not started",
-   "covered": false,
+   "status": "merged",
+   "covered": true,
    "partial": false,
-   "evidence": [],
-   "missing": {
-    "class": "a",
-    "note": "Right-click player menu: report, challenge, whisper, invite to party, trade"
-   },
+   "evidence": [
+    {
+     "ref": "main",
+     "path": "apps/web/src/extras-ui.ts",
+     "ok": true
+    }
+   ],
+   "missing": null,
    "partialNote": null
   }
  ],
@@ -14766,56 +14995,12 @@
    "title": "Options, keybinds and extras",
    "scope": "Options forms, custom keys, hotkeys, events, battlegrounds, duels, premium shop, remort",
    "packetIds": [
-    "s2c:165",
-    "s2c:178",
-    "s2c:179",
-    "s2c:183",
-    "s2c:189",
-    "s2c:196",
-    "s2c:197",
-    "s2c:198",
-    "s2c:200",
     "s2c:203",
     "s2c:204",
     "s2c:205",
     "s2c:206",
     "s2c:207",
-    "c2s:64",
-    "c2s:67",
-    "c2s:68",
-    "c2s:69",
-    "c2s:185",
-    "c2s:213",
-    "c2s:214",
-    "c2s:216",
-    "c2s:218",
-    "c2s:219",
-    "c2s:220",
-    "c2s:221",
-    "c2s:227",
-    "c2s:239",
-    "c2s:240",
-    "c2s:244",
-    "c2s:245",
-    "c2s:248",
-    "c2s:249",
-    "c2s:250",
-    "c2s:251",
-    "c2s:267",
-    "c2s:272",
-    "c2s:274",
-    "c2s:290",
-    "c2s:291",
-    "c2s:292",
-    "c2s:294",
-    "c2s:295",
-    "c2s:297",
-    "c2s:298",
-    "c2s:302",
-    "c2s:303",
     "c2s:307",
-    "c2s:310",
-    "c2s:311",
     "c2s:312",
     "c2s:313",
     "c2s:314",
@@ -14823,56 +15008,12 @@
     "c2s:316"
    ],
    "packetNames": [
-    "S165 InvasionInfo",
-    "S178 ShopInit",
-    "S179 UpdateShopClienteCredits",
-    "S183 NotificarClienteSeguido",
-    "S189 ShopPjsInit",
-    "S196 AntiCheatMessage",
-    "S197 AntiCheatStartSession",
-    "S198 ReportLobbyList",
-    "S200 ChangeSkinSlot",
     "S203 RemortState",
     "S204 RemortResult",
     "S205 HooTargetedSpellCastResult",
     "S206 HooHouseDoorActionResult",
     "S207 AutoCombatState",
-    "C64 ChangeDescription",
-    "C67 Gamble",
-    "C68 MapPriceEntrance",
-    "C69 LeaveFaction",
-    "C185 Participar",
-    "C213 OfertaInicial",
-    "C214 OfertaDeSubasta",
-    "C216 CuentaRegresiva",
-    "C218 Duel",
-    "C219 AcceptDuel",
-    "C220 CancelDuel",
-    "C221 QuitDuel",
-    "C227 Casarse",
-    "C239 MacroPossent",
-    "C240 SubastaInfo",
-    "C244 EventoInfo",
-    "C245 CrearEvento",
-    "C248 CrearTorneo",
-    "C249 ComenzarTorneo",
-    "C250 CancelarTorneo",
-    "C251 BusquedaTesoro",
-    "C267 FinEvento",
-    "C272 CreateEvent",
-    "C274 LogMacroClickHechizo",
-    "C290 BuyShopItem",
-    "C291 StartEvent",
-    "C292 CancelarEvento",
-    "C294 PublicarPersonajeMAO",
-    "C295 EventoFaccionario",
-    "C297 LobbyCommand",
-    "C298 FeatureToggle",
-    "C302 AntiCheatMessage",
-    "C303 RequestLobbyList",
     "C307 ChangeSkinSlot",
-    "C310 AntiMacroMessage",
-    "C311 ModifyCastleWhiteList",
     "C312 HooClientCapabilities",
     "C313 RequestRemort",
     "C314 HooTargetedSpellCast",
@@ -14885,8 +15026,6 @@
     "frmMasOpciones",
     "frmCollectibleCard",
     "frmCreateBattleground",
-    "frmLobbyBattleground",
-    "frmRetos",
     "frmShop",
     "frmShopPjsAO20",
     "frmTransferChar",
@@ -14903,14 +15042,10 @@
    "packetIds": [],
    "packetNames": [],
    "forms": [
-    "FrmTorneo",
     "frmDebug",
     "frmMessageTxt",
     "frmMSG",
-    "frmProcesses",
-    "MenuGM",
-    "MenuNPC",
-    "MenuUser"
+    "frmProcesses"
    ]
   }
  ],
