@@ -181,7 +181,10 @@ export const extrasClientCodecs = {
     read: r => ({ data: r.readSafeArrayInt8() }),
     write: (w, v) => { w.writeSafeArrayInt8(v.data); },
   } as ExtrasCodec<{ data: SafeArrayInt8 }>,
-  /** eRequestLobbyList has no payload (server HendleRequestLobbyList reads nothing). */
+  /**
+   * eRequestLobbyList has no payload (server HendleRequestLobbyList reads nothing). Do NOT send it: the live VB6 server drops the
+   * connection on it (it has no dispatcher entry). Nothing in the client sends it; the codec exists for decoding recordings only.
+   */
   [ExtrasClientPacketId.RequestLobbyList]: empty,
   /** WriteAntiMacroMessage: userName String8, mensaje String8. */
   [ExtrasClientPacketId.AntiMacroMessage]: flat({ userName: 's8', message: 's8' }),

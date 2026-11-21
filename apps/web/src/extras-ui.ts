@@ -25,6 +25,8 @@ export function validName(name: string): boolean {
   if (!/^[A-Za-z ]+$/.test(name) || name.includes('  ') || name.startsWith(' ') || name.endsWith(' ')) return false;
   return true;
 }
+/** WriteDuel / WriteCrearTorneo carry these as Int16: an out-of-range value would throw in encode and close the session, so clamp to 0..32767. */
+const int16 = (text: string) => Math.max(0, Math.min(32767, Math.round(Number(text) || 0)));
 /** frmRetos.Validar: the first error caption, or '' when the form can be sent. */
 export function validateDuel(names: string[], perTeam: number, redPotions: boolean, potions: string): string {
   for (let i = 0; i < perTeam * 2; i++) {
@@ -111,7 +113,7 @@ export class ExtrasUI {
       error.textContent = problem;
       if (problem) return;
       // Retar_Click: every player but the creator, joined by ';'.
-      this.deps.send({ id: X.Duel, players: names.slice(1, n * 2).join(';'), bet: Number(bet.value) || 0, redPotions: redBox.checked ? Math.round(Number(potions.value) || 0) : -1, dropItems: dropBox.checked } as unknown as ClientPacket);
+      this.deps.send({ id: X.Duel, players: names.slice(1, n * 2).join(';'), bet: Number(bet.value) || 0, redPotions: redBox.checked ? int16(potions.value) : -1, dropItems: dropBox.checked } as unknown as ClientPacket);
       win.close();
     }).id = 'duel-send';
     win.closeButton([260, 1, 31, 28]);
@@ -151,7 +153,7 @@ export class ExtrasUI {
       id: X.CrearTorneo, minLevel: byte(minLevel.value), maxLevel: byte(maxLevel.value), slots: byte(slots.value), cost: Math.round(Number(cost.value) || 0),
       mage: +checks[0]!.checked, cleric: +checks[1]!.checked, warrior: +checks[2]!.checked, assassin: +checks[3]!.checked, bard: +checks[4]!.checked, druid: +checks[5]!.checked,
       paladin: +checks[6]!.checked, hunter: +checks[7]!.checked, worker: +checks[8]!.checked, pirate: +checks[9]!.checked, thief: +checks[10]!.checked, bandit: +checks[11]!.checked,
-      map: Math.round(Number(map.value) || 0), x: byte(x.value), y: byte(y.value), name: name.value, rules: rules.value,
+      map: int16(map.value), x: byte(x.value), y: byte(y.value), name: name.value, rules: rules.value,
     } as unknown as ClientPacket)).id = 'tournament-create';
     win.command('Comenzar', [120, 172, 100, 24], () => send({ id: X.ComenzarTorneo } as ClientPacket)).id = 'tournament-start';
     win.command('Cancelar torneo', [230, 172, 110, 24], () => send({ id: X.CancelarTorneo } as ClientPacket)).id = 'tournament-cancel';
