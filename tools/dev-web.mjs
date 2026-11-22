@@ -31,8 +31,11 @@ try {
   const configure = server => {
     server.middlewares.use((request, response, next) => {
       if (request.url === '/ao-config.json') {
-        response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
-        response.end(JSON.stringify({ mode: standinMode ? 'standin' : 'classic', serverProfile, wireProfile, wsPath: '/bridge', assetVersion: assets.version }));
+        // The resources are scanned again on page loads (local-assets.mjs refresh): a patch made while this server runs gets a new version.
+        void assets.refresh().then(assetVersion => {
+          response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+          response.end(JSON.stringify({ mode: standinMode ? 'standin' : 'classic', serverProfile, wireProfile, wsPath: '/bridge', assetVersion }));
+        }, next);
       } else next();
     });
     server.middlewares.use(assets);
@@ -47,8 +50,8 @@ try {
     plugins: [{
       name: 'local-ao-resources', configureServer: configure,
       // The production bundle: compressed, the hashed files immutable, the page pinned to the asset version (#79).
-      configurePreviewServer: server => { configure(server); server.middlewares.use(distDelivery(fileURLToPath(new URL('../apps/web/dist', import.meta.url)), assets.version)); },
-      transformIndexHtml: html => injectAssetVersion(html, assets.version),
+      configurePreviewServer: server => { configure(server); server.middlewares.use(distDelivery(fileURLToPath(new URL('../apps/web/dist', import.meta.url)), () => assets.refresh())); },
+      transformIndexHtml: async html => injectAssetVersion(html, await assets.refresh()),
     }],
     server: settings, preview: settings,
   };
