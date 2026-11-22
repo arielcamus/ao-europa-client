@@ -706,7 +706,8 @@ viewport.addEventListener('pointerdown', event => {
   // While the server asked for a target (UsingSkill <> 0) any click or tap is a WorkLeftClick (ModGameplayUI), never a LeftClick.
   if (session.spells.targeting) {
     event.preventDefault(); clearInput();
-    const tile = tileAt(event);
+    // The server's LookatTile shifts one tile only, but a sprite is ~2 tiles tall: snap a click on a creature's sprite to its foot tile.
+    const raw = tileAt(event), tile = raw && (characterTapTile(session.tracker.chars.values(), session.charIndex, raw) ?? raw);
     if (tile) try { session.spells.click(tile.x, tile.y); } catch (error) { close(String(error)); }
     renderer.app.canvas.focus(); return;
   }
@@ -715,7 +716,8 @@ viewport.addEventListener('pointerdown', event => {
     event.preventDefault(); renderer.app.canvas.focus(); questWindows.closeOffers(); // frmMain.Form_MouseDown unloads FrmQuestInfo
     // One LeftClick per click (VB6 frmMain): on a door the tile follows the server's door rule, anywhere else it is the tile
     // itself. The counter is the session's shared one, so door, look-at, NPC and attack-target clicks never collide.
-    const tile = doorAt(event) ?? tileAt(event);
+    const door = doorAt(event), raw = door ?? tileAt(event);
+    const tile = door ? raw : raw && (characterTapTile(session.tracker.chars.values(), session.charIndex, raw) ?? raw);
     try { if (tile) session.leftClick(tile.x, tile.y); } catch (error) { close(String(error)); }
     return;
   }

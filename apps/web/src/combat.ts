@@ -137,15 +137,20 @@ export class CombatState {
 
 /**
  * Touch gesture decision (#17 item 4, #20 item 6). The desktop client selects with a left click (LeftClick -> NPC dialog, shop, target) and
- * walks with the keys; a phone has no keys, so a tap on a tile where ANOTHER character (NPC or player) stands, or just under its sprite
- * row (the head of a tall NPC), is the LeftClick that selects it; a tap anywhere else keeps the walk-towards behaviour. Returns the tile to click.
+ * walks with the keys; a phone has no keys, so a tap on a tile where ANOTHER character (NPC or player) stands, or anywhere up its sprite
+ * (the head of a tall NPC, up to 2 tiles above the foot), is the LeftClick that selects it; a tap anywhere else keeps the walk-towards behaviour. Returns the tile to click.
  */
 export function characterTapTile(
   characters: Iterable<{ charIndex: number; x: number; y: number }>, selfIndex: number | undefined, tile: { x: number; y: number },
 ): { x: number; y: number } | undefined {
+  // A sprite is ~2 tiles tall, drawn upward from its foot tile, so a character covers the click when its foot is 0, 1 or 2 tiles BELOW it.
+  // The nearest foot wins (the creature whose feet are under the cursor), so a vertical stack resolves the same wherever each sprite is hit.
+  let best: { x: number; y: number } | undefined;
   for (const c of characters) {
-    if (c.charIndex === selfIndex) continue;
-    if (c.x === tile.x && (c.y === tile.y || c.y === tile.y + 1)) return { x: c.x, y: c.y };
+    if (c.charIndex === selfIndex || c.x !== tile.x) continue;
+    const below = c.y - tile.y;
+    if (below < 0 || below > 2) continue;
+    if (!best || c.y < best.y) best = { x: c.x, y: c.y };
   }
-  return undefined;
+  return best;
 }
