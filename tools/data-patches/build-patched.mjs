@@ -8,9 +8,9 @@
 // Exit 0 when the output matches the lock, 1 otherwise.
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { readLock, readManifest, sha256, verifyAssets } from '../provenance/provenance.mjs';
+import { hashMismatch, readLock, readManifest, sha256, verifyAssets } from '../provenance/provenance.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -32,8 +32,10 @@ export function buildPatched({ pin, out, inputs, onlyPatched = false, lock = rea
     for (const p of active) {
       const src = resolveCase(pin, p.path);
       if (!existsSync(src)) { problems.push(`${p.path}: missing in the pin`); continue; }
-      if (sha256(src) !== p.base) problems.push(`${p.path}: the pin's file is not the pinned base ${p.base.slice(0, 12)}`);
-      const dest = join(out, src.slice(pin.length + 1));
+      const actual = sha256(src);
+      if (actual !== p.base) problems.push(`${p.path}: the pin's file is not the pinned base: ${hashMismatch(actual, p.base)}`);
+      // relative(), not a slice by pin.length: a --pin with a trailing / would cut the first letter of every path.
+      const dest = join(out, relative(pin, src));
       mkdirSync(dirname(dest), { recursive: true });
       copyFileSync(src, dest);
     }
@@ -56,7 +58,7 @@ export function buildPatched({ pin, out, inputs, onlyPatched = false, lock = rea
   const outputs = active.map(p => {
     const file = resolveCase(out, p.path);
     const actual = existsSync(file) ? sha256(file) : 'missing';
-    if (actual !== p.sha256) problems.push(`${p.path}: built ${actual.slice(0, 12)}, the lock expects ${p.sha256.slice(0, 12)}`);
+    if (actual !== p.sha256) problems.push(`${p.path}: built vs the lock: ${hashMismatch(actual, p.sha256)}`);
     return { path: p.path, sha256: actual };
   });
   let verify;

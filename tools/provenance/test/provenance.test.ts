@@ -1,9 +1,11 @@
+import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { afterAll, describe, expect, it } from 'vitest';
 // @ts-expect-error plain ESM script without types
-import { consumedFiles, lockProblems, readLock, readManifest, sha256, verifyAssets } from '../provenance.mjs';
+import { consumedFiles, hashMismatch, lockProblems, MODES, readLock, readManifest, sha256, verifyAssets } from '../provenance.mjs';
 // @ts-expect-error plain ESM script without types
 import { buildPatched } from '../../data-patches/build-patched.mjs';
 // @ts-expect-error plain ESM script without types
@@ -78,6 +80,31 @@ describe('provenance lock (synthetic tree)', () => {
     expect(lockProblems(lock({ base: 'b'.repeat(64) }), manifest)[0]).toMatch(/is not the pinned/);
     expect(lockProblems(lock({ script: 'tools/data-patches/nope.py' }), manifest).join()).toMatch(/not found/);
     expect(lockProblems(lock({ path: 'Dat/other.dat' }), manifest)[0]).toMatch(/not a pinned file/);
+  });
+});
+
+describe('tooling edges (#115)', () => {
+  it('a hash problem shows both hashes in full and where they part', () => {
+    const a = 'ab'.repeat(32), b = 'ab'.repeat(16) + 'cd' + 'ab'.repeat(15);
+    expect(hashMismatch(a, b)).toBe(`${a} vs ${b} (first difference at hex digit 33)`);
+  });
+
+  it('build-patched --only-patched keeps whole paths when --pin ends in a slash', () => {
+    const pin = join(tmp, 'slash-pin');
+    put(pin, 'Dat/npcs.dat', '[NPC1]\r\nBody=1\r\n');
+    const base = sha256(join(pin, 'Dat/npcs.dat'));
+    const lock = { patches: { recipe: [], active: [{ path: 'Dat/npcs.dat', base, sha256: base }] } };
+    const out = join(tmp, 'slash-out');
+    const r = buildPatched({ pin: pin + '/', out, onlyPatched: true, lock, log: () => {} });
+    expect(r.problems).toEqual([]);
+    expect(existsSync(join(out, 'Dat/npcs.dat'))).toBe(true);
+  });
+
+  it('provenance.mjs rejects an unknown mode instead of running --verify', () => {
+    const run = spawnSync(process.execPath, [fileURLToPath(new URL('../provenance.mjs', import.meta.url)), '--verfy-pin', tmp], { encoding: 'utf8' });
+    expect(run.status).toBe(2);
+    expect(run.stderr).toMatch(/unknown mode "--verfy-pin"/);
+    expect(Object.keys(MODES)).toEqual(['--verify', '--verify-pin', '--verify-patched', '--write']);
   });
 });
 
@@ -175,8 +202,11 @@ if (!pinned) {
 describe.skipIf(!pinned)(`the patch recipe on AO_ASSETS_PIN${pinned ? '' : ' [skipped: no AO_ASSETS_PIN]'}`, () => {
   it('the scripts turn every pinned base into exactly the locked output', () => {
     const out = join(tmp, 'patched');
-    // The world-2 pictures are an input, not derived from the pin: take them from AO_ASSETS when it already has them, else download.
-    const inputs = assets ? join(assets, 'interface') : undefined;
+    // The world-2 pictures are an input, not derived from the pin: take them from AO_ASSETS only when it already holds the 043cdf20
+    // bytes (hash-checked first, #115: AO_ASSETS may itself be the untouched pin), else let the script download them.
+    const picture = readLock().patches.active.find((p: { path: string }) => p.path === 'interface/es_mapa2.bmp')!.sha256;
+    const face = assets ? join(assets, 'interface') : '';
+    const inputs = face && ['es_mapa2.bmp', 'en_mapa2.bmp'].every(n => existsSync(join(face, n)) && sha256(join(face, n)) === picture) ? face : undefined;
     const r = buildPatched({ pin: pinned, out, inputs, onlyPatched: true, log: () => {} });
     expect(r.problems).toEqual([]);
     expect(r.outputs.map((o: { sha256: string }) => o.sha256)).toEqual(readLock().patches.active.map((p: { sha256: string }) => p.sha256));

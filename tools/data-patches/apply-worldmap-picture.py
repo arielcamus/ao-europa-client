@@ -13,7 +13,7 @@ Worlds 1 and 3 (847f4a23 too) match the grid: 0 cells on black.
 --assets   the client's AO_ASSETS folder (default: $AO_ASSETS)
 --check    report which picture each world has and how many mapped cells are on black; write nothing
 --from     take the 043cdf20 files from this folder instead of downloading them (same names, sha256 checked; used by
-           tools/data-patches/build-patched.mjs for offline builds)
+           tools/data-patches/build-patched.mjs for offline builds). A file there with another hash is ignored and downloaded
 --restore  put the backed-up pictures (<file>.orig-worldmap) back
 
 Applying replaces interface/es_mapa2.bmp and en_mapa2.bmp with the 043cdf20 files (downloaded from github.com/ao-org/Recursos,
@@ -97,8 +97,14 @@ def main():
         dest = face / name
         if dest.exists() and sha(dest) == GOOD_SHA: print(f'{name}: already the 043cdf20 picture'); continue
         local = Path(a.source).expanduser() / name if a.source else None
-        data = local.read_bytes() if local and local.exists() else urllib.request.urlopen(URL.format(name), timeout=60).read()
-        if hashlib.sha256(data).hexdigest() != GOOD_SHA: sys.exit(f'{name}: {"local" if local and local.exists() else "downloaded"} file has an unexpected sha256, nothing written')
+        data = local.read_bytes() if local and local.exists() else None
+        if data is not None and hashlib.sha256(data).hexdigest() != GOOD_SHA:
+            # --from holds some other picture (an untouched pin tree has the 847f4a23 one): ignore it and download (#115).
+            print(f'{name}: {local} is not the 043cdf20 picture (sha256 {hashlib.sha256(data).hexdigest()}), downloading instead', file=sys.stderr)
+            data = None
+        source = 'local' if data is not None else 'downloaded'
+        if data is None: data = urllib.request.urlopen(URL.format(name), timeout=60).read()
+        if hashlib.sha256(data).hexdigest() != GOOD_SHA: sys.exit(f'{name}: {source} file has an unexpected sha256, nothing written')
         backup = face / (name + BACKUP)
         if dest.exists() and not backup.exists(): shutil.copy2(dest, backup)
         tmp = face / (name + '.tmp-worldmap'); tmp.write_bytes(data); os.replace(tmp, dest)

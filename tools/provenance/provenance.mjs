@@ -9,6 +9,7 @@
 //   node tools/provenance/provenance.mjs --verify-pin <root>      untouched pin only: every active patch counts as a change
 //   node tools/provenance/provenance.mjs --verify-patched <root>  the built copy: every active patch must be applied
 //   node tools/provenance/provenance.mjs --write <root>           rewrite the manifest from a tree already verified against the pin commit
+// Any other first argument exits 2 with the list of modes.
 import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, sep } from 'node:path';
@@ -51,13 +52,21 @@ export function readManifest(text = readFileSync(MANIFEST_PATH, 'utf8')) {
 
 export const readLock = (path = LOCK_PATH) => JSON.parse(readFileSync(path, 'utf8'));
 
+/** Two hashes for a problem message: both in full plus the first hex digit where they part (1-based), so a near-miss is visible. */
+export function hashMismatch(actual, expected) {
+  const a = String(actual ?? 'none'), e = String(expected ?? 'none');
+  let i = 0;
+  while (i < a.length && i < e.length && a[i] === e[i]) i++;
+  return `${a} vs ${e} (first difference at hex digit ${i + 1})`;
+}
+
 /** Problems in the lock itself: an active patch whose base is not the pinned hash, a path outside the pin, a missing script or hash. */
 export function lockProblems(lock = readLock(), manifest = readManifest(), repoRoot = join(HERE, '..', '..')) {
   const out = [];
   for (const p of lock.patches?.active ?? []) {
     const pinned = manifest.get(p.path.toLowerCase());
     if (!pinned) out.push(`${p.path}: not a pinned file`);
-    else if (p.base !== pinned.sha256) out.push(`${p.path}: base ${p.base?.slice(0, 12)} is not the pinned ${pinned.sha256.slice(0, 12)}`);
+    else if (p.base !== pinned.sha256) out.push(`${p.path}: base is not the pinned hash: ${hashMismatch(p.base, pinned.sha256)}`);
     if (!/^[0-9a-f]{64}$/.test(p.sha256 ?? '')) out.push(`${p.path}: no output sha256`);
     if (!p.script || !existsSync(join(repoRoot, p.script))) out.push(`${p.path}: script ${p.script} not found`);
     if (!(lock.patches.recipe ?? []).some(step => step.script === p.script)) out.push(`${p.path}: script ${p.script} is not in patches.recipe`);
@@ -120,8 +129,15 @@ export function summarize(r, limit = 15) {
 }
 
 const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+export const MODES = { '--verify': 'any', '--verify-pin': 'pin', '--verify-patched': 'patched', '--write': 'write' };
+
 if (isMain) {
   const [mode, root = process.env.AO_ASSETS] = process.argv.slice(2);
+  // An unknown mode (a typo of --verify-pin) must not quietly fall back to --verify.
+  if (!Object.hasOwn(MODES, mode ?? '')) {
+    console.error(`unknown mode ${JSON.stringify(mode ?? '')}; use one of ${Object.keys(MODES).join(', ')} followed by the Recursos dir`);
+    process.exit(2);
+  }
   if (!root || !existsSync(root)) {
     console.error('SKIPPED: no assets. Set AO_ASSETS (or pass a directory) to verify the pre-HOO pin; nothing was checked.');
     process.exit(2);
@@ -130,7 +146,7 @@ if (isMain) {
   else {
     const problems = lockProblems();
     for (const p of problems) console.log(`  lock: ${p}`);
-    const r = verifyAssets(root, { mode: { '--verify-pin': 'pin', '--verify-patched': 'patched' }[mode] ?? 'any' });
+    const r = verifyAssets(root, { mode: MODES[mode] });
     console.log(summarize(r, 40));
     process.exit(r.ok && !problems.length ? 0 : 1);
   }

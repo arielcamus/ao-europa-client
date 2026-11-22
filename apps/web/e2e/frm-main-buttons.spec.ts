@@ -6,6 +6,8 @@ test('experience read-out buttons show exactly one label; the manual and MAO but
   test.skip(info.project.name !== 'desktop-chrome', 'desktop layout');
   const failures: string[] = [];
   page.on('pageerror', error => failures.push(error.message));
+  // The popups must not depend on argentumonline.com.ar answering (#93): the context route also covers the new windows.
+  await page.context().route('https://www.argentumonline.com.ar/**', route => route.fulfill({ status: 200, contentType: 'text/html', body: '<title>stub</title>' }));
   await page.goto('/');
   await expect(page.locator('#classic')).toHaveAttribute('data-ui-ready', 'true');
   await page.locator('#connect').click();

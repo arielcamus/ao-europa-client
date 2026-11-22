@@ -33,6 +33,12 @@ Suspect, kept inside the pin: `999649ad` (server) / `6b8939f` (client), 2026-08-
 `tools/local-assets.mjs` allowlist plus the server's whole `Dat/`, 5,134 files) and compares it with `tools/provenance/recursos-pin.sha256`.
 A file that differs, or that does not exist at the pin (`OGG/`, new `wav`, new `Dat` files), fails unless its exact hash is the output of
 an **active patch** in the lock. `--verify-pin` accepts only the pinned bytes; `--verify-patched` requires every active patch.
+Any other mode is rejected (exit 2), so a typo never quietly runs `--verify`.
+
+**The pin hashes are of the git checkout, not of the raw git blobs.** Recursos' `.gitattributes` checks `.dat`, `.ini` and `.txt` out
+with CRLF line endings and windows-1252 text, so the bytes on disk (and in `recursos-pin.sha256`) differ from the blob bytes that
+`git cat-file` or a raw GitHub download returns. To reproduce a pinned hash, check the commit out (or `git archive` it) and hash the
+file; never hash the blob. Every other file (`.bmp`, `.png` and the rest, most marked `binary` there) is stored as is, so for it both agree.
 `tools/data-integrity/integrity.mjs` then checks every NPC body/head/weapon/shield/helmet, object graphic, body and door partner, spell
 FX/NPC/object, quest NPC/object/spell/quest, crafting object and map NPC/object spawn; ids outside `knownGaps` (the dangling references
 the pinned upstream already has) fail.
