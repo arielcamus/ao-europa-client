@@ -4,11 +4,14 @@
   "type": "module",
   "license": "AGPL-3.0-or-later",
   "packageManager": "pnpm@12.21.0",
-  "engines": { "node": ">=24 <25" },
+  "engines": {
+    "node": ">=24 <25"
+  },
   "scripts": {
     "build": "pnpm -r build",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
     "coverage:map": "node tools/coverage/build-map.mjs",
     "size:web": "node tools/bundle-size.mjs",
     "bot": "pnpm build && node apps/bot/dist/cli.js",
@@ -24,11 +27,15 @@
     "test:browser:real": "pnpm build && playwright test --config playwright.real.config.ts"
   },
   "devDependencies": {
+    "@eslint/js": "10.0.1",
     "@playwright/test": "1.65.1",
-    "vite": "8.3.8",
     "@types/node": "^24.0.0",
     "@types/ws": "^8.18.1",
+    "eslint": "10.14.0",
+    "globals": "17.13.0",
     "typescript": "~5.9.3",
+    "typescript-eslint": "8.72.2",
+    "vite": "8.3.8",
     "vitest": "^4.0.0"
   }
 }

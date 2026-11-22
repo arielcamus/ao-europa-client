@@ -176,7 +176,7 @@ describe('replay of recorded VB6 sessions', () => {
     expect(session.ui.messages.length).toBeGreaterThan(0);
   });
   it('session-npcdesc: the real NPCDESC overhead fires the NPC dialog hook', () => {
-    let now = 0; const seen: number[] = [];
+    const now = 0; const seen: number[] = [];
     const session = new Session({ email: 'a', password: 'b' }, () => {}, () => now);
     session.tracker.onNpcDescription = d => { seen.push(d.npcNumber); };
     const lines = readFileSync(new URL('../../../tests/fixtures/vb6/npcs/session-npcdesc.jsonl', import.meta.url), 'utf8').trim().split('\n').map(l => JSON.parse(l) as { dir: string; id: number; hex: string });
@@ -226,7 +226,7 @@ describe('characters that step out of the area (Char_Move_by_Pos: If nY < MinLim
     expect(t.chars.get(5)).toMatchObject({ x: 73, y: 59 });
   });
   it('session: the creature that left is not kept as a ghost the player later walks up to (the "Target inválido" creatures)', () => {
-    let now = 0;
+    const now = 0;
     const session = new Session({ email: 'a', password: 'b' }, () => {}, () => now);
     const recv = (...packets: ServerPacket[]) => { for (const packet of packets) session.receive(encodeServerFrame(packet)); };
     recv(f.Connected, f.AccountCharacterList, f.Intervals, f.ChangeMap, { ...f.CharacterCreate, x: 75, y: 78, speeding: 1 }, f.UserCharIndexInServer, f.Logged);

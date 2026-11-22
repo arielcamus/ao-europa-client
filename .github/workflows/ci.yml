@@ -1,0 +1,52 @@
+# Typecheck, lint, unit tests and build on GitHub-hosted Ubuntu. Minutes are billed, so it stays one job:
+# draft PRs run only typecheck + lint (~1 min), ready PRs and pushes to main run everything (~1-2 min).
+# No Playwright and no live VB6 server here: those need the local VM and stay local. Tests that need
+# AO_ASSETS or a recorded fixture skip themselves when it is absent. docs/ and *.md are NOT path-ignored: vitest asserts that
+# generated docs (COVERAGE.md, coverage.json, COMPLETION.md, PLAYTHROUGH.md, pinned-layouts.json) match the tree.
+name: ci
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore: ['LICENSE', 'LICENSES/**', 'NOTICE']
+  push:
+    branches: [main]
+    paths-ignore: ['LICENSE', 'LICENSES/**', 'NOTICE']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      FULL: ${{ github.event_name == 'push' || !github.event.pull_request.draft }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          # Its automatic pnpm cache runs before corepack puts pnpm on PATH; the store is cached below instead.
+          package-manager-cache: false
+      # pnpm comes from package.json "packageManager" via corepack (bundled with Node 24).
+      - run: corepack enable && pnpm --version
+      # pnpm-workspace.yaml keeps the store in node_modules/.pnpm-store.
+      - uses: actions/cache@v4
+        with:
+          path: node_modules/.pnpm-store
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: pnpm-store-${{ runner.os }}-
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - name: vitest
+        if: env.FULL == 'true'
+        run: pnpm test
+      - name: build
+        if: env.FULL == 'true'
+        run: pnpm build

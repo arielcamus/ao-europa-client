@@ -56,7 +56,7 @@ describe('decodeGameText: one decoder for every game text file', () => {
 
 // Real data: every pinned text file must decode with no mojibake, on whichever AO_ASSETS tree is set.
 const root = process.env.AO_ASSETS ?? '';
-const MOJIBAKE = /Ã[\u0080-¿]|Â[ -¿]|�/;
+const MOJIBAKE = /Ã[\u0080-¿]|Â[\u00A0-¿]|�/;
 describe.skipIf(!root || !existsSync(join(root, 'init')))('real data files decode cleanly', () => {
   const files = ['init', 'Dat'].flatMap(dir => existsSync(join(root!, dir)) ? readdirSync(join(root!, dir)).filter(f => /\.(dat|ini)$/i.test(f)).map(f => `${dir}/${f}`) : []);
   it('has files to check', () => expect(files.length).toBeGreaterThan(10));

@@ -12,7 +12,7 @@ import { dragPosition } from '../src/window-drag.js';
 import { hotkeySlotAt } from '../src/hotkeys-ui.js';
 
 function harness() {
-  let now = 0;
+  const now = 0;
   const session = new Session({ email: 'a', password: 'b' }, () => {}, () => now);
   const recv = (...packets: ServerPacket[]) => { for (const packet of packets) session.receive(encodeServerFrame(packet)); };
   recv(f.Connected, f.AccountCharacterList, f.Intervals, f.ChangeMap, { ...f.CharacterCreate, speeding: 1 }, f.UserCharIndexInServer, f.Logged);

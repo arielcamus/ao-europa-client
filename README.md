@@ -137,9 +137,25 @@ Requires Node 24 and pnpm 12.21.0. From this repository:
 ```sh
 pnpm install --frozen-lockfile
 pnpm typecheck
+pnpm lint
 pnpm test
 pnpm bot:standin
 ```
+
+### CI and lint
+
+`.github/workflows/ci.yml` runs on every pull request and on pushes to `main`:
+install (frozen lockfile), typecheck, lint, vitest and build, on GitHub-hosted
+Ubuntu. Draft PRs run only typecheck and lint; the job runs in full once the PR
+is ready for review. Only licence-file changes skip it (docs are checked too:
+some tests assert the generated docs are current). CI has no `AO_ASSETS` and no VB6
+server, so tests that need them skip themselves (`skipIf`). Playwright and the
+live-server tests stay local.
+
+`pnpm lint` is ESLint with typescript-eslint `recommended` (no type information,
+about 6 s). There is no formatter on purpose: the code keeps its own dense style.
+CI fails on lint errors only. Rules set to `warn` in `eslint.config.js` are the
+baseline from when lint was added; promote one to `error` once its count is 0.
 
 `bot:standin` builds the workspaces, starts the stand-in on a free loopback port,
 runs the bot, and closes the server when the bot exits. It uses the test account

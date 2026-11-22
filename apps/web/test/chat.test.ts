@@ -163,7 +163,7 @@ describe('chat input rules (HandleChatMsg and ParseUserCommand)', () => {
     const input = new ChatInput();
     expect(input.submit('/CMSG uno').packet).toEqual({ id: C.GuildMessage, message: 'uno', counter: 0 }); // filled by Session.sendChat
     expect(input.submit('/cmsg dos').packet).toEqual({ id: C.GuildMessage, message: 'dos', counter: 0 });
-    let now = 0; const sent: Uint8Array[] = [];
+    const now = 0; const sent: Uint8Array[] = [];
     const session = new Session({ email: 'a', password: 'b' }, b => sent.push(b), () => now);
     for (const p of [f.Connected, f.AccountCharacterList, f.Intervals, f.ChangeMap, { ...f.CharacterCreate, speeding: 1 }, f.UserCharIndexInServer, f.Logged]) session.receive(encodeServerFrame(p));
     expect(session.sendChat(input.submit('/CMSG uno').packet!)).toBe(true);
@@ -225,7 +225,7 @@ describe('chat in a session', () => {
     return session;
   };
   it('puts a bubble on the self character and uses the session clock', () => {
-    let now = 10;
+    const now = 10;
     const session = login([], () => now);
     session.receive(encodeServerFrame({ id: NS.ChatOverHead, chat: 'Hola', charIndex: f.UserCharIndexInServer.charIndex, color: 0xffffff, isSpell: false, x: 50, y: 50, minChatTime: 0, maxChatTime: 0 }));
     expect(session.ui.chat.dialogs.get(f.UserCharIndexInServer.charIndex)).toMatchObject({ text: 'Hola', start: 10, color: [255, 255, 255] });

@@ -113,7 +113,7 @@ import { readFileSync as rf, writeFileSync as wf, existsSync as ex, mkdirSync as
 /** A SECOND non-GM character of the harness's own (warrior), created once and cached in artifacts/playthrough/account2.json. */
 export async function second(c: Ctx): Promise<InstanceType<typeof SessCls>> {
   if (c.shared.p2) return c.shared.p2 as InstanceType<typeof SessCls>;
-  const file = 'artifacts/playthrough/account2.json'; let acct = ex(file) ? JSON.parse(rf(file, 'utf8')) : undefined;
+  const file = 'artifacts/playthrough/account2.json'; const acct = ex(file) ? JSON.parse(rf(file, 'utf8')) : undefined;
   for (let i = 0; i < 4; i++) {
     const s = await SessCls.open();
     try {

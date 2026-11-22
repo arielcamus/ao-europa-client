@@ -9,7 +9,7 @@ import { graphicAnimation, parseGraphics, parseHeads, parseIni } from '../src/as
 const root = process.env.AO_ASSETS;
 const SELF = f.CharacterCreate.charIndex;
 function playing() {
-  let now = 0;
+  const now = 0;
   const s = new Session({ email: 'a', password: 'b' }, () => {}, () => now);
   for (const p of [f.Connected, f.AccountCharacterList, f.Intervals, f.ChangeMap, { ...f.CharacterCreate, speeding: 1, body: 1, head: 1, weapon: 5, shield: 6, helmet: 7 }, f.UserCharIndexInServer, f.Logged]) s.receive(encodeServerFrame(p));
   return s;

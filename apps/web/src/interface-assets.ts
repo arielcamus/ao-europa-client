@@ -68,7 +68,7 @@ async function fetchInterface(original: string): Promise<string> {
     if (!response.ok) throw new Error(`Interfaz original no disponible: ${original} (${response.status})`);
     let bytes: Uint8Array;
     try { bytes = normalizeTrueColorBmp(new Uint8Array(await response.arrayBuffer())); }
-    catch (error) { throw new Error(`${original}: ${String(error)}`); }
+    catch (error) { throw new Error(`${original}: ${String(error)}`, { cause: error }); }
     const url = URL.createObjectURL(new Blob([bytes.buffer as ArrayBuffer], { type: 'image/bmp' }));
     image.src = url;
     try { await image.decode(); }

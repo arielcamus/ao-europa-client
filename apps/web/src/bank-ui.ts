@@ -141,7 +141,7 @@ export class BankUI {
   /** interface_KeyDown: arrows move the selection inside the grid that was last clicked. */
   private arrow(event: KeyboardEvent) {
     const current = this.selected?.side === this.lastSide ? this.selected.slot : 0, max = this.lastSide === 'vault' ? BANK_SLOTS : INVENTORY_SLOTS, columns = 6;
-    let next = current;
+    let next: number;
     if (event.key === 'ArrowRight' && current < max) next = current + 1;
     else if (event.key === 'ArrowLeft' && current > 1) next = current - 1;
     else if (event.key === 'ArrowUp' && current > columns) next = current - columns;

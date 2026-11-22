@@ -64,7 +64,7 @@ step('CMB-01', async c => {
   try {
     c.ok(await ensureEquipped(w, 3487), 'sword equipped');
     c.shared.melee = { strength: (await attributes(w)).strength, damages: [] as number[], texts: [] as string[] }; let lastHp = 1_000_000;
-    let m = w.mark(); attack(w); attack(w); await w.sleep(1600);
+    const m = w.mark(); attack(w); attack(w); await w.sleep(1600);
     c.eq(series(w, m, 'ArmaMov').length, 1, 'two Attack packets in the same instant produce ONE swing (1165 ms interval)');
     let swings = 0, hits = 0; const startSta = w.stats!.stamina, spent: number[] = [];
     while (swings < 14 && w.stats!.stamina >= 10) {
