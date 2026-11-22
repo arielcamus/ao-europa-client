@@ -550,7 +550,8 @@ function gameKey(action: KeyAction): boolean {
       return false;
   }
 }
-const macControl = new MacControlClick(); macControl.install();
+const macControl = new MacControlClick();
+macControl.install();
 window.addEventListener('keydown', event => {
   // HandleKeyUp: Esc while UserSaliendo sends CancelarExit instead of HandleEsc (the windows keep their own Esc via the window stack).
   if (event.key === 'Escape' && session?.cancelExit()) return;

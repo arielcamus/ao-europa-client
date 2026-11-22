@@ -16,6 +16,9 @@ export const CAPTIONS: Record<string, readonly CaptionSpec[]> = {
     {text: "CREAR",box: [16,11,54,20]},
     {text: "CREATE",box: [80,11,64,20]},
   ],
+  "boton-cancelar": [
+    {text: "CANCELAR",box: [33,6,66,14]},
+  ],
   "ventanaprincipal": [
     {text: "AJUSTES",box: [777,7,47,17]},
     {text: "MANUAL",box: [846,7,49,17]},

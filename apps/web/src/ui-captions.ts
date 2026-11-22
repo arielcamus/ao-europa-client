@@ -42,11 +42,15 @@ export function captionGeometry(found: FoundCaption): CaptionText | undefined {
   const stretch = found.width / (ink * size / 100);
   return {
     size,
-    x: found.x - m.actualBoundingBoxLeft * size / 100 * stretch,
+    // actualBoundingBoxLeft is the ink's distance LEFT of the origin (negative when the first glyph starts right of it): origin = ink left + ABL.
+    x: found.x + m.actualBoundingBoxLeft * size / 100 * stretch,
     y: capitals ? found.y + m.actualBoundingBoxAscent * size / 100 : found.y + found.height - m.actualBoundingBoxDescent * size / 100,
     length: m.width * size / 100 * stretch,
   };
 }
+
+/** The drop shadow under the live text, in bitmap px: the baked captions carry a soft one (about half black, one pixel down-right). */
+export const CAPTION_SHADOW = { offset: 0.75, color: 'rgba(0,0,0,.5)' } as const;
 
 const SVG = 'http://www.w3.org/2000/svg';
 interface Captioned { width: number; height: number; captions: FoundCaption[] }
@@ -79,7 +83,7 @@ function overlay(info: Captioned): SVGSVGElement {
   svg.setAttribute('viewBox', `0 0 ${info.width} ${info.height}`); svg.setAttribute('preserveAspectRatio', 'none');
   for (const found of info.captions) {
     const geometry = captionGeometry(found); if (!geometry) continue;
-    for (const [dx, fill, role] of [[1, 'rgba(0,0,0,.85)', 'shadow'], [0, found.color, 'text']] as const) {
+    for (const [dx, fill, role] of [[CAPTION_SHADOW.offset, CAPTION_SHADOW.color, 'shadow'], [0, found.color, 'text']] as const) {
       const text = document.createElementNS(SVG, 'text');
       text.textContent = found.text; text.setAttribute('data-role', role); text.setAttribute('data-caption', found.text);
       text.setAttribute('x', String(geometry.x + dx)); text.setAttribute('y', String(geometry.y + dx));
@@ -123,7 +127,9 @@ function sync(element: Element) {
       Object.assign(svg.style, { position: 'absolute', pointerEvents: 'none', left: `${element.offsetLeft}px`, top: `${element.offsetTop}px`, width: `${element.offsetWidth || info.width}px`, height: `${element.offsetHeight || info.height}px` });
       svg.style.display = element.hidden || getComputedStyle(element).display === 'none' ? 'none' : '';
     } else {
-      if (svg.parentElement !== element) element.append(svg);
+      // Under the element's own controls, as the baked text was: a window's caption must not draw over the buttons placed on it (the
+      // ventanacrearcuenta CANCELAR / CREAR CUENTA under their boton-* pictures read double-struck, #113).
+      if (svg.parentElement !== element) element.prepend(svg);
       const stretched = svg.dataset.state !== undefined || getComputedStyle(element).backgroundSize.startsWith('100%');
       Object.assign(svg.style, { position: 'absolute', pointerEvents: 'none', left: '0', top: '0', width: stretched ? '100%' : `${info.width}px`, height: stretched ? '100%' : `${info.height}px` });
     }
@@ -202,6 +208,15 @@ export function verifyCaptions(image: HTMLImageElement, specs: readonly CaptionS
   });
 }
 
+/** Each caption of a bitmap: the box its letters fill and the live text's geometry (tests and alignment checks). */
+export function captionLayout(image: HTMLImageElement, specs: readonly CaptionSpec[]) {
+  const width = image.naturalWidth, height = image.naturalHeight;
+  const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })!; ctx.drawImage(image, 0, 0);
+  const found = eraseCaptions(ctx.getImageData(0, 0, width, height).data, width, height, specs);
+  return found.map(caption => ({ text: caption.text, font: caption.font, found: { x: caption.x, y: caption.y, width: caption.width, height: caption.height }, geometry: captionGeometry(caption) }));
+}
+
 /** The bitmap with its captions painted out and redrawn, `scale` times larger (nearest-neighbour art, vector text): the caption review sheet. */
 export function renderCaptioned(image: HTMLImageElement, specs: readonly CaptionSpec[], scale = 3): HTMLCanvasElement {
   const width = image.naturalWidth, height = image.naturalHeight;
@@ -212,7 +227,7 @@ export function renderCaptioned(image: HTMLImageElement, specs: readonly Caption
   const g = out.getContext('2d')!; g.imageSmoothingEnabled = false; g.drawImage(base, 0, 0, out.width, out.height);
   for (const caption of found) {
     const geometry = captionGeometry(caption); if (!geometry) continue;
-    for (const [dx, fill] of [[1, 'rgba(0,0,0,.85)'], [0, caption.color]] as const) {
+    for (const [dx, fill] of [[CAPTION_SHADOW.offset, CAPTION_SHADOW.color], [0, caption.color]] as const) {
       g.save(); g.scale(scale, scale); g.font = CAPTION_FONTS[caption.font].replace('100px', `${geometry.size}px`);
       const advance = g.measureText(caption.text).width;
       g.translate(geometry.x + dx, geometry.y + dx); g.scale(advance > 0 ? geometry.length / advance : 1, 1); g.fillStyle = fill; g.fillText(caption.text, 0, 0); g.restore();

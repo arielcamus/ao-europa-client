@@ -146,3 +146,34 @@ test('every element showing a captioned picture has its caption drawn on it, in 
   await expect.poll(async () => (await all()).length).toBeGreaterThan(4);
   expect(await bare()).toEqual([]);
 });
+
+// #113: CANCELAR of the account window is captioned; a window's own captions sit under the buttons placed on it (the baked CANCELAR /
+// CREAR CUENTA of ventanacrearcuenta read double-struck through the boton-* pictures); left-aligned labels of one column share one origin.
+test('account window: CANCELAR is live text, the window caption under each button is hidden, label columns line up', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop-chrome', 'desktop layout');
+  await page.goto('/?captiondebug');
+  await expect(page.locator('#classic')).toHaveAttribute('data-ui-ready', 'true');
+  await page.getByRole('button', { name: 'Crear cuenta', exact: true }).first().click();
+  const win = page.locator('#new-account-window');
+  await expect(win).toBeVisible();
+  const cancel = win.getByRole('button', { name: 'Cancelar' });
+  await expect.poll(() => cancel.evaluate(button => [...button.querySelectorAll('svg.ui-caption')].filter(svg => getComputedStyle(svg).display !== 'none')
+    .flatMap(svg => [...svg.querySelectorAll('text[data-role="text"]')].map(text => text.textContent)))).toEqual(['CANCELAR']);
+  // What is on top at the centre of each button's caption is the button itself, never the window's caption layer.
+  const tops = await win.evaluate(root => [...root.querySelectorAll('button')].filter(b => b.querySelector('svg.ui-caption')).map(button => {
+    const r = button.getBoundingClientRect(), hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+    return { button: button.getAttribute('aria-label'), onTop: !!hit && (hit === button || button.contains(hit)), windowLayerFirst: root.firstElementChild?.matches('svg.ui-caption') ?? false };
+  }));
+  expect(tops.length).toBeGreaterThanOrEqual(2);
+  for (const t of tops) expect(t, t.button ?? '').toMatchObject({ onTop: true, windowLayerFirst: true });
+  await mkdir('artifacts/screenshots', { recursive: true });
+  await win.screenshot({ path: 'artifacts/screenshots/ui-captions-account-window.png' });
+  // ventanaskills: the option labels start at x 26 and 244 in the bitmap; their live text origins agree within one pixel per column.
+  type Row = { text: string; font: string; geometry?: { x: number } };
+  const rows = await page.evaluate(() => (globalThis as unknown as { __aoCaptions: { layout(f: string): Promise<Row[]> } }).__aoCaptions.layout('ventanaskills'));
+  for (const column of [rows.filter(r => r.font === 'sans' && r.geometry!.x < 150), rows.filter(r => r.font === 'sans' && r.geometry!.x >= 150)]) {
+    const xs = column.map(r => r.geometry!.x);
+    expect(column.length).toBeGreaterThan(8);
+    expect(Math.max(...xs) - Math.min(...xs), column.map(r => `${r.text} ${r.geometry!.x.toFixed(2)}`).join(', ')).toBeLessThan(1);
+  }
+});

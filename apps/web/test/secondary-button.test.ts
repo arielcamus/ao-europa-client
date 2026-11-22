@@ -36,6 +36,35 @@ describe('Mac Control as a click modifier, not an attack (issue #103)', () => {
     m.pointerDown({ button: 0, ctrlKey: true });
     expect(m.suppress(repeat)).toBe(true);
   });
+  it('leaving the window or losing focus forgets the drag source: a later Control press attacks (#106)', () => {
+    const m = new MacControlClick(true);
+    m.pointerAt(source as unknown as EventTarget);
+    m.leave(); // pointerout to nowhere
+    expect(m.suppress(press)).toBe(false);
+    m.release();
+    const handlers = new Map<string, (event: unknown) => void>();
+    const target = { addEventListener: (type: string, handler: (event: unknown) => void) => handlers.set(type, handler) };
+    const wired = new MacControlClick(true);
+    wired.install(target as unknown as Window);
+    handlers.get('pointermove')!({ target: source });
+    handlers.get('pointerout')!({ relatedTarget: world }); // moving between elements inside the page keeps it
+    expect(wired.suppress(press)).toBe(true);
+    handlers.get('keyup')!({ code: 'ControlLeft' });
+    handlers.get('pointerout')!({ relatedTarget: null });
+    expect(wired.suppress(press)).toBe(false);
+    handlers.get('pointermove')!({ target: source });
+    handlers.get('blur')!({});
+    expect(wired.suppress(press)).toBe(false);
+  });
+  it('a claim whose Control keyup was swallowed (Mac context menu, no blur) does not eat the next press\'s attack (#106)', () => {
+    const m = new MacControlClick(true);
+    m.pointerAt(world as unknown as EventTarget);
+    m.suppress(press); m.pointerDown({ button: 0, ctrlKey: true }); // Control+click: the menu opens and keeps the keyup
+    expect(m.suppress(repeat)).toBe(true);
+    expect(m.suppress(press)).toBe(false); // the next real press attacks at once
+    m.pointerAt(source as unknown as EventTarget);
+    expect(m.suppress(press)).toBe(true); // and a press over the inventory still claims
+  });
   it('changes nothing off a Mac or for other keys', () => {
     const m = new MacControlClick(false);
     m.pointerAt(source as unknown as EventTarget); m.pointerDown({ button: 0, ctrlKey: true });
