@@ -149,16 +149,34 @@ export const ZOOM_LEVELS: readonly ZoomLevel[] = ['cerca', 'medio', 'lejos'];
 /** frmMain's world is 736x608 (23x19 tiles of 32 px). */
 export const VIEW_W = 736, VIEW_H = 608;
 /**
- * CSS scale of the 736x608 world for a world area. `cerca` shows ~11 tiles on a phone's short side (15 on a tablet) and never
- * leaves black margins; `medio` shows ~15 (19); `lejos` is the whole classic view.
+ * Fewest whole tiles each zoom level keeps on screen. Portrait counts tiles ACROSS (the narrow side), landscape counts tiles
+ * DOWN and across: `cerca` in landscape is the classic server view range, 17x13 tiles (RANGO_VISION 8/6 around the player).
  */
-export function mobileZoom(areaW: number, areaH: number, level: ZoomLevel): number {
+export const ZOOM_TILES: Readonly<Record<'portrait' | 'landscape', Record<ZoomLevel, { w: number; h: number }>>> = {
+  portrait: { cerca: { w: 11, h: 0 }, medio: { w: 15, h: 0 }, lejos: { w: 23, h: 19 } },
+  landscape: { cerca: { w: 17, h: 13 }, medio: { w: 21, h: 17 }, lejos: { w: 23, h: 19 } },
+};
+/**
+ * CSS scale of the 736x608 world for a world area of areaW x areaH CSS px on a screen with `dpr` device pixels per CSS px.
+ * The largest scale that still shows the level's tiles (ZOOM_TILES; tablets, short side >= 600, add 4 tiles each way), snapped
+ * DOWN to a crisp one: a whole number of device pixels per art pixel (zoom * dpr is an integer), so pixelated scaling never
+ * doubles one art pixel and not its neighbour. When the snap would cost more than 20% of the size (a dpr-1 screen, or `lejos`
+ * on a phone) the exact fit is used instead: readable beats crisp.
+ */
+export function mobileZoom(areaW: number, areaH: number, level: ZoomLevel, dpr = 1): number {
   if (!(areaW > 0 && areaH > 0)) return 1;
-  const short = Math.min(areaW, areaH), tablet = short >= 600;
-  const contain = Math.min(areaW / VIEW_W, areaH / VIEW_H), cover = Math.max(areaW / VIEW_W, areaH / VIEW_H);
-  if (level === 'lejos') return contain;
-  if (level === 'medio') return Math.max(short / ((tablet ? 19 : 15) * 32), contain);
-  return Math.max(short / ((tablet ? 15 : 11) * 32), cover);
+  const orientation = areaW > areaH ? 'landscape' : 'portrait', extra = Math.min(areaW, areaH) >= 600 && level !== 'lejos' ? 4 : 0;
+  const want = ZOOM_TILES[orientation][level];
+  const fits = [areaW / ((want.w + extra) * 32)];
+  if (want.h) fits.push(areaH / ((want.h + extra) * 32));
+  const raw = Math.min(...fits);
+  return crispZoom(raw, dpr);
+}
+/** `raw` snapped down to k/dpr (k whole), unless that loses more than 20%. */
+export function crispZoom(raw: number, dpr: number): number {
+  const ratio = dpr > 0 && Number.isFinite(dpr) ? dpr : 1;
+  const snapped = Math.floor(raw * ratio + 1e-6) / ratio;
+  return snapped > 0 && snapped >= raw * 0.8 ? snapped : raw;
 }
 
 /** Dat/npcs.dat [NPCn]: attackable creatures are the targets of a plain tap; merchants, bankers and priests only get a LeftClick. */

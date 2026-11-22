@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { Heading } from '@ao/protocol';
 import {
-  bestDamage, bestHeal, chooseAction, clickTileFor, cheapestDamageCost, defaultPrefer, headingTowards, hostility, joystickHeading, mobileZoom,
+  bestDamage, bestHeal, chooseAction, clickTileFor, cheapestDamageCost, defaultPrefer, headingTowards, hostility, joystickHeading, mobileZoom, crispZoom,
   shouldShowMeditate, spellFromDat,
 } from '../src/mobile-rules.js';
 import type { ActionContext, MobileSpell } from '../src/mobile-rules.js';
@@ -126,25 +126,41 @@ describe('joystick and facing', () => {
 });
 
 describe('mobileZoom', () => {
-  it('portrait phone, cerca: about 11 tiles across, never black margins', () => {
-    const z = mobileZoom(390, 614, 'cerca');
-    expect(390 / (32 * z)).toBeCloseTo(11, 0);
-    expect(736 * z).toBeGreaterThanOrEqual(390); expect(608 * z).toBeGreaterThanOrEqual(614);
+  const tiles = (area: number, z: number) => area / (32 * z);
+  const crisp = (z: number, dpr: number) => Math.abs(z * dpr - Math.round(z * dpr)) < 1e-9;
+  it('iPhone portrait (390 wide, dpr 3), cerca: at least 11 tiles across, 1x so it is crisp', () => {
+    const z = mobileZoom(390, 438, 'cerca', 3);
+    expect(z).toBe(1);
+    expect(tiles(390, z)).toBeGreaterThanOrEqual(11);
   });
-  it('landscape phone, cerca: the cover clamp wins', () => {
-    const z = mobileZoom(844, 390, 'cerca');
-    expect(736 * z).toBeGreaterThanOrEqual(844 - 0.01);
-    expect(390 / (32 * z)).toBeLessThan(11.01);
+  it('iPhone landscape (750x342 with the bars), cerca: the whole 17x13 classic range, 2 device pixels per art pixel', () => {
+    const z = mobileZoom(750, 342, 'cerca', 3);
+    expect(z).toBeCloseTo(2 / 3, 9);
+    expect(tiles(342, z)).toBeGreaterThanOrEqual(13); expect(tiles(750, z)).toBeGreaterThanOrEqual(17);
   });
-  it('tablet: 15 tiles on the short side', () => {
-    const z = mobileZoom(820, 920, 'cerca');
-    expect(820 / (32 * z)).toBeCloseTo(15, 0);
+  it('Android with a fractional ratio (Pixel 5, dpr 2.75): still a whole number of device pixels per art pixel', () => {
+    const z = mobileZoom(393, 500, 'cerca', 2.75);
+    expect(crisp(z, 2.75)).toBe(true);
+    expect(tiles(393, z)).toBeGreaterThanOrEqual(11); expect(tiles(393, z)).toBeLessThan(13);
   });
-  it('lejos is the whole classic view; medio sits between', () => {
-    const lejos = mobileZoom(390, 614, 'lejos'), medio = mobileZoom(390, 614, 'medio'), cerca = mobileZoom(390, 614, 'cerca');
-    expect(lejos).toBeCloseTo(390 / 736, 5);
-    expect(medio).toBeLessThan(cerca); expect(medio).toBeGreaterThanOrEqual(lejos);
+  it('a snap that would shrink the world more than 20% keeps the exact fit (readable beats crisp)', () => {
+    expect(crispZoom(0.5625, 3)).toBe(0.5625); // 1/3 would be 59% of it
+    expect(crispZoom(1.108, 3)).toBe(1);
+    expect(crispZoom(1.3, 1)).toBe(1.3); // dpr 1: 1x would lose 23%
   });
+  it('tablet: four more tiles each way', () => {
+    const z = mobileZoom(820, 920, 'cerca', 2);
+    expect(tiles(820, z)).toBeGreaterThanOrEqual(15);
+    expect(crisp(z, 2)).toBe(true);
+  });
+  it('medio shows more than cerca, lejos the whole 23x19 view', () => {
+    for (const [w, h] of [[390, 438], [750, 342]] as const) {
+      const cerca = mobileZoom(w, h, 'cerca', 3), medio = mobileZoom(w, h, 'medio', 3), lejos = mobileZoom(w, h, 'lejos', 3);
+      expect(medio).toBeLessThanOrEqual(cerca); expect(lejos).toBeLessThanOrEqual(medio);
+      expect(736 * lejos).toBeLessThanOrEqual(w + 0.01); expect(608 * lejos).toBeLessThanOrEqual(h + 0.01);
+    }
+  });
+  it('an empty area (not laid out yet) is 1x', () => { expect(mobileZoom(0, 0, 'cerca', 3)).toBe(1); });
 });
 
 describe('hostility', () => {

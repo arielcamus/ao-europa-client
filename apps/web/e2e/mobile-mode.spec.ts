@@ -18,16 +18,46 @@ async function enterWorld(page: Page) {
 }
 const position = async (page: Page) => (await page.locator('#position').textContent()) ?? '';
 
+/**
+ * 22 Nov (Ariel's iPhone): every control inside the visible area, the world under the whole screen, no page scroll, and the
+ * overlays taking only their own touches (the world's centre and its edges between the overlays still reach the world).
+ */
+async function expectFits(page: Page) {
+  const fit = await page.evaluate(() => {
+    const W = innerWidth, H = innerHeight, out: string[] = [];
+    const shown = (n: Element) => { const r = n.getBoundingClientRect(), s = getComputedStyle(n); return !n.closest('[hidden]') && s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0; };
+    for (const n of document.querySelectorAll('#mobile-top .m-who, #m-chat, #m-zoom, #m-menu, #mobile-bars .m-bar, #mobile-joystick, #mobile-actions .m-btn, #mobile-console')) {
+      if (!shown(n)) continue;
+      const r = n.getBoundingClientRect();
+      if (r.left < -0.5 || r.top < -0.5 || r.right > W + 0.5 || r.bottom > H + 0.5) out.push(`${n.id || n.className} outside`);
+    }
+    for (const n of document.querySelectorAll('#mobile-console #console > *')) if (n.getBoundingClientRect().right > W + 0.5) out.push('console line past the edge');
+    const page = document.scrollingElement!;
+    if (page.scrollHeight > H + 1 || page.scrollWidth > W + 1) out.push('page scrolls');
+    const world = document.getElementById('mobile-world')!.getBoundingClientRect();
+    if (Math.abs(world.width - W) > 1 || Math.abs(world.height - H) > 1) out.push(`world area ${world.width}x${world.height} is not the screen`);
+    const joy = document.getElementById('mobile-joystick')!.getBoundingClientRect();
+    const at = (x: number, y: number) => document.elementFromPoint(x, y);
+    if (!at(joy.left + joy.width / 2, joy.top + joy.height / 2)?.closest('#mobile-joystick')) out.push('joystick does not get its touches');
+    if (!at(W / 2, H / 2)?.closest('#viewport')) out.push('the centre is not the world');
+    if (!at(W / 2, H - 20)?.closest('#viewport, #mobile-world')) out.push('the bottom between the overlays is not the world');
+    return out;
+  });
+  expect(fit).toEqual([]);
+  expect(await page.locator('meta[name="viewport"]').getAttribute('content')).toContain('maximum-scale=1');
+}
+
 test('portrait phone: zoomed world, joystick, drawer, classic HUD hidden', async ({ page }) => {
   await mkdir('artifacts/screenshots', { recursive: true });
   await enterWorld(page);
   expect(await page.locator('#mobile-world #viewport').count()).toBe(1);
   await expect(page.locator('#inventory-panel')).toBeHidden();
-  // About 11 tiles across a 390 px phone: 736 px of world (23 tiles) drawn ~2.2x wider than the screen... per tile ~35 px.
+  // At least 11 tiles across a 390 px phone at a crisp scale: 1x at dpr 2 (12.2 tiles).
   const world = (await page.locator('#viewport').boundingBox())!;
   const tile = world.width / 23;
-  expect(tile).toBeGreaterThan((390 / 11) * 0.85);
-  expect(tile).toBeLessThan((390 / 11) * 1.15);
+  expect(390 / tile).toBeGreaterThanOrEqual(11);
+  expect(390 / tile).toBeLessThan(13);
+  await expectFits(page);
   // The player is centred in the world area (above the control deck).
   const area = (await page.locator('#mobile-world').boundingBox())!;
   expect(Math.abs(world.x + world.width / 2 - (area.x + area.width / 2))).toBeLessThan(2);
@@ -87,9 +117,11 @@ test('landscape phone: the controls float over the world', async ({ page }) => {
   const area = (await page.locator('#mobile-world').boundingBox())!;
   expect(area.height).toBeCloseTo(390, 0);
   expect(await page.locator('#mobile-deck').evaluate(node => getComputedStyle(node).backgroundImage)).toBe('none');
-  // Cover: no black margins, about 10-11 tiles high.
+  // The classic 17x13 range fits: at least 13 tiles high and 17 across.
   const world = (await page.locator('#viewport').boundingBox())!;
-  expect(world.width).toBeGreaterThanOrEqual(843);
-  expect(390 / (world.width / 23)).toBeLessThan(11.5);
+  const tile = world.width / 23;
+  expect(390 / tile).toBeGreaterThanOrEqual(13);
+  expect(Math.min(844, world.width) / tile).toBeGreaterThanOrEqual(17);
+  await expectFits(page);
   await page.screenshot({ path: 'artifacts/screenshots/mobile-mode-landscape.png' });
 });

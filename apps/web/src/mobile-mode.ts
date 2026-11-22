@@ -74,8 +74,30 @@ export function initialLayout(): Layout {
   if (asked === 'mobile' || asked === 'classic') { storage.set('ao.layout', asked); return asked; }
   const saved = storage.get('ao.layout');
   if (saved === 'mobile' || saved === 'classic') return saved;
-  const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
-  return coarse && Math.min(screen.width, screen.height) < 1100 ? 'mobile' : 'classic';
+  return touchScreen() && Math.min(screen.width, screen.height) < 1100 ? 'mobile' : 'classic';
+}
+/** A phone or tablet: a coarse pointer (iPhone Safari, Android Chrome), or touch points without hover (iPadOS with a trackpad, some Android builds). */
+export function touchScreen(): boolean {
+  const media = (query: string) => typeof matchMedia === 'function' && matchMedia(query).matches;
+  return media('(pointer: coarse)') || ((navigator.maxTouchPoints ?? 0) > 0 && media('(hover: none)'));
+}
+
+/*
+ * iOS Safari zooms the page in when an input under 16 px gets focus (the e-mail and password boxes of the classic connect screen)
+ * and never zooms back out, so the world opened at ~1.5x with the bars and the controls past the screen's edges (Ariel's iPhone,
+ * 22 Nov). maximum-scale=1 stops that auto-zoom (iOS still allows a deliberate pinch) and re-applying it snaps an existing zoom
+ * back to 1. Only while the mobile layout is chosen: desktop and the classic touch layout keep the page's own meta.
+ */
+const viewportMeta = () => document.querySelector<HTMLMetaElement>('meta[name="viewport"]');
+const CLASSIC_VIEWPORT = viewportMeta()?.content ?? 'width=device-width, initial-scale=1';
+const MOBILE_VIEWPORT = 'width=device-width, initial-scale=1, maximum-scale=1';
+export function lockViewport(on: boolean) {
+  const meta = viewportMeta();
+  if (!meta) return;
+  // Already zoomed (a pinch, or the auto-zoom before the lock): iOS re-reads the meta only when it changes, so flip between two
+  // equivalent locked forms to force it.
+  if (on && (globalThis.visualViewport?.scale ?? 1) > 1.01) meta.content = meta.content === MOBILE_VIEWPORT ? `${MOBILE_VIEWPORT}, minimum-scale=1` : MOBILE_VIEWPORT;
+  else if (!on || !meta.content.startsWith(MOBILE_VIEWPORT)) meta.content = on ? MOBILE_VIEWPORT : CLASSIC_VIEWPORT;
 }
 
 export class MobileMode {
@@ -100,6 +122,7 @@ export class MobileMode {
   private readonly manaPotion = button('m-potion-mana', 'Poción de maná');
   private readonly drawerButton = button('m-drawer-btn', 'Hechizos e inventario', '🎒');
   private readonly top = el('div', { id: 'mobile-top' });
+  private readonly bars = el('div', { id: 'mobile-bars' });
   private readonly drawer = el('div', { id: 'mobile-drawer', hidden: true });
   private readonly picker = el('div', { id: 'mobile-picker', hidden: true });
   private readonly ring = el('div', { id: 'm-target-ring', hidden: true });
@@ -120,7 +143,12 @@ export class MobileMode {
 
   constructor(private readonly deps: MobileDeps) {
     this.build();
-    for (const name of ['resize', 'orientationchange']) window.addEventListener(name, () => { if (this.active) requestAnimationFrame(() => this.applyZoom()); });
+    const refit = () => { if (this.active) requestAnimationFrame(() => this.applyZoom()); };
+    for (const name of ['resize', 'orientationchange']) window.addEventListener(name, refit);
+    globalThis.visualViewport?.addEventListener('resize', refit);
+    // iOS ignores touch-action for pinch on some builds: its own gesture events are the reliable stop. Only in the mobile world.
+    for (const name of ['gesturestart', 'gesturechange']) document.addEventListener(name, event => { if (this.active) event.preventDefault(); }, { passive: false });
+    lockViewport(this.layout === 'mobile');
     const release = () => this.releaseJoystick();
     window.addEventListener('blur', release);
     document.addEventListener('visibilitychange', () => { if (document.hidden) release(); });
@@ -149,6 +177,7 @@ export class MobileMode {
   setLayout(layout: Layout) {
     this.layout = layout; storage.set('ao.layout', layout);
     document.documentElement.classList.toggle('mobile-mode', layout === 'mobile');
+    lockViewport(layout === 'mobile');
   }
 
   /** Every ~100 ms from main.ts updateUi: enter/leave the layout, refresh the HUD. */
@@ -156,8 +185,7 @@ export class MobileMode {
     document.documentElement.classList.toggle('mobile-mode', this.layout === 'mobile');
     const want = this.layout === 'mobile' && playing && !!session;
     if (want !== this.active) { if (want) this.enter(); else this.leave(); }
-    const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
-    this.toggle.hidden = !(playing && this.layout === 'classic' && coarse);
+    this.toggle.hidden = !(playing && this.layout === 'classic' && touchScreen());
     if (!this.active || !session) return;
     this.refreshHud(session);
     if (!this.drawer.hidden && session.ui.revision !== this.drawerRevision) this.renderDrawer(session);
@@ -210,6 +238,9 @@ export class MobileMode {
 
   private enter() {
     this.active = true;
+    // The connect screen's focused input is what made iOS zoom in: drop the focus and snap the page back to 1x.
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+    lockViewport(true); scrollTo(0, 0);
     document.documentElement.classList.add('mobile-world');
     const take = (id: string, into: HTMLElement) => {
       const node = document.getElementById(id);
@@ -232,14 +263,24 @@ export class MobileMode {
     window.dispatchEvent(new Event('resize')); // classic-layout refits the 1024x768 window
   }
   private applyZoom() {
-    const rect = this.world.getBoundingClientRect();
-    this.root.style.setProperty('--mobile-zoom', String(mobileZoom(rect.width, rect.height, this.zoom)));
+    const rect = this.world.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+    const zoom = mobileZoom(rect.width, rect.height, this.zoom, dpr);
+    // Centred (the player is the middle of the 736x608 view) on a whole device pixel, so the crisp scale stays crisp.
+    const snap = (value: number) => Math.round(value * dpr) / dpr;
+    const style = this.root.style;
+    style.setProperty('--mobile-zoom', String(zoom));
+    style.setProperty('--mobile-world-x', `${snap((rect.width - VIEW_W * zoom) / 2)}px`);
+    style.setProperty('--mobile-world-y', `${snap((rect.height - VIEW_H * zoom) / 2)}px`);
+    // Landscape: the black margins beside the world hold the bars and the joystick (never narrower than a thumb's reach).
+    style.setProperty('--mobile-side', `${Math.max(150, Math.floor((rect.width - VIEW_W * zoom) / 2))}px`);
+    this.root.dataset.zoom = zoom.toFixed(4);
+    this.root.dataset.tiles = `${(rect.width / (32 * zoom)).toFixed(1)}x${(rect.height / (32 * zoom)).toFixed(1)}`;
     // Classic windows (bank, shop, quests...) stay children of the 1024x768 box, centred over the screen at a readable scale.
     const scale = Math.max(0.5, Math.min(1.5, innerWidth / 560, innerHeight / 600));
-    const style = document.documentElement.style;
-    style.setProperty('--mobile-window-scale', String(scale));
-    style.setProperty('--mobile-window-left', `${(innerWidth - 1024 * scale) / 2}px`);
-    style.setProperty('--mobile-window-top', `${(innerHeight - 768 * scale) / 2}px`);
+    const page = document.documentElement.style;
+    page.setProperty('--mobile-window-scale', String(scale));
+    page.setProperty('--mobile-window-left', `${(innerWidth - 1024 * scale) / 2}px`);
+    page.setProperty('--mobile-window-top', `${(innerHeight - 768 * scale) / 2}px`);
     this.top.querySelector('#m-zoom')!.textContent = `🔍 ${this.zoom}`;
   }
 
@@ -254,17 +295,17 @@ export class MobileMode {
     deck.append(joyZone, actions);
     this.top.innerHTML = `
       <div class="m-who"><span id="m-name"></span> <span id="m-level"></span></div>
-      <div class="m-bars">
-        <div class="m-bar m-hp"><i></i><span id="m-hp-text"></span></div>
-        <div class="m-bar m-mana"><i></i><span id="m-mana-text"></span></div>
-      </div>
       <div class="m-where"><span id="m-map"></span> <span id="m-coords"></span></div>
       <div class="m-top-buttons">
         <button type="button" class="m-btn m-small" id="m-chat" aria-label="Chat">💬</button>
         <button type="button" class="m-btn m-small" id="m-zoom" aria-label="Zoom"></button>
         <button type="button" class="m-btn m-small" id="m-menu" aria-label="Menú">☰</button>
       </div>`;
-    root.append(world, this.top, this.consoleBox, this.chatBox, deck, this.drawer, this.picker);
+    this.bars.innerHTML = `
+      <div class="m-bar m-hp"><i></i><span id="m-hp-text"></span></div>
+      <div class="m-bar m-mana"><i></i><span id="m-mana-text"></span></div>
+      <div class="m-bar m-sta"><i></i><span id="m-sta-text"></span></div>`;
+    root.append(world, this.top, this.consoleBox, this.chatBox, deck, this.bars, this.drawer, this.picker);
     document.body.append(root, this.toggle);
     this.toggle.hidden = true;
     this.toggle.onclick = () => this.setLayout('mobile');
@@ -480,13 +521,14 @@ export class MobileMode {
     }).catch(() => undefined);
   }
   private refreshHud(session: Session) {
-    const stats = session.ui.stats, q = (id: string) => this.top.querySelector<HTMLElement>(`#${id}`)!;
+    const stats = session.ui.stats, q = (id: string) => this.root.querySelector<HTMLElement>(`#${id}`)!;
     const hp = stats.hp ?? 0, maxHp = stats.maxHp ?? 0, mana = stats.mana ?? 0, maxMana = stats.maxMana ?? 0;
     q('m-name').textContent = session.self?.name ?? ''; q('m-level').textContent = stats.level ? `Nv ${stats.level}` : '';
-    q('m-hp-text').textContent = `${hp}/${maxHp}`; q('m-mana-text').textContent = `${mana}/${maxMana}`;
-    this.top.querySelector<HTMLElement>('.m-hp i')!.style.width = `${maxHp ? (100 * hp) / maxHp : 0}%`;
-    this.top.querySelector<HTMLElement>('.m-mana i')!.style.width = `${maxMana ? (100 * mana) / maxMana : 0}%`;
-    this.top.querySelector<HTMLElement>('.m-mana')!.hidden = maxMana <= 0;
+    const sta = stats.stamina ?? 0, maxSta = stats.maxStamina ?? 0;
+    q('m-hp-text').textContent = `${hp}/${maxHp}`; q('m-mana-text').textContent = `${mana}/${maxMana}`; q('m-sta-text').textContent = `${sta}/${maxSta}`;
+    const fill = (kind: string, value: number, max: number) => { this.bars.querySelector<HTMLElement>(`.${kind} i`)!.style.width = `${max ? Math.min(100, (100 * value) / max) : 0}%`; };
+    fill('m-hp', hp, maxHp); fill('m-mana', mana, maxMana); fill('m-sta', sta, maxSta);
+    this.bars.querySelector<HTMLElement>('.m-mana')!.hidden = maxMana <= 0;
     q('m-map').textContent = this.deps.renderer.mapName;
     q('m-coords').textContent = session.position ? `${session.map} · ${session.position.x},${session.position.y}` : '';
 
