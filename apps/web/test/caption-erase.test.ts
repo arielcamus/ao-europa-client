@@ -35,6 +35,14 @@ describe('painting out baked captions', () => {
     expect(found).toMatchObject({ x: 20, width: 3, color: 'rgb(20,20,20)' });
     expect(lum(parchment.px, parchment.w, 21, 10)).toBeGreaterThan(180);
   });
+  it('reports the height of the capitals alone when an accent floats above them (CONTRASEÑA beside EMAIL)', () => {
+    const plain = face([[10, 8, 2, 8], [14, 8, 6, 2], [14, 14, 6, 2]]);
+    expect(eraseCaptions(plain.px, plain.w, plain.h, [{ text: 'AB', box: [5, 3, 50, 16] }])[0]!.capHeight).toBeUndefined();
+    // Two capitals 8 px tall on the line, a 2 px tilde detached 2 px above one of them: the box is 12 tall, the capitals 8.
+    const accented = face([[10, 8, 2, 8], [14, 8, 6, 2], [14, 14, 6, 2], [24, 8, 2, 8], [24, 4, 5, 2]]);
+    const [found] = eraseCaptions(accented.px, accented.w, accented.h, [{ text: 'AÑ', box: [5, 1, 50, 18] }]);
+    expect(found).toMatchObject({ y: 4, height: 12, capHeight: 8 });
+  });
   it('leaves a box without letters untouched', () => {
     const { w, h, px } = face([]), copy = Uint8ClampedArray.from(px);
     expect(eraseCaptions(px, w, h, [{ text: 'X', box: [0, 0, 60, 20] }])[0]!.pixels).toBe(0);

@@ -40,13 +40,16 @@ export function captionGeometry(found: FoundCaption): CaptionText | undefined {
   // Capitals: as tall as the original letters, stretched to their width. Mixed case (option rows, labels): sized to the original's width, so the
   // lines of one window keep one size whatever their accents and descenders, and sat on the same bottom edge (no taller than 1.25x).
   const capitals = found.font === 'serif';
-  const byHeight = 100 * found.height / tall, size = capitals ? byHeight : Math.min(100 * found.width / ink, 1.25 * byHeight);
+  // CONTRASEÑA next to EMAIL: the baked tilde is shorter than Cinzel's, so sizing the whole word to the box made its capitals taller than EMAIL's.
+  // When a mark floats above the line, size the capitals alone (the word without its marks) to the capitals found and stand them on the same line.
+  const bare = found.capHeight !== undefined && capitals ? measurer.measureText(found.text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')) : undefined;
+  const byHeight = bare ? 100 * found.capHeight! / (bare.actualBoundingBoxAscent + bare.actualBoundingBoxDescent) : 100 * found.height / tall, size = capitals ? byHeight : Math.min(100 * found.width / ink, 1.25 * byHeight);
   const stretch = found.width / (ink * size / 100);
   return {
     size,
     // actualBoundingBoxLeft is the ink's distance LEFT of the origin (negative when the first glyph starts right of it): origin = ink left + ABL.
     x: found.x + m.actualBoundingBoxLeft * size / 100 * stretch,
-    y: capitals ? found.y + m.actualBoundingBoxAscent * size / 100 : found.y + found.height - m.actualBoundingBoxDescent * size / 100,
+    y: bare ? found.y + found.height - bare.actualBoundingBoxDescent * size / 100 : capitals ? found.y + m.actualBoundingBoxAscent * size / 100 : found.y + found.height - m.actualBoundingBoxDescent * size / 100,
     length: m.width * size / 100 * stretch,
   };
 }
@@ -108,7 +111,11 @@ const pictures = (element: Element): [state: string, url: string][] => {
   if (element instanceof HTMLImageElement) return [['', element.getAttribute('src') ?? '']];
   const style = (element as HTMLElement).style; if (!style) return [];
   const states = (['normal', 'over', 'off'] as const).map(state => [state, cssUrl(style.getPropertyValue(`--${state}`))] as [string, string]).filter(([, url]) => url);
-  return states.length ? states : [['', cssUrl(style.backgroundImage ?? '')]];
+  // The login INGRESAR button (#connect) has only --over / --off: its default picture is its plain inline background. Without it as the
+  // 'normal' state the over / off captions exist but the resting button, whose letters were painted out, never got its caption (22 Nov).
+  const resting = cssUrl(style.backgroundImage ?? '');
+  if (states.length && resting && !states.some(([state]) => state === 'normal')) states.unshift(['normal', resting]);
+  return states.length ? states : [['', resting]];
 };
 const OWNER = new WeakMap<Element, { key: string; svgs: SVGSVGElement[] }>();
 
