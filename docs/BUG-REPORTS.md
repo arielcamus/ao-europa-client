@@ -17,11 +17,12 @@ window closes after 2.5 s. Escape closes it like every window (`window-stack.ts`
 
 It is drawn on FrmGmAyuda's picture, the classic "MENSAJE AL STAFF" window (Ariel, 22 Nov: the first version was a plain white form; he
 sent that window as the reference). `es_ventanagm` (470x434) as `ui-captions.ts` hands it out, every baked caption painted out, then a canvas
-copy of our own (`reporterArt`) with the last two reason circles and the CANCELAR / ENVIAR frames covered by the plain texture beside them.
-Over it: "REPORTAR UN BUG" in Cinzel after the message icon, "¿QUÉ PASÓ?" on the scroll banner, the intro (where a status or error replaces
-it), the message in the black box (FrmGmAyuda's `txtMotivo` position); on the right the **category** on the first five reason rows
-(`radio-on`), "Incluir captura" (`check-amarillo`) with the thumbnail, and "¿Qué esperabas? (opcional)"; at the bottom "Escribir a un GM"
-(a text button drawn like the bitmap ones) and the game's CANCELAR / ENVIAR pictures. The window is opaque (FrmGmAyuda is 240/255: the world
+copy of our own (`reporterArt`) with the seven reason circles and the CANCELAR / ENVIAR frames covered by the plain texture beside them.
+Over it: "REPORTAR UN BUG" in Cinzel after the message icon, "¿QUÉ PASÓ?" on the scroll banner, and under it the message box, as large as
+the left panel allows (182x224: the GM form's black box widened and raised to the banner, over where that form has its intro). The right
+panel, its reason circles covered, says what is sent (a status or error replaces that line), then "Incluir captura de pantalla"
+(`check-amarillo`) with the thumbnail and "¿Qué esperabas? (opcional)". At the bottom "Escribir a un GM" (a text button drawn like the
+bitmap ones) and the game's CANCELAR / ENVIAR pictures. The window is opaque (FrmGmAyuda is 240/255: the world
 showed through the message box). If the picture cannot load, the window stays black with a plain frame.
 
 Code: `apps/web/src/bug-report-ui.ts` (window), `bug-report-data.ts` (rings, redaction, payload), `bug-report-capture.ts`
@@ -50,7 +51,6 @@ overrides it for one page (the Playwright suite runs with `AO_BETA=0` so the lay
 | Part | Contents |
 |---|---|
 | Text | what happened, what was expected (≤ 4000 / 2000 characters) |
-| Category | optional, one of `Error o cuelgue`, `Gráficos o sonido`, `Movimiento o mapa`, `Combate u objetos`, `Otro` (`BUG_CATEGORIES`, the same list in `bug-report-data.ts` and `tools/bug-reports.mjs`; the server drops anything else). A "Categoría" row in the issue. |
 | Screenshot | the game canvas only (the world view; frmMain's HUD is HTML and not in the picture), taken when the window opens, ≤ 1280 px wide, PNG or JPEG under 900 KB. The player can untick it. |
 | Character | name, level, class, map, map name, x/y, HP, mana, dead, privilege level |
 | Client | commit and branch of the server's checkout, build time, asset version, wire profile, server profile, mode (classic / standin), page path |

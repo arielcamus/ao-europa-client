@@ -9,8 +9,8 @@
 import './bug-report.css';
 import { VbWindow } from './vb-window.js';
 import { loadInterface } from './interface-assets.js';
-import { BUG_CATEGORIES, buildBugReport } from './bug-report-data.js';
-import type { BugCategory, ReportInput, ScreenshotInfo } from './bug-report-data.js';
+import { buildBugReport } from './bug-report-data.js';
+import type { ReportInput, ScreenshotInfo } from './bug-report-data.js';
 import type { Box } from './vb-window.js';
 
 export type ReportContext = Omit<ReportInput, 'sessionId' | 'text' | 'expected' | 'screenshot'>;
@@ -41,7 +41,8 @@ export class BugReportUI {
     if (this.win?.isOpen) { this.win.focus(); return; }
     const screenshot = this.deps.capture();
     // FrmGmAyuda's picture (es_ventanagm, 470x434: "MENSAJE AL STAFF", the LEE ATENTAMENTE banner, the black message box on the left, the
-    // reason list on the right, CANCELAR / ENVIAR), its baked captions painted out (reporterArt); our words drawn over it in the game's fonts.
+    // reason list on the right, CANCELAR / ENVIAR), its baked captions and reason circles painted out (reporterArt); our words drawn over it
+    // in the game's fonts.
     const win = new VbWindow(this.parent, { id: 'bug-report-window', size: [ART_WIDTH, ART_HEIGHT], title: 'Reportar un bug', onClose: () => { if (this.win === win) this.win = undefined; art?.release(); } });
     this.win = win;
     let art: { release(): void } | undefined;
@@ -53,31 +54,20 @@ export class BugReportUI {
     win.label('Reportar un bug', [157, 28, 260, 30], 'bug-report-title'); // after the message icon, in place of "MENSAJE AL STAFF"
     win.closeButton(t(6585, 0, 420, 420)).id = 'bug-report-close';
     win.label('¿Qué pasó?', [62, 80, 133, 20], 'bug-report-banner'); // the scroll banner (LEE ATENTAMENTE)
-    // Left panel: the status replaces the intro while it has something to say (CSS: .bug-report-status:not(:empty) + .bug-report-intro).
-    const status = win.label('', [39, 122, 166, 70], 'bug-report-status'); status.id = 'bug-report-status'; status.setAttribute('role', 'status');
-    win.label('Contanos qué estabas haciendo y qué salió mal. Se envían tu personaje, una captura y los últimos mensajes; nunca tu email ni tu contraseña.',
-      [39, 122, 166, 70], 'bug-report-intro');
-    const text = win.input(t(720, 3000, 2415, 2175), { multiline: true, maxLength: 4000 }) as HTMLTextAreaElement; // FrmGmAyuda's txtMotivo
-    text.id = 'bug-report-text'; text.placeholder = 'Escribí acá…'; text.classList.add('bug-report-field');
-    // Right panel: the categories on the first five of the seven reason rows (optReason), then the screenshot and what was expected.
-    const radios = BUG_CATEGORIES.map((category, i) => {
-      const top = REASON_TOPS[i]!;
-      const radio = document.createElement('button'); radio.type = 'button'; radio.className = 'bug-report-radio'; radio.id = `bug-report-category-${i}`;
-      radio.setAttribute('role', 'radio'); radio.setAttribute('aria-checked', 'false'); radio.setAttribute('aria-label', category); radio.dataset.category = category;
-      win.add(radio, [257, top - 3, 140, 21]);
-      const label = document.createElement('span'); label.className = 'bug-report-radio-label'; label.textContent = category; radio.append(label);
-      return radio;
-    });
-    let category: BugCategory | undefined, radioOn = 'none';
-    radios.forEach((radio, i) => radio.addEventListener('click', () => {
-      category = BUG_CATEGORIES[i]; radios.forEach((other, j) => { other.setAttribute('aria-checked', String(j === i)); other.style.setProperty('--dot', j === i ? radioOn : 'none'); });
-    }));
-    void loadInterface('radio-on').then(url => { radioOn = `url("${url}")`; radios.forEach(radio => { if (radio.getAttribute('aria-checked') === 'true') radio.style.setProperty('--dot', radioOn); }); }).catch(() => undefined);
+    // Left panel: the message, as large as the panel allows: its whole inner width (FrmGmAyuda's black box and a little more), from under the banner
+    // to its bottom, over where the GM form has its intro.
+    const text = win.input([38, 120, 182, 224], { multiline: true, maxLength: 4000 }) as HTMLTextAreaElement;
+    text.id = 'bug-report-text'; text.placeholder = 'Contanos qué estabas haciendo y qué salió mal.'; text.classList.add('bug-report-field');
+    // Right panel (the reason list's place, its circles covered): what is sent, the screenshot, what was expected.
+    // The status replaces the intro while it has something to say (CSS: .bug-report-status:not(:empty) + .bug-report-intro).
+    const status = win.label('', [252, 100, 178, 72], 'bug-report-status'); status.id = 'bug-report-status'; status.setAttribute('role', 'status');
+    win.label('Se envían tu personaje y posición, una captura y los últimos mensajes de la consola. Nunca tu email ni tu contraseña.',
+      [252, 100, 178, 72], 'bug-report-intro');
     // The game's check box (check-amarillo.bmp over a dark square), as in frmRetos: a button with role=checkbox.
     const box = document.createElement('button'); box.type = 'button'; box.id = 'bug-report-screenshot'; box.className = 'bug-report-checkbox';
     box.setAttribute('role', 'checkbox'); box.disabled = !screenshot;
     const caption = document.createElement('button'); caption.type = 'button'; caption.className = 'bug-report-check-label'; caption.disabled = !screenshot;
-    caption.textContent = screenshot ? 'Incluir captura' : 'Sin captura'; caption.tabIndex = -1;
+    caption.textContent = screenshot ? 'Incluir captura de pantalla' : 'Captura no disponible'; caption.tabIndex = -1;
     box.setAttribute('aria-label', screenshot ? 'Incluir captura de pantalla' : 'Captura no disponible');
     let attach = !!screenshot;
     const thumb = screenshot ? document.createElement('img') : undefined;
@@ -88,16 +78,16 @@ export class BugReportUI {
     const toggle = () => { if (!screenshot) return; attach = !attach; showCheck(); };
     box.addEventListener('click', toggle); caption.addEventListener('click', toggle);
     void loadInterface('check-amarillo').then(url => { box.style.setProperty('--check', `url("${url}")`); }).catch(() => undefined);
-    win.add(box, [261, 232, 15, 15]); win.add(caption, [283, 231, 80, 17]);
+    win.add(box, [252, 182, 15, 15]); win.add(caption, [274, 181, 150, 17]);
     if (screenshot && thumb) {
       thumb.className = 'bug-report-thumb'; thumb.id = 'bug-report-thumb'; thumb.alt = 'Captura de pantalla';
       thumb.src = screenshot.dataUrl;
-      win.add(thumb, [364, 222, 54, 42]);
+      win.add(thumb, [252, 202, 176, 70]);
     }
     showCheck();
-    win.label('¿Qué esperabas? (opcional)', [254, 272, 166, 15], 'bug-report-small-label');
-    const expected = win.input([254, 289, 164, 52], { multiline: true, maxLength: 2000 }) as HTMLTextAreaElement;
-    expected.id = 'bug-report-expected'; expected.classList.add('bug-report-field', 'bug-report-field-small');
+    win.label('¿Qué esperabas? (opcional)', [252, 278, 178, 15], 'bug-report-small-label');
+    const expected = win.input([252, 294, 176, 48], { multiline: true, maxLength: 2000 }) as HTMLTextAreaElement;
+    expected.id = 'bug-report-expected'; expected.classList.add('bug-report-field');
     // The bottom bar: CANCELAR / ENVIAR are FrmGmAyuda's own pictures, moved right to make room for "Escribir a un GM" (reporterArt clears the bar).
     const gm = this.deps.gmHelp();
     if (gm) {
@@ -111,7 +101,7 @@ export class BugReportUI {
       if (text.value.trim() === '') { status.textContent = 'Contanos qué pasó.'; text.focus(); return; }
       send.disabled = true; cancel.disabled = true; status.textContent = 'Enviando…';
       try {
-        const payload = buildBugReport({ ...this.deps.context(), sessionId: this.sessionId, text: text.value, expected: expected.value, category, screenshot: attach ? screenshot : undefined });
+        const payload = buildBugReport({ ...this.deps.context(), sessionId: this.sessionId, text: text.value, expected: expected.value, screenshot: attach ? screenshot : undefined });
         const response = await (this.deps.post ?? postJson)(JSON.stringify(payload));
         const body = await response.json().catch(() => ({})) as { id?: string; error?: string; retryAfterSeconds?: number };
         if (response.status === 201 && body.id) {
@@ -137,12 +127,12 @@ export class BugReportUI {
 const ART_WIDTH = 470, ART_HEIGHT = 434;
 /** FrmGmAyuda positions are twips; / 15 gives form pixels (gm-ui.ts). */
 const t = (l: number, tp: number, w: number, h: number): Box => [Math.round(l / 15), Math.round(tp / 15), Math.round(w / 15), Math.round(h / 15)];
-/** optConsult(i).Top in twips / 15, top to bottom: the seven reason rows of es_ventanagm. */
+/** optConsult(i).Top in twips / 15, top to bottom: the seven reason circles of es_ventanagm (covered: the reporter has no reasons). */
 const REASON_TOPS = [1590, 1950, 2310, 2670, 3045, 3405, 3765].map(top => Math.round(top / 15));
 /**
  * The window's picture: es_ventanagm as loadInterface hands it out (every baked caption, title to ENVIAR, already painted out by
- * ui-captions.ts), drawn on a canvas, with what our window does not use covered by the plain texture beside it: the last two reason
- * circles (the screenshot box sits there) and the CANCELAR / ENVIAR frames (our three buttons go where they fit). A copy of our own, so the
+ * ui-captions.ts), drawn on a canvas, with what our window does not use covered by the plain texture beside it: the seven reason
+ * circles (the right panel holds the screenshot and what was expected) and the CANCELAR / ENVIAR frames (our three buttons go where they fit). A copy of our own, so the
  * caption overlay never draws "MENSAJE AL STAFF" back over it.
  */
 async function reporterArt(): Promise<{ url: string; release(): void }> {
@@ -151,7 +141,7 @@ async function reporterArt(): Promise<{ url: string; release(): void }> {
   const canvas = document.createElement('canvas'); canvas.width = ART_WIDTH; canvas.height = ART_HEIGHT;
   const ctx = canvas.getContext('2d'); if (!ctx) throw new Error('no 2d context');
   ctx.drawImage(image, 0, 0, ART_WIDTH, ART_HEIGHT);
-  for (const top of REASON_TOPS.slice(BUG_CATEGORIES.length)) ctx.drawImage(canvas, 380, top - 4, 26, 24, 255, top - 4, 26, 24);
+  for (const top of REASON_TOPS) ctx.drawImage(canvas, 380, top - 4, 26, 24, 255, top - 4, 26, 24);
   for (const [from, to, width] of COVERS) ctx.drawImage(canvas, from, BAR_TOP, width, BAR_HEIGHT, to, BAR_TOP, width, BAR_HEIGHT);
   const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
   if (!blob) throw new Error('no picture');
