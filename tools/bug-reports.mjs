@@ -66,7 +66,8 @@ export class RateLimiter {
 }
 
 // Same patterns as the browser (apps/web/src/bug-report-data.ts redact), minus the per-page secrets the server never knows.
-const EMAIL = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
+// Bounded quantifiers (local part <= 64, domain <= 255, RFC 5321): unbounded ones were quadratic on a long run with no `@` (review, 22 Nov).
+const EMAIL = /[A-Z0-9._%+-]{1,64}@[A-Z0-9.-]{1,255}\.[A-Z]{2,}/gi;
 const CREDENTIAL_PAIR = /\b(pass(?:word|wd)?|contrase(?:ñ|n)a|clave|pin|token|secret|api[_-]?key|auth(?:orization)?|session(?:id)?|cookie)(\s*[:=]\s*)("[^"]*"|'[^']*'|\S+)/gi;
 const BEARER = /\b(Bearer|Basic|token)\s+[A-Za-z0-9._~+/=-]{8,}/gi;
 const KNOWN_TOKENS = /\b(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[abpr]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9_-]{20,}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,})\b/g;
@@ -76,13 +77,20 @@ export function redact(text) {
     .replace(CREDENTIAL_PAIR, (_, key, sep) => `${key}${sep}[redactado]`).replace(EMAIL, '[email]').replace(PASSWORD_COMMANDS, (_, head) => `${head}[redactado]`);
 }
 const clip = (text, max) => (text.length > max ? `${text.slice(0, max - 1)}…` : text);
-const cleanString = (value, max) => (typeof value === 'string' ? clip(redact(value), max) : undefined);
+/**
+ * Cut BEFORE redacting: the patterns run over at most the kept length plus a margin, never a megabyte the 3 MB body allows (a 100k `chat`
+ * line blocked the event loop for ~17 s, review of #123). The margin (longer than an e-mail or a token can be) lets a secret that straddles
+ * the cut still be recognised and replaced before the final clip.
+ */
+const REDACT_MARGIN = 512;
+const clean = (text, max) => clip(redact(text.slice(0, max + REDACT_MARGIN)), max);
+const cleanString = (value, max) => (typeof value === 'string' ? clean(value, max) : undefined);
 const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const finite = value => (typeof value === 'number' && Number.isFinite(value) ? value : undefined);
 
 /** Free-form objects from the page (client, environment, stats): strings redacted and clipped, bounded depth, keys and list lengths. */
 function sanitizeDeep(value, depth = 0) {
-  if (typeof value === 'string') return clip(redact(value), LIMITS.line);
+  if (typeof value === 'string') return clean(value, LIMITS.line);
   if (typeof value === 'number') return Number.isFinite(value) ? value : undefined;
   if (typeof value === 'boolean' || value === null) return value;
   if (depth >= 4 || typeof value !== 'object') return undefined;
@@ -129,8 +137,8 @@ export function validateReport(body) {
     schema: 1,
     sessionId: body.sessionId,
     createdAt: at(body.createdAt),
-    text: clip(redact(body.text.trim()), LIMITS.text),
-    expected: clip(redact((body.expected ?? '').trim()), LIMITS.expected),
+    text: clean(body.text.trim(), LIMITS.text),
+    expected: clean((body.expected ?? '').trim(), LIMITS.expected),
     ...(BUG_CATEGORIES.includes(body.category) ? { category: body.category } : {}),
     phase: cleanString(body.phase, 32) ?? '',
     character,

@@ -79,6 +79,11 @@ There is no ping in the client yet, so latency is not measured directly; the pro
 
 - JSON only (415 otherwise), body ≤ 3 MB (413), decoded screenshot ≤ 1.5 MB and really a PNG/JPEG (magic bytes checked, 415).
 - Unknown fields are dropped; lists and strings are cut to fixed ceilings; strings are redacted again.
+- ⚠️ **Behind a proxy (Cloudflare tunnel, nginx), set `AO_BUG_REPORT_TRUST_PROXY=1`.** Otherwise every request comes from the proxy's
+  address and ALL players share one per-IP bucket: five reports an hour for the whole beta.
+- **Strings are cut before they are redacted:** each one to its limit plus 512 characters, then redacted, then clipped, so the patterns
+  never run over the megabyte a 3 MB body allows (an unauthenticated 100 KB chat line used to block the server ~17 s; now ~1 ms). The
+  e-mail pattern has bounded parts (local ≤ 64, domain ≤ 255) on both sides.
 - **Rate limits:** 5 reports per IP per hour and 3 per page session per 10 minutes (429 with `Retry-After`; the window says when to
   try again). Every POST counts against the IP from the moment it arrives (so a parallel burst cannot slip past the check, and
   a malformed 3 MB body costs a slot like a good one), except one the server itself failed to store. The page-session limit counts

@@ -53,6 +53,24 @@ describe('validateReport', () => {
       expect(dropped.ok && dropped.report).not.toHaveProperty('category');
     }
   });
+  it('cuts strings before redacting: a 1 MB line in any list validates in well under 100 ms (no regex blow-up)', () => {
+    const mb = 'a'.repeat(1 << 20), jwtish = 'eyJ'.repeat(350_000);
+    const body = report({
+      text: 'x', chat: [mb, jwtish], console: [{ at: 't', level: 'log', text: mb }], openWindows: [mb],
+      errors: [{ at: 't', kind: 'error', message: mb, stack: jwtish }], protocol: [{ at: 't', dir: 'in', id: 1, name: mb }],
+      environment: { userAgent: mb, nested: { deep: jwtish } }, stats: { note: mb }, client: { commit: mb }, phase: mb, character: { name: mb, mapName: mb },
+    });
+    const started = performance.now();
+    const result = validateReport(body);
+    const ms = performance.now() - started;
+    expect(result.ok).toBe(true);
+    expect(ms, `${ms.toFixed(1)} ms`).toBeLessThan(100);
+    if (result.ok) expect((result.report.chat as string[])[0]!.length).toBeLessThanOrEqual(2000);
+  });
+  it('still redacts an e-mail that straddles the cut', () => {
+    const result = validateReport(report({ chat: [`${'a '.repeat(997)}x user@example.com ${'b'.repeat(5000)}`] }));
+    expect(result.ok && (result.report.chat as string[])[0]).not.toContain('user@');
+  });
   it('rejects malformed reports with a reason', () => {
     const bad = (over: Record<string, unknown>) => validateReport(report(over));
     expect(validateReport(null)).toMatchObject({ ok: false, status: 400 });

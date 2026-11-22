@@ -24,7 +24,8 @@ export class Ring<T> {
 }
 
 export const REDACTED = '[redactado]';
-const EMAIL = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
+// Bounded (local part <= 64, domain <= 255): the unbounded form was quadratic on a long run with no `@` (same as tools/bug-reports.mjs).
+const EMAIL = /[A-Z0-9._%+-]{1,64}@[A-Z0-9.-]{1,255}\.[A-Z]{2,}/gi;
 /** key=value / key: value where the key names a credential (English and Spanish). */
 const CREDENTIAL_PAIR = /\b(pass(?:word|wd)?|contrase(?:ñ|n)a|clave|pin|token|secret|api[_-]?key|auth(?:orization)?|session(?:id)?|cookie)(\s*[:=]\s*)("[^"]*"|'[^']*'|\S+)/gi;
 const BEARER = /\b(Bearer|Basic|token)\s+[A-Za-z0-9._~+/=-]{8,}/gi;
