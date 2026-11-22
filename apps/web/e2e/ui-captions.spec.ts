@@ -159,13 +159,24 @@ test('account window: CANCELAR is live text, the window caption under each butto
   const cancel = win.getByRole('button', { name: 'Cancelar' });
   await expect.poll(() => cancel.evaluate(button => [...button.querySelectorAll('svg.ui-caption')].filter(svg => getComputedStyle(svg).display !== 'none')
     .flatMap(svg => [...svg.querySelectorAll('text[data-role="text"]')].map(text => text.textContent)))).toEqual(['CANCELAR']);
-  // What is on top at the centre of each button's caption is the button itself, never the window's caption layer.
-  const tops = await win.evaluate(root => [...root.querySelectorAll('button')].filter(b => b.querySelector('svg.ui-caption')).map(button => {
-    const r = button.getBoundingClientRect(), hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
-    return { button: button.getAttribute('aria-label'), onTop: !!hit && (hit === button || button.contains(hit)), windowLayerFirst: root.firstElementChild?.matches('svg.ui-caption') ?? false };
-  }));
-  expect(tops.length).toBeGreaterThanOrEqual(2);
-  for (const t of tops) expect(t, t.button ?? '').toMatchObject({ onTop: true, windowLayerFirst: true });
+  // Paint order at the centre of each button's caption: the button (and its own caption) above the window's caption layer. The layers are
+  // pointer-events: none, so a plain hit test never sees them: they take hits for the duration of the check and elementsFromPoint gives the
+  // real stack, top first. The window layer must be in that stack (it covers the whole window) or the check proves nothing (#119).
+  const stacks = await win.evaluate(root => {
+    const style = document.createElement('style');
+    style.textContent = 'svg.ui-caption, svg.ui-caption * { pointer-events: auto !important }';
+    document.head.append(style);
+    try {
+      const layer = [...root.children].find(child => child.matches('svg.ui-caption'));
+      return [...root.querySelectorAll('button')].filter(b => b.querySelector('svg.ui-caption')).map(button => {
+        const r = button.getBoundingClientRect(), stack = document.elementsFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+        const buttonAt = stack.findIndex(e => e === button || button.contains(e)), layerAt = layer ? stack.findIndex(e => e === layer || layer.contains(e)) : -1;
+        return { button: button.getAttribute('aria-label'), buttonAt, layerAt, buttonAbove: buttonAt >= 0 && layerAt > buttonAt };
+      });
+    } finally { style.remove(); }
+  });
+  expect(stacks.length).toBeGreaterThanOrEqual(2);
+  for (const s of stacks) expect(s, `${s.button}: stack positions`).toMatchObject({ buttonAbove: true });
   await mkdir('artifacts/screenshots', { recursive: true });
   await win.screenshot({ path: 'artifacts/screenshots/ui-captions-account-window.png' });
   // ventanaskills: the option labels start at x 26 and 244 in the bitmap; their live text origins agree within one pixel per column.
@@ -175,5 +186,46 @@ test('account window: CANCELAR is live text, the window caption under each butto
     const xs = column.map(r => r.geometry!.x);
     expect(column.length).toBeGreaterThan(8);
     expect(Math.max(...xs) - Math.min(...xs), column.map(r => `${r.text} ${r.geometry!.x.toFixed(2)}`).join(', ')).toBeLessThan(1);
+  }
+});
+
+// #119: the STATS tab read as red-tinted after #118's softer shadow. Measured at 1x and 2x it is not: the letters and their anti-aliased edges
+// carry the original bitmap's grey (red cast, R minus the mean of G and B: live 0.57 / 0.56, original 0.13 / 0.15; brightness 221-227 vs 224-225).
+// This keeps it so: the live caption's tone against ?captions=off, the bitmap as shipped, at both pixel ratios.
+test('the STATS tab caption keeps the original grey at 1x and 2x: no colour cast, same brightness', async ({ browser }, info) => {
+  test.skip(info.project.name !== 'desktop-chrome', 'desktop layout, both pixel ratios from one project');
+  type Band = { n: number; rgb: number[]; red: number };
+  for (const deviceScaleFactor of [1, 2]) {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor });
+    const page = await context.newPage();
+    const tone = async (query: string) => {
+      await page.goto(`/${query}`);
+      await expect(page.locator('#classic')).toHaveAttribute('data-ui-ready', 'true');
+      await page.locator('#connect').click();
+      await expect(page.locator('#viewport')).toHaveAttribute('data-rendered', 'true');
+      await page.mouse.move(0, 0);
+      await mkdir('artifacts/screenshots', { recursive: true });
+      const png = await page.locator('#stats-tab').screenshot({ path: `artifacts/screenshots/ui-captions-stats-tab-${query ? 'original' : 'live'}-${deviceScaleFactor}x.png` });
+      return page.evaluate(async src => {
+        const image = new Image(); image.src = src; await image.decode();
+        const canvas = document.createElement('canvas'); canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
+        const g = canvas.getContext('2d')!; g.drawImage(image, 0, 0);
+        const d = g.getImageData(0, 0, canvas.width, canvas.height).data, sums = { letters: [0, 0, 0, 0], edges: [0, 0, 0, 0] };
+        for (let i = 0; i < d.length; i += 4) {
+          const l = 0.299 * d[i]! + 0.587 * d[i + 1]! + 0.114 * d[i + 2]!, band = l >= 170 ? sums.letters : l >= 100 ? sums.edges : undefined;
+          if (band) { band[0]! += d[i]!; band[1]! += d[i + 1]!; band[2]! += d[i + 2]!; band[3]!++; }
+        }
+        const band = ([r, g2, b, n]: number[]) => ({ n: n!, rgb: [r! / n!, g2! / n!, b! / n!], red: (r! - (g2! + b!) / 2) / n! });
+        return { letters: band(sums.letters), edges: band(sums.edges) };
+      }, `data:image/png;base64,${png.toString('base64')}`) as Promise<{ letters: Band; edges: Band }>;
+    };
+    const live = await tone(''), original = await tone('?captions=off');
+    const note = `${deviceScaleFactor}x live ${JSON.stringify(live)} original ${JSON.stringify(original)}`;
+    for (const band of ['letters', 'edges'] as const) {
+      expect(live[band].n, note).toBeGreaterThan(20 * deviceScaleFactor ** 2);
+      expect(Math.abs(live[band].red - original[band].red), `${band} colour cast, ${note}`).toBeLessThan(1.5);
+    }
+    for (let c = 0; c < 3; c++) expect(Math.abs(live.letters.rgb[c]! - original.letters.rgb[c]!), `letter brightness, ${note}`).toBeLessThan(10);
+    await context.close();
   }
 });
