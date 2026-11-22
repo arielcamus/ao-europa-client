@@ -13,7 +13,7 @@ const assets = process.env.AO_ASSETS, ocr = process.env.OCR;
 if (!assets || !ocr) throw new Error('Set AO_ASSETS and OCR (see the header)');
 const dir = path.join(assets, 'interface');
 const work = fs.mkdtempSync(path.join(os.tmpdir(), 'ao-captions-'));
-const SKIP = /^(mapa2|mapa_referencias|referencias|VentanaMapa|patchnotes-.*|ventanalauncher|VentanaCargando|ventanatiendaao20|board|spanish-.*|VentanaEstadisticas|alquimia|global|globalapretado|info|infoapretado|ventanaprincipal|boton-jugar|boton-crear-personaje|ventanallavero)$/i;
+const SKIP = /^(mapa2|mapa_referencias|referencias|VentanaMapa|patchnotes-.*|ventanalauncher|VentanaCargando|ventanatiendaao20|board|spanish-.*|VentanaEstadisticas|alquimia|global|globalapretado|info|infoapretado|ventanaprincipal|boton-jugar|boton-crear-personaje|ventanallavero|boton-cancelar)$/i;
 // global / info: 6 px labels on 37x12 chat buttons, left as drawn.
 // Written by hand: the recognizer reads the gear and "?" icons of ventanaprincipal as digits, and the two bilingual buttons (boton-jugar,
 // boton-crear-personaje: Spanish | English) need one box per word.
@@ -21,6 +21,8 @@ const MANUAL = {
   'boton-jugar': [{ text: 'JUGAR', box: [27, 9, 57, 22] }],
   ventanallavero: [{ text: 'LLAVERO', box: [90, 19, 86, 22] }],
   'boton-crear-personaje': [{ text: 'CREAR', box: [16, 11, 54, 20] }, { text: 'CREATE', box: [80, 11, 64, 20] }],
+  // sips cannot read es_boton-cancelar-*.bmp, so the recognizer never saw it (#113); box from ao-ocr on a 3x PNG of the default state.
+  'boton-cancelar': [{ text: 'CANCELAR', box: [33, 6, 66, 14] }],
   ventanaprincipal: [
     { text: 'AJUSTES', box: [777, 7, 47, 17] }, { text: 'MANUAL', box: [846, 7, 49, 17] }, { text: 'MAO', box: [920, 7, 40, 17] },
     { text: 'INVENTARIO', box: [784, 166, 84, 16] }, { text: 'HECHIZOS', box: [912, 166, 76, 16] },

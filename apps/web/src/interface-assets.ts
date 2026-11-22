@@ -1,5 +1,5 @@
 import { assetUrl } from './assets.js';
-import { CAPTIONS, captionState, captionedUrl, captionsFor, renderCaptioned, verifyCaptions } from './ui-captions.js';
+import { CAPTIONS, captionLayout, captionState, captionedUrl, captionsFor, renderCaptioned, verifyCaptions } from './ui-captions.js';
 // Original BMP files remain untouched. Some true-color BI_RGB headers declare
 // important palette colors; WebKit rejects these, although there is no palette.
 // Normalize only unused palette metadata in a browser-local copy. Pixel bytes,
@@ -109,6 +109,13 @@ if (typeof location !== 'undefined' && new URLSearchParams(location.search).has(
       const image = new Image(); image.src = url; await image.decode();
       await document.fonts.load('700 12px Cinzel');
       return verifyCaptions(image, captionsFor(file)!);
+    },
+    /** Where each caption's letters were found and where the live text goes (bitmap px): alignment checks. */
+    async layout(file: string) {
+      const url = await fetchInterface(interfaceUrl(file)).catch(() => fetchInterface(interfaceUrl(file, false))).catch(() => undefined); if (!url) return undefined;
+      const image = new Image(); image.src = url; await image.decode();
+      await document.fonts.load('700 12px Cinzel');
+      return captionLayout(image, captionsFor(file)!);
     },
     /** Original and captioned copy, `scale` times larger, as data URLs (the review sheet). */
     async preview(file: string, scale = 3) {
