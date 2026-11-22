@@ -62,7 +62,7 @@ export interface ConsoleEntry { t: number; level: string; text: string }
 export interface ErrorEntry { t: number; kind: 'error' | 'rejection' | 'report'; message: string; stack?: string }
 
 /** Sizes of the rings and of the strings in them; the server enforces the same ceilings (tools/bug-reports.mjs). */
-export const LIMITS = { chat: 200, console: 200, protocol: 300, errors: 50, text: 4000, expected: 2000, line: 1000, stack: 2000 } as const;
+export const LIMITS = { chat: 200, console: 200, protocol: 300, errors: 50, text: 4000, line: 1000, stack: 2000 } as const;
 
 export interface CharacterInfo {
   name: string; level?: number | undefined; className?: string | undefined; map?: number | undefined; resourceMap?: number | undefined; mapName?: string | undefined;
@@ -74,7 +74,6 @@ export interface ScreenshotInfo { dataUrl: string; width: number; height: number
 export interface ReportInput {
   sessionId: string;
   text: string;
-  expected: string;
   screenshot: ScreenshotInfo | undefined;
   character: CharacterInfo | undefined;
   /** The page's phase: login, account, playing... */
@@ -100,7 +99,6 @@ export interface BugReportPayload {
   sessionId: string;
   createdAt: string;
   text: string;
-  expected: string;
   phase: string;
   screenshot?: string;
   screenshotInfo?: { width: number; height: number; type: string; bytes: number };
@@ -134,7 +132,6 @@ export function buildBugReport(input: ReportInput): BugReportPayload {
     sessionId: input.sessionId,
     createdAt: new Date(input.timeOrigin + input.now).toISOString(),
     text: r(input.text.trim(), LIMITS.text),
-    expected: r(input.expected.trim(), LIMITS.expected),
     phase: input.phase,
     character: input.character ? { ...input.character, name: r(input.character.name, 64), ...(input.character.mapName !== undefined ? { mapName: r(input.character.mapName, 100) } : {}) } : null,
     client: redactDeep(input.client, secrets) as BugReportPayload['client'],

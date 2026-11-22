@@ -25,7 +25,6 @@ await page.screenshot({ path: 'artifacts/screenshots/bug-report-live-ingame.png'
 await page.keyboard.press('F8');
 await page.locator('#bug-report-window').waitFor();
 await page.locator('#bug-report-text').fill('Prueba en vivo del reporte de bugs \nEl personaje camina y abro el reporte con F8.');
-await page.locator('#bug-report-expected').fill('Que llegue el reporte con captura, personaje y protocolo.');
 await page.screenshot({ path: 'artifacts/screenshots/bug-report-live-window.png' });
 await page.locator('#bug-report-send').click();
 await page.locator('#bug-report-status').filter({ hasText: 'Gracias' }).waitFor({ timeout: 15_000 });

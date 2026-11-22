@@ -1,18 +1,17 @@
-/* AGPL-3.0-or-later. The bug reporter window (bug-report-ui.ts), drawn on FrmGmAyuda's picture (es_ventanagm, "MENSAJE AL STAFF"): Cinzel
-   capitals for the title, the banner and the text button, Georgia for the rest (ui-captions.ts draws the baked captions with the same
-   families), the black message box, check-amarillo, and the game's CANCELAR / ENVIAR / close pictures. */
-.bug-report-form { z-index: 40; background-color: #0d0d0d; } /* opaque, unlike FrmGmAyuda (240): the world showed through the message box */
+/* AGPL-3.0-or-later. The bug reporter window (bug-report-ui.ts): the configuration window's frame with FrmGmAyuda's message icon and scroll
+   banner (reporterArt), Cinzel capitals for the title, the banner and the text button, Georgia for the rest (ui-captions.ts draws the baked
+   captions with the same families), black text boxes, check-amarillo, and the game's CANCELAR / ENVIAR / close pictures. */
+.bug-report-form { z-index: 40; background-color: #0d0d0d; }
 .bug-report-form.bug-report-bare { border: 3px solid #3b362e; box-shadow: inset 0 0 0 1px #000, 0 0 0 1px #000; }
 .bug-report-form .vb-label { overflow: visible; }
 .bug-report-title { color: #f2ede4; font: 700 23px/30px Cinzel, Georgia, serif; text-transform: uppercase; letter-spacing: .3px; text-shadow: .75px .75px rgb(0 0 0 / 50%); }
 .bug-report-banner { text-align: center; color: #f2ede4; font: 700 12px/20px Cinzel, Georgia, serif; text-transform: uppercase; text-shadow: .75px .75px rgb(0 0 0 / 60%); }
-.bug-report-intro, .bug-report-status { white-space: normal !important; font: 12px/14px Georgia, "Times New Roman", serif; text-shadow: 1px 1px #000; }
-.bug-report-intro { color: #fff; }
+.bug-report-intro, .bug-report-status { white-space: normal !important; font: 11px/14px Georgia, "Times New Roman", serif; text-shadow: 1px 1px #000; }
+.bug-report-intro { color: #c9c1b2; }
 .bug-report-status { color: #ffd75e; }
 .bug-report-status:not(:empty) + .bug-report-intro { visibility: hidden; }
-.bug-report-small-label { color: #c9c1b2; font: 11px/14px Georgia, "Times New Roman", serif; text-shadow: 1px 1px #000; }
 .bug-report-field {
-  padding: 4px 5px; border: 1px solid #3c372f; background: #000; color: #fff; font: 12px/15px Tahoma, Arial, sans-serif; outline: none; resize: none;
+  padding: 4px 6px; border: 1px solid #3c372f; background: #000; color: #fff; font: 13px/16px Tahoma, Arial, sans-serif; outline: none; resize: none;
   scrollbar-width: thin; -webkit-user-select: text; user-select: text;
 }
 .bug-report-field::placeholder { color: #6f6a60; }

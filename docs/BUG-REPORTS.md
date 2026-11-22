@@ -11,19 +11,20 @@ Beta players report a bug from inside the game. The report carries a screenshot,
   to the GMs online. It now opens the reporter, and the reporter's **"Escribir a un GM"** button opens FrmGmAyuda, so the old
   path is still one click away. `/GM` still opens FrmGmAyuda directly.
 
-The window asks **¿Qué pasó?** (required) and **¿Qué esperabas que pasara?** (optional), shows the screenshot with a checkbox to
-leave it out, and says in one line what else is sent. Enviar → "¡Gracias! Reporte `<id>` enviado." plus a console line, and the
-window closes after 2.5 s. Escape closes it like every window (`window-stack.ts`).
+The window has one large box, **¿Qué pasó?** (required), shows the screenshot with a checkbox to leave it out, and says in one line what
+else is sent. Enviar → "¡Gracias! Reporte `<id>` enviado." plus a console line, and the window closes after 2.5 s. Escape closes it like
+every window (`window-stack.ts`). (A second "¿Qué esperabas?" box was dropped, 22 Nov: Ariel wanted one roomy box. The server still accepts
+an `expected` string from older pages and shows it in the issue when it is not empty; this page no longer sends one.)
 
-It is drawn on FrmGmAyuda's picture, the classic "MENSAJE AL STAFF" window (Ariel, 22 Nov: the first version was a plain white form; he
-sent that window as the reference). `es_ventanagm` (470x434) as `ui-captions.ts` hands it out, every baked caption painted out, then a canvas
-copy of our own (`reporterArt`) with the seven reason circles and the CANCELAR / ENVIAR frames covered by the plain texture beside them.
-Over it: "REPORTAR UN BUG" in Cinzel after the message icon, "¿QUÉ PASÓ?" on the scroll banner, and under it the message box, as large as
-the left panel allows (182x224: the GM form's black box widened and raised to the banner, over where that form has its intro). The right
-panel, its reason circles covered, says what is sent (a status or error replaces that line), then "Incluir captura de pantalla"
-(`check-amarillo`) with the thumbnail and "¿Qué esperabas? (opcional)". At the bottom "Escribir a un GM" (a text button drawn like the
-bitmap ones) and the game's CANCELAR / ENVIAR pictures. The window is opaque (FrmGmAyuda is 240/255: the world
-showed through the message box). If the picture cannot load, the window stays black with a plain frame.
+It looks like the classic "MENSAJE AL STAFF" window (FrmGmAyuda) Ariel sent as the reference, on one wide panel so the box can be large
+(484x280; the GM form's two narrow columns left 182x224). `reporterArt` composes it on a canvas from two bitmaps as `ui-captions.ts` hands
+them out (baked captions painted out): the frame of the configuration window (`es_configuracion-vacio`, 536x506), its bottom bar's
+key-binding button and social icons covered by the plain bar beside them, and from `es_ventanagm` the message icon before the title and
+the scroll banner over the panel's top border, each laid with an opacity that grows with brightness so only the icon and the ribbon come
+over, not the GM window's own texture and lines. Over it: "REPORTAR UN BUG" in Cinzel, a strip with "Incluir captura" (`check-amarillo`),
+the thumbnail and what is sent (a status or error replaces that line), "¿QUÉ PASÓ?" on the banner, the box, and at the bottom "Escribir a
+un GM" (a text button drawn like the bitmap ones) and the game's CANCELAR / ENVIAR pictures. If the pictures cannot load, the window stays
+black with a plain frame.
 
 Code: `apps/web/src/bug-report-ui.ts` (window), `bug-report-data.ts` (rings, redaction, payload), `bug-report-capture.ts`
 (console/error capture, screenshot), wiring in `main.ts`, the protocol hook `Session.onTrace`. Server: `tools/bug-reports.mjs`,
@@ -50,7 +51,7 @@ overrides it for one page (the Playwright suite runs with `AO_BETA=0` so the lay
 
 | Part | Contents |
 |---|---|
-| Text | what happened, what was expected (≤ 4000 / 2000 characters) |
+| Text | what happened (≤ 4000 characters); `expected` (≤ 2000) is still accepted from older pages, this one sends none |
 | Screenshot | the game canvas only (the world view; frmMain's HUD is HTML and not in the picture), taken when the window opens, ≤ 1280 px wide, PNG or JPEG under 900 KB. The player can untick it. |
 | Character | name, level, class, map, map name, x/y, HP, mana, dead, privilege level |
 | Client | commit and branch of the server's checkout, build time, asset version, wire profile, server profile, mode (classic / standin), page path |

@@ -53,7 +53,7 @@ describe('packetNameTable', () => {
 });
 
 const base = (over: Partial<ReportInput> = {}): ReportInput => ({
-  sessionId: 'abcdef12-3456', text: '  Me trabé en la puerta\nsegunda línea ', expected: '', screenshot: undefined,
+  sessionId: 'abcdef12-3456', text: '  Me trabé en la puerta\nsegunda línea ', screenshot: undefined,
   character: { name: 'Aotest', level: 5, className: 'Mago', map: 751, x: 50, y: 60, hp: 10, maxHp: 20 },
   phase: 'playing', client: { commit: 'abc123', assetVersion: 'v1' }, environment: { userAgent: 'UA' }, stats: { fps: 60 }, openWindows: ['options'],
   chat: [], console: [], protocol: [], errors: [], secrets: ['aotest@local.test', 'aotestpw1'], timeOrigin: Date.UTC(2026, 10, 22, 9, 0, 0), now: 1500,
@@ -73,7 +73,6 @@ describe('buildBugReport', () => {
   it('never carries the account e-mail or password, from any string', () => {
     const report = buildBugReport(base({
       text: 'entré con aotest@local.test y aotestpw1',
-      expected: 'que AOTESTPW1 funcione',
       chat: ['Bienvenido aotestpw1'], console: [{ t: 1, level: 'warn', text: 'login aotest@local.test failed' }],
       errors: [{ t: 2, kind: 'error', message: 'boom aotestpw1', stack: 'at x (aotestpw1)' }],
       environment: { note: 'aotestpw1', nested: { deeper: ['aotest@local.test'] } },
