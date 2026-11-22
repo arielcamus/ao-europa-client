@@ -44,6 +44,8 @@ test('bug reporter: F8 opens it, Enviar stores the report with screenshot, chara
   await expect(page.locator('#bug-report-text')).toHaveValue('wasd ');
   await page.locator('#bug-report-text').fill('Me trabé en la puerta del banco\nsegunda línea, mi clave es testpass');
   await page.locator('#bug-report-expected').fill('Poder pasar');
+  await page.locator('#bug-report-category-2').click(); // the reason rows, FrmGmAyuda style
+  await expect(page.locator('#bug-report-category-2')).toHaveAttribute('aria-checked', 'true');
   await win.screenshot({ path: 'artifacts/screenshots/bug-report-window-standin.png' });
   await page.locator('#bug-report-send').click();
   await expect(page.locator('#bug-report-status')).toContainText('¡Gracias! Reporte ');
@@ -62,6 +64,7 @@ test('bug reporter: F8 opens it, Enviar stores the report with screenshot, chara
   const report = JSON.parse(raw) as Stored;
   expect(report.text).toBe('Me trabé en la puerta del banco\nsegunda línea, mi clave es [redactado]');
   expect(report.expected).toBe('Poder pasar');
+  expect((report as unknown as { category: string }).category).toBe('Movimiento o mapa');
   expect(report.phase).toBe('playing');
   expect(report.character.name).not.toBe('');
   expect(typeof report.character.map).toBe('number');

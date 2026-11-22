@@ -70,10 +70,16 @@ export interface CharacterInfo {
 }
 export interface ScreenshotInfo { dataUrl: string; width: number; height: number; type: 'image/png' | 'image/jpeg'; bytes: number }
 
+/** What the bug is about, the reporter's radio list (the FrmGmAyuda look). tools/bug-reports.mjs keeps the same list and drops anything else. */
+export const BUG_CATEGORIES = ['Error o cuelgue', 'Gráficos o sonido', 'Movimiento o mapa', 'Combate u objetos', 'Otro'] as const;
+export type BugCategory = typeof BUG_CATEGORIES[number];
+
 export interface ReportInput {
   sessionId: string;
   text: string;
   expected: string;
+  /** Optional: the player may leave it unchosen. */
+  category?: BugCategory | undefined;
   screenshot: ScreenshotInfo | undefined;
   character: CharacterInfo | undefined;
   /** The page's phase: login, account, playing... */
@@ -100,6 +106,7 @@ export interface BugReportPayload {
   createdAt: string;
   text: string;
   expected: string;
+  category?: BugCategory;
   phase: string;
   screenshot?: string;
   screenshotInfo?: { width: number; height: number; type: string; bytes: number };
@@ -147,6 +154,7 @@ export function buildBugReport(input: ReportInput): BugReportPayload {
       at: iso(input.timeOrigin, entry.t), kind: entry.kind, message: r(entry.message, LIMITS.line), ...(entry.stack ? { stack: r(entry.stack, LIMITS.stack) } : {}),
     })),
   };
+  if (input.category && (BUG_CATEGORIES as readonly string[]).includes(input.category)) payload.category = input.category;
   if (input.screenshot) {
     payload.screenshot = input.screenshot.dataUrl;
     payload.screenshotInfo = { width: input.screenshot.width, height: input.screenshot.height, type: input.screenshot.type, bytes: input.screenshot.bytes };

@@ -1,30 +1,36 @@
-/* AGPL-3.0-or-later. The bug reporter window (bug-report-ui.ts), drawn like the other in-game windows: the configuration window's frame
-   (es_configuracion-vacio), Cinzel capitals for the title and the text button, Georgia for the labels (ui-captions.ts uses the same three
-   families for the baked captions), black text boxes, the game's ENVIAR / CANCELAR / close pictures and check-amarillo. */
-.bug-report-form { z-index: 40; background-color: #0d0d0d; }
+/* AGPL-3.0-or-later. The bug reporter window (bug-report-ui.ts), drawn on FrmGmAyuda's picture (es_ventanagm, "MENSAJE AL STAFF"): Cinzel
+   capitals for the title, the banner and the text button, Georgia for the rest (ui-captions.ts draws the baked captions with the same
+   families), the black message box, radio-on / check-amarillo, and the game's CANCELAR / ENVIAR / close pictures. */
+.bug-report-form { z-index: 40; background-color: #0d0d0d; } /* opaque, unlike FrmGmAyuda (240): the world showed through the message box */
 .bug-report-form.bug-report-bare { border: 3px solid #3b362e; box-shadow: inset 0 0 0 1px #000, 0 0 0 1px #000; }
 .bug-report-form .vb-label { overflow: visible; }
-.bug-report-title { text-align: center; color: #f2ede4; font: 700 22px/30px Cinzel, Georgia, serif; letter-spacing: .5px; text-transform: uppercase; text-shadow: .75px .75px rgb(0 0 0 / 50%); }
-.bug-report-label { color: #fff; font: 13px/17px Georgia, "Times New Roman", serif; text-shadow: 1px 1px #000; }
-.bug-report-note { color: #b8b0a0; font: 11px/14px Georgia, "Times New Roman", serif; text-shadow: 1px 1px #000; white-space: normal; }
-.bug-report-status { color: #ffd75e; font: 12px/15px Georgia, "Times New Roman", serif; white-space: normal !important; text-shadow: 1px 1px #000; }
+.bug-report-title { color: #f2ede4; font: 700 23px/30px Cinzel, Georgia, serif; text-transform: uppercase; letter-spacing: .3px; text-shadow: .75px .75px rgb(0 0 0 / 50%); }
+.bug-report-banner { text-align: center; color: #f2ede4; font: 700 12px/20px Cinzel, Georgia, serif; text-transform: uppercase; text-shadow: .75px .75px rgb(0 0 0 / 60%); }
+.bug-report-intro, .bug-report-status { white-space: normal !important; font: 12px/14px Georgia, "Times New Roman", serif; text-shadow: 1px 1px #000; }
+.bug-report-intro { color: #fff; }
+.bug-report-status { color: #ffd75e; }
+.bug-report-status:not(:empty) + .bug-report-intro { visibility: hidden; }
+.bug-report-small-label { color: #c9c1b2; font: 11px/14px Georgia, "Times New Roman", serif; text-shadow: 1px 1px #000; }
 .bug-report-field {
-  padding: 3px 5px; border: 1px solid #4b4539; background: #000; color: #fff; font: 12px/15px Tahoma, Arial, sans-serif; outline: none;
-  box-shadow: inset 1px 1px 0 #000, 0 0 0 1px #111;
-  -webkit-user-select: text; user-select: text;
+  padding: 3px 4px; border: 0; background: #000; color: #fff; font: 11px/14px Tahoma, Arial, sans-serif; outline: none; resize: none;
+  scrollbar-width: thin; -webkit-user-select: text; user-select: text;
 }
-.bug-report-field::placeholder { color: #7d776b; }
-.bug-report-field:focus { border-color: #8a7f68; }
+.bug-report-field-small { border: 1px solid #3c372f; }
+.bug-report-field::placeholder { color: #6f6a60; }
+.bug-report-field:focus { box-shadow: 0 0 0 1px #6d6553; }
+.bug-report-radio { padding: 0 0 0 26px; border: 0; background: transparent no-repeat 2px 1px; background-image: var(--dot, none); cursor: pointer; text-align: left; }
+.bug-report-radio-label { color: #fff; font: 12px/21px Georgia, "Times New Roman", serif; text-shadow: 1px 1px #000; white-space: nowrap; }
+.bug-report-radio:hover .bug-report-radio-label { color: #ffd75e; }
+.bug-report-radio:focus-visible, .bug-report-checkbox:focus-visible { outline: 1px solid #ffd75e; outline-offset: 1px; }
 .bug-report-checkbox { padding: 0; border: 2px solid #4a4a4a; background: #0a0a0a no-repeat center / 100% 100%; cursor: pointer; }
 .bug-report-checkbox.checked { border: 0; background-image: var(--check); }
 .bug-report-checkbox:disabled, .bug-report-check-label:disabled { cursor: default; opacity: .5; }
-.bug-report-checkbox:focus-visible { outline: 1px solid #ffd75e; outline-offset: 1px; }
-.bug-report-check-label { padding: 0; border: 0; background: transparent; color: #fff; text-align: left; cursor: pointer; font: 13px/17px Georgia, "Times New Roman", serif; text-shadow: 1px 1px #000; }
-.bug-report-thumb { border: 1px solid #4b4539; background: #000; object-fit: contain; image-rendering: auto; }
-/* "Escribir a un GM": a text button drawn like the bitmap ones (boton-enviar: dark face, light grey frame, engraved capitals). */
+.bug-report-check-label { padding: 0; border: 0; background: transparent; color: #fff; text-align: left; cursor: pointer; font: 12px/17px Georgia, "Times New Roman", serif; text-shadow: 1px 1px #000; }
+.bug-report-thumb { border: 1px solid #4b4539; background: #000; object-fit: cover; image-rendering: auto; }
+/* "Escribir a un GM": a text button drawn like the bitmap ones beside it (dark face, light grey frame, engraved capitals). */
 .bug-report-text-button {
   padding: 0; border: 2px solid #77746c; background: #151515; color: #f2ede4; cursor: pointer;
-  font: 700 11px/23px Cinzel, Georgia, serif; text-transform: uppercase; letter-spacing: .3px; text-shadow: 1px 1px #000;
+  font: 700 10.5px/20px Cinzel, Georgia, serif; text-transform: uppercase; letter-spacing: .2px; text-shadow: 1px 1px #000;
   box-shadow: 0 0 0 1px #000, inset 0 0 0 1px #000;
 }
 .bug-report-text-button:hover { border-color: #a9a498; background: #1f1f1f; }

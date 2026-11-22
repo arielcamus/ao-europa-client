@@ -19,6 +19,8 @@ export const MAX_IMAGE_BYTES = 1536 * 1024;
 /** The whole JSON body: the base64 screenshot plus the logs. */
 export const MAX_BODY_BYTES = 3 * 1024 * 1024;
 /** Ceilings per list and per string; a little above the browser's own (bug-report-data.ts LIMITS) so a normal report is never cut. */
+/** The reporter's categories (apps/web/src/bug-report-data.ts BUG_CATEGORIES, same list): anything else is dropped. */
+export const BUG_CATEGORIES = ['Error o cuelgue', 'Gráficos o sonido', 'Movimiento o mapa', 'Combate u objetos', 'Otro'];
 export const LIMITS = { chat: 250, console: 250, protocol: 400, errors: 100, windows: 50, text: 4000, expected: 2000, line: 2000, stack: 4000 };
 const ID = /^\d{8}-\d{6}-[0-9a-f]{6}$/;
 
@@ -129,6 +131,7 @@ export function validateReport(body) {
     createdAt: at(body.createdAt),
     text: clip(redact(body.text.trim()), LIMITS.text),
     expected: clip(redact((body.expected ?? '').trim()), LIMITS.expected),
+    ...(BUG_CATEGORIES.includes(body.category) ? { category: body.category } : {}),
     phase: cleanString(body.phase, 32) ?? '',
     character,
     client: isObject(body.client) ? sanitizeDeep(body.client) : {},
@@ -191,6 +194,7 @@ export function issueContent(report, id, links = {}) {
   if (report.expected) body += `**Qué esperaba**\n${quote(report.expected)}\n\n`;
   if (links.image) body += `![captura](${links.image})\n\n`;
   body += '| | |\n|---|---|\n'
+    + row('Categoría', report.category)
     + row('Personaje', c ? `${c.name}${who ? ` (${who})` : ''}` : 'sin personaje (fuera del juego)')
     + row('Mapa', c && c.map !== undefined ? `${c.map}${c.mapName ? ` (${c.mapName})` : ''} @ ${c.x ?? '?'},${c.y ?? '?'}` : undefined)
     + row('HP / MP', c ? `${fmt(c.hp, c.maxHp) ?? '?'} · ${fmt(c.mana, c.maxMana) ?? '?'}${c.dead ? ' · muerto' : ''}` : undefined)

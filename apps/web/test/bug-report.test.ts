@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import * as protocol from '@ao/protocol';
 import { ClientPacketId, ServerPacketId, NpcsServerPacketId, SessionClientPacketId } from '@ao/protocol';
-import { LIMITS, REDACTED, Ring, buildBugReport, clip, consoleText, packetNameTable, redact, reportTitle } from '../src/bug-report-data.js';
+import { BUG_CATEGORIES, LIMITS, REDACTED, Ring, buildBugReport, clip, consoleText, packetNameTable, redact, reportTitle } from '../src/bug-report-data.js';
 import type { ReportInput } from '../src/bug-report-data.js';
 
 describe('redact', () => {
@@ -95,6 +95,12 @@ describe('buildBugReport', () => {
     expect(report.protocol).toHaveLength(LIMITS.protocol);
     expect(report.errors).toHaveLength(LIMITS.errors);
     expect(report.text.length).toBe(LIMITS.text);
+  });
+  it('carries the category only when it is one of the reporter\'s', () => {
+    expect(buildBugReport(base({ category: 'Gráficos o sonido' })).category).toBe('Gráficos o sonido');
+    expect(buildBugReport(base({})).category).toBeUndefined();
+    expect(buildBugReport(base({ category: 'Hackeo' as never })).category).toBeUndefined();
+    expect(BUG_CATEGORIES).toHaveLength(5); // five of FrmGmAyuda's seven reason rows; the screenshot box takes the other two
   });
   it('attaches the screenshot only when one is given', () => {
     const report = buildBugReport(base({ screenshot: { dataUrl: 'data:image/png;base64,AAAA', width: 10, height: 5, type: 'image/png', bytes: 3 } }));

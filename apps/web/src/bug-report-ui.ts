@@ -9,8 +9,9 @@
 import './bug-report.css';
 import { VbWindow } from './vb-window.js';
 import { loadInterface } from './interface-assets.js';
-import { buildBugReport } from './bug-report-data.js';
-import type { ReportInput, ScreenshotInfo } from './bug-report-data.js';
+import { BUG_CATEGORIES, buildBugReport } from './bug-report-data.js';
+import type { BugCategory, ReportInput, ScreenshotInfo } from './bug-report-data.js';
+import type { Box } from './vb-window.js';
 
 export type ReportContext = Omit<ReportInput, 'sessionId' | 'text' | 'expected' | 'screenshot'>;
 export interface BugReportDeps {
@@ -39,8 +40,8 @@ export class BugReportUI {
   open() {
     if (this.win?.isOpen) { this.win.focus(); return; }
     const screenshot = this.deps.capture();
-    // The frame of the classic configuration window (frmOpciones' es_configuracion-vacio, 536x506), its captions painted out
-    // (reporterArt), like every other in-game window: the title, labels and buttons are drawn over it in the game's fonts.
+    // FrmGmAyuda's picture (es_ventanagm, 470x434: "MENSAJE AL STAFF", the LEE ATENTAMENTE banner, the black message box on the left, the
+    // reason list on the right, CANCELAR / ENVIAR), its baked captions painted out (reporterArt); our words drawn over it in the game's fonts.
     const win = new VbWindow(this.parent, { id: 'bug-report-window', size: [ART_WIDTH, ART_HEIGHT], title: 'Reportar un bug', onClose: () => { if (this.win === win) this.win = undefined; art?.release(); } });
     this.win = win;
     let art: { release(): void } | undefined;
@@ -49,23 +50,35 @@ export class BugReportUI {
       if (!win.isOpen) { result.release(); return; }
       art = result; win.root.style.backgroundImage = `url("${result.url}")`; win.root.classList.add('bug-report-art');
     }).catch(() => { win.root.classList.add('bug-report-bare'); });
-    win.label('Reportar un bug', [0, 24, ART_WIDTH, 30], 'bug-report-title'); // in place of the baked "CONFIGURACIÓN"
-    win.closeButton([505, 0, 29, 20]).id = 'bug-report-close';
-    const note = win.label('También se envían tu personaje y posición, los últimos mensajes de la consola y datos técnicos del cliente. Nunca tu email ni tu contraseña.',
-      [28, 74, 480, 34], 'bug-report-note');
-    note.style.whiteSpace = 'normal';
-    win.label('¿Qué pasó?', [28, 126, 300, 17], 'bug-report-label');
-    const text = win.input([28, 145, 480, 100], { multiline: true, maxLength: 4000 }) as HTMLTextAreaElement;
-    text.id = 'bug-report-text'; text.placeholder = 'Contanos qué estabas haciendo y qué salió mal.'; text.classList.add('bug-report-field');
-    win.label('¿Qué esperabas que pasara? (opcional)', [28, 255, 330, 17], 'bug-report-label');
-    const expected = win.input([28, 274, 480, 58], { multiline: true, maxLength: 2000 }) as HTMLTextAreaElement;
-    expected.id = 'bug-report-expected'; expected.classList.add('bug-report-field');
+    win.label('Reportar un bug', [157, 28, 260, 30], 'bug-report-title'); // after the message icon, in place of "MENSAJE AL STAFF"
+    win.closeButton(t(6585, 0, 420, 420)).id = 'bug-report-close';
+    win.label('¿Qué pasó?', [62, 80, 133, 20], 'bug-report-banner'); // the scroll banner (LEE ATENTAMENTE)
+    // Left panel: the status replaces the intro while it has something to say (CSS: .bug-report-status:not(:empty) + .bug-report-intro).
+    const status = win.label('', [39, 122, 166, 70], 'bug-report-status'); status.id = 'bug-report-status'; status.setAttribute('role', 'status');
+    win.label('Contanos qué estabas haciendo y qué salió mal. Se envían tu personaje, una captura y los últimos mensajes; nunca tu email ni tu contraseña.',
+      [39, 122, 166, 70], 'bug-report-intro');
+    const text = win.input(t(720, 3000, 2415, 2175), { multiline: true, maxLength: 4000 }) as HTMLTextAreaElement; // FrmGmAyuda's txtMotivo
+    text.id = 'bug-report-text'; text.placeholder = 'Escribí acá…'; text.classList.add('bug-report-field');
+    // Right panel: the categories on the first five of the seven reason rows (optReason), then the screenshot and what was expected.
+    const radios = BUG_CATEGORIES.map((category, i) => {
+      const top = REASON_TOPS[i]!;
+      const radio = document.createElement('button'); radio.type = 'button'; radio.className = 'bug-report-radio'; radio.id = `bug-report-category-${i}`;
+      radio.setAttribute('role', 'radio'); radio.setAttribute('aria-checked', 'false'); radio.setAttribute('aria-label', category); radio.dataset.category = category;
+      win.add(radio, [257, top - 3, 140, 21]);
+      const label = document.createElement('span'); label.className = 'bug-report-radio-label'; label.textContent = category; radio.append(label);
+      return radio;
+    });
+    let category: BugCategory | undefined, radioOn = 'none';
+    radios.forEach((radio, i) => radio.addEventListener('click', () => {
+      category = BUG_CATEGORIES[i]; radios.forEach((other, j) => { other.setAttribute('aria-checked', String(j === i)); other.style.setProperty('--dot', j === i ? radioOn : 'none'); });
+    }));
+    void loadInterface('radio-on').then(url => { radioOn = `url("${url}")`; radios.forEach(radio => { if (radio.getAttribute('aria-checked') === 'true') radio.style.setProperty('--dot', radioOn); }); }).catch(() => undefined);
     // The game's check box (check-amarillo.bmp over a dark square), as in frmRetos: a button with role=checkbox.
     const box = document.createElement('button'); box.type = 'button'; box.id = 'bug-report-screenshot'; box.className = 'bug-report-checkbox';
     box.setAttribute('role', 'checkbox'); box.disabled = !screenshot;
     const caption = document.createElement('button'); caption.type = 'button'; caption.className = 'bug-report-check-label'; caption.disabled = !screenshot;
-    caption.textContent = screenshot ? 'Incluir captura de pantalla' : 'Captura no disponible'; caption.tabIndex = -1;
-    box.setAttribute('aria-label', caption.textContent);
+    caption.textContent = screenshot ? 'Incluir captura' : 'Sin captura'; caption.tabIndex = -1;
+    box.setAttribute('aria-label', screenshot ? 'Incluir captura de pantalla' : 'Captura no disponible');
     let attach = !!screenshot;
     const thumb = screenshot ? document.createElement('img') : undefined;
     const showCheck = () => {
@@ -75,27 +88,30 @@ export class BugReportUI {
     const toggle = () => { if (!screenshot) return; attach = !attach; showCheck(); };
     box.addEventListener('click', toggle); caption.addEventListener('click', toggle);
     void loadInterface('check-amarillo').then(url => { box.style.setProperty('--check', `url("${url}")`); }).catch(() => undefined);
-    win.add(box, [28, 346, 17, 17]); win.add(caption, [50, 346, 260, 17]);
+    win.add(box, [261, 232, 15, 15]); win.add(caption, [283, 231, 80, 17]);
     if (screenshot && thumb) {
       thumb.className = 'bug-report-thumb'; thumb.id = 'bug-report-thumb'; thumb.alt = 'Captura de pantalla';
       thumb.src = screenshot.dataUrl;
-      win.add(thumb, [388, 342, 120, 90]);
+      win.add(thumb, [364, 222, 54, 42]);
     }
     showCheck();
-    const status = win.label('', [28, 374, 350, 56], 'bug-report-status'); status.id = 'bug-report-status'; status.setAttribute('role', 'status');
+    win.label('¿Qué esperabas? (opcional)', [254, 272, 166, 15], 'bug-report-small-label');
+    const expected = win.input([254, 289, 164, 52], { multiline: true, maxLength: 2000 }) as HTMLTextAreaElement;
+    expected.id = 'bug-report-expected'; expected.classList.add('bug-report-field', 'bug-report-field-small');
+    // The bottom bar: CANCELAR / ENVIAR are FrmGmAyuda's own pictures, moved right to make room for "Escribir a un GM" (reporterArt clears the bar).
     const gm = this.deps.gmHelp();
     if (gm) {
-      const gmButton = win.add(document.createElement('button'), [33, 453, 150, 27]);
+      const gmButton = win.add(document.createElement('button'), [36, 381, 128, 24]);
       gmButton.type = 'button'; gmButton.className = 'bug-report-text-button'; gmButton.id = 'bug-report-gm'; gmButton.textContent = 'Escribir a un GM';
       gmButton.addEventListener('click', () => { win.close(); gm(); });
     }
-    const cancel = win.button('boton-cancelar', [236, 453, 132, 28], 'Cancelar', () => win.close()); cancel.id = 'bug-report-cancel';
-    const send = win.button('boton-enviar', [380, 453, 132, 28], 'Enviar', () => { void submit(); }); send.id = 'bug-report-send';
+    const cancel = win.button('boton-cancelar', [171, 381, 128, 24], 'Cancelar', () => win.close()); cancel.id = 'bug-report-cancel';
+    const send = win.button('boton-enviar', [306, 381, 128, 24], 'Enviar', () => { void submit(); }); send.id = 'bug-report-send';
     const submit = async () => {
       if (text.value.trim() === '') { status.textContent = 'Contanos qué pasó.'; text.focus(); return; }
       send.disabled = true; cancel.disabled = true; status.textContent = 'Enviando…';
       try {
-        const payload = buildBugReport({ ...this.deps.context(), sessionId: this.sessionId, text: text.value, expected: expected.value, screenshot: attach ? screenshot : undefined });
+        const payload = buildBugReport({ ...this.deps.context(), sessionId: this.sessionId, text: text.value, expected: expected.value, category, screenshot: attach ? screenshot : undefined });
         const response = await (this.deps.post ?? postJson)(JSON.stringify(payload));
         const body = await response.json().catch(() => ({})) as { id?: string; error?: string; retryAfterSeconds?: number };
         if (response.status === 201 && body.id) {
@@ -118,25 +134,33 @@ export class BugReportUI {
   }
 }
 
-const ART_WIDTH = 536, ART_HEIGHT = 506;
+const ART_WIDTH = 470, ART_HEIGHT = 434;
+/** FrmGmAyuda positions are twips; / 15 gives form pixels (gm-ui.ts). */
+const t = (l: number, tp: number, w: number, h: number): Box => [Math.round(l / 15), Math.round(tp / 15), Math.round(w / 15), Math.round(h / 15)];
+/** optConsult(i).Top in twips / 15, top to bottom: the seven reason rows of es_ventanagm. */
+const REASON_TOPS = [1590, 1950, 2310, 2670, 3045, 3405, 3765].map(top => Math.round(top / 15));
 /**
- * The window's picture: es_configuracion-vacio as loadInterface hands it out (its baked captions, "CONFIGURACIÓN" and "CONFIGURAR TECLAS",
- * already painted out by ui-captions.ts), drawn on a canvas, with the bottom bar's "CONFIGURAR TECLAS" frame and the five social icons covered
- * by the plain bar to their right. A copy of our own, so the caption overlay never draws "CONFIGURACIÓN" back over it.
+ * The window's picture: es_ventanagm as loadInterface hands it out (every baked caption, title to ENVIAR, already painted out by
+ * ui-captions.ts), drawn on a canvas, with what our window does not use covered by the plain texture beside it: the last two reason
+ * circles (the screenshot box sits there) and the CANCELAR / ENVIAR frames (our three buttons go where they fit). A copy of our own, so the
+ * caption overlay never draws "MENSAJE AL STAFF" back over it.
  */
 async function reporterArt(): Promise<{ url: string; release(): void }> {
-  const source = await loadInterface('configuracion-vacio');
+  const source = await loadInterface('ventanagm');
   const image = new Image(); image.src = source; await image.decode();
   const canvas = document.createElement('canvas'); canvas.width = ART_WIDTH; canvas.height = ART_HEIGHT;
   const ctx = canvas.getContext('2d'); if (!ctx) throw new Error('no 2d context');
   ctx.drawImage(image, 0, 0, ART_WIDTH, ART_HEIGHT);
-  // The bar between y 449 and 487 is plain from x 350 on: two copies of it over x 24..340 (the key-binding button and the icons).
-  for (const x of [24, 182]) ctx.drawImage(canvas, 350, 449, 158, 38, x, 449, 158, 38);
+  for (const top of REASON_TOPS.slice(BUG_CATEGORIES.length)) ctx.drawImage(canvas, 380, top - 4, 26, 24, 255, top - 4, 26, 24);
+  for (const [from, to, width] of COVERS) ctx.drawImage(canvas, from, BAR_TOP, width, BAR_HEIGHT, to, BAR_TOP, width, BAR_HEIGHT);
   const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
   if (!blob) throw new Error('no picture');
   const url = URL.createObjectURL(blob);
   return { url, release: () => URL.revokeObjectURL(url) };
 }
+const BAR_TOP = 376, BAR_HEIGHT = 34;
+/** Plain strips of the bottom bar copied over the two baked button frames: [from x, to x, width]. */
+const COVERS: readonly (readonly [number, number, number])[] = [[30, 80, 50], [30, 130, 50], [30, 180, 50], [30, 230, 50], [30, 280, 50], [30, 330, 50], [30, 380, 50]];
 
 async function postJson(body: string) {
   const response = await fetch(BUG_REPORT_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body });

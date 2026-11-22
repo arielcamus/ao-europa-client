@@ -4,6 +4,7 @@ export const ROUTE: string;
 export const DEFAULT_DIR: string;
 export const MAX_IMAGE_BYTES: number;
 export const MAX_BODY_BYTES: number;
+export const BUG_CATEGORIES: string[];
 export const LIMITS: Record<'chat' | 'console' | 'protocol' | 'errors' | 'windows' | 'text' | 'expected' | 'line' | 'stack', number>;
 
 export interface GitHubConfig { token: string; repo: string; branch: string; label: string; apiUrl: string }

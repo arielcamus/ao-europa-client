@@ -5,7 +5,7 @@ import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'n
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  MAX_IMAGE_BYTES, RateLimiter, bugReportOptionsFromEnv, createBugReportHandler, issueContent, pushPending, pushToGitHub, redact, validateReport,
+  BUG_CATEGORIES, MAX_IMAGE_BYTES, RateLimiter, bugReportOptionsFromEnv, createBugReportHandler, issueContent, pushPending, pushToGitHub, redact, validateReport,
 } from '../../../tools/bug-reports.mjs';
 
 const PNG = Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), Buffer.alloc(32, 7)]);
@@ -41,6 +41,17 @@ describe('validateReport', () => {
     expect(result.image).toMatchObject({ ext: 'png', type: 'image/png' });
     expect(result.image!.buffer.equals(PNG)).toBe(true);
     expect(result.report.screenshotInfo).toEqual({ width: 4, height: 2, type: 'image/png', bytes: PNG.length });
+  });
+  it('keeps a category from the reporter\'s list (the same as the client\'s) and drops anything else', async () => {
+    const { BUG_CATEGORIES: client } = await import('../src/bug-report-data.js');
+    expect(BUG_CATEGORIES).toEqual([...client]);
+    const kept = validateReport(report({ category: 'Movimiento o mapa' }));
+    expect(kept.ok && kept.report.category).toBe('Movimiento o mapa');
+    if (kept.ok) expect(issueContent(kept.report, 'id1').body).toContain('| Categoría | Movimiento o mapa |');
+    for (const category of ['otro', '<b>x</b>', 3, null]) {
+      const dropped = validateReport(report({ category }));
+      expect(dropped.ok && dropped.report).not.toHaveProperty('category');
+    }
   });
   it('rejects malformed reports with a reason', () => {
     const bad = (over: Record<string, unknown>) => validateReport(report(over));
