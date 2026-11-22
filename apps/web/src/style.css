@@ -25,7 +25,8 @@ button { cursor: pointer; }
 .main-art, .panel-art { position: absolute; top: 0; left: 0; pointer-events: none; user-select: none; }
 .main-art { width: 1024px; height: 768px; }
 /* The AO World lockup (969 x 440) in the slot the baked Argentum logo had (logo-patch.ts paints that one over). */
-#ao-logo { position: absolute; left: 8px; top: 2px; width: 106px; height: 30px; object-fit: contain; image-rendering: auto; pointer-events: none; }
+/* The title bar's face is rows 0-27 (the bezel starts at 28): the 24 px lockup has 2.5 px above and below, so it sits centred in it. */
+#ao-logo { position: absolute; left: 8px; top: 2.5px; width: 106px; height: 24px; object-fit: contain; image-rendering: auto; pointer-events: none; }
 .panel-art { width: 100%; height: 100%; }
 img, canvas { image-rendering: pixelated; }
 /* ?scale=fill|whole: every piece of art in the classic window (backgrounds of art buttons and windows included: image-rendering is inherited)
@@ -34,10 +35,10 @@ img, canvas { image-rendering: pixelated; }
 .ui-caption { overflow: visible; text-rendering: geometricPrecision; }
 /* A VbWindow button carries one caption layer per picture (ui-captions.ts): the one shown follows the same :hover / :active as its picture. */
 .ui-caption[data-state="over"], .ui-caption[data-state="off"] { display: none; }
-.vb-art-ready:hover > .ui-caption[data-state="normal"] { display: none; }
-.vb-art-ready:hover > .ui-caption[data-state="over"] { display: inline; }
-.vb-art-ready:active:has(> .ui-caption[data-state="off"]) > .ui-caption[data-state="over"] { display: none; }
-.vb-art-ready:active > .ui-caption[data-state="off"] { display: inline; }
+.vb-art-ready:hover > .ui-caption[data-state="normal"], #connect:hover > .ui-caption[data-state="normal"] { display: none; }
+.vb-art-ready:hover > .ui-caption[data-state="over"], #connect:hover > .ui-caption[data-state="over"] { display: inline; }
+.vb-art-ready:active:has(> .ui-caption[data-state="off"]) > .ui-caption[data-state="over"], #connect:active:has(> .ui-caption[data-state="off"]) > .ui-caption[data-state="over"] { display: none; }
+.vb-art-ready:active > .ui-caption[data-state="off"], #connect:active > .ui-caption[data-state="off"] { display: inline; }
 button, input { border-radius: 0; }
 .hotspot, .art-button { border: 0; padding: 0; background: transparent; color: transparent; }
 .hotspot:hover { background: #ffffff12; }

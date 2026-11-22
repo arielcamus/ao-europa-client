@@ -21,6 +21,8 @@ export interface FoundCaption {
   color: string;
   /** Letter pixels found (a box with none keeps the bitmap as it was). */
   pixels: number;
+  /** Height of the capitals alone, without the accents above them (CONTRASEÑA: 8 of its 11 px). Set only when a mark floats above the line. */
+  capHeight?: number;
 }
 
 const luminance = (px: Uint8ClampedArray | Uint8Array, i: number) => 0.299 * px[i]! + 0.587 * px[i + 1]! + 0.114 * px[i + 2]!;
@@ -52,7 +54,7 @@ export function eraseCaptions(px: Uint8ClampedArray | Uint8Array, width: number,
     for (let i = 0; i < core.length; i++) if (core[i]) { all++; if (chroma(i) < 48) grey++; }
     if (grey > 0.5 * all) for (let i = 0; i < core.length; i++) if (core[i] && chroma(i) >= 48) core[i] = 0;
     // A frame or separator line crossing the box is not a letter: drop thin pieces that run most of the box.
-    const seen = new Uint8Array(w * h);
+    const seen = new Uint8Array(w * h), parts: { y0: number; y1: number }[] = [];
     for (let i = 0; i < core.length; i++) if (core[i] && !seen[i]) {
       const piece = [i]; seen[i] = 1;
       let px0 = w, py0 = h, px1 = -1, py1 = -1;
@@ -66,6 +68,7 @@ export function eraseCaptions(px: Uint8ClampedArray | Uint8Array, width: number,
       }
       const pw = px1 - px0 + 1, ph = py1 - py0 + 1;
       if ((ph <= 2 && pw >= 0.6 * w) || (pw <= 2 && ph >= 0.9 * h)) for (const q of piece) core[q] = 0;
+      else parts.push({ y0: py0, y1: py1 });
     }
     let bx0 = w, by0 = h, bx1 = -1, by1 = -1, count = 0;
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (core[y * w + x]) {
@@ -105,7 +108,13 @@ export function eraseCaptions(px: Uint8ClampedArray | Uint8Array, width: number,
           : median;
       }
     }
-    return { text: spec.text, font, x: x0 + bx0, y: y0 + by0, width: bx1 - bx0 + 1, height: by1 - by0 + 1, color: `rgb(${rgb.join(',')})`, pixels: count };
+    // An accent (the tilde of Ñ, the acute of Ó) is a piece of its own that ends above the line the letters stand on: the capitals' height is
+    // that of the pieces on the line (median, so one tall letter or a tail does not decide it), and the accent is the rest of the box.
+    const ends = parts.map(part => part.y1).sort((a, b) => a - b), baseline = ends[ends.length >> 1] ?? by1;
+    const onLine = parts.filter(part => Math.abs(part.y1 - baseline) <= 1).map(part => part.y1 - part.y0 + 1).sort((a, b) => a - b);
+    const caps = onLine[onLine.length >> 1];
+    const floating = caps !== undefined && by1 - by0 + 1 - caps >= 2 && parts.some(part => part.y1 < baseline - 1);
+    return { text: spec.text, font, x: x0 + bx0, y: y0 + by0, width: bx1 - bx0 + 1, height: by1 - by0 + 1, color: `rgb(${rgb.join(',')})`, pixels: count, ...(floating ? { capHeight: caps } : {}) };
   });
 }
 
