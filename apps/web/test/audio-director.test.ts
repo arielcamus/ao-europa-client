@@ -91,6 +91,17 @@ describe('footsteps (DoPasosFx)', () => {
     t.director.receive(move(3, 51, 50));
     expect(t.engine.events.at(-1)).toMatchObject({ id: '50', label: 'sailing_3', category: 'steps' });
   });
+  it('EraseChar stops the erased sailor\'s sailing_<index> sound and no one else\'s (#110)', async () => {
+    const t = setup({ ground: 1 }); t.f.files.set('/ao-assets/OGG/50.ogg', 4);
+    t.chars.set(3, { x: 51, y: 50, body: 1, privileges: 0, sailing: true, speeding: 1 });
+    t.chars.set(4, { x: 49, y: 50, body: 1, privileges: 0, sailing: true, speeding: 1 });
+    t.director.receive(move(3, 51, 50)); t.director.receive(move(4, 49, 50));
+    await new Promise(resolve => setTimeout(resolve, 0));
+    const sailing = t.f.started.slice(-2);
+    t.director.eraseChar(3);
+    expect(sailing.map(s => s.stopped)).toEqual([true, false]);
+    expect(t.engine.events.at(-1)).toMatchObject({ kind: 'stop', label: 'sailing_3' });
+  });
   it('stays quiet for the dead, for a dead player, out of earshot and for stronger privileges', () => {
     const t = setup();
     t.chars.set(2, { x: 52, y: 50, body: 829, privileges: 0, sailing: false, speeding: 1 });

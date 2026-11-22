@@ -75,6 +75,7 @@ export class AudioSystem {
     this.world.session = session;
     // Waves the world FX decide: a travelling spell's arrival (positional) and RevisarHoraMundo's wolf / rooster (no position).
     session.world.setHooks({ playWave: (wave, x, y) => this.director.at(wave, x, y), playGlobalWave: wave => this.director.global(wave) });
+    session.onCharacterErased = charIndex => { try { this.director.eraseChar(charIndex); } catch (error) { this.report(`Audio: ${String(error)}`); } };
     session.onPacket = packet => {
       try { this.director.receive(packet); } catch (error) { this.report(`Audio: ${String(error)}`); } // sound must never drop the session
     };

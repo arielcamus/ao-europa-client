@@ -57,6 +57,8 @@ export class AudioDirector {
     this.lastMap = undefined; this.lastMusic = undefined; this.lastMotion = undefined; this.feet.clear();
     void this.engine.playMusic(undefined); this.engine.stopAmbient();
   }
+  /** EraseChar's audio part: "if char is erased while sailing, stop loop" (StopAllWavsMatchingLabel("sailing_" & charindex)). */
+  eraseChar(charIndex: number) { this.engine.stopLabel(`sailing_${charIndex}`); }
   private get invert() { return this.engine.settings.invertChannels; }
   private get self() { return this.world.position; }
 

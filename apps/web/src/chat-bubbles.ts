@@ -5,7 +5,7 @@
  * Drawn as a DOM layer over the map: the bitmap-font renderer is not ported, and the map
  * renderer only draws the player's own body. Positions use the same camera as WorldRenderer.render.
  */
-import { fetchText, parseIni } from './assets.js';
+import { bodyHeadOffset, fetchText, parseIni } from './assets.js';
 import type { Ini } from './assets.js';
 import type { Session } from './session.js';
 
@@ -30,7 +30,8 @@ export class ChatBubbles {
   constructor(private readonly layer: HTMLElement) {}
   async init() { this.bodies = parseIni(await fetchText('init/cuerpos.dat')); }
 
-  private headOffsetY(body: number) { return Number(this.bodies?.get(`body${body}`)?.get('headoffsety') ?? 0); }
+  /** engine.bas uses .Body.HeadOffset.y: the combined head + body offset (CargarCuerpos), not the raw ini HeadOffsetY. */
+  private headOffsetY(body: number) { return this.bodies ? bodyHeadOffset(this.bodies, body).y : 0; }
 
   update(session: Session | undefined, now: number) {
     const visible = session && session.phase === 'playing' ? session.ui.chat.visibleDialogs() : [];

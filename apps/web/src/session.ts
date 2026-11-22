@@ -100,6 +100,8 @@ export class Session {
   readonly inventoryActions = new InventoryActions({ send: packet => this.send(packet), ready: () => this.ready, now: () => this.clock(), ui: this.ui, items: this.items });
   /** Observer called with every decoded server packet once the session state has applied it (audio). */
   onPacket: ((packet: ServerPacket) => void) | undefined;
+  /** Observer called after EraseChar removed a character (every path: CharacterRemove, a step out of the area, CambioDeArea): audio. */
+  onCharacterErased: ((charIndex: number) => void) | undefined;
   /** Bank vault, Goliath and player-to-player trade (feat/bank-trade). */
   readonly bankTrade = new BankTradeState();
   readonly bankTradeActions = new BankTradeController({ send: packet => this.send(packet), ready: () => this.ready }, this.bankTrade);
@@ -207,6 +209,8 @@ export class Session {
     this.tracker.onErase = charIndex => {
       this.combat.forgetCharacter(charIndex); this.spells.forgetCharacter(charIndex); this.world.forgetCharacter(charIndex);
       if (charIndex !== this.charIndex) this.status.forget(charIndex); // the own character keeps its status across a warp
+      this.ui.chat.removeDialog(charIndex); // Dialogos.RemoveDialog
+      this.onCharacterErased?.(charIndex); // the audio side: StopAllWavsMatchingLabel("sailing_<index>")
     };
     this.placementDeadline = this.connectedAt + 10_000;
   }
