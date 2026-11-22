@@ -106,3 +106,10 @@ export function silentLoginText(kind: 'create' | 'enter', timedOut: boolean): st
   if (kind === 'create') return timedOut ? TEXT.createNoAnswer : TEXT.createClosed;
   return timedOut ? TEXT.enterNoAnswer : TEXT.enterClosed;
 }
+
+/**
+ * The account box's value as sent: surrounding whitespace dropped (iOS autofill and keyboards add a trailing space; the server's
+ * HandleLoginAccount compares UPPER(email)=UPPER(?) with no trim, so " a@b.c " never matches). Case is left alone: that comparison
+ * is already case-insensitive, and HandleCreateAccount stores LCase(username).
+ */
+export const accountName = (value: string) => value.trim();

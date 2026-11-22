@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { CLASS_ROTATION, HOME_CITIES, homeCityId, TEXT, headsFor, raceModifiers, rotateClass, validateCharacterName } from '../src/connect-text.js';
+import { CLASS_ROTATION, HOME_CITIES, accountName, homeCityId, TEXT, headsFor, raceModifiers, rotateClass, validateCharacterName } from '../src/connect-text.js';
 import { ACCOUNT_RECTS, slotAt, slotOrigin } from '../src/connect-ui.js';
 import { parseIni } from '../src/assets.js';
+import { readFileSync } from 'node:fs';
 
 describe('character name rules (General.ValidarNombre)', () => {
   it.each([['Ab', TEXT.nameLength], ['A'.repeat(19), TEXT.nameLength], ['Ab1', TEXT.nameChars], ['Añb', TEXT.nameChars], ['Ana  Maria', TEXT.nameSpaces], [' Ana', TEXT.nameEdges], ['Ana ', TEXT.nameEdges]])('%s', (name, problem) => {
@@ -76,5 +77,22 @@ describe('home city list (ListaCiudades at the pinned client 619e69d, Forgat hid
   });
   it('sends the server e_City id of each city (Declares.bas: Ullathorpe 1 .. Arghal 5), never 0 and never Forgat (7) or Arkhein (6)', () => {
     expect(HOME_CITIES.map((_, i) => homeCityId(i))).toEqual([1, 2, 3, 4, 5]);
+  });
+});
+
+describe('login boxes on phones (22 Nov: iOS capitalised the account and the login said wrong password)', () => {
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const tag = (id: string) => html.match(new RegExp(`<input id="${id}"[^>]*>`))?.[0] ?? '';
+  it('the account box: no capitalisation, autocorrect or spellcheck, the e-mail keyboard, still autocomplete=username', () => {
+    const box = tag('email');
+    for (const attribute of ['autocapitalize="none"', 'autocorrect="off"', 'spellcheck="false"', 'inputmode="email"', 'autocomplete="username"']) expect(box).toContain(attribute);
+  });
+  it('the password box: no capitalisation or autocorrect, still a password', () => {
+    const box = tag('password');
+    for (const attribute of ['type="password"', 'autocomplete="current-password"', 'autocapitalize="none"', 'autocorrect="off"']) expect(box).toContain(attribute);
+  });
+  it('the account is sent trimmed, its case untouched (the server compares UPPER(email))', () => {
+    expect(accountName('  Ariel@Example.com \n')).toBe('Ariel@Example.com');
+    expect(accountName('a@b.c')).toBe('a@b.c');
   });
 });

@@ -58,7 +58,7 @@ import { PapiroUI } from './papiro-ui.js';
 import { InventoryExtras } from './inventory-extras.js';
 import { ConnectUI } from './connect-ui.js';
 import { LoadingCard, showConfirm, showConnecting, showExit, showMessage, showNewAccount } from './session-windows.js';
-import { TEXT, silentLoginText } from './connect-text.js';
+import { TEXT, accountName, silentLoginText } from './connect-text.js';
 import { FloatingTexts } from './floating-text.js';
 import type { SessionNotice } from './session.js';
 import type { VbWindow } from './vb-window.js';
@@ -474,6 +474,7 @@ const REMEMBER = 'ao.account';
 const remembered = (() => { try { return localStorage.getItem(REMEMBER) ?? ''; } catch { return ''; } })();
 form.addEventListener('submit', event => {
   event.preventDefault();
+  account.value = accountName(account.value);
   try { if (remember.getAttribute('aria-checked') === 'true') localStorage.setItem(REMEMBER, account.value); else localStorage.removeItem(REMEMBER); } catch { /* storage may be blocked */ }
   connectSession(account.value, password.value);
 });
