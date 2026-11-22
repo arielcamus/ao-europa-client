@@ -83,6 +83,12 @@ export function classicScaleNow() { return current; }
 /** Called with the new scale whenever the window, the device pixel ratio or the mode changes. */
 export function onClassicScale(listener: (scale: number, dpr: number, mode: ScreenScale) => void) { listeners.add(listener); return () => { listeners.delete(listener); }; }
 export function setScreenScale(next: ScreenScale) { if (next !== mode && SCREEN_SCALES.includes(next)) { mode = next; resize?.(); } }
+let gutter = 0;
+/**
+ * CSS px kept free on each side of the window (the beta bug button, beta.ts). 0 by default; set only when the browser window is too narrow
+ * for the button to sit beside the game, so the game shrinks just enough to make room instead of being covered.
+ */
+export function setLayoutGutter(px: number) { const next = Math.max(0, Math.round(px)); if (next !== gutter) { gutter = next; resize?.(); } }
 
 export function applyClassicLayout(initial: ScreenScale = 'classic') {
   mode = initial;
@@ -94,7 +100,7 @@ export function applyClassicLayout(initial: ScreenScale = 'classic') {
   });
   let watched: MediaQueryList | undefined;
   resize = () => {
-    const dpr = window.devicePixelRatio || 1, width = document.documentElement.clientWidth, height = window.innerHeight;
+    const dpr = window.devicePixelRatio || 1, width = Math.max(1, document.documentElement.clientWidth - 2 * gutter), height = window.innerHeight;
     const scale = classicScale(width, height, dpr, mode);
     document.documentElement.style.setProperty('--classic-scale', String(scale));
     const fit = document.getElementById('classic-fit')!, classic = document.getElementById('classic');

@@ -1,4 +1,5 @@
 import { defineConfig } from '@playwright/test';
+import { bugReportDir } from './apps/web/e2e/bug-report-dir.js';
 
 // AO_WEB_PORT lets parallel worktrees run the suite without colliding on 5188.
 const port = Number(process.env.AO_WEB_PORT ?? 5188);
@@ -13,6 +14,9 @@ export default defineConfig({
   ],
   webServer: {
     command: 'node tools/dev-web.mjs --standin --preview', port, reuseExistingServer: false,
-    env: { AO_WEB_PORT: String(port) }, timeout: 15_000,
+    // The bug reporter writes into a temp dir of this run (bug-report.spec.ts reads it back), never the real reports dir.
+    env: { AO_WEB_PORT: String(port), AO_BUG_REPORT_DIR: bugReportDir(port), AO_BUG_REPORT_GITHUB_TOKEN: '',
+      // The layout specs measure the bare game; the beta button (and the gutter it may ask for) is tested by bug-report.spec.ts with ?beta=1.
+      AO_BETA: '0' }, timeout: 15_000,
   },
 });
