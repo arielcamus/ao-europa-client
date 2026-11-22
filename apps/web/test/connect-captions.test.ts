@@ -18,7 +18,7 @@ describe('captions of the buttons that tools/ui-captions once skipped (sips refu
 describe('connect screens (account, creation)', () => {
   it('lists the baked buttons of both sprites', () => {
     expect(CONNECT_ART[3839]!.captions.map(c => c.text)).toEqual(['CREAR', 'CREATE', 'JUGAR', 'PLAY']);
-    expect(CONNECT_ART[3839]!.glyphs!.map(g => g.kind)).toEqual(['back', 'close']);
+    expect(CONNECT_ART[3839]!.glyphs!.map(g => g.kind)).toEqual(['back', 'close', 'trash', 'transfer']);
     expect(CONNECT_ART[727]!.captions.map(c => c.text)).toEqual(['VOLVER', 'CREAR PERSONAJE']);
   });
   it('draws the glyphs inside their box', () => {

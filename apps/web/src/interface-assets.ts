@@ -1,4 +1,5 @@
 import { assetUrl } from './assets.js';
+import { paintOverArgentumLogo } from './logo-patch.js';
 import { CAPTIONS, captionLayout, captionState, captionedUrl, captionsFor, renderCaptioned, verifyCaptions } from './ui-captions.js';
 // Original BMP files remain untouched. Some true-color BI_RGB headers declare
 // important palette colors; WebKit rejects these, although there is no palette.
@@ -84,7 +85,7 @@ async function withCaptions(name: string, original: string, url: string): Promis
   if (!specs || typeof document === 'undefined' || new URLSearchParams(location.search).get('captions') === 'off') return url;
   try {
     const image = new Image(); image.src = url; await image.decode();
-    const captioned = await captionedUrl(image, specs, original.split('?')[0]!.split('/').pop());
+    const captioned = await captionedUrl(image, specs, original.split('?')[0]!.split('/').pop(), name === 'ventanaprincipal' ? paintOverArgentumLogo : undefined);
     if (!captioned) return url;
     if (url.startsWith('blob:')) URL.revokeObjectURL(url); // the decodable copy of the BMP, no longer handed out
     urls.set(original, captioned); return captioned;

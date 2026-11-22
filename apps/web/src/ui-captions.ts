@@ -60,13 +60,14 @@ interface Captioned { width: number; height: number; captions: FoundCaption[] }
 const registry = new Map<string, Captioned>();
 
 /** Make the captioned copy of a decoded bitmap (`file`: its original file name): returns its URL, or undefined when nothing was found. */
-export async function captionedUrl(image: HTMLImageElement, specs: readonly CaptionSpec[], file = ''): Promise<string | undefined> {
+export async function captionedUrl(image: HTMLImageElement, specs: readonly CaptionSpec[], file = '', patch?: (data: ImageData) => void): Promise<string | undefined> {
   const canvas = document.createElement('canvas'); canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
   const ctx = canvas.getContext('2d', { willReadFrequently: true }); if (!ctx) return undefined;
   ctx.drawImage(image, 0, 0);
   const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const captions = eraseCaptions(data.data, canvas.width, canvas.height, specs).filter(found => found.pixels > 0);
   if (!captions.length) return undefined;
+  patch?.(data);
   ctx.putImageData(data, 0, 0);
   const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
   if (!blob) return undefined;

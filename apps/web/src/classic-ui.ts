@@ -10,6 +10,7 @@ import type { WorldRenderer } from './renderer.js';
 import { loadInterface, loadedInterfaceUrl } from './interface-assets.js';
 import { KeysClientPacketId } from '@ao/protocol';
 import { renderMessage } from './chat-console.js';
+import { setFittedText, LABEL_SLACK } from './label-fit.js';
 import { loadSpellTables, swapSpellSlots } from './spells.js';
 import { ObjectCatalog, loadObjectIni } from './object-catalog.js';
 
@@ -18,6 +19,8 @@ export const element = <T extends HTMLElement = HTMLElement>(id: string) => {
   if (!node) throw new Error(`Missing element ${id}`);
   return node as T;
 };
+/** Width of each bar read-out box (frmMain: HpBar, manabar, stabar, AGUbar, hambar). The text may use LABEL_SLACK px more: the label overflows evenly (style.css). */
+const BAR_LABEL_BOX: Record<string, number> = { hp: 63, mana: 63, stamina: 51, water: 17, food: 17 };
 const text = (id: string, value: string | number) => { element(id).textContent = String(value); };
 const ratio = (value: number | undefined, max: number | undefined) => max && value !== undefined ? Math.min(1, Math.max(0, value / max)) : 0;
 
@@ -73,10 +76,7 @@ export class ClassicUI {
       if (this.session?.ready && spell && spell.index > 0) this.session.spells.info(this.selectedSpell);
     };
     // cmdLanzar_Click -> UseSpell: WriteCastSpell, then the server asks for a target (WorkRequestTarget).
-    element('cast').onclick = () => {
-      const spell = this.session?.ui.spells.get(this.selectedSpell);
-      if (this.session?.ready && spell && spell.index > 0) this.session.spells.cast(this.selectedSpell, this.spellName(spell.index));
-    };
+    element('cast').onclick = () => this.castSelectedSpell();
     // OpcionesBoton opens frmOpciones and imgManual / imgMAO the web pages (main.ts, frm-main-buttons.ts).
     element('menu-tab').onclick = () => this.showMenu(true);
     element('stats-tab').onclick = () => this.showMenu(false);
@@ -260,7 +260,7 @@ export class ClassicUI {
     const hpWidth = ratio(hp, fullHp) * 216;
     element('shield-fill').style.left = `${35.2 + hpWidth}px`;
     element('shield-fill').style.width = `${ratio(shield, fullHp) * 216}px`;
-    if (shield > 0) text('hp-text', `${hp} / ${maxHp} + ${shield}`);
+    if (shield > 0) setFittedText(element('hp-text'), `${hp} / ${maxHp} + ${shield}`, BAR_LABEL_BOX.hp! + LABEL_SLACK);
     this.bar('mana', mana, maxMana, 216);
     this.bar('stamina', stats.stamina, stats.maxStamina, 89);
     this.bar('water', ui.food?.water, ui.food?.maxWater, 32);
@@ -281,17 +281,25 @@ export class ClassicUI {
       row.className = 'spell'; row.dataset.slot = String(slot); row.id = `spell-${slot}`;
       row.setAttribute('role', 'option'); row.setAttribute('aria-selected', String(slot === this.selectedSpell));
       row.textContent = spell && spell.index > 0 ? this.spellName(spell.index) : '(Vacío)';
-      row.onclick = () => this.selectSpell(slot); list.append(row);
+      row.onclick = () => this.selectSpell(slot);
+      row.ondblclick = () => { this.selectSpell(slot); this.castSelectedSpell(); }; // double click casts, as the LANZAR button does
+      list.append(row);
     }
     list.scrollTop = scroll;
     const messages = element('messages'); messages.replaceChildren();
     for (const message of ui.messages) messages.append(renderMessage(message, ui.chat.locale));
     element('console').scrollTop = element('console').scrollHeight;
   }
+  /** cmdLanzar_Click -> UseSpell. Also a double click on a spell row (like picInv_DblClick on an item). */
+  castSelectedSpell() {
+    const spell = this.session?.ui.spells.get(this.selectedSpell);
+    if (this.session?.ready && spell && spell.index > 0) this.session.spells.cast(this.selectedSpell, this.spellName(spell.index));
+  }
   private bar(name: string, value: number | undefined, max: number | undefined, width: number, labelMax = max) {
     element(`${name}-fill`).style.width = `${ratio(value, max) * width}px`;
     if (name === 'experience') return; // the four read-out labels are written by frm-main-buttons.ts (UpdateExpBar)
     const label = value === undefined || labelMax === undefined ? '—' : ['water', 'food'].includes(name) ? String(value) : `${value} / ${labelMax}`;
-    text(`${name}-text`, label);
+    const node = element(`${name}-text`);
+    setFittedText(node, label, (BAR_LABEL_BOX[name] ?? parseFloat(node.style.width)) + LABEL_SLACK);
   }
 }

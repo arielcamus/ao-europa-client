@@ -24,6 +24,8 @@ button { cursor: pointer; }
 #classic[data-boot="ready"] #boot-cover { display: none; }
 .main-art, .panel-art { position: absolute; top: 0; left: 0; pointer-events: none; user-select: none; }
 .main-art { width: 1024px; height: 768px; }
+/* The AO World lockup (969 x 440) in the slot the baked Argentum logo had (logo-patch.ts paints that one over). */
+#ao-logo { position: absolute; left: 8px; top: 2px; width: 106px; height: 30px; object-fit: contain; image-rendering: auto; pointer-events: none; }
 .panel-art { width: 100%; height: 100%; }
 img, canvas { image-rendering: pixelated; }
 /* ?scale=fill|whole: every piece of art in the classic window (backgrounds of art buttons and windows included: image-rendering is inherited)
@@ -46,6 +48,8 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 1
 /* The game canvas is focusable for keyboard input but the original client draws no focus ring on the viewport. */
 #viewport canvas:focus, #viewport canvas:focus-visible { outline: none; }
 .label { display: block; text-align: center; font: bold 11px/16px Tahoma, Arial, sans-serif; white-space: nowrap; overflow: hidden; text-shadow: 1px 1px #000; pointer-events: none; }
+/* Read-outs that fit by font size (label-fit.ts): never clipped by the VB6 box, overflowing evenly into the art around it. */
+#hp-text, #mana-text, #stamina-text, .items-stat { display: flex; justify-content: center; overflow: visible; }
 .character-name { font-size: 16px; line-height: 30px; color: #ffffc0; }
 /* The label box is 75 px wide (NameMapa); a longer name ("Ciudad de Ullathorpe") overflows evenly on both sides instead of being cut. */
 #map-name { font-size: 9px; line-height: 11px; display: flex; justify-content: center; overflow: visible; }

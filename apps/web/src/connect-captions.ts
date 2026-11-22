@@ -13,7 +13,7 @@ import type { CaptionSpec } from './caption-erase.js';
 import { captionGeometry, CAPTION_SHADOW } from './ui-captions.js';
 
 /** A small icon-button glyph drawn as vector over the erased bitmap one. */
-export interface GlyphSpec { kind: 'back' | 'close'; box: readonly [x: number, y: number, width: number, height: number] }
+export interface GlyphSpec { kind: 'back' | 'close' | 'trash' | 'transfer'; box: readonly [x: number, y: number, width: number, height: number] }
 export interface CrispArt { captions: readonly CaptionSpec[]; glyphs?: readonly GlyphSpec[] }
 
 /** Boxes are in Grh-frame pixels. Keyed by Grh id. */
@@ -24,17 +24,38 @@ export const CONNECT_ART: Readonly<Record<number, CrispArt>> = {
       { text: 'CREAR', box: [272, 718, 58, 22] }, { text: 'CREATE', box: [338, 718, 66, 22] },
       { text: 'JUGAR', box: [630, 718, 58, 22] }, { text: 'PLAY', box: [694, 718, 46, 22] },
     ],
-    glyphs: [{ kind: 'back', box: [24, 22, 24, 24] }, { kind: 'close', box: [977, 22, 24, 24] }],
+    glyphs: [{ kind: 'back', box: [24, 22, 24, 24] }, { kind: 'close', box: [977, 22, 24, 24] }, { kind: 'trash', box: [15, 682, 24, 28] }, { kind: 'transfer', box: [976, 680, 30, 30] }],
   },
   // RenderUICrearPJ: the creation frame (512 x 401).
   727: { captions: [{ text: 'VOLVER', box: [96, 352, 80, 28] }, { text: 'CREAR PERSONAJE', box: [298, 352, 154, 28] }] },
 };
 
 const SVG = 'http://www.w3.org/2000/svg';
+/** A filled vector shape of an icon glyph: [tag, attributes]. The delete (bin) and transfer (arrow + character) icons of the account screen. */
+export type GlyphShape = readonly [tag: 'rect' | 'path', attrs: Record<string, string>];
+export const TRASH_COLOR = '#c8141f', ARROW_COLOR = '#f5b82b', FIGURE_COLOR = '#74685a';
+export function glyphShapes(kind: 'trash' | 'transfer', x: number, y: number, w: number, h: number): GlyphShape[] {
+  const f = (v: number) => v.toFixed(2);
+  if (kind === 'trash') {
+    const u = w / 24, v = h / 28, X = (n: number) => f(x + n * u), Y = (n: number) => f(y + n * v);
+    return [
+      ['rect', { x: X(8), y: Y(1), width: f(8 * u), height: f(3 * v), fill: 'none', stroke: TRASH_COLOR, 'stroke-width': f(1.6 * u) }], // handle
+      ['rect', { x: X(1), y: Y(4.5), width: f(22 * u), height: f(3 * v), fill: TRASH_COLOR }], // lid
+      ['path', { d: `M${X(3)} ${Y(9)} H${X(21)} L${X(19.6)} ${Y(27)} H${X(4.4)} Z`, fill: 'none', stroke: TRASH_COLOR, 'stroke-width': f(1.8 * u), 'stroke-linejoin': 'miter' }], // body
+      ['path', { d: [8.8, 12, 15.2].map(n => `M${X(n)} ${Y(11.5)} V${Y(24.5)}`).join(' '), fill: 'none', stroke: TRASH_COLOR, 'stroke-width': f(1.6 * u) }], // slots
+    ];
+  }
+  const u = w / 30, v = h / 30, X = (n: number) => f(x + n * u), Y = (n: number) => f(y + n * v);
+  return [
+    ['path', { d: `M${X(18)} ${Y(9)} L${X(10)} ${Y(5)} L${X(10.6)} ${Y(9.6)} C${X(4)} ${Y(11)} ${X(1.5)} ${Y(17)} ${X(2)} ${Y(24)} C${X(4)} ${Y(17.5)} ${X(7)} ${Y(15.5)} ${X(11.4)} ${Y(15.2)} L${X(12)} ${Y(19.8)} Z`, fill: ARROW_COLOR }], // arrow
+    ['path', { d: `M${X(22.6)} ${Y(6)} a${f(3.6 * u)} ${f(3.8 * v)} 0 1 1 0.01 0 Z M${X(16.4)} ${Y(28)} V${Y(18)} C${X(16.4)} ${Y(14)} ${X(19)} ${Y(12.6)} ${X(22.6)} ${Y(12.6)} C${X(26.2)} ${Y(12.6)} ${X(28.8)} ${Y(14)} ${X(28.8)} ${Y(18)} V${Y(28)} Z`, fill: FIGURE_COLOR }], // character
+  ];
+}
 export interface CrispResult { url: string; svg: SVGSVGElement; found: { text: string; pixels: number }[] }
 
 /** SVG strokes of a glyph inside its found box (bitmap px). */
 export function glyphPath(kind: GlyphSpec['kind'], x: number, y: number, w: number, h: number): string {
+  if (kind === 'trash' || kind === 'transfer') return '';
   if (kind === 'back') return `M${x + w * 0.72} ${y + h * 0.08} L${x + w * 0.2} ${y + h / 2} L${x + w * 0.72} ${y + h * 0.92}`;
   return `M${x + w * 0.08} ${y + h * 0.08} L${x + w * 0.92} ${y + h * 0.92} M${x + w * 0.92} ${y + h * 0.08} L${x + w * 0.08} ${y + h * 0.92}`;
 }
@@ -62,6 +83,14 @@ export async function crispFrame(draw: (ctx: CanvasRenderingContext2D) => void, 
     if (!f.pixels) return;
     if (n >= art.captions.length) {
       const glyph = art.glyphs![n - art.captions.length]!;
+      if (glyph.kind === 'trash' || glyph.kind === 'transfer') {
+        for (const [tag, attrs] of glyphShapes(glyph.kind, f.x, f.y, f.width, f.height)) {
+          const shape = document.createElementNS(SVG, tag);
+          for (const [name, value] of Object.entries(attrs)) shape.setAttribute(name, value);
+          shape.setAttribute('data-role', 'glyph'); shape.setAttribute('data-glyph', glyph.kind); svg.append(shape);
+        }
+        return;
+      }
       for (const [dx, stroke, role] of [[CAPTION_SHADOW.offset, CAPTION_SHADOW.color, 'shadow'], [0, f.color, 'glyph']] as const) {
         const path = document.createElementNS(SVG, 'path');
         path.setAttribute('d', glyphPath(glyph.kind, f.x + dx, f.y + dx, f.width, f.height)); path.setAttribute('data-role', role); path.setAttribute('data-glyph', glyph.kind);

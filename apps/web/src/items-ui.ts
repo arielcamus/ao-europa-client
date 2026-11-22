@@ -7,6 +7,7 @@
 import { windows } from './window-stack.js';
 import { loadInterface } from './interface-assets.js';
 import { controls } from './classic-layout.js';
+import { setFittedText, LABEL_SLACK } from './label-fit.js';
 import { GOLD_SLOT } from './items.js';
 import { ObjType, itemInfo, usableSuffix } from './object-catalog.js';
 import type { ClassicUI } from './classic-ui.js';
@@ -251,9 +252,9 @@ export class ItemsUI {
       else if (info.type === ObjType.Shield) equipped.shield = `${info.minDef}/${info.maxDef}`;
       else if (info.type === ObjType.Helmet) equipped.helmet = `${info.minDef}/${info.maxDef}`;
     }
-    for (const key of ['weapon', 'shield', 'helmet', 'armour'] as const) this.stat[key].textContent = equipped[key];
-    this.stat.resistance.textContent = `+${session.items.resistanceBonus}%`;
-    this.stat.damage.textContent = `+${session.items.damageBonus}%`;
+    for (const key of ['weapon', 'shield', 'helmet', 'armour'] as const) setFittedText(this.stat[key], equipped[key], 32 + LABEL_SLACK);
+    setFittedText(this.stat.resistance, `+${session.items.resistanceBonus}%`, controls.lblResis![2] + LABEL_SLACK);
+    setFittedText(this.stat.damage, `+${session.items.damageBonus}%`, controls.lbldm![2] + LABEL_SLACK);
     const attributes = session.items.attributes;
     this.stat.strength.textContent = attributes ? String(attributes.strength) : '';
     this.stat.agility.textContent = attributes ? String(attributes.agility) : '';
