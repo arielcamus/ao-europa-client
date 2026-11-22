@@ -43,9 +43,11 @@ function measure() {
   const layer = box(document.getElementById('mobile-layer'));
   if (Math.abs(layer.w - W) > 1 || Math.abs(layer.h - H) > 1) problems.push(`layer ${layer.w}x${layer.h} is not the visible ${W}x${H}`);
   const view = box(document.getElementById('viewport')), zoom = Number(document.getElementById('mobile-layer').dataset.zoom);
+  // 22 Nov (Ariel): the world fills the screen edge to edge, no black bands.
+  if (view.l > 0.5 || view.t > 0.5 || view.r < W - 0.5 || view.b < H - 0.5) problems.push(`world does not fill the screen: ${JSON.stringify(view)}`);
   return {
     size: `${W}x${H}`, dpr: devicePixelRatio, zoom, tiles: document.getElementById('mobile-layer').dataset.tiles,
-    devicePxPerArtPx: +(zoom * devicePixelRatio).toFixed(3), viewportOrigin: [view.l * devicePixelRatio, view.t * devicePixelRatio].map(v => +v.toFixed(2)),
+    devicePxPerArtPx: +(zoom * devicePixelRatio).toFixed(3), viewportOrigin: [view.l * devicePixelRatio, view.t * devicePixelRatio].map(v => +v.toFixed(2)), mapView: [document.getElementById('viewport').offsetWidth, document.getElementById('viewport').offsetHeight],
     meta: document.querySelector('meta[name="viewport"]')?.content, problems,
   };
 }
@@ -67,7 +69,7 @@ try {
     await page.locator('#connect-stage[data-screen="account"]').waitFor({ timeout: 30000 }); await page.waitForTimeout(1200);
     // The previous context's character may still be leaving ("El personaje está saliendo"): pick it again a few times.
     for (let attempt = 0; attempt < 4; attempt++) {
-      await page.locator('.cs-slot-hit').first().dblclick();
+      await page.locator('.cs-slot-hit').first().dblclick({ timeout: 10_000 }).catch(() => undefined);
       if (await page.locator('#viewport[data-rendered="true"]').waitFor({ timeout: 15_000 }).then(() => true, () => false)) break;
     }
     await page.locator('#viewport[data-rendered="true"]').waitFor({ timeout: 30_000 }).catch(async error => {
@@ -90,7 +92,7 @@ try {
     }
     console.log(name, JSON.stringify(result));
     if (result.problems.length) failures.push(name);
-    await context.close(); await new Promise(r => setTimeout(r, 6000)); // the server closes the old session before the next login
+    await context.close(); await new Promise(r => setTimeout(r, 10_000)); // the server closes the old session before the next login
   }
   // Desktop: classic frmMain, no mobile layer, page meta untouched.
   const browser = browsers.chromium ??= await engines.chromium();

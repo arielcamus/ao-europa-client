@@ -50,6 +50,7 @@ type Layout = 'mobile' | 'classic';
 interface Pending { charIndex: number; skill: number; until: number }
 interface Target { charIndex: number; kind: TargetKind }
 
+const CONSOLE_SHOW_MS = 6000;
 const LONG_PRESS_MS = 450, TAP_SLOP = 14, JOY_RADIUS = 52, JOY_DEAD = 14;
 /** Objects that lie on a tile but are not loot: trees, doors, signs, deposits, decoration, anvils, forges, teleports. */
 const NOT_LOOT: readonly number[] = [ObjType.Trees, ObjType.Doors, ObjType.Signs, ObjType.Deposits, ObjType.Decoration, ObjType.Anvil, ObjType.Forge, ObjType.Teleport];
@@ -126,6 +127,10 @@ export class MobileMode {
   private readonly drawer = el('div', { id: 'mobile-drawer', hidden: true });
   private readonly picker = el('div', { id: 'mobile-picker', hidden: true });
   private readonly ring = el('div', { id: 'm-target-ring', hidden: true });
+  /** The classic 23x19 box (the server's character area) inside the larger mobile view; outside it is shaded. */
+  private readonly area = el('div', { id: 'm-area' });
+  private consoleFade = 0;
+  private readonly consoleWatch = new MutationObserver(() => this.showConsole());
   private readonly toggle = button('mobile-toggle', 'Modo móvil', 'Modo móvil');
   private moved: { node: HTMLElement; parent: Node; next: Node | null }[] = [];
   private joyPointer: number | undefined;
@@ -161,7 +166,7 @@ export class MobileMode {
     const session = this.deps.session(), self = session?.visualPosition(performance.now());
     const view = document.getElementById('viewport')?.getBoundingClientRect();
     if (!session || !self || !view) return [];
-    const k = view.width / VIEW_W, cameraX = self.x * 32 + 16 - VIEW_W / 2, cameraY = self.y * 32 + 16 - VIEW_H / 2;
+    const { width, height } = this.viewSize(), k = view.width / width, cameraX = self.x * 32 + 16 - width / 2, cameraY = self.y * 32 + 16 - height / 2;
     return [...session.tracker.chars.values()].map(c => {
       const target = { charIndex: c.charIndex, kind: this.kindOf(session, c) };
       return {
@@ -249,30 +254,52 @@ export class MobileMode {
       into.append(node);
     };
     take('viewport', this.world); take('console', this.consoleBox); take('chat-form', this.chatBox);
-    document.getElementById('viewport')?.append(this.ring);
+    document.getElementById('viewport')?.append(this.area, this.ring);
+    const consoleNode = document.getElementById('console');
+    if (consoleNode) this.consoleWatch.observe(consoleNode, { childList: true, subtree: true, characterData: true });
+    this.showConsole();
     void this.loadNpcTable(); // before the first tap, so a creature is never taken for a merchant
     this.applyZoom();
   }
   private leave() {
     this.active = false;
     this.releaseJoystick(); this.closeDrawer(); this.picker.hidden = true; this.pending = undefined; this.target = undefined; this.drinking = undefined;
-    this.ring.remove();
+    this.ring.remove(); this.area.remove(); this.consoleWatch.disconnect(); clearTimeout(this.consoleFade);
     for (const { node, parent, next } of this.moved.reverse()) parent.insertBefore(node, next && next.parentNode === parent ? next : null);
     this.moved = [];
     document.documentElement.classList.remove('mobile-world');
     window.dispatchEvent(new Event('resize')); // classic-layout refits the 1024x768 window
   }
+  /** The viewport's size in map pixels: 736x608 in the classic layout, the screen / zoom in this one. */
+  private viewSize() {
+    const view = document.getElementById('viewport');
+    return { width: view?.offsetWidth || VIEW_W, height: view?.offsetHeight || VIEW_H };
+  }
+  /** The console shows for a few seconds after each new line, then fades so it hides as little of the world as possible. */
+  private showConsole() {
+    this.consoleBox.classList.add('fresh');
+    clearTimeout(this.consoleFade);
+    this.consoleFade = window.setTimeout(() => this.consoleBox.classList.remove('fresh'), CONSOLE_SHOW_MS);
+  }
   private applyZoom() {
     const rect = this.world.getBoundingClientRect(), dpr = devicePixelRatio || 1;
     const zoom = mobileZoom(rect.width, rect.height, this.zoom, dpr);
-    // Centred (the player is the middle of the 736x608 view) on a whole device pixel, so the crisp scale stays crisp.
+    /*
+     * The world fills the whole screen, edge to edge (Ariel, 22 Nov: no black bands). The renderer already draws whatever size its
+     * host has (it centres the camera on the player and sizes the canvas from the host, renderer.ts), and the client holds the whole
+     * map, so the viewport is simply made as large as the screen in map pixels: area / zoom. What lies outside the classic 23x19 box
+     * (EstaEnArea, the only area the server sends characters for) is real terrain, lightly shaded by #m-area so an empty field there
+     * is not mistaken for a safe one.
+     */
+    const viewW = Math.ceil(rect.width / zoom), viewH = Math.ceil(rect.height / zoom);
+    // Centred on a whole device pixel, so the crisp scale stays crisp.
     const snap = (value: number) => Math.round(value * dpr) / dpr;
     const style = this.root.style;
     style.setProperty('--mobile-zoom', String(zoom));
-    style.setProperty('--mobile-world-x', `${snap((rect.width - VIEW_W * zoom) / 2)}px`);
-    style.setProperty('--mobile-world-y', `${snap((rect.height - VIEW_H * zoom) / 2)}px`);
-    // Landscape: the black margins beside the world hold the bars and the joystick (never narrower than a thumb's reach).
-    style.setProperty('--mobile-side', `${Math.max(150, Math.floor((rect.width - VIEW_W * zoom) / 2))}px`);
+    style.setProperty('--mobile-view-w', `${viewW}px`); style.setProperty('--mobile-view-h', `${viewH}px`);
+    style.setProperty('--mobile-world-x', `${snap((rect.width - viewW * zoom) / 2)}px`);
+    style.setProperty('--mobile-world-y', `${snap((rect.height - viewH * zoom) / 2)}px`);
+    Object.assign(this.area.style, { left: `${(viewW - VIEW_W) / 2}px`, top: `${(viewH - VIEW_H) / 2}px` });
     this.root.dataset.zoom = zoom.toFixed(4);
     this.root.dataset.tiles = `${(rect.width / (32 * zoom)).toFixed(1)}x${(rect.height / (32 * zoom)).toFixed(1)}`;
     // Classic windows (bank, shop, quests...) stay children of the 1024x768 box, centred over the screen at a readable scale.
@@ -310,12 +337,12 @@ export class MobileMode {
     this.toggle.hidden = true;
     this.toggle.onclick = () => this.setLayout('mobile');
 
-    this.top.querySelector<HTMLElement>('#m-chat')!.onclick = () => document.getElementById('chat-open')?.click();
+    this.top.querySelector<HTMLElement>('#m-chat')!.onclick = () => { this.showConsole(); document.getElementById('chat-open')?.click(); };
     this.top.querySelector<HTMLElement>('#m-zoom')!.onclick = () => {
       this.zoom = ZOOM_LEVELS[(ZOOM_LEVELS.indexOf(this.zoom) + 1) % ZOOM_LEVELS.length]!; storage.set('ao.mobileZoom', this.zoom); this.applyZoom();
     };
     this.top.querySelector<HTMLElement>('#m-menu')!.onclick = () => this.openDrawer('menu');
-    this.consoleBox.addEventListener('click', () => this.consoleBox.classList.toggle('expanded'));
+    this.consoleBox.addEventListener('click', () => { this.consoleBox.classList.toggle('expanded'); this.showConsole(); });
 
     // Joystick: floating, where the thumb lands; only its own pointer, so the other thumb can tap the world and the buttons.
     joyZone.addEventListener('pointerdown', event => {
@@ -577,7 +604,7 @@ export class MobileMode {
     const c = target && session.tracker.chars.get(target.charIndex);
     if (!target || !c || !self) { this.ring.hidden = true; return; }
     const at = target.charIndex === session.charIndex ? self : session.tracker.visualPosition(c, now);
-    const cameraX = self.x * 32 + 16 - VIEW_W / 2, cameraY = self.y * 32 + 16 - VIEW_H / 2;
+    const { width, height } = this.viewSize(), cameraX = self.x * 32 + 16 - width / 2, cameraY = self.y * 32 + 16 - height / 2;
     this.ring.hidden = false;
     this.ring.style.left = `${Math.round(at.x * 32 - cameraX)}px`; this.ring.style.top = `${Math.round(at.y * 32 - cameraY)}px`;
     this.ring.dataset.kind = target.kind;

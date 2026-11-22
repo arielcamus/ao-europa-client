@@ -29,14 +29,18 @@ html.mobile-world #classic > * { pointer-events: auto; }
 html.mobile-world #classic > #hud { visibility: hidden !important; pointer-events: none !important; }
 html.mobile-world #skills-button, html.mobile-world #hotkeys, html.mobile-world #mobile-toggle, html.mobile-world #delete-item { display: none !important; }
 
-/* The world: the 736x608 viewport scaled (crisp: a whole number of device pixels per art pixel), never resized, so the overlays
-   inside it keep their coordinates. mobile-mode.ts places it on whole device pixels. */
+/* The world: the viewport sized to the screen in map pixels (mobile-mode.ts: area / zoom) and scaled back up by the zoom (crisp: a
+   whole number of device pixels per art pixel), so it fills the screen edge to edge. The overlays inside it place themselves from the
+   renderer's camera and their layer's size, so they follow. */
 html.mobile-world #mobile-world { position: absolute; inset: 0; overflow: hidden; }
 html.mobile-world #mobile-world #viewport {
-  position: absolute !important; left: var(--mobile-world-x, 0) !important; top: var(--mobile-world-y, 0) !important; width: 736px !important; height: 608px !important;
+  position: absolute !important; left: var(--mobile-world-x, 0) !important; top: var(--mobile-world-y, 0) !important;
+  width: var(--mobile-view-w, 736px) !important; height: var(--mobile-view-h, 608px) !important;
   transform: scale(var(--mobile-zoom, 1)); transform-origin: 0 0;
 }
 html.mobile-world #mobile-world #viewport canvas { image-rendering: pixelated; }
+/* EstaEnArea's 23x19 box: the server sends no characters outside it, so the terrain there is shaded, lightly. */
+#m-area { position: absolute; width: 736px; height: 608px; pointer-events: none; z-index: 1; box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.28); }
 #m-target-ring {
   position: absolute; width: 32px; height: 32px; pointer-events: none; z-index: 3; border-radius: 50%;
   border: 2px solid #ff5040; box-shadow: 0 0 6px #ff5040; transform: translateY(14px) scaleY(0.45);
@@ -47,29 +51,31 @@ html.mobile-world #mobile-world #viewport canvas { image-rendering: pixelated; }
 /* Top bar: who and where on the left, chat / zoom / menu on the right. */
 #mobile-top {
   position: absolute; left: 0; right: 0; top: 0; z-index: 4; pointer-events: none;
-  padding: calc(var(--safe-t) + 6px) calc(var(--safe-r) + 8px) 10px calc(var(--safe-l) + 8px);
-  background: linear-gradient(rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0)); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 8px;
+  padding: calc(var(--safe-t) + 4px) calc(var(--safe-r) + 6px) 8px calc(var(--safe-l) + 8px);
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0)); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 8px;
   text-shadow: 0 0 2px #000, 1px 1px 0 #000;
 }
-#mobile-top .m-who { font-weight: bold; font-size: 14px; color: #f0e0bb; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#mobile-top .m-where { grid-column: 1; font-size: 11px; color: #c8bebe; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#mobile-top .m-top-buttons { grid-column: 2; grid-row: 1 / span 2; display: flex; gap: 6px; align-items: flex-start; pointer-events: auto; }
+#mobile-top .m-who { font-weight: bold; font-size: 13px; color: #f0e0bb; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#mobile-top .m-where { grid-column: 1; font-size: 10px; color: #c8bebe; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#mobile-top .m-top-buttons { grid-column: 2; grid-row: 1 / span 2; display: flex; gap: 5px; align-items: flex-start; pointer-events: auto; }
 
 /* HP / mana / stamina: a compact translucent row under the name, top-left. */
 #mobile-bars {
   position: absolute; z-index: 5; pointer-events: none; display: grid; gap: 4px; grid-template-columns: 1.2fr 1.2fr 1fr;
-  left: calc(var(--safe-l) + 8px); top: calc(var(--safe-t) + 46px); width: min(250px, calc(100% - 16px - var(--safe-l) - var(--safe-r)));
+  left: calc(var(--safe-l) + 8px); top: calc(var(--safe-t) + 38px); width: min(230px, calc(100% - 16px - var(--safe-l) - var(--safe-r)));
   text-shadow: 0 0 2px #000, 1px 1px 0 #000;
 }
-.m-bar { position: relative; height: 14px; border: 1px solid rgba(200, 169, 107, 0.7); border-radius: 7px; background: rgba(0, 0, 0, 0.45); overflow: hidden; }
-.m-bar i { position: absolute; inset: 0 auto 0 0; width: 0; transition: width 0.2s; }
+.m-bar { position: relative; height: 12px; border: 1px solid rgba(200, 169, 107, 0.6); border-radius: 6px; background: rgba(0, 0, 0, 0.3); overflow: hidden; }
+.m-bar i { position: absolute; inset: 0 auto 0 0; width: 0; transition: width 0.2s; opacity: 0.85; }
 .m-bar.m-hp i { background: linear-gradient(#e04030, #8c1a10); }
 .m-bar.m-mana i { background: linear-gradient(#4a8cf0, #1a3c8c); }
 .m-bar.m-sta i { background: linear-gradient(#e8c440, #8c6a10); }
-.m-bar span { position: relative; display: block; text-align: center; font-size: 10px; line-height: 12px; font-weight: bold; white-space: nowrap; }
+.m-bar span { position: relative; display: block; text-align: center; font-size: 9px; line-height: 10px; font-weight: bold; white-space: nowrap; }
 
 /* Console: the last lines under the top bar, wrapped inside the screen; tap to expand. */
-html.mobile-world #mobile-console { position: absolute; left: calc(var(--safe-l) + 8px); right: calc(var(--safe-r) + 8px); top: calc(var(--safe-t) + 66px); z-index: 3; }
+html.mobile-world #mobile-console { position: absolute; left: calc(var(--safe-l) + 8px); right: calc(var(--safe-r) + 8px); top: calc(var(--safe-t) + 56px); z-index: 3; transition: opacity 0.8s; }
+/* Faded and touch-through until a new line arrives (6 s) or the chat opens; a tap while it shows expands the history. */
+html.mobile-world #mobile-console:not(.fresh):not(.expanded) { opacity: 0; pointer-events: none; }
 html.mobile-world #mobile-console #console {
   position: static !important; width: auto !important; height: auto !important; max-height: 4.7em; overflow: hidden;
   background: transparent !important; font-size: 11px !important; line-height: 1.15; pointer-events: none;
@@ -101,8 +107,8 @@ html.mobile-world #mobile-deck { position: absolute; inset: 0; z-index: 4; point
   touch-action: none; -webkit-tap-highlight-color: transparent; text-shadow: 1px 1px 0 #000; padding: 0; line-height: 1.1; box-sizing: border-box;
 }
 .m-btn:active { filter: brightness(1.4); }
-.m-btn.m-small { position: static; width: 40px; height: 40px; font-size: 16px; }
-#m-zoom { width: auto; min-width: 40px; border-radius: 20px; padding: 0 10px; font-size: 12px; white-space: nowrap; }
+.m-btn.m-small { position: static; width: 34px; height: 34px; font-size: 14px; }
+#m-zoom { width: auto; min-width: 34px; border-radius: 17px; padding: 0 8px; font-size: 11px; white-space: nowrap; }
 #m-act { right: 10px; bottom: 10px; width: 84px; height: 84px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-width: 3px; }
 #m-act[data-kind="cast"] { border-color: #7fb0ff; background: radial-gradient(circle at 35% 30%, rgba(42, 60, 106, 0.65), rgba(14, 21, 48, 0.5) 75%); }
 #m-act[data-kind="hint"] { opacity: 0.75; }
@@ -128,11 +134,11 @@ html.mobile-world #mobile-deck { position: absolute; inset: 0; z-index: 4; point
 @keyframes m-flash { 50% { filter: brightness(2.2); } }
 
 @media (orientation: landscape) {
-  /* The world is narrower than the screen at a crisp scale: the bars, the console and the joystick use the margins beside it. */
+  /* Bars stacked top-left, the console between the side columns, the joystick in the left column. */
   html.mobile-world #mobile-top { background: none; grid-template-columns: calc(var(--mobile-side, 150px) - 16px) minmax(0, 1fr) auto; }
   html.mobile-world #mobile-top .m-who, html.mobile-world #mobile-top .m-where { grid-column: 1; }
   html.mobile-world #mobile-top .m-top-buttons { grid-column: 3; }
-  html.mobile-world #mobile-bars { grid-template-columns: 1fr; width: calc(var(--mobile-side, 150px) - 16px); }
+  html.mobile-world #mobile-bars { grid-template-columns: 1fr; width: calc(var(--mobile-side, 150px) - 16px); top: calc(var(--safe-t) + 40px); }
   html.mobile-world #mobile-console { left: calc(var(--safe-l) + var(--mobile-side, 150px)); right: calc(var(--safe-r) + var(--mobile-side, 150px)); top: calc(var(--safe-t) + 52px); }
   html.mobile-world #mobile-joystick { width: max(160px, var(--mobile-side, 150px)); height: 50%; }
 }

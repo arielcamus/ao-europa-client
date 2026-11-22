@@ -36,6 +36,11 @@ async function expectFits(page: Page) {
     if (page.scrollHeight > H + 1 || page.scrollWidth > W + 1) out.push('page scrolls');
     const world = document.getElementById('mobile-world')!.getBoundingClientRect();
     if (Math.abs(world.width - W) > 1 || Math.abs(world.height - H) > 1) out.push(`world area ${world.width}x${world.height} is not the screen`);
+    // Edge to edge (Ariel, 22 Nov: no black bands): the drawn world covers the whole screen.
+    const drawn = document.getElementById('viewport')!.getBoundingClientRect();
+    if (drawn.left > 0.5 || drawn.top > 0.5 || drawn.right < W - 0.5 || drawn.bottom < H - 0.5) out.push(`world does not fill the screen: ${drawn.width}x${drawn.height}`);
+    const canvas = document.querySelector('#viewport canvas')!.getBoundingClientRect();
+    if (canvas.width < drawn.width - 1 || canvas.height < drawn.height - 1) out.push('the canvas did not follow the larger view');
     const joy = document.getElementById('mobile-joystick')!.getBoundingClientRect();
     const at = (x: number, y: number) => document.elementFromPoint(x, y);
     if (!at(joy.left + joy.width / 2, joy.top + joy.height / 2)?.closest('#mobile-joystick')) out.push('joystick does not get its touches');
@@ -54,7 +59,7 @@ test('portrait phone: zoomed world, joystick, drawer, classic HUD hidden', async
   await expect(page.locator('#inventory-panel')).toBeHidden();
   // At least 11 tiles across a 390 px phone at a crisp scale: 1x at dpr 2 (12.2 tiles).
   const world = (await page.locator('#viewport').boundingBox())!;
-  const tile = world.width / 23;
+  const tile = 32 * Number(await page.locator('#mobile-layer').getAttribute('data-zoom'));
   expect(390 / tile).toBeGreaterThanOrEqual(11);
   expect(390 / tile).toBeLessThan(13);
   await expectFits(page);
@@ -118,10 +123,9 @@ test('landscape phone: the controls float over the world', async ({ page }) => {
   expect(area.height).toBeCloseTo(390, 0);
   expect(await page.locator('#mobile-deck').evaluate(node => getComputedStyle(node).backgroundImage)).toBe('none');
   // The classic 17x13 range fits: at least 13 tiles high and 17 across.
-  const world = (await page.locator('#viewport').boundingBox())!;
-  const tile = world.width / 23;
+  const tile = 32 * Number(await page.locator('#mobile-layer').getAttribute('data-zoom'));
   expect(390 / tile).toBeGreaterThanOrEqual(13);
-  expect(Math.min(844, world.width) / tile).toBeGreaterThanOrEqual(17);
+  expect(844 / tile).toBeGreaterThanOrEqual(17);
   await expectFits(page);
   await page.screenshot({ path: 'artifacts/screenshots/mobile-mode-landscape.png' });
 });
