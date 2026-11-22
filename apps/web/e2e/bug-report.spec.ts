@@ -89,3 +89,51 @@ test('bug reporter: F8 opens it, Enviar stores the report with screenshot, chara
   await expect(page.locator('#gm-help')).toBeVisible();
   expect(failures).toEqual([]);
 });
+
+test('beta: the red bug button sits outside the game, opens the reporter, and the console says so once per login', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop-chrome', 'desktop only: touch keeps the MENU tab button');
+  // Off unless asked: the suite's own server has AO_BETA=0.
+  await page.goto('/');
+  await expect(page.locator('#classic')).toHaveAttribute('data-ui-ready', 'true');
+  await expect(page.locator('#beta-bug-button')).toHaveCount(0);
+  const failures: string[] = [];
+  page.on('pageerror', error => failures.push(error.message));
+  const button = page.locator('#beta-bug-button');
+  const clear = async () => {
+    const [b, game] = await Promise.all([button.boundingBox(), page.locator('#classic-fit').boundingBox()]);
+    expect(b && game).toBeTruthy();
+    const apart = b!.x >= game!.x + game!.width || b!.x + b!.width <= game!.x || b!.y >= game!.y + game!.height || b!.y + b!.height <= game!.y;
+    expect(apart, `button ${JSON.stringify(b)} vs game ${JSON.stringify(game)}`).toBe(true);
+    const view = page.viewportSize()!;
+    expect(b!.x + b!.width).toBeLessThanOrEqual(view.width); expect(b!.y).toBeGreaterThanOrEqual(0); // top-right corner, on screen
+    expect(b!.x).toBeGreaterThan(view.width / 2);
+  };
+  await page.goto('/?beta=1'); // the suite's server runs with AO_BETA=0 (playwright.config.ts)
+  await expect(page.locator('#classic')).toHaveAttribute('data-ui-ready', 'true');
+  await expect(button).toBeVisible(); // already on the login screen (F8 works there too)
+  await clear();
+  await page.locator('#connect').click();
+  await expect(page.locator('#viewport')).toHaveAttribute('data-rendered', 'true');
+  const line = 'Beta: si ves algo raro, F8 o el botón 🐞 arriba a la derecha';
+  await expect(page.locator('#messages')).toContainText(line);
+  await page.waitForTimeout(500);
+  expect((await page.locator('#messages').innerText()).split(line).length - 1).toBe(1);
+
+  // 1440x1000 leaves 54 px beside the game: the icon alone, in a gutter the layout keeps free for it.
+  await expect(button).toHaveAttribute('data-variant', 'compact');
+  await clear();
+  // A 16:9 window: the full label beside the game.
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await expect(button).toHaveAttribute('data-variant', 'full');
+  await expect(button).toHaveText('🐞 Reportar bug (F8)');
+  await clear();
+  await page.screenshot({ path: 'artifacts/screenshots/bug-report-beta-button.png' });
+
+  await button.click();
+  await expect(page.locator('#bug-report-window')).toBeVisible();
+  await expect(page.locator('#bug-report-text')).toBeFocused();
+  await expect(button).not.toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#bug-report-window')).toHaveCount(0);
+  expect(failures).toEqual([]);
+});

@@ -36,6 +36,14 @@ export function bugReportOptionsFromEnv(env = process.env) {
   };
 }
 
+/**
+ * AO_BETA: the alpha/beta play aids in the client (apps/web/src/beta.ts: the red bug button and the per-login console line), served as
+ * ao-config.json `beta`. ON by default while the game is in beta; `AO_BETA=0` (or false/off/no) turns both off.
+ */
+export function betaFromEnv(env = process.env) {
+  return !['0', 'false', 'off', 'no'].includes(String(env.AO_BETA ?? '').trim().toLowerCase());
+}
+
 /** A sliding-window counter per key. */
 export class RateLimiter {
   constructor({ limit, windowMs, now = () => Date.now() }) { this.limit = limit; this.windowMs = windowMs; this.now = now; this.hits = new Map(); }

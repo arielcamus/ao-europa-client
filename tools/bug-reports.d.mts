@@ -19,6 +19,8 @@ export interface ReportImage { buffer: Buffer; ext: 'png' | 'jpg'; type: string 
 export type FetchLike = (url: string, init: { method: string; headers: Record<string, string>; body?: string }) => Promise<{ status: number; text(): Promise<string> }>;
 
 export function bugReportOptionsFromEnv(env?: Record<string, string | undefined>): BugReportOptions;
+/** AO_BETA: the client beta aids (apps/web/src/beta.ts) as ao-config.json `beta`; on unless 0/false/off/no. */
+export function betaFromEnv(env?: Record<string, string | undefined>): boolean;
 export class RateLimiter {
   constructor(options: { limit: number; windowMs: number; now?: () => number });
   check(key: string): { ok: true } | { ok: false; retryAfterMs: number };

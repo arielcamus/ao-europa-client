@@ -19,6 +19,23 @@ Code: `apps/web/src/bug-report-ui.ts` (window), `bug-report-data.ts` (rings, red
 (console/error capture, screenshot), wiring in `main.ts`, the protocol hook `Session.onTrace`. Server: `tools/bug-reports.mjs`,
 mounted by `tools/dev-web.mjs` (dev and `--preview`, so `play.sh` gets it).
 
+### Beta: the red bug button and the console line
+
+While the game is in alpha/beta the reporter has to be impossible to miss, so two aids sit on one flag, `AO_BETA` (on by default; the
+server passes it to the page as ao-config.json `beta`; `AO_BETA=0` removes both when the beta ends). `?beta=1` / `?beta=0` in the address
+overrides it for one page (the Playwright suite runs with `AO_BETA=0` so the layout specs see the bare game). Code: `apps/web/src/beta.ts`.
+
+- **A red "🐞 Reportar bug (F8)" button** fixed to the page's top-right corner, outside the 1024x768 game window, above every window, on
+  every screen (login, account, world, combat). It opens the same reporter and never takes the keyboard focus (Enter and Space stay with
+  the game). It never covers the game: with room beside or above the game it shows the full label; when the window is just too narrow
+  the layout keeps a gutter for it if that costs the game at most 10% of its size, otherwise it shows the bug icon alone, in a gutter of
+  exactly its width if needed (`betaButtonPlacement`, `setLayoutGutter` in `classic-layout.ts`). The cost: in a window with no room beside
+  or above the game (a 4:3 window, 1440x1000), the game is drawn up to 112 px narrower than without the flag, so a whole-number scale can
+  become a fractional one.
+- **Desktop only.** On a touch device (no hover, coarse pointer) the button is not created; the MENU tab's "Bugs" button is the way in.
+- **One console line per entry into the world** (a login, or another character from the account screen): "Beta: si ves algo raro, F8 o el
+  botón 🐞 arriba a la derecha". Client-only, nothing goes to the server.
+
 ## What is collected
 
 | Part | Contents |
@@ -67,9 +84,10 @@ There is no ping in the client yet, so latency is not measured directly; the pro
 | `AO_BUG_REPORT_SESSION_LIMIT` | `3` | reports per page session per 10 minutes |
 | `AO_BUG_REPORT_TRUST_PROXY` | off | `1` = take the client IP from the LAST `X-Forwarded-For` entry, the one your proxy appended (earlier entries are client-supplied and ignored). Set it only behind exactly one proxy you run (e.g. one Cloudflare tunnel); without it every player behind that proxy shares one IP limit |
 | `AO_BUG_REPORT_GITHUB_TOKEN` | none | turns GitHub on together with the repo |
-| `AO_BUG_REPORT_GITHUB_REPO` | none | `owner/name`, e.g. `arielcamus/ao-client` |
+| `AO_BUG_REPORT_GITHUB_REPO` | none | `owner/name`; live: `arielcamus/ao-bug-reports` |
 | `AO_BUG_REPORT_GITHUB_BRANCH` | `bug-reports` | the branch the screenshots and JSON are committed to |
 | `AO_BUG_REPORT_GITHUB_LABEL` | `bug-report` | the issue label |
+| `AO_BETA` | on | the beta aids above (ao-config.json `beta`); `0` / `false` / `off` / `no` turns them off |
 
 Without a token and repo the server stores locally and logs one line per report:
 `[bug-report] <id> stored at <path>: <title>`.
@@ -96,14 +114,36 @@ If GitHub fails (token expired, no permission, network), the report is already s
 pushed again on the next server start, or on demand: `node tools/bug-reports.mjs push-pending` (same environment variables).
 A successful push writes `<id>.github.json` with the issue number and URL.
 
-### What Ariel provides to turn GitHub on
+### The live setup (22 Nov 2026)
 
-1. A **fine-grained personal access token** limited to the one repo, with **Contents: read and write** and **Issues: read and
-   write** (Metadata read is added automatically). A token from a bot account is better than his own, so issues are not opened
-   in his name.
-2. The repo, `owner/name`. The code repo (`arielcamus/ao-client`) works; a separate private repo (e.g. `ao-beta-bugs`) keeps the
-   screenshots branch and the triage noise out of the code repo. Either way the token only needs that repo.
-3. Both as environment variables of the play server (e.g. in `play.sh` before `node tools/dev-web.mjs`), never committed.
+- **Repo:** [`arielcamus/ao-bug-reports`](https://github.com/arielcamus/ao-bug-reports), **private**, separate from the code. Reports carry
+  players' chat lines, character names and screenshots, so only collaborators see them. Its `main` holds a README; the server creates the
+  `bug-reports` orphan branch on the first report. Label `bug-report` created up front.
+- **Token:** a fine-grained personal access token on Ariel's account, named `ao-bug-reporter`, resource owner `arielcamus`, **only** the
+  `ao-bug-reports` repository, permissions **Contents: read and write** (the screenshots and JSON pushed to the branch), **Issues: read and
+  write**, Metadata read-only (automatic). Nothing else: it cannot see `ao-client` or any other repo. Issues open in Ariel's name (no bot
+  account: creating one needs an e-mail and a captcha only he can do).
+- **Expires 22 Nov 2027.** A Todoist reminder fires on 8 Nov 2027 to rotate it.
+- **Where it lives:** the macOS Keychain of the play Mac, generic password, service `ao-bug-report-github-token`, account `ao-bug-reporter`.
+  Never in git, never in a file.
+- **How the server reads it:** the play server's environment, set by whatever starts `tools/dev-web.mjs` (`play.sh`):
+
+  ```sh
+  AO_BUG_REPORT_GITHUB_TOKEN="$(security find-generic-password -s ao-bug-report-github-token -w)" \
+  AO_BUG_REPORT_GITHUB_REPO=arielcamus/ao-bug-reports \
+  node tools/dev-web.mjs --preview
+  ```
+
+  The startup line then says `Bug reports: <dir> + GitHub issues in arielcamus/ao-bug-reports`.
+- **Verified end to end** on 22 Nov against the VB6 server (own dev server, account `bugreport@local.test`): report
+  `20261122-125258-b62a7b` became issue #1 with the screenshot rendered (736x608), the table, the logs and the JSON link; the issue was then
+  closed.
+
+**Rotating the token** (before 22 Nov 2027, or at once if it leaks): github.com → Settings → Developer settings → Fine-grained tokens →
+`ao-bug-reporter` → Regenerate (same scope), then
+`security add-generic-password -a ao-bug-reporter -s ao-bug-report-github-token -w '<new token>' -U` and restart the play server. Reports
+sent while the token was dead are stored locally with `<id>.github.json` = `{"error": ...}` and are pushed on the next start (or
+`node tools/bug-reports.mjs push-pending`). Revoke the old token if it leaked.
 
 GitHub creates the label the first time an issue uses it; if a repo setting prevents that, create `bug-report` once under the repo's labels.
 
@@ -122,6 +162,9 @@ GitHub creates the label the first time an issue uses it; if a repo setting prev
 - `apps/web/test/bug-report.test.ts`: redaction, the ring buffer, the payload builder (limits, no credentials), packet names.
 - `apps/web/test/bug-report-server.test.ts`: validation, rate limits, the endpoint over HTTP into a temp dir, the GitHub calls
   against a fake API (branch creation, uploads, issue, token never in errors), push-pending.
+- `apps/web/test/beta.test.ts`: the `AO_BETA` flag (server default on, client only on `beta: true`), touch detection, the button placement
+  over common window sizes (never on the game).
 - `apps/web/e2e/bug-report.spec.ts`: F8 → fill → Enviar against the stand-in; reads the stored JSON and picture back from the run's
-  temp dir (`playwright.config.ts` sets `AO_BUG_REPORT_DIR`) and checks the credentials are absent; the Bugs button → "Escribir a un GM".
+  temp dir (`playwright.config.ts` sets `AO_BUG_REPORT_DIR`) and checks the credentials are absent; the Bugs button → "Escribir a un GM"; the beta button (outside the game at 1440x1000 and 1920x1080, opens the reporter, no focus kept) and the
+  console line once per login (screenshot `artifacts/screenshots/bug-report-beta-button.png`).
 - Live: `tools/bug-report-real-shot.mjs` against the VB6 server (screenshots `artifacts/screenshots/bug-report-live-*.png`).

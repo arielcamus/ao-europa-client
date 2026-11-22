@@ -67,6 +67,7 @@ import { Diagnostics, captureCanvas } from './bug-report-capture.js';
 import { packetNameTable } from './bug-report-data.js';
 import type { CharacterInfo } from './bug-report-data.js';
 import { BugReportUI } from './bug-report-ui.js';
+import { BETA_CONSOLE_LINE, BetaBugButton, betaEnabled, isTouchMode } from './beta.js';
 import { CLASS_NAMES } from './game-text.js';
 
 // The bug reporter's rings (console, errors, protocol ids) start before anything else can log (docs/BUG-REPORTS.md).
@@ -206,6 +207,9 @@ let clientInfo: Record<string, string | number | boolean | undefined> = {};
 /** The account e-mail and password of this page: redacted from every string of a report, never sent. */
 let reportSecrets: string[] = [];
 let packetName: ReturnType<typeof packetNameTable> | undefined;
+/** ao-config.json `beta` (beta.ts): the floating bug button and the per-login console line. */
+let beta = false;
+const betaGreeted = new WeakMap<object, number>();
 const bugReport = new BugReportUI(element('classic'), {
   capture: () => (session?.ready ? captureCanvas(renderer.app.canvas, () => renderer.app.render()) : undefined),
   gmHelp: () => (session?.ready ? () => gmUi.openHelp() : undefined),
@@ -349,7 +353,10 @@ function close(message = 'Disconnected', byPlayer = false) {
 async function boot() {
   const response = await fetch('/ao-config.json');
   if (!response.ok) throw new Error('Start this client with pnpm dev or pnpm dev:standin.');
-  const config: { mode: string; serverProfile?: string; wireProfile?: string; wsPath: string; assetVersion?: string; build?: { commit?: string; branch?: string; builtAt?: string } } = await response.json();
+  const config: { mode: string; serverProfile?: string; wireProfile?: string; wsPath: string; assetVersion?: string; build?: { commit?: string; branch?: string; builtAt?: string }; beta?: boolean } = await response.json();
+  // Alpha/beta play: the red bug button beside the game (desktop only; touch keeps the MENU tab's "Bugs") and one console line per login.
+  beta = betaEnabled(config, location.search);
+  if (beta && !isTouchMode(window.matchMedia?.bind(window))) new BetaBugButton(() => bugReport.open());
   clientInfo = { mode: config.mode, serverProfile: config.serverProfile, wireProfile: config.wireProfile, assetVersion: config.assetVersion, commit: config.build?.commit, branch: config.build?.branch, builtAt: config.build?.builtAt };
   if (!['standin', 'classic'].includes(config.mode) || config.wsPath !== '/bridge') throw new Error('Invalid local server configuration');
   // The VB6 server is the pinned pre-HOO build (9ccd7fad): decode its exact layouts (packages/protocol/src/profile.ts). dev-web.mjs serves it.
@@ -446,6 +453,8 @@ function updateUi(now: number) {
   const playing = session.ready && renderer.readyMap === session.resourceMap && hudReady;
   // ModSettings.LoadHotkeys: once per entry into the game, send the saved slots to the server.
   if (playing && session.self && !hotkeysLoaded.has(session)) { hotkeysLoaded.add(session); applyOptions(); session.optionsActions.loadHotkeys(session.self.tag); }
+  // Beta: once per entry into the world (a new login or another character from the account screen), client-side only.
+  if (beta && playing && session.loggedAt !== undefined && betaGreeted.get(session) !== session.loggedAt) { betaGreeted.set(session, session.loggedAt); session.ui.message(BETA_CONSOLE_LINE, 4); }
   hotkeysUi.update(session, playing);
   if (gameOptions.value.showFps && now - lastFps > 500) { lastFps = now; fpsLabel.textContent = `FPS: ${Math.round(renderer.app.ticker.FPS)}`; }
   minimap.options = { centered: gameOptions.value.centeredMinimap, zoom: gameOptions.value.centeredMinimapZoom };

@@ -7,3 +7,14 @@
 .bug-report-note { color: #404040 !important; font-size: 10px; line-height: 12px; white-space: normal; }
 .bug-report-status { color: #000080 !important; }
 .bug-report-form .vb-command:disabled { color: #8d8d8d; background: #ececec; }
+/* Beta: the floating bug button (beta.ts). Outside #classic, pinned to the page's top-right corner, above every window and the boot cover. */
+#beta-bug-button {
+  position: fixed; top: 8px; right: 8px; z-index: 1000; display: inline-flex; align-items: center; gap: 0; padding: 6px 12px;
+  border: 2px solid #fff; border-radius: 6px; background: #c40000; color: #fff; font: bold 14px/18px Tahoma, Arial, sans-serif;
+  white-space: nowrap; box-shadow: 0 0 0 2px #000, 0 2px 8px rgb(0 0 0 / 60%); cursor: pointer;
+}
+#beta-bug-button:hover { background: #e00000; }
+#beta-bug-button:active { background: #9a0000; }
+#beta-bug-button .beta-bug-icon { font-size: 16px; }
+#beta-bug-button.compact { padding: 6px 8px; }
+#beta-bug-button.compact .beta-bug-words { display: none; }

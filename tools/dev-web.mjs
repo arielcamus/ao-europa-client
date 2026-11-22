@@ -5,7 +5,7 @@ import { startBridge } from '../packages/bridge/dist/index.js';
 import { parseWireProfile, setWireProfile } from '../packages/protocol/dist/index.js';
 import { startStandin } from './standin-server/dist/index.js';
 import { distDelivery, injectAssetVersion, localAssets } from './local-assets.mjs';
-import { bugReportOptionsFromEnv, createBugReportHandler, pushPending } from './bug-reports.mjs';
+import { betaFromEnv, bugReportOptionsFromEnv, createBugReportHandler, pushPending } from './bug-reports.mjs';
 import { execFileSync } from 'node:child_process';
 
 const standinMode = process.argv.includes('--standin');
@@ -23,6 +23,8 @@ const build = { commit: git(['rev-parse', '--short=10', 'HEAD']), branch: git(['
 const bugReports = bugReportOptionsFromEnv();
 const bugReportHandler = createBugReportHandler(bugReports);
 console.log(`Bug reports: ${bugReports.dir}${bugReports.github ? ` + GitHub issues in ${bugReports.github.repo}` : ' (local only; set AO_BUG_REPORT_GITHUB_TOKEN + AO_BUG_REPORT_GITHUB_REPO for issues)'}`);
+// AO_BETA (on by default): the client's beta bug button and console line (apps/web/src/beta.ts), via ao-config.json `beta`.
+const beta = betaFromEnv();
 if (bugReports.github) void pushPending(bugReports).then(count => { if (count) console.log(`[bug-report] ${count} pending report(s) pushed to GitHub`); }, error => console.log(`[bug-report] GITHUB FAILED pushing pending reports: ${error instanceof Error ? error.message : String(error)}`));
 const cleanup = [];
 let stopping = false;
@@ -44,7 +46,7 @@ try {
         // The resources are scanned again on page loads (local-assets.mjs refresh): a patch made while this server runs gets a new version.
         void assets.refresh().then(assetVersion => {
           response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
-          response.end(JSON.stringify({ mode: standinMode ? 'standin' : 'classic', serverProfile, wireProfile, wsPath: '/bridge', assetVersion, build }));
+          response.end(JSON.stringify({ mode: standinMode ? 'standin' : 'classic', serverProfile, wireProfile, wsPath: '/bridge', assetVersion, build, beta }));
         }, next);
       } else next();
     });
