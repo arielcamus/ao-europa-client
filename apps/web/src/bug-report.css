@@ -1,12 +1,36 @@
-/* AGPL-3.0-or-later. The bug reporter window (bug-report-ui.ts): a plain VB form. */
-.bug-report-form { z-index: 40; }
+/* AGPL-3.0-or-later. The bug reporter window (bug-report-ui.ts), drawn like the other in-game windows: the configuration window's frame
+   (es_configuracion-vacio), Cinzel capitals for the title and the text button, Georgia for the labels (ui-captions.ts uses the same three
+   families for the baked captions), black text boxes, the game's ENVIAR / CANCELAR / close pictures and check-amarillo. */
+.bug-report-form { z-index: 40; background-color: #0d0d0d; }
+.bug-report-form.bug-report-bare { border: 3px solid #3b362e; box-shadow: inset 0 0 0 1px #000, 0 0 0 1px #000; }
 .bug-report-form .vb-label { overflow: visible; }
-.bug-report-check { display: flex; align-items: center; gap: 2px; color: #000; font: 11px Tahoma, Arial, sans-serif; cursor: default; }
-.bug-report-check input { margin: 0 3px 0 0; }
-.bug-report-thumb { border: 1px solid #7a7a7a; background: #000; object-fit: contain; image-rendering: auto; }
-.bug-report-note { color: #404040 !important; font-size: 10px; line-height: 12px; white-space: normal; }
-.bug-report-status { color: #000080 !important; }
-.bug-report-form .vb-command:disabled { color: #8d8d8d; background: #ececec; }
+.bug-report-title { text-align: center; color: #f2ede4; font: 700 22px/30px Cinzel, Georgia, serif; letter-spacing: .5px; text-transform: uppercase; text-shadow: .75px .75px rgb(0 0 0 / 50%); }
+.bug-report-label { color: #fff; font: 13px/17px Georgia, "Times New Roman", serif; text-shadow: 1px 1px #000; }
+.bug-report-note { color: #b8b0a0; font: 11px/14px Georgia, "Times New Roman", serif; text-shadow: 1px 1px #000; white-space: normal; }
+.bug-report-status { color: #ffd75e; font: 12px/15px Georgia, "Times New Roman", serif; white-space: normal !important; text-shadow: 1px 1px #000; }
+.bug-report-field {
+  padding: 3px 5px; border: 1px solid #4b4539; background: #000; color: #fff; font: 12px/15px Tahoma, Arial, sans-serif; outline: none;
+  box-shadow: inset 1px 1px 0 #000, 0 0 0 1px #111;
+  -webkit-user-select: text; user-select: text;
+}
+.bug-report-field::placeholder { color: #7d776b; }
+.bug-report-field:focus { border-color: #8a7f68; }
+.bug-report-checkbox { padding: 0; border: 2px solid #4a4a4a; background: #0a0a0a no-repeat center / 100% 100%; cursor: pointer; }
+.bug-report-checkbox.checked { border: 0; background-image: var(--check); }
+.bug-report-checkbox:disabled, .bug-report-check-label:disabled { cursor: default; opacity: .5; }
+.bug-report-checkbox:focus-visible { outline: 1px solid #ffd75e; outline-offset: 1px; }
+.bug-report-check-label { padding: 0; border: 0; background: transparent; color: #fff; text-align: left; cursor: pointer; font: 13px/17px Georgia, "Times New Roman", serif; text-shadow: 1px 1px #000; }
+.bug-report-thumb { border: 1px solid #4b4539; background: #000; object-fit: contain; image-rendering: auto; }
+/* "Escribir a un GM": a text button drawn like the bitmap ones (boton-enviar: dark face, light grey frame, engraved capitals). */
+.bug-report-text-button {
+  padding: 0; border: 2px solid #77746c; background: #151515; color: #f2ede4; cursor: pointer;
+  font: 700 11px/23px Cinzel, Georgia, serif; text-transform: uppercase; letter-spacing: .3px; text-shadow: 1px 1px #000;
+  box-shadow: 0 0 0 1px #000, inset 0 0 0 1px #000;
+}
+.bug-report-text-button:hover { border-color: #a9a498; background: #1f1f1f; }
+.bug-report-text-button:active { background: #0b0b0b; }
+.bug-report-form .vb-art:disabled { opacity: .5; cursor: default; }
+
 /* Beta: the floating bug button (beta.ts). Outside #classic, pinned to the page's top-right corner, above every window and the boot cover. */
 #beta-bug-button {
   position: fixed; top: 8px; right: 8px; z-index: 1000; display: inline-flex; align-items: center; gap: 0; padding: 6px 12px;

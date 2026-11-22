@@ -15,6 +15,12 @@ The window asks **¿Qué pasó?** (required) and **¿Qué esperabas que pasara?*
 leave it out, and says in one line what else is sent. Enviar → "¡Gracias! Reporte `<id>` enviado." plus a console line, and the
 window closes after 2.5 s. Escape closes it like every window (`window-stack.ts`).
 
+It looks like the other in-game windows (Ariel, 22 Nov: the first version was a plain white form): the classic configuration window's
+frame (`es_configuracion-vacio`, 536x506) with its baked captions painted out by `ui-captions.ts` and the bottom bar's key-binding button
+and social icons covered by the plain bar beside them (`reporterArt`, a canvas copy of our own); the title in Cinzel capitals, labels in
+Georgia, black text boxes, the game's CANCELAR / ENVIAR / close pictures and `check-amarillo` for the screenshot box; "Escribir a un GM"
+is a text button drawn like the bitmap ones. If the picture cannot load, the window stays black with a plain frame.
+
 Code: `apps/web/src/bug-report-ui.ts` (window), `bug-report-data.ts` (rings, redaction, payload), `bug-report-capture.ts`
 (console/error capture, screenshot), wiring in `main.ts`, the protocol hook `Session.onTrace`. Server: `tools/bug-reports.mjs`,
 mounted by `tools/dev-web.mjs` (dev and `--preview`, so `play.sh` gets it).

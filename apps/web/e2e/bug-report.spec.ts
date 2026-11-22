@@ -23,6 +23,14 @@ test('bug reporter: F8 opens it, Enviar stores the report with screenshot, chara
   await expect(page.locator('#bug-report-screenshot')).toBeChecked();
   await expect(page.locator('#bug-report-thumb')).toHaveAttribute('src', /^data:image\/(png|jpeg);base64,/);
   await expect(page.locator('#bug-report-text')).toBeFocused();
+  // Drawn like the other in-game windows: the configuration frame, not a plain light form; the check box toggles (role=checkbox).
+  await expect(win).toHaveClass(/bug-report-art/);
+  await expect(win).not.toHaveClass(/vb-plain/);
+  expect(await win.evaluate(el => getComputedStyle(el).backgroundImage)).toMatch(/^url\("blob:/);
+  await page.locator('#bug-report-screenshot').click();
+  await expect(page.locator('#bug-report-screenshot')).not.toBeChecked();
+  await page.locator('.bug-report-check-label').click();
+  await expect(page.locator('#bug-report-screenshot')).toBeChecked();
   // Escape closes it like every window (window-stack.ts), and the game keys stay with the game.
   await page.keyboard.press('Escape');
   await expect(win).toHaveCount(0);
