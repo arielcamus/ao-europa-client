@@ -52,8 +52,13 @@ AO_ASSETS="$HOME/Projects/ao-reference/Recursos" pnpm web:preview
 ```
 
 Slow links: the server sends the uncompressed resources (BMP, init/Dat tables, maps) brotli/gzip and
-keeps the best-compressed copies in `AO_ASSET_CACHE` (default: the OS temp dir). Asset URLs carry the
-asset-set version, so a second visit is served from the browser cache. The preview bundle is compressed
+keeps the best-compressed copies in `AO_ASSET_CACHE` (default: the OS temp dir), pruning the copies of
+files that have since changed. Asset URLs carry the asset-set version, so a second visit is served from
+the browser cache. Patching `AO_ASSETS` while the server runs needs no restart: each page load rescans the
+set (at most once a second, ~40 ms for the pre-HOO resources) and a changed, added or removed file gives a
+new version, `cp -p` included (the file's change time and inode are part of it). Reload open pages. Two
+limits: a filesystem without a real change time (some network mounts) only sees size and date changes,
+and the preview bundle is read once, so rebuilding `dist` needs a restart. The preview bundle is compressed
 and its hashed files are immutable. Window pictures load after the login screen, while the player types.
 
 Use arrows/WASD or touch the map in a direction from the character. Quick taps and held input work;
