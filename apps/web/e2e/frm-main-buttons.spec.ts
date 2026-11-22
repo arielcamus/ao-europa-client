@@ -35,7 +35,7 @@ test('experience read-out buttons show exactly one label; the manual and MAO but
   expect(failures).toEqual([]);
 });
 
-// imgBugReport -> FrmGmAyuda (pinned 619e69d): ventanagm.bmp, the .frm geometry, radio-on.bmp on the chosen row, and the row -> reason map.
+// imgBugReport -> bug reporter -> FrmGmAyuda (pinned 619e69d): ventanagm.bmp, the .frm geometry, radio-on.bmp on the chosen row, and the row -> reason map.
 test('FrmGmAyuda: ventanagm.bmp, controls where the .frm puts them, the rows send the reason printed on them', async ({ page }, info) => {
   test.skip(info.project.name !== 'desktop-chrome', 'desktop layout');
   const failures: string[] = [];
@@ -46,6 +46,8 @@ test('FrmGmAyuda: ventanagm.bmp, controls where the .frm puts them, the rows sen
   await expect(page.locator('#viewport')).toHaveAttribute('data-rendered', 'true');
   await page.locator('#menu-tab').click();
   await page.locator('#bug-report').click();
+  await page.locator('#bug-report-gm').click(); // the button opens the bug reporter; its "Escribir a un GM" is FrmGmAyuda (docs/BUG-REPORTS.md)
+  await page.mouse.move(0, 0); // the pointer left on that button would sit over cmdCancelar of the new form (its -over art)
   const win = page.locator('#gm-help');
   await expect(win).toHaveCSS('background-image', /ventanagm\.bmp/);
   await expect(page.locator('#gm-help-send')).toHaveCSS('background-image', /boton-enviar-default\.bmp/);

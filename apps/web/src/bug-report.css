@@ -1,0 +1,9 @@
+/* AGPL-3.0-or-later. The bug reporter window (bug-report-ui.ts): a plain VB form. */
+.bug-report-form { z-index: 40; }
+.bug-report-form .vb-label { overflow: visible; }
+.bug-report-check { display: flex; align-items: center; gap: 2px; color: #000; font: 11px Tahoma, Arial, sans-serif; cursor: default; }
+.bug-report-check input { margin: 0 3px 0 0; }
+.bug-report-thumb { border: 1px solid #7a7a7a; background: #000; object-fit: contain; image-rendering: auto; }
+.bug-report-note { color: #404040 !important; font-size: 10px; line-height: 12px; white-space: normal; }
+.bug-report-status { color: #000080 !important; }
+.bug-report-form .vb-command:disabled { color: #8d8d8d; background: #ececec; }

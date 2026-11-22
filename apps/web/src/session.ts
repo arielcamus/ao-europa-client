@@ -100,6 +100,8 @@ export class Session {
   readonly inventoryActions = new InventoryActions({ send: packet => this.send(packet), ready: () => this.ready, now: () => this.clock(), ui: this.ui, items: this.items });
   /** Observer called with every decoded server packet once the session state has applied it (audio). */
   onPacket: ((packet: ServerPacket) => void) | undefined;
+  /** Observer of every packet id in and out, payloads never (the bug reporter keeps the last few hundred, bug-report-capture.ts). */
+  onTrace: ((direction: 'in' | 'out', id: number) => void) | undefined;
   /** Observer called after EraseChar removed a character (every path: CharacterRemove, a step out of the area, CambioDeArea): audio. */
   onCharacterErased: ((charIndex: number) => void) | undefined;
   /** Bank vault, Goliath and player-to-player trade (feat/bank-trade). */
@@ -235,6 +237,7 @@ export class Session {
     }
     if (packet.id === KS_QUIT) this.leaving = true; // WriteQuit: UserSaliendo = True
     this.write(encodeClientFrame(packet));
+    this.onTrace?.('out', packet.id);
   }
   /** Esc while UserSaliendo (ModGameplayUI.HandleKeyUp): WriteCancelarExit clears the flag; the server answers LocaleMsg 578 if a countdown was running. */
   cancelExit(): boolean {
@@ -259,6 +262,7 @@ export class Session {
       let frame: ReturnType<typeof decodeServerFrame>;
       try { frame = decodeServerFrame(body); } catch (error) { this.decodeProblem(body, error instanceof Error ? error.message : String(error)); continue; }
       const { packet, trailing } = frame;
+      this.onTrace?.('in', packet.id);
       if ('unknown' in packet) { this.unknownFrames++; continue; }
       if (trailing.length) this.decodeProblem(body, `Server message ID: ${packet.id} too many bytes; ${trailing.length} extra bytes found`, trailing);
       this.ui.receive(packet);

@@ -62,6 +62,16 @@ import { TEXT, silentLoginText } from './connect-text.js';
 import { FloatingTexts } from './floating-text.js';
 import type { SessionNotice } from './session.js';
 import type { VbWindow } from './vb-window.js';
+import * as protocolTables from '@ao/protocol';
+import { Diagnostics, captureCanvas } from './bug-report-capture.js';
+import { packetNameTable } from './bug-report-data.js';
+import type { CharacterInfo } from './bug-report-data.js';
+import { BugReportUI } from './bug-report-ui.js';
+import { CLASS_NAMES } from './game-text.js';
+
+// The bug reporter's rings (console, errors, protocol ids) start before anything else can log (docs/BUG-REPORTS.md).
+const diagnostics = new Diagnostics();
+diagnostics.install();
 
 // The saved screen scale applies from the first layout; `?scale=classic|fill|whole` in the address changes and remembers it (see options-settings.ts).
 const gameOptions = new OptionsSettings();
@@ -120,6 +130,7 @@ let chatSupported = true;
 /** The account screen, character creation and message boxes belong to the classic server; the stand-in and the community adapter keep the one-click login. */
 let interactiveFlow = true;
 const report = (message: string) => {
+  diagnostics.error(message);
   errorBox.textContent = message; errorBox.hidden = false;
   element('console').scrollTop = element('console').scrollHeight;
 };
@@ -185,11 +196,53 @@ partyUi.onFrameClick = groupId => { if (session?.spells.targeting?.skill === 1) 
 const guildUi = new GuildUI(element('classic'), sendPackets);
 const mainButtons = new FrmMainButtons({
   element, confirm: (text, yes) => { showConfirm(element('classic'), text, yes); }, send: packet => sendPackets(packet),
-  openUrl: url => { window.open(url, '_blank', 'noopener,noreferrer'); }, openBugReport: () => gmUi.openHelp(),
+  openUrl: url => { window.open(url, '_blank', 'noopener,noreferrer'); }, openBugReport: () => bugReport.open(),
 });
 mainButtons.init();
 const gmUi = new GmUI(element('classic'), error => report(String(error))); // GM forms (wp12)
 chatBox.onOpenWindow = window => (window === 'objects' ? gmUi.openObjects() : gmUi.openHelp());
+// The in-game bug reporter (F8 or the MENU tab's "Bugs" button): screenshot, logs and character info to POST /api/bug-report.
+let clientInfo: Record<string, string | number | boolean | undefined> = {};
+/** The account e-mail and password of this page: redacted from every string of a report, never sent. */
+let reportSecrets: string[] = [];
+let packetName: ReturnType<typeof packetNameTable> | undefined;
+const bugReport = new BugReportUI(element('classic'), {
+  capture: () => (session?.ready ? captureCanvas(renderer.app.canvas, () => renderer.app.render()) : undefined),
+  gmHelp: () => (session?.ready ? () => gmUi.openHelp() : undefined),
+  say: text => { if (session?.ready) session.ui.message(text); else connectUi.say(text); },
+  context: () => {
+    const s = session && session.phase !== 'closed' ? session : undefined;
+    const self = s?.self, stats = s?.ui.stats;
+    const character: CharacterInfo | undefined = self && s ? {
+      name: displayName(self.name), level: stats?.level ?? s.characterLevel, className: stats?.characterClass !== undefined ? CLASS_NAMES[stats.characterClass] : undefined,
+      map: s.map, resourceMap: s.resourceMap, mapName: renderer.mapName, x: s.position?.x, y: s.position?.y,
+      hp: stats?.hp, maxHp: stats?.maxHp, mana: stats?.mana, maxMana: stats?.maxMana, dead: s.dead, privileges: self.privileges,
+    } : undefined;
+    const memory = (performance as { memory?: { usedJSHeapSize: number } }).memory;
+    const now = performance.now();
+    return {
+      character, phase: s ? s.phase : connectUi.current, client: { ...clientInfo, path: location.pathname + location.search },
+      environment: {
+        userAgent: navigator.userAgent, platform: navigator.platform, language: navigator.language, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        viewport: { width: innerWidth, height: innerHeight }, devicePixelRatio, screen: { width: screen.width, height: screen.height },
+        screenScale: gameOptions.value.screenScale, touch: navigator.maxTouchPoints > 0,
+      },
+      stats: {
+        fps: Math.round(renderer.app.ticker.FPS), memoryMB: memory ? Math.round(memory.usedJSHeapSize / 1048576) : undefined, pageSeconds: Math.round(now / 1000),
+        connectedSeconds: s ? Math.round((now - s.connectedAt) / 1000) : undefined, inWorldSeconds: s?.loggedAt !== undefined ? Math.round((now - s.loggedAt) / 1000) : undefined,
+        walksSent: s?.walksSent, confirmedWalks: s?.confirmedWalks, correctedWalks: s?.correctedWalks, unknownFrames: s?.unknownFrames,
+        serverSilentMs: s?.serverSilentSince !== undefined ? Math.round(now - s.serverSilentSince) : undefined,
+        decodeProblems: s?.decodeProblems.slice(-20), clippedFrames: renderer.clippedFrames, rendered: viewport.dataset.rendered,
+      },
+      openWindows: windows.open.filter(id => id !== 'bug-report-window'),
+      chat: s ? s.ui.messages.map(message => message.text) : [],
+      console: diagnostics.console.values(), protocol: diagnostics.protocol.values(), errors: diagnostics.errors.values(),
+      secrets: [...reportSecrets, account.value, password.value, remembered].filter(Boolean),
+      timeOrigin: performance.timeOrigin, now,
+      packetName: (dir, id) => (packetName ??= packetNameTable(protocolTables as unknown as Record<string, unknown>))(dir, id),
+    };
+  },
+});
 const travelUi = new TravelUI(element('classic'), packet => sendPackets(packet)); // FrmViajes (wp05)
 // Events, duels (frmRetos), the tournament organiser, battleground lobbies and the right-click menus (coverage-tail).
 const extrasUi = new ExtrasUI(element('classic'), viewport, { send: packet => sendPackets(packet), runLine: line => chatBox.runLine(line), whisper: name => chatBox.whisperTo(name) });
@@ -296,7 +349,8 @@ function close(message = 'Disconnected', byPlayer = false) {
 async function boot() {
   const response = await fetch('/ao-config.json');
   if (!response.ok) throw new Error('Start this client with pnpm dev or pnpm dev:standin.');
-  const config: { mode: string; serverProfile?: string; wireProfile?: string; wsPath: string } = await response.json();
+  const config: { mode: string; serverProfile?: string; wireProfile?: string; wsPath: string; assetVersion?: string; build?: { commit?: string; branch?: string; builtAt?: string } } = await response.json();
+  clientInfo = { mode: config.mode, serverProfile: config.serverProfile, wireProfile: config.wireProfile, assetVersion: config.assetVersion, commit: config.build?.commit, branch: config.build?.branch, builtAt: config.build?.builtAt };
   if (!['standin', 'classic'].includes(config.mode) || config.wsPath !== '/bridge') throw new Error('Invalid local server configuration');
   // The VB6 server is the pinned pre-HOO build (9ccd7fad): decode its exact layouts (packages/protocol/src/profile.ts). dev-web.mjs serves it.
   setWireProfile(parseWireProfile(config.wireProfile ?? 'prehoo'));
@@ -430,6 +484,8 @@ function connectSession(email: string, secret: string, create = false) {
     ws.send(bytes.slice().buffer);
   });
   session.interactive = interactiveFlow;
+  reportSecrets = [email, secret];
+  session.onTrace = (direction, id) => diagnostics.trace(direction, id);
   { const mine = session; mine.terrain = (x, y) => renderer.readyMap === mine.resourceMap ? renderer.legalTileAt(x, y) : undefined; } // LegalPos reads MapData(x, y).Blocked / Trigger
   password.value = '';
   npcDialog.hide();
@@ -555,6 +611,8 @@ macControl.install();
 window.addEventListener('keydown', event => {
   // HandleKeyUp: Esc while UserSaliendo sends CancelarExit instead of HandleEsc (the windows keep their own Esc via the window stack).
   if (event.key === 'Escape' && session?.cancelExit()) return;
+  // F8, unless the player bound it to an action: the bug reporter (docs/BUG-REPORTS.md). F8 has no binding in DefaultKey.ini and no browser action.
+  if (event.code === 'F8' && keyAction('F8') === undefined && !event.repeat && !event.ctrlKey && !event.metaKey && !event.altKey) { event.preventDefault(); bugReport.open(); return; }
   if (event.key === 'Escape') { npcDialog.hide(); chatBox.close(); itemsUi.closeDialogs(); bankUi.closeDialogs(); tradeUi.closeDialogs(); craftingUi.closeAll(); craftingExtraUi.closeAll(); clearInput(); session?.spells.cancel(); renderer.app.canvas.focus(); return; }
   // IsDialogOpen: while the vault, Goliath or a trade window is up the game keys (attack, use, drop...) do nothing. The options and key windows are modal too.
   if (transacting() || optionsUi.visible) return;

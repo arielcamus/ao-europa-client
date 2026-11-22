@@ -5,6 +5,8 @@ import { startBridge } from '../packages/bridge/dist/index.js';
 import { parseWireProfile, setWireProfile } from '../packages/protocol/dist/index.js';
 import { startStandin } from './standin-server/dist/index.js';
 import { distDelivery, injectAssetVersion, localAssets } from './local-assets.mjs';
+import { bugReportOptionsFromEnv, createBugReportHandler, pushPending } from './bug-reports.mjs';
+import { execFileSync } from 'node:child_process';
 
 const standinMode = process.argv.includes('--standin');
 const previewMode = process.argv.includes('--preview');
@@ -14,6 +16,14 @@ if (!['classic', 'elixir-classic'].includes(serverProfile)) throw new Error('Inv
 // (ao-config.json) and the stand-in encodes with it, so both ends agree. AO_WIRE_PROFILE=live for a HOO-era server.
 const wireProfile = parseWireProfile(process.env.AO_WIRE_PROFILE ?? 'prehoo');
 setWireProfile(wireProfile);
+// The checked-out commit, for bug reports (ao-config.json `build`). play.sh rebuilds dist/ from this tree before starting.
+const git = args => { try { return execFileSync('git', args, { cwd: fileURLToPath(new URL('..', import.meta.url)), encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim(); } catch { return undefined; } };
+const build = { commit: git(['rev-parse', '--short=10', 'HEAD']), branch: git(['rev-parse', '--abbrev-ref', 'HEAD']), builtAt: new Date().toISOString() };
+// POST /api/bug-report: the in-game bug reporter (docs/BUG-REPORTS.md). Reports land in AO_BUG_REPORT_DIR; GitHub only with a token.
+const bugReports = bugReportOptionsFromEnv();
+const bugReportHandler = createBugReportHandler(bugReports);
+console.log(`Bug reports: ${bugReports.dir}${bugReports.github ? ` + GitHub issues in ${bugReports.github.repo}` : ' (local only; set AO_BUG_REPORT_GITHUB_TOKEN + AO_BUG_REPORT_GITHUB_REPO for issues)'}`);
+if (bugReports.github) void pushPending(bugReports).then(count => { if (count) console.log(`[bug-report] ${count} pending report(s) pushed to GitHub`); });
 const cleanup = [];
 let stopping = false;
 async function stop() {
@@ -34,10 +44,11 @@ try {
         // The resources are scanned again on page loads (local-assets.mjs refresh): a patch made while this server runs gets a new version.
         void assets.refresh().then(assetVersion => {
           response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
-          response.end(JSON.stringify({ mode: standinMode ? 'standin' : 'classic', serverProfile, wireProfile, wsPath: '/bridge', assetVersion }));
+          response.end(JSON.stringify({ mode: standinMode ? 'standin' : 'classic', serverProfile, wireProfile, wsPath: '/bridge', assetVersion, build }));
         }, next);
       } else next();
     });
+    server.middlewares.use((request, response, next) => { void bugReportHandler(request, response, next); });
     server.middlewares.use(assets);
   };
   const settings = {
