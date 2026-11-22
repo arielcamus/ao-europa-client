@@ -66,7 +66,13 @@ const out = { ...MANUAL };
 for (const [base, { file }] of [...bases].sort()) {
   if (out[base]) continue;
   const png = path.join(work, 'a.png'), big = path.join(work, 'b.png');
-  try { execFileSync('sips', ['-s', 'format', 'png', path.join(dir, file), '--out', png], { stdio: 'ignore' }); } catch { continue; }
+  // Many true-colour BMPs declare "important colors" in the header, which sips refuses (it skipped boton-lanzar, boton-ingresar, boton-volver...
+  // silently, so their captions stayed bitmap text: Ariel, 22 Nov, "Lanzar"). Same fix as interface-assets.ts normalizeTrueColorBmp: zero the
+  // palette metadata in a scratch copy; the pixels are untouched.
+  const source = path.join(work, 'src.bmp'), raw = fs.readFileSync(path.join(dir, file));
+  if (raw.length > 54 && raw.readUInt16LE(28) >= 24) { raw.writeUInt32LE(0, 46); raw.writeUInt32LE(0, 50); }
+  fs.writeFileSync(source, raw);
+  try { execFileSync('sips', ['-s', 'format', 'png', source, '--out', png], { stdio: 'ignore' }); } catch { console.warn('sips cannot read', file); continue; }
   const image = bmp(path.join(dir, file));
   execFileSync('sips', ['-z', String(image.h * 3), String(image.w * 3), png, '--out', big], { stdio: 'ignore' });
   const lines = execFileSync(ocr, [big], { encoding: 'utf8' }).trim().split('\n').filter(Boolean);

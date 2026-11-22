@@ -28,8 +28,23 @@ export const CAPTIONS: Record<string, readonly CaptionSpec[]> = {
     {text: "STATS",box: [796,528,52,16]},
     {text: "MENU",box: [924,528,50,16]},
   ],
+  "VentanaPrincipal-hechizos": [
+    {text: "INVENTARIO",box: [22,7,79,15]},
+    {text: "HECHIZOS",box: [151,7,66,16]},
+    {text: "LANZAR",box: [47,295,64,18]},
+  ],
+  "banco": [
+    {text: "FINANZAS GOLIATH",box: [168,30,221,22]},
+    {text: "BÓVEDA",box: [120,70,54,17]},
+    {text: "INVENTARIO",box: [355,73,83,15]},
+    {text: "RETIRAR",box: [89,437,54,15]},
+    {text: "DEPOSITAR",box: [393,437,69,15]},
+  ],
   "boton-abandonar": [
     {text: "ABANDONAR",box: [27,6,80,15]},
+  ],
+  "boton-aceptar": [
+    {text: "ACEPTAR",box: [38,6,56,15]},
   ],
   "boton-actualizar": [
     {text: "ACTUALIZAR",box: [27,6,78,16]},
@@ -40,17 +55,44 @@ export const CAPTIONS: Record<string, readonly CaptionSpec[]> = {
   "boton-audio": [
     {text: "AUDIO",box: [61,6,43,15]},
   ],
+  "boton-cambiar-pass": [
+    {text: "CAMBIAR CONTRASEÑA",box: [7,4,138,19]},
+  ],
   "boton-combate": [
     {text: "COMBATE",box: [35,6,62,15]},
   ],
+  "boton-comenzar": [
+    {text: "COMENZAR",box: [37,12,86,17]},
+  ],
+  "boton-comprar": [
+    {text: "COMPRAR",box: [29,6,62,15]},
+  ],
+  "boton-conectar": [
+    {text: "CONECTAR",box: [39,12,82,17]},
+  ],
   "boton-config": [
     {text: "CONFIGURACIÓN",box: [13,4,106,18]},
+  ],
+  "boton-config-teclas": [
+    {text: "CONFIGURAR TECLAS",box: [11,6,129,15]},
   ],
   "boton-construir": [
     {text: "CONSTRUIR",box: [31,6,71,15]},
   ],
   "boton-crear-cuenta-rojo": [
     {text: "CREAR CUENTA",box: [20,6,93,15]},
+  ],
+  "boton-crear-pj": [
+    {text: "CREAR PERSONAJE",box: [10,12,137,18]},
+  ],
+  "boton-crearcuenta": [
+    {text: "CREAR CUENTA",box: [24,12,113,17]},
+  ],
+  "boton-cuenta": [
+    {text: "CUENTA",box: [41,6,52,15]},
+  ],
+  "boton-depositar": [
+    {text: "DEPOSITAR",box: [26,6,68,15]},
   ],
   "boton-depositartodo": [
     {text: "DEPOSITAR TODO",box: [11,6,110,15]},
@@ -73,8 +115,23 @@ export const CAPTIONS: Record<string, readonly CaptionSpec[]> = {
   "boton-fundar-clan": [
     {text: "FUNDAR CLAN",box: [23,6,87,15]},
   ],
+  "boton-hechizos": [
+    {text: "HECHIZOS",box: [27,6,66,16]},
+  ],
+  "boton-ingresar": [
+    {text: "INGRESAR",box: [35,6,62,16]},
+  ],
+  "boton-inventory": [
+    {text: "INVENTARIO",box: [21,6,78,15]},
+  ],
   "boton-jugabilidad": [
     {text: "JUGABILIDAD",box: [39,6,84,17]},
+  ],
+  "boton-lanzar": [
+    {text: "LANZAR",box: [49,12,62,16]},
+  ],
+  "boton-mainmenu": [
+    {text: "MENU PRINCIPAL",box: [15,6,102,15]},
   ],
   "boton-manual": [
     {text: "MANUAL",box: [17,4,46,13]},
@@ -94,6 +151,12 @@ export const CAPTIONS: Record<string, readonly CaptionSpec[]> = {
   "boton-retar": [
     {text: "RETAR",box: [35,6,41,15]},
   ],
+  "boton-retirar": [
+    {text: "RETIRAR",box: [33,6,54,15]},
+  ],
+  "boton-salir": [
+    {text: "SALIR",box: [47,6,37,15]},
+  ],
   "boton-solicitaringreso": [
     {text: "SOLICITAR INGRESO",box: [39,6,134,16]},
   ],
@@ -103,11 +166,17 @@ export const CAPTIONS: Record<string, readonly CaptionSpec[]> = {
   "boton-tirar": [
     {text: "TIRAR",box: [37,6,39,14]},
   ],
+  "boton-tirar-dados": [
+    {text: "TIRAR DADOS",box: [19,6,83,16]},
+  ],
   "boton-tirar-todo": [
     {text: "TIRAR TODO",box: [17,6,78,15]},
   ],
   "boton-transferir": [
     {text: "TRANSFERIR",box: [23,6,75,15]},
+  ],
+  "boton-vender": [
+    {text: "VENDER",box: [33,6,52,15]},
   ],
   "boton-ver-boveda": [
     {text: "VER BÓVEDA",box: [20,3,79,18]},
@@ -115,11 +184,19 @@ export const CAPTIONS: Record<string, readonly CaptionSpec[]> = {
   "boton-video": [
     {text: "VIDEO",box: [60,6,43,15]},
   ],
+  "boton-volver": [
+    {text: "VOLVER",box: [50,12,59,17]},
+  ],
   "cantidad": [
     {text: "TIRAR OBJETO",box: [81,17,128,22]},
     {text: "Ingrese cantidad a tirar",box: [88,81,116,18],font: "book"},
     {text: "TIRAR",box: [66,151,39,14]},
     {text: "TIRAR TODO",box: [167,151,78,16]},
+  ],
+  "centrohechizo": [
+    {text: "INVENTARIO",box: [22,7,79,15]},
+    {text: "HECHIZOS",box: [152,7,66,15]},
+    {text: "LANZAR",box: [47,295,64,18]},
   ],
   "centroinventario": [
     {text: "INVENTARIO",box: [22,7,79,15]},

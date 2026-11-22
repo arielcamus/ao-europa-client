@@ -16,9 +16,11 @@ import { CAPTIONS } from './ui-captions-data.js';
 export { CAPTIONS };
 
 /** CAPTIONS entry of an interface file name (`boton-video-off` -> `boton-video`). */
+// Keys keep the file's own spelling (VentanaPrincipal-hechizos), requests come in any case: look up by lower case.
+const BY_LOWER = new Map(Object.entries(CAPTIONS).map(([key, specs]) => [key.toLowerCase(), specs] as const));
 export function captionsFor(name: string): readonly CaptionSpec[] | undefined {
   const base = name.toLowerCase().replace(/^(es|en)_/, '');
-  return CAPTIONS[base] ?? CAPTIONS[base.replace(/-(default|over|off|on|pressed)$/, '')];
+  return BY_LOWER.get(base) ?? BY_LOWER.get(base.replace(/-(default|over|off|on|pressed)$/, ''));
 }
 
 export const CAPTION_FONTS = { serif: '700 100px Cinzel', sans: '400 100px Tahoma, Verdana, sans-serif', book: '400 100px Georgia, "Times New Roman", serif' } as const;

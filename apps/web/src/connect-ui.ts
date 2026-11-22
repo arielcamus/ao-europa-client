@@ -9,6 +9,7 @@ import type { AccountCharacter } from '@ao/protocol';
 import type { WorldRenderer } from './renderer.js';
 import type { NewCharacter } from './session.js';
 import { keyedSheet } from './grh-canvas.js';
+import { CONNECT_ART, crispFrame } from './connect-captions.js';
 import { fetchText, parseIni, assetUrl } from './assets.js';
 import { fxTables } from './fx-world.js';
 import { averageTint, groupTint } from './fx-particles.js';
@@ -187,6 +188,9 @@ export class ConnectUI {
       b.addEventListener('click', () => this.select(i)); b.addEventListener('dblclick', () => { this.select(i); this.play(); });
       this.account.append(b);
     }
+    // The character list may have arrived while the pictures above were still loading (showAccount ran renderSlots before these buttons existed,
+    // which left every slot hidden and unclickable); the crisp-art pass made that window wider.
+    if (this.characters.length) this.renderSlots();
   }
   private play() {
     const character = this.selectedCharacter;
@@ -359,6 +363,15 @@ export class ConnectUI {
     const el = document.createElement('div'); el.className = `cs-grh ${cls}`.trim();
     const left = center ? x - Math.floor(frame.width / 2) + 16 : x, top = center ? y - frame.height + 32 : y;
     el.style.cssText = `left:${left}px;top:${top}px;width:${frame.width}px;height:${frame.height}px;background:url("${sheet}") -${frame.x}px -${frame.y}px no-repeat`;
+    // Sprites that carry buttons (CREAR | CREATE, JUGAR | PLAY, VOLVER, back / close): their baked letters and glyphs are redrawn as vector.
+    const art = CONNECT_ART[id];
+    if (art) {
+      try {
+        const image = new Image(); image.src = sheet; await image.decode();
+        const crisp = await crispFrame(ctx => ctx.drawImage(image, frame.x, frame.y, frame.width, frame.height, 0, 0, frame.width, frame.height), frame.width, frame.height, art);
+        if (crisp) { el.style.background = `url("${crisp.url}") 0 0 / 100% 100% no-repeat`; Object.assign(crisp.svg.style, { position: 'absolute', left: '0', top: '0', width: '100%', height: '100%', pointerEvents: 'none' }); el.append(crisp.svg); }
+      } catch (error) { console.warn('connect art captions', id, error); }
+    }
     parent.prepend(el); // art goes under the controls added so far
     return el;
   }
