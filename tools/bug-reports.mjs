@@ -50,7 +50,9 @@ export class RateLimiter {
     const list = this.recent(key);
     return list.length < this.limit ? { ok: true } : { ok: false, retryAfterMs: Math.max(1, list[0] + this.windowMs - this.now()) };
   }
-  record(key) { const list = this.recent(key); list.push(this.now()); this.hits.set(key, list); }
+  record(key) { const list = this.recent(key); const at = this.now(); list.push(at); this.hits.set(key, list); return at; }
+  /** Take back one hit (a reserved slot whose request failed). */
+  release(key, at) { const list = this.hits.get(key); const i = list ? list.indexOf(at) : -1; if (i >= 0) list.splice(i, 1); }
 }
 
 // Same patterns as the browser (apps/web/src/bug-report-data.ts redact), minus the per-page secrets the server never knows.
@@ -58,7 +60,7 @@ const EMAIL = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
 const CREDENTIAL_PAIR = /\b(pass(?:word|wd)?|contrase(?:ñ|n)a|clave|pin|token|secret|api[_-]?key|auth(?:orization)?|session(?:id)?|cookie)(\s*[:=]\s*)("[^"]*"|'[^']*'|\S+)/gi;
 const BEARER = /\b(Bearer|Basic|token)\s+[A-Za-z0-9._~+/=-]{8,}/gi;
 const KNOWN_TOKENS = /\b(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[abpr]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9_-]{20,}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,})\b/g;
-const PASSWORD_COMMANDS = /^(\/PARTICIPAR\s+\S+\s+)(.+)$/i;
+const PASSWORD_COMMANDS = /(\/PARTICIP(?:AR|ATE)\s+\S+\s+)(\S+)/gi;
 export function redact(text) {
   return text.replace(KNOWN_TOKENS, '[redactado]').replace(BEARER, (_, kind) => `${kind} [redactado]`)
     .replace(CREDENTIAL_PAIR, (_, key, sep) => `${key}${sep}[redactado]`).replace(EMAIL, '[email]').replace(PASSWORD_COMMANDS, (_, head) => `${head}[redactado]`);
@@ -163,15 +165,17 @@ export async function storeReport(dir, report, image, { now = new Date(), userAg
 
 // ---- GitHub ---------------------------------------------------------------------------------------------------------------------
 /** No @mention or code fence from a player's text reaches the issue as markup. */
-const neutral = text => text.replace(/@(?=\w)/g, '@​').replace(/```/g, 'ʼʼʼ');
+const neutral = text => text.replace(/@(?=\w)/g, '@​').replace(/#(?=\d)/g, '#​').replace(/```/g, 'ʼʼʼ');
+/** Player-controlled text outside a code fence: no HTML, links, images or other Markdown, and no line breaks inside a table cell. */
+const inline = text => neutral(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/[\\`*_[\]()!#|~]/g, '\\$&');
 const fence = lines => `\`\`\`\n${neutral(lines.join('\n'))}\n\`\`\``;
-const quote = text => neutral(text).split(/\r?\n/).map(line => `> ${line}`).join('\n');
+const quote = text => text.split(/\r?\n/).map(line => `> ${inline(line)}`).join('\n');
 const MAX_ISSUE_BODY = 60000;
 
 /** Title and Markdown body of the issue. `links`: { image, json } URLs (either may be missing). */
 export function issueContent(report, id, links = {}) {
   const c = report.character, cl = report.client ?? {}, env = report.environment ?? {}, st = report.stats ?? {};
-  const row = (name, value) => (value === undefined || value === '' ? '' : `| ${name} | ${neutral(String(value)).replace(/\|/g, '\\|')} |\n`);
+  const row = (name, value) => (value === undefined || value === '' ? '' : `| ${name} | ${inline(String(value).replace(/[\r\n]+/g, ' '))} |\n`);
   const fmt = (a, b) => (a === undefined ? undefined : `${a}${b !== undefined ? ` / ${b}` : ''}`);
   const viewport = isObject(env.viewport) ? `${env.viewport.width}x${env.viewport.height} @${env.devicePixelRatio ?? 1}x${env.screenScale ? `, escala ${env.screenScale}` : ''}` : undefined;
   const who = c ? [c.className, c.level !== undefined ? `nivel ${c.level}` : undefined].filter(Boolean).join(', ') : '';
@@ -281,16 +285,21 @@ export async function pushPending(options, { log = console.log, fetchImpl = fetc
   for (const name of names.sort()) {
     const id = name.slice(0, -'.json'.length);
     if (!name.endsWith('.json') || name.endsWith('.github.json') || !ID.test(id) || done.has(id)) continue;
-    const stored = JSON.parse(await readFile(join(options.dir, name), 'utf8'));
-    const ext = stored.screenshotFile?.endsWith('.jpg') ? 'jpg' : 'png';
-    const image = stored.screenshotFile ? { buffer: await readFile(join(options.dir, stored.screenshotFile)), ext, type: ext === 'png' ? 'image/png' : 'image/jpeg' } : undefined;
+    let stored, image;
+    try { // a truncated or hand-edited file must not stop the others (nor, at startup, the server)
+      stored = JSON.parse(await readFile(join(options.dir, name), 'utf8'));
+      const ext = stored.screenshotFile?.endsWith('.jpg') ? 'jpg' : 'png';
+      image = stored.screenshotFile ? { buffer: await readFile(join(options.dir, `${id}.${ext}`)), ext, type: ext === 'png' ? 'image/png' : 'image/jpeg' } : undefined;
+    } catch (error) { log(`[bug-report] GITHUB SKIPPED ${name}: unreadable (${error instanceof Error ? error.message : String(error)})`); continue; }
     if (await pushStored(options, id, stored, image, log, fetchImpl)) pushed++;
   }
   return pushed;
 }
 
+const STORE_FAILED = Symbol('store failed');
 function clientIp(request, trustProxy) {
-  const forwarded = trustProxy ? String(request.headers['x-forwarded-for'] ?? '').split(',')[0].trim() : '';
+  // The LAST hop is the address our own proxy saw; earlier entries are whatever the client sent and can be forged.
+  const forwarded = trustProxy ? (String(request.headers['x-forwarded-for'] ?? '').split(',').pop() ?? '').trim() : '';
   return forwarded || request.socket?.remoteAddress || 'unknown';
 }
 function reply(response, status, body, headers = {}) {
@@ -325,6 +334,13 @@ export function createBugReportHandler(options, { log = console.log, fetchImpl =
     const ip = clientIp(request, options.trustProxy);
     const byIp = ipLimiter.check(ip);
     if (!byIp.ok) { request.resume(); tooMany(response, byIp.retryAfterMs); return; }
+    // Take the slot now, before the body is read, so parallel requests cannot all pass the check. Every attempt counts (a malformed
+    // 3 MB body costs this server as much as a good one) except one this server failed to store.
+    const slot = ipLimiter.record(ip);
+    let outcome;
+    try { outcome = await accept(request, response); } finally { if (outcome === STORE_FAILED) ipLimiter.release(ip, slot); }
+  };
+  const accept = async (request, response) => {
     if (Number(request.headers['content-length'] ?? 0) > MAX_BODY_BYTES) { reply(response, 413, { error: 'report too large' }, { Connection: 'close' }); request.resume(); return; }
     let raw;
     try { raw = await readBody(request, MAX_BODY_BYTES); } catch { reply(response, 400, { error: 'unreadable body' }); return; }
@@ -338,9 +354,9 @@ export function createBugReportHandler(options, { log = console.log, fetchImpl =
     let saved;
     try { saved = await storeReport(options.dir, checked.report, checked.image, { now: new Date(now()), userAgent: request.headers['user-agent'] }); } catch (error) {
       log(`[bug-report] STORE FAILED in ${options.dir}: ${error instanceof Error ? error.message : String(error)}`);
-      reply(response, 500, { error: 'could not store the report' }); return;
+      reply(response, 500, { error: 'could not store the report' }); return STORE_FAILED;
     }
-    ipLimiter.record(ip); sessionLimiter.record(checked.report.sessionId);
+    sessionLimiter.record(checked.report.sessionId);
     log(`[bug-report] ${saved.id} stored at ${saved.jsonPath}: ${reportTitle(checked.report)}`);
     reply(response, 201, { id: saved.id, github: options.github ? 'queued' : 'off' });
     if (options.github) handler.pending = pushStored(options, saved.id, saved.stored, checked.image, log, fetchImpl);

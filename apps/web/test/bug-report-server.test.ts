@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createServer, request } from 'node:http';
 import type { Server } from 'node:http';
-import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
@@ -131,6 +131,14 @@ describe('issueContent', () => {
     expect(body).not.toContain('```rm');
     expect(title.startsWith('[bug] hola @​arielcamus')).toBe(true);
   });
+  it('renders no HTML, image, link or issue reference from player-controlled text, and keeps table rows on one line', () => {
+    const checked = validateReport(report({ text: 'mirá ![x](https://evil.test/p.png) <img src=https://evil.test/q> #12', character: { name: '<b>x</b>' }, environment: { userAgent: 'UA <img src=https://evil.test/u>\n| y |' } }));
+    if (!checked.ok) throw new Error(checked.error);
+    const { body } = issueContent(checked.report, 'id1');
+    expect(body).not.toMatch(/<img|<b>|!\[x\]\(/);
+    expect(body).not.toMatch(/#12/);
+    expect(body).toContain('| Navegador | UA &lt;img src=https://evil.test/u&gt; \\| y \\| |\n');
+  });
 });
 
 describe('POST /api/bug-report', () => {
@@ -140,7 +148,8 @@ describe('POST /api/bug-report', () => {
   let handler: ReturnType<typeof createBugReportHandler>;
   beforeAll(async () => {
     dir = mkdtempSync(join(tmpdir(), 'ao-bug-reports-'));
-    const options = { ...bugReportOptionsFromEnv({ AO_BUG_REPORT_DIR: dir, AO_BUG_REPORT_IP_LIMIT: '4', AO_BUG_REPORT_SESSION_LIMIT: '2' }), github: { token: 't', repo: 'o/r', branch: 'bug-reports', label: 'bug-report', apiUrl: 'https://api.github.test' } };
+    // Every POST past the method/type checks counts against the IP (refused ones too): 9 = the 7 the tests before the IP test make + 2.
+    const options = { ...bugReportOptionsFromEnv({ AO_BUG_REPORT_DIR: dir, AO_BUG_REPORT_IP_LIMIT: '9', AO_BUG_REPORT_SESSION_LIMIT: '2' }), github: { token: 't', repo: 'o/r', branch: 'bug-reports', label: 'bug-report', apiUrl: 'https://api.github.test' } };
     handler = createBugReportHandler(options, { log: line => logs.push(line), fetchImpl: gh.fetchImpl as never });
     server = createServer((req, res) => { void handler(req, res, () => { res.writeHead(404); res.end('next'); }); });
     await new Promise<void>(done => server.listen(0, '127.0.0.1', done));
@@ -190,10 +199,45 @@ describe('POST /api/bug-report', () => {
     const limited = await post(JSON.stringify(report()));
     expect(limited.status).toBe(429);
     expect(Number(limited.headers.get('retry-after'))).toBeGreaterThan(0);
-    expect((await post(JSON.stringify(report({ sessionId: 'other-session-1' })))).status).toBe(201); // IP: third and fourth
+    expect((await post(JSON.stringify(report({ sessionId: 'other-session-1' })))).status).toBe(201); // IP: the last two of nine
     expect((await post(JSON.stringify(report({ sessionId: 'other-session-2' })))).status).toBe(201);
     expect((await post(JSON.stringify(report({ sessionId: 'other-session-3' })))).status).toBe(429);
     await handler.pending;
+  });
+  it('counts parallel requests before their bodies are read', async () => {
+    const own = mkdtempSync(join(tmpdir(), 'ao-bug-reports-burst-'));
+    const burst = createBugReportHandler(bugReportOptionsFromEnv({ AO_BUG_REPORT_DIR: own, AO_BUG_REPORT_IP_LIMIT: '3', AO_BUG_REPORT_SESSION_LIMIT: '100' }), { log: () => undefined });
+    const srv = createServer((req, res) => { void burst(req, res); });
+    await new Promise<void>(done => srv.listen(0, '127.0.0.1', done));
+    const url = `http://127.0.0.1:${(srv.address() as { port: number }).port}/api/bug-report`;
+    const statuses = await Promise.all(Array.from({ length: 10 }, (_, i) => fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(report({ sessionId: `burst-session-${i}` })) }).then(r => r.status)));
+    await new Promise(done => srv.close(done));
+    expect(statuses.filter(s => s === 201)).toHaveLength(3);
+    expect(readdirSync(own).filter(name => name.endsWith('.json'))).toHaveLength(3);
+    rmSync(own, { recursive: true, force: true });
+  });
+  it('behind a trusted proxy keys on the hop the proxy appended, not on a forged first X-Forwarded-For entry', async () => {
+    const own = mkdtempSync(join(tmpdir(), 'ao-bug-reports-xff-'));
+    const proxied = createBugReportHandler(bugReportOptionsFromEnv({ AO_BUG_REPORT_DIR: own, AO_BUG_REPORT_IP_LIMIT: '2', AO_BUG_REPORT_SESSION_LIMIT: '100', AO_BUG_REPORT_TRUST_PROXY: '1' }), { log: () => undefined });
+    const srv = createServer((req, res) => { void proxied(req, res); });
+    await new Promise<void>(done => srv.listen(0, '127.0.0.1', done));
+    const url = `http://127.0.0.1:${(srv.address() as { port: number }).port}/api/bug-report`;
+    const send = (forwarded: string, i: number) => fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': forwarded }, body: JSON.stringify(report({ sessionId: `xff-session-${i}` })) }).then(r => r.status);
+    const statuses = [];
+    for (let i = 0; i < 4; i++) statuses.push(await send(`10.0.0.${i}, 203.0.113.7`, i));
+    statuses.push(await send('203.0.113.8', 9));
+    await new Promise(done => srv.close(done));
+    expect(statuses).toEqual([201, 201, 429, 429, 201]);
+    rmSync(own, { recursive: true, force: true });
+  });
+  it('pushPending skips an unreadable report instead of throwing (the server calls it at startup)', async () => {
+    const own = mkdtempSync(join(tmpdir(), 'ao-bug-reports-bad-'));
+    writeFileSync(join(own, '20261122-000000-aaaaaa.json'), '{"truncated');
+    const lines: string[] = [];
+    const pushed = await pushPending({ dir: own, github: { token: 't', repo: 'o/r', branch: 'bug-reports', label: 'bug-report', apiUrl: 'https://api.github.test' } } as never, { log: line => lines.push(line), fetchImpl: fakeGitHub().fetchImpl as never });
+    expect(pushed).toBe(0);
+    expect(lines.some(line => line.includes('GITHUB SKIPPED 20261122-000000-aaaaaa.json'))).toBe(true);
+    rmSync(own, { recursive: true, force: true });
   });
   it('pushPending retries only the reports without an issue', async () => {
     const files = readdirSync(dir).filter(name => name.endsWith('.github.json'));

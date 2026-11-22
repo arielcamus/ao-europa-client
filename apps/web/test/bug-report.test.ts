@@ -24,6 +24,8 @@ describe('redact', () => {
   it('removes the password argument of /PARTICIPAR and leaves ordinary game text alone', () => {
     expect(redact('/PARTICIPAR 3 misala')).toBe(`/PARTICIPAR 3 ${REDACTED}`);
     expect(redact('/PARTICIPAR 3')).toBe('/PARTICIPAR 3');
+    expect(redact('/participate 3 misala')).toBe(`/participate 3 ${REDACTED}`);
+    expect(redact('puse /PARTICIPAR 3 misala y no entró')).toBe(`puse /PARTICIPAR 3 ${REDACTED} y no entró`);
     expect(redact('Has ganado 120 puntos de experiencia.')).toBe('Has ganado 120 puntos de experiencia.');
   });
 });

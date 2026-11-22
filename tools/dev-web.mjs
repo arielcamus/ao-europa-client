@@ -23,7 +23,7 @@ const build = { commit: git(['rev-parse', '--short=10', 'HEAD']), branch: git(['
 const bugReports = bugReportOptionsFromEnv();
 const bugReportHandler = createBugReportHandler(bugReports);
 console.log(`Bug reports: ${bugReports.dir}${bugReports.github ? ` + GitHub issues in ${bugReports.github.repo}` : ' (local only; set AO_BUG_REPORT_GITHUB_TOKEN + AO_BUG_REPORT_GITHUB_REPO for issues)'}`);
-if (bugReports.github) void pushPending(bugReports).then(count => { if (count) console.log(`[bug-report] ${count} pending report(s) pushed to GitHub`); });
+if (bugReports.github) void pushPending(bugReports).then(count => { if (count) console.log(`[bug-report] ${count} pending report(s) pushed to GitHub`); }, error => console.log(`[bug-report] GITHUB FAILED pushing pending reports: ${error instanceof Error ? error.message : String(error)}`));
 const cleanup = [];
 let stopping = false;
 async function stop() {

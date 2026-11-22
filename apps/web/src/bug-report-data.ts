@@ -30,8 +30,8 @@ const CREDENTIAL_PAIR = /\b(pass(?:word|wd)?|contrase(?:ñ|n)a|clave|pin|token|s
 const BEARER = /\b(Bearer|Basic|token)\s+[A-Za-z0-9._~+/=-]{8,}/gi;
 /** GitHub, Slack, AWS, OpenAI/Anthropic-style keys and JWTs. */
 const KNOWN_TOKENS = /\b(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[abpr]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9_-]{20,}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,})\b/g;
-/** Chat commands whose arguments are a password: /PARTICIPAR <sala> <clave> (extras-commands.ts). */
-const PASSWORD_COMMANDS = /^(\/PARTICIPAR\s+\S+\s+)(.+)$/i;
+/** Chat commands whose arguments are a password: /PARTICIPAR (or /PARTICIPATE) <sala> <clave> (extras-commands.ts), anywhere in a line. */
+const PASSWORD_COMMANDS = /(\/PARTICIP(?:AR|ATE)\s+\S+\s+)(\S+)/gi;
 
 const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 

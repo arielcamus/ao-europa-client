@@ -43,7 +43,7 @@ There is no ping in the client yet, so latency is not measured directly; the pro
   The page passes the account e-mail and password it knows as secrets; every exact occurrence is replaced by `[redactado]` in
   every string (the player's text included, in case they typed it).
 - Then every string, in the browser and again on the server, loses: e-mail addresses (`[email]`), `password=` / `clave:` /
-  `token:`-style pairs, `Bearer` tokens, GitHub / Slack / AWS / `sk-` keys, JWTs, and the password argument of `/PARTICIPAR`.
+  `token:`-style pairs, `Bearer` tokens, GitHub / Slack / AWS / `sk-` keys, JWTs, and the password argument of `/PARTICIPAR` / `/PARTICIPATE` anywhere in a line.
 - The server keeps no IP address in the report (the IP is only a rate-limit key in memory). Files are written `0600` in a
   `0700` directory.
 - The GitHub token lives only in the server process; it never reaches the browser and never appears in a log or error line.
@@ -53,7 +53,9 @@ There is no ping in the client yet, so latency is not measured directly; the pro
 - JSON only (415 otherwise), body ≤ 3 MB (413), decoded screenshot ≤ 1.5 MB and really a PNG/JPEG (magic bytes checked, 415).
 - Unknown fields are dropped; lists and strings are cut to fixed ceilings; strings are redacted again.
 - **Rate limits:** 5 reports per IP per hour and 3 per page session per 10 minutes (429 with `Retry-After`; the window says when to
-  try again). Only accepted reports count.
+  try again). Every POST counts against the IP from the moment it arrives (so a parallel burst cannot slip past the check, and
+  a malformed 3 MB body costs a slot like a good one), except one the server itself failed to store. The page-session limit counts
+  accepted reports only.
 - Answers `201 {"id": "...", "github": "queued" | "off"}`, then (if configured) opens the GitHub issue in the background.
 
 ### Configuration (environment of `tools/dev-web.mjs` / `play.sh`)
@@ -63,7 +65,7 @@ There is no ping in the client yet, so latency is not measured directly; the pro
 | `AO_BUG_REPORT_DIR` | `~/.ao-client/bug-reports` | where `<id>.json` and `<id>.png`/`.jpg` land. Keep it outside the repo (`bug-reports/` is gitignored in case). |
 | `AO_BUG_REPORT_IP_LIMIT` | `5` | reports per IP per hour |
 | `AO_BUG_REPORT_SESSION_LIMIT` | `3` | reports per page session per 10 minutes |
-| `AO_BUG_REPORT_TRUST_PROXY` | off | `1` = take the client IP from `X-Forwarded-For` (only behind a proxy you run; otherwise every player shares the proxy's IP limit) |
+| `AO_BUG_REPORT_TRUST_PROXY` | off | `1` = take the client IP from the LAST `X-Forwarded-For` entry, the one your proxy appended (earlier entries are client-supplied and ignored). Set it only behind exactly one proxy you run (e.g. one Cloudflare tunnel); without it every player behind that proxy shares one IP limit |
 | `AO_BUG_REPORT_GITHUB_TOKEN` | none | turns GitHub on together with the repo |
 | `AO_BUG_REPORT_GITHUB_REPO` | none | `owner/name`, e.g. `arielcamus/ao-client` |
 | `AO_BUG_REPORT_GITHUB_BRANCH` | `bug-reports` | the branch the screenshots and JSON are committed to |
