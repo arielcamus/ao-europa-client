@@ -23,7 +23,7 @@ import { ObjType } from './object-catalog.js';
 import { windows } from './window-stack.js';
 import {
   VIEW_H, VIEW_W, ZOOM_LEVELS, affordable, chooseAction, clickTileFor, cheapestDamageCost, defaultPrefer, headingTowards, hostility, isAdjacent, isDamage, isHeal,
-  isOffensive, joystickHeading, mobileZoom, shouldShowMeditate, spellFromDat,
+  isOffensive, joystickHeading, mobileZoom, npcService, shouldShowMeditate, spellFromDat,
 } from './mobile-rules.js';
 import type { ActionContext, MobileAction, MobileSpell, TargetKind, ZoomLevel } from './mobile-rules.js';
 
@@ -50,7 +50,9 @@ type Layout = 'mobile' | 'classic';
 interface Pending { charIndex: number; skill: number; until: number }
 interface Target { charIndex: number; kind: TargetKind }
 
-const CONSOLE_SHOW_MS = 6000;
+const CONSOLE_SHOW_MS = 6000, CONSOLE_BACK_MS = 20_000;
+/** The classic windows mobile mode fits on screen: VbWindows, dialogs and the hand-built *-window forms. */
+const CLASSIC_WINDOWS = '.vb-window, .items-window, .craft-window, .bt-window, .papiro-window, .opt-panel, [role="dialog"], [id$="-window"], [id$="-form"]';
 const LONG_PRESS_MS = 450, TAP_SLOP = 14, JOY_RADIUS = 52, JOY_DEAD = 14;
 /** Objects that lie on a tile but are not loot: trees, doors, signs, deposits, decoration, anvils, forges, teleports. */
 const NOT_LOOT: readonly number[] = [ObjType.Trees, ObjType.Doors, ObjType.Signs, ObjType.Deposits, ObjType.Decoration, ObjType.Anvil, ObjType.Forge, ObjType.Teleport];
@@ -130,7 +132,11 @@ export class MobileMode {
   /** The classic 23x19 box (the server's character area) inside the larger mobile view; outside it is shaded. */
   private readonly area = el('div', { id: 'm-area' });
   private consoleFade = 0;
-  private readonly consoleWatch = new MutationObserver(() => this.showConsole());
+  private consoleBack = 0;
+  /** Scrolled back through the console history: the offset to keep while new lines arrive. */
+  private consoleKeep: number | undefined;
+  private readonly consoleWatch = new MutationObserver(() => this.consoleChanged());
+  private readonly windowWatch = new MutationObserver(() => requestAnimationFrame(() => this.fitWindows()));
   private readonly toggle = button('mobile-toggle', 'Modo móvil', 'Modo móvil');
   private moved: { node: HTMLElement; parent: Node; next: Node | null }[] = [];
   private joyPointer: number | undefined;
@@ -151,6 +157,8 @@ export class MobileMode {
     const refit = () => { if (this.active) requestAnimationFrame(() => this.applyZoom()); };
     for (const name of ['resize', 'orientationchange']) window.addEventListener(name, refit);
     globalThis.visualViewport?.addEventListener('resize', refit);
+    // The page never scrolls in the world (the top bar was half off the top on Ariel's iPhone): undo any scroll at once.
+    window.addEventListener('scroll', () => { if (this.active && (scrollX || scrollY)) scrollTo(0, 0); }, { passive: true });
     // iOS ignores touch-action for pinch on some builds: its own gesture events are the reliable stop. Only in the mobile world.
     for (const name of ['gesturestart', 'gesturechange']) document.addEventListener(name, event => { if (this.active) event.preventDefault(); }, { passive: false });
     lockViewport(this.layout === 'mobile');
@@ -192,6 +200,7 @@ export class MobileMode {
     if (want !== this.active) { if (want) this.enter(); else this.leave(); }
     this.toggle.hidden = !(playing && this.layout === 'classic' && touchScreen());
     if (!this.active || !session) return;
+    this.fitWindows();
     this.refreshHud(session);
     if (!this.drawer.hidden && session.ui.revision !== this.drawerRevision) this.renderDrawer(session);
   }
@@ -256,18 +265,27 @@ export class MobileMode {
     take('viewport', this.world); take('console', this.consoleBox); take('chat-form', this.chatBox);
     document.getElementById('viewport')?.append(this.area, this.ring);
     const consoleNode = document.getElementById('console');
-    if (consoleNode) this.consoleWatch.observe(consoleNode, { childList: true, subtree: true, characterData: true });
+    if (consoleNode) {
+      this.consoleWatch.observe(consoleNode, { childList: true, subtree: true, characterData: true });
+      consoleNode.addEventListener('scroll', this.consoleScrolled, { passive: true });
+      consoleNode.scrollTop = consoleNode.scrollHeight;
+    }
     this.showConsole();
+    const classic = document.getElementById('classic');
+    if (classic) this.windowWatch.observe(classic, { childList: true, subtree: false, attributes: true, attributeFilter: ['hidden', 'class', 'style'] });
     void this.loadNpcTable(); // before the first tap, so a creature is never taken for a merchant
     this.applyZoom();
   }
   private leave() {
     this.active = false;
     this.releaseJoystick(); this.closeDrawer(); this.picker.hidden = true; this.pending = undefined; this.target = undefined; this.drinking = undefined;
-    this.ring.remove(); this.area.remove(); this.consoleWatch.disconnect(); clearTimeout(this.consoleFade);
+    this.ring.remove(); this.area.remove(); this.consoleWatch.disconnect(); this.windowWatch.disconnect(); clearTimeout(this.consoleFade); clearTimeout(this.consoleBack);
+    document.getElementById('console')?.removeEventListener('scroll', this.consoleScrolled);
+    this.consoleKeep = undefined; this.consoleBox.classList.remove('back', 'fresh', 'expanded');
+    for (const node of document.querySelectorAll<HTMLElement>('#classic > [data-mobile-fit]')) { node.style.transform = ''; node.style.transformOrigin = ''; delete node.dataset.mobileFit; }
     for (const { node, parent, next } of this.moved.reverse()) parent.insertBefore(node, next && next.parentNode === parent ? next : null);
     this.moved = [];
-    document.documentElement.classList.remove('mobile-world');
+    document.documentElement.classList.remove('mobile-world', 'm-window-open');
     window.dispatchEvent(new Event('resize')); // classic-layout refits the 1024x768 window
   }
   /** The viewport's size in map pixels: 736x608 in the classic layout, the screen / zoom in this one. */
@@ -280,6 +298,51 @@ export class MobileMode {
     this.consoleBox.classList.add('fresh');
     clearTimeout(this.consoleFade);
     this.consoleFade = window.setTimeout(() => this.consoleBox.classList.remove('fresh'), CONSOLE_SHOW_MS);
+  }
+  /** A new line (classic-ui re-renders the history and jumps to the bottom): scrolled back, the reader keeps their place. */
+  private consoleChanged() {
+    const node = document.getElementById('console');
+    if (node && this.consoleKeep !== undefined) node.scrollTop = this.consoleKeep;
+    this.showConsole();
+  }
+  /** Above the bottom: stay visible (no fade, no jump) for up to CONSOLE_BACK_MS; at the bottom: back to normal. */
+  private readonly consoleScrolled = () => {
+    const node = document.getElementById('console');
+    if (!node) return;
+    const back = node.scrollTop + node.clientHeight < node.scrollHeight - 4;
+    this.consoleBox.classList.toggle('back', back);
+    clearTimeout(this.consoleBack);
+    if (!back) { this.consoleKeep = undefined; this.showConsole(); return; }
+    this.consoleKeep = node.scrollTop;
+    this.consoleBack = window.setTimeout(() => {
+      this.consoleKeep = undefined; this.consoleBox.classList.remove('back');
+      node.scrollTop = node.scrollHeight; this.showConsole();
+    }, CONSOLE_BACK_MS);
+  };
+  /**
+   * Every open classic window (shop, bank, quests, options, any VbWindow) inside the visible screen: centred, scaled down to fit (up to
+   * 1.2x for small ones), its close button always on screen. #classic is unscaled in this layout, so a window's offsetLeft/Top plus
+   * #classic's own position are screen pixels and one transform per window places it. The NPC's words have their own strip (CSS).
+   */
+  private fitWindows() {
+    if (!this.active) return;
+    const classic = document.getElementById('classic');
+    if (!classic) return;
+    const W = this.root.clientWidth || innerWidth, H = this.root.clientHeight || innerHeight, margin = 6;
+    let open = false;
+    // #classic is unscaled here, but its box may sit off the corner (#classic-fit centres it): measure where it is.
+    const origin = classic.getBoundingClientRect();
+    for (const node of Array.from(classic.children) as HTMLElement[]) {
+      if (node.id === 'hud' || node.id === 'npc-dialog' || !node.matches(CLASSIC_WINDOWS)) continue;
+      const w = node.offsetWidth, h = node.offsetHeight;
+      if (node.hidden || !w || !h) continue;
+      open = true;
+      const scale = Math.min(1.2, (W - 2 * margin) / w, (H - 2 * margin) / h);
+      const x = Math.round((W - w * scale) / 2), y = Math.round((H - h * scale) / 2);
+      const transform = `translate(${Math.round(x - origin.left - node.offsetLeft)}px, ${Math.round(y - origin.top - node.offsetTop)}px) scale(${scale.toFixed(4)})`;
+      if (node.style.transform !== transform) { node.style.transformOrigin = '0 0'; node.style.transform = transform; node.dataset.mobileFit = '1'; }
+    }
+    document.documentElement.classList.toggle('m-window-open', open);
   }
   private applyZoom() {
     const rect = this.world.getBoundingClientRect(), dpr = devicePixelRatio || 1;
@@ -302,13 +365,8 @@ export class MobileMode {
     Object.assign(this.area.style, { left: `${(viewW - VIEW_W) / 2}px`, top: `${(viewH - VIEW_H) / 2}px` });
     this.root.dataset.zoom = zoom.toFixed(4);
     this.root.dataset.tiles = `${(rect.width / (32 * zoom)).toFixed(1)}x${(rect.height / (32 * zoom)).toFixed(1)}`;
-    // Classic windows (bank, shop, quests...) stay children of the 1024x768 box, centred over the screen at a readable scale.
-    const scale = Math.max(0.5, Math.min(1.5, innerWidth / 560, innerHeight / 600));
-    const page = document.documentElement.style;
-    page.setProperty('--mobile-window-scale', String(scale));
-    page.setProperty('--mobile-window-left', `${(innerWidth - 1024 * scale) / 2}px`);
-    page.setProperty('--mobile-window-top', `${(innerHeight - 768 * scale) / 2}px`);
     this.top.querySelector('#m-zoom')!.textContent = `🔍 ${this.zoom}`;
+    this.fitWindows();
   }
 
   private build() {
@@ -449,6 +507,7 @@ export class MobileMode {
       kind: target.kind, dead: session.dead, mana: stats.mana ?? 0, hp: stats.hp ?? 0, maxHp: stats.maxHp ?? 0, stamina: stats.stamina,
       adjacent: !!(c && self && isAdjacent(self, c)), paralyzed: session.status.paralyzed, spells,
       pinned: this.pinned(session), prefer: this.prefer(session, spells), rangedSlot: this.rangedSlot(session),
+      service: c && c.npcNumber > 0 && this.npcTable ? npcService(this.npcTable.get(`npc${c.npcNumber}`)) : undefined,
     };
   }
   private decide(session: Session, target: Target): MobileAction { return chooseAction(this.context(session, target)); }
@@ -495,6 +554,8 @@ export class MobileMode {
           return;
         }
         case 'look': { const tile = clickTileFor(c); session.leftClick(tile.x, tile.y); return; }
+        // The NPC's own tile, not the head tile: HandleWorldAction opens the shop only when MapData(x, y).NpcIndex is the NPC.
+        case 'interact': session.leftClick(c.x, c.y); return;
         case 'command': { const tile = clickTileFor(c); session.leftClick(tile.x, tile.y); this.deps.runCommand(action.line); return; }
         case 'hint':
           if (action.text !== this.lastHint.text || now - this.lastHint.at > 2000) { session.ui.message(action.text); this.lastHint = { text: action.text, at: now }; }
@@ -580,6 +641,7 @@ export class MobileMode {
       : action.kind === 'melee' ? ['Golpe', 'cuerpo a cuerpo']
       : action.kind === 'ranged' ? ['Disparar', 'arco']
       : action.kind === 'command' ? [action.label, action.line]
+      : action.kind === 'interact' ? [action.label, (target && session.tracker.chars.get(target.charIndex)?.name) ?? '']
       : action.kind === 'look' ? ['Mirar', target?.kind === 'npc' || target?.kind === 'priest' ? 'hablar' : '']
       : ['…', action.text];
     label.textContent = main; sub.textContent = small;

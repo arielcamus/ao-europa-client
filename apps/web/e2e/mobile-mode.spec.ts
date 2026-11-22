@@ -129,3 +129,59 @@ test('landscape phone: the controls float over the world', async ({ page }) => {
   await expectFits(page);
   await page.screenshot({ path: 'artifacts/screenshots/mobile-mode-landscape.png' });
 });
+
+test('console: a swipe scrolls back through the history, stays visible and keeps its place when a line arrives', async ({ page }) => {
+  await enterWorld(page);
+  // Enough history to scroll: extra rows in the console's list, as classic-ui renders them.
+  await page.evaluate(() => {
+    const list = document.getElementById('messages')!;
+    for (let i = 0; i < 40; i++) { const row = document.createElement('div'); row.textContent = `línea de prueba ${i}`; list.append(row); }
+    const node = document.getElementById('console')!; node.scrollTop = node.scrollHeight;
+  });
+  const box = (await page.locator('#console').boundingBox())!;
+  const before = { top: await page.locator('#console').evaluate(n => n.scrollTop), position: await position(page) };
+  expect(await page.locator('#console').evaluate(n => { const s = getComputedStyle(n); return [s.overflowY, s.touchAction, s.overscrollBehaviorY]; })).toEqual(['auto', 'pan-y', 'contain']);
+  // A real touch swipe (downwards = back in time), through the browser's gesture pipeline.
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Input.synthesizeScrollGesture', { x: box.x + box.width / 2, y: box.y + box.height / 2, yDistance: 120, gestureSourceType: 'touch', speed: 800 });
+  await expect.poll(() => page.locator('#console').evaluate(n => n.scrollTop)).toBeLessThan(before.top - 20);
+  await expect(page.locator('#mobile-console')).toHaveClass(/back/);
+  expect(await page.evaluate(() => [scrollX, scrollY])).toEqual([0, 0]);
+  expect(await position(page)).toBe(before.position); // the swipe never walked or tapped the world
+  // A new line (classic-ui re-renders and jumps to the bottom): the reader keeps their place.
+  const kept = await page.locator('#console').evaluate(n => n.scrollTop);
+  await page.evaluate(() => { const list = document.getElementById('messages')!; const row = document.createElement('div'); row.textContent = 'nueva'; list.append(row); const n = document.getElementById('console')!; n.scrollTop = n.scrollHeight; });
+  await expect.poll(() => page.locator('#console').evaluate(n => n.scrollTop)).toBe(kept);
+  // Scrolled back it does not fade.
+  await page.waitForTimeout(7000);
+  expect(await page.locator('#mobile-console').evaluate(n => getComputedStyle(n).opacity)).toBe('1');
+  await page.screenshot({ path: 'artifacts/screenshots/mobile-mode-console-back.png' });
+  // Back at the bottom: normal again (fades after a few seconds).
+  await page.locator('#console').evaluate(n => { n.scrollTop = n.scrollHeight; });
+  await expect(page.locator('#mobile-console')).not.toHaveClass(/back/);
+});
+
+test('classic windows open inside the screen in both orientations, close button reachable (22 Nov: the NPC box ran off the left edge)', async ({ page }) => {
+  await enterWorld(page);
+  for (const size of [{ width: 390, height: 664 }, { width: 750, height: 342 }]) {
+    await page.setViewportSize(size); await page.waitForTimeout(300);
+    for (const entry of ['Opciones', 'Mapa']) {
+      await page.locator('#m-menu').tap();
+      await page.getByRole('tab', { name: 'Menú' }).tap();
+      await page.locator('#mobile-drawer').getByRole('button', { name: entry, exact: true }).tap();
+      await page.waitForTimeout(600);
+      const boxes = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>('#classic > [data-mobile-fit]')].filter(n => !n.hidden && n.offsetWidth)
+        .map(n => { const r = n.getBoundingClientRect(); return { id: n.id, l: r.left, t: r.top, r: r.right, b: r.bottom }; }));
+      const shown = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>('#classic > *')].filter(n => !n.hidden && n.offsetWidth && getComputedStyle(n).display !== 'none' && n.id !== 'hud').map(n => `${n.tagName}#${n.id}.${n.className}`));
+      expect(boxes.length, `${entry} opened a fitted window; shown: ${shown.join(', ')}`).toBeGreaterThan(0);
+      for (const b of boxes) {
+        expect(b.l, `${entry} ${b.id} left`).toBeGreaterThanOrEqual(0); expect(b.t, `${entry} ${b.id} top`).toBeGreaterThanOrEqual(0);
+        expect(b.r, `${entry} ${b.id} right`).toBeLessThanOrEqual(size.width + 0.5); expect(b.b, `${entry} ${b.id} bottom`).toBeLessThanOrEqual(size.height + 0.5);
+      }
+      if (size.width === 390 && entry === 'Opciones') await page.screenshot({ path: 'artifacts/screenshots/mobile-mode-window-portrait.png' });
+      await page.keyboard.press('Escape'); await page.waitForTimeout(300);
+      await page.evaluate(() => { for (const n of document.querySelectorAll<HTMLElement>('#classic > [data-mobile-fit]')) if (!n.hidden) n.querySelector<HTMLElement>('[aria-label="Cerrar"], .vb-close, button[title="Cerrar"]')?.click(); });
+    }
+    expect(await page.evaluate(() => [scrollX, scrollY])).toEqual([0, 0]);
+  }
+});

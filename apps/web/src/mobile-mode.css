@@ -5,6 +5,8 @@
   background: rgba(27, 20, 15, 0.9); color: #f0e0bb; font: bold 13px Tahoma, sans-serif;
 }
 html.mobile-world, html.mobile-world body { overflow: hidden; height: 100%; overscroll-behavior: none; }
+/* iOS scrolls a body with overflow: hidden anyway; a fixed body cannot move, so the top bar is never pushed off the top. */
+html.mobile-world body { position: fixed; inset: 0; width: 100%; }
 /*
  * Fit (22 Nov, Ariel's iPhone in portrait with Safari's bars showing): the layer is exactly the visible area (fixed, inset 0, no
  * page scroll) and every control sits inside it. The world always uses the whole layer; the controls are small translucent
@@ -19,11 +21,25 @@ html.mobile-world #mobile-layer {
   -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
   font-family: Tahoma, Verdana, sans-serif; color: #fff;
 }
-/* Classic windows (bank, shop, quests, options...) stay in the 1024x768 box, centred over the layer at a readable scale. */
-html.mobile-world #classic-fit { position: fixed !important; inset: 0; width: 100% !important; height: 100% !important; z-index: 2; pointer-events: none; }
+/* Classic windows (shop, bank, quests, options...) stay children of the 1024x768 box, which now sits unscaled at the screen's corner
+   and clips nothing; mobile-mode.ts fits each open window inside the screen on its own (centred, scaled down when needed). The box
+   never makes the page scrollable (22 Nov: the shared scale pushed windows and the page past the edges). */
+html.mobile-world #classic-fit { position: fixed !important; inset: 0; width: 100% !important; height: 100% !important; z-index: 2; pointer-events: none; overflow: hidden; }
 html.mobile-world #classic {
-  left: var(--mobile-window-left); top: var(--mobile-window-top); transform: scale(var(--mobile-window-scale)) !important;
+  left: 0 !important; top: 0 !important; transform: none !important;
   background: transparent !important; overflow: visible !important; pointer-events: none;
+}
+/* The NPC's words: a strip above the thumbs, the screen's width, never the 716 px renderer strip. */
+html.mobile-world #npc-dialog {
+  position: fixed !important; left: calc(env(safe-area-inset-left, 0px) + 8px) !important; right: calc(env(safe-area-inset-right, 0px) + 8px) !important; width: auto !important;
+  top: auto !important; bottom: calc(env(safe-area-inset-bottom, 0px) + 176px) !important; max-height: 34%; overflow-y: auto; box-sizing: border-box;
+  font-size: 13px; background: rgba(11, 26, 47, 0.85);
+}
+/* A window (the shop the greeting came with) takes the screen: the strip steps aside. */
+html.mobile-world.m-window-open #npc-dialog { display: none !important; }
+@media (orientation: landscape) {
+  /* Between the joystick and the buttons, at the bottom. */
+  html.mobile-world #npc-dialog { left: calc(env(safe-area-inset-left, 0px) + 170px) !important; right: calc(env(safe-area-inset-right, 0px) + 220px) !important; bottom: calc(env(safe-area-inset-bottom, 0px) + 8px) !important; max-height: 45%; }
 }
 html.mobile-world #classic > * { pointer-events: auto; }
 html.mobile-world #classic > #hud { visibility: hidden !important; pointer-events: none !important; }
@@ -74,15 +90,22 @@ html.mobile-world #mobile-world #viewport canvas { image-rendering: pixelated; }
 
 /* Console: the last lines under the top bar, wrapped inside the screen; tap to expand. */
 html.mobile-world #mobile-console { position: absolute; left: calc(var(--safe-l) + 8px); right: calc(var(--safe-r) + 8px); top: calc(var(--safe-t) + 56px); z-index: 3; transition: opacity 0.8s; }
-/* Faded and touch-through until a new line arrives (6 s) or the chat opens; a tap while it shows expands the history. */
-html.mobile-world #mobile-console:not(.fresh):not(.expanded) { opacity: 0; pointer-events: none; }
+/*
+ * Four lines, faded and touch-through until a new line arrives (6 s) or the chat opens. While it shows, a vertical swipe scrolls
+ * back through the whole history (the desktop buffer), with momentum; scrolled back it stays (.back) and new lines do not pull it
+ * down (mobile-mode.ts). The swipe never reaches the world (the console is outside the viewport) nor the page (contained).
+ */
+html.mobile-world #mobile-console:not(.fresh):not(.expanded):not(.back) { opacity: 0; pointer-events: none; }
 html.mobile-world #mobile-console #console {
-  position: static !important; width: auto !important; height: auto !important; max-height: 4.7em; overflow: hidden;
-  background: transparent !important; font-size: 11px !important; line-height: 1.15; pointer-events: none;
-  text-shadow: 0 0 2px #000, 1px 1px 0 #000; display: flex; flex-direction: column; justify-content: flex-end;
+  position: static !important; width: auto !important; height: auto !important; max-height: 4.7em; overflow-x: hidden; overflow-y: auto;
+  overscroll-behavior: contain; -webkit-overflow-scrolling: touch; touch-action: pan-y; scrollbar-width: none;
+  background: transparent !important; font-size: 11px !important; line-height: 1.15; pointer-events: auto;
+  text-shadow: 0 0 2px #000, 1px 1px 0 #000; display: block;
 }
+html.mobile-world #mobile-console #console::-webkit-scrollbar { display: none; }
+html.mobile-world #mobile-console.back #console { background: rgba(0, 0, 0, 0.45) !important; border-radius: 6px; }
 html.mobile-world #mobile-console #console, html.mobile-world #mobile-console #console * { white-space: normal !important; overflow-wrap: anywhere; word-break: normal; max-width: 100%; }
-html.mobile-world #mobile-console.expanded #console { max-height: 14em; overflow-y: auto; pointer-events: auto; background: rgba(0, 0, 0, 0.7) !important; }
+html.mobile-world #mobile-console.expanded #console { max-height: 14em; background: rgba(0, 0, 0, 0.7) !important; }
 html.mobile-world #mobile-console #dev-status, html.mobile-world #mobile-console #scope-note { display: none; }
 html.mobile-world #mobile-chat { position: absolute; left: calc(var(--safe-l) + 8px); right: calc(var(--safe-r) + 8px); top: calc(var(--safe-t) + 50px); z-index: 6; }
 html.mobile-world #mobile-chat #chat-form { position: static !important; width: 100% !important; height: auto !important; }

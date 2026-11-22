@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { Heading } from '@ao/protocol';
 import {
-  bestDamage, bestHeal, chooseAction, clickTileFor, cheapestDamageCost, defaultPrefer, headingTowards, hostility, joystickHeading, mobileZoom, crispZoom,
+  bestDamage, bestHeal, chooseAction, clickTileFor, cheapestDamageCost, defaultPrefer, headingTowards, hostility, joystickHeading, mobileZoom, crispZoom, npcService,
   shouldShowMeditate, spellFromDat,
 } from '../src/mobile-rules.js';
 import type { ActionContext, MobileSpell } from '../src/mobile-rules.js';
@@ -176,5 +176,23 @@ describe('hostility', () => {
     expect(hostility(section({ npctype: '2', hostile: '1', attackable: '1' }))).toBe('npc');
     expect(hostility(section({ npctype: '8', hostile: '1', attackable: '1' }))).toBe('npc');
     expect(hostility(section({ npctype: '6', hostile: '1', attackable: '1' }))).toBe('hostile');
+  });
+});
+
+describe('npcService (WorldActions.IsNpcWorldInteractable / HandleNpcInteractionByType)', () => {
+  it('merchants trade, the banker opens the vault, crafters craft, the other service NPCs talk; creatures and guards do nothing', () => {
+    expect(npcService(section({ comercia: '1', npctype: '0' }))).toBe('trade');
+    expect(npcService(section({ npctype: '4' }))).toBe('bank');
+    expect(npcService(section({ craftea: '2' }))).toBe('craft');
+    for (const type of ['5', '10', '12', '16', '17', '20', '21', '22', '23', '26']) expect(npcService(section({ npctype: type }))).toBe('talk');
+    for (const type of ['0', '1', '2', '3', '6', '8', '9']) expect(npcService(section({ npctype: type }))).toBeUndefined();
+    expect(npcService(undefined)).toBeUndefined();
+  });
+  it('a tap on a merchant is "Comerciar": a LeftClick on its own tile, not a look', () => {
+    const base: ActionContext = { kind: 'npc', dead: false, mana: 0, hp: 10, maxHp: 10, adjacent: false, paralyzed: false, spells: [], prefer: 'magic' };
+    expect(chooseAction({ ...base, service: 'trade' })).toMatchObject({ kind: 'interact', label: 'Comerciar', rule: 'npc-trade' });
+    expect(chooseAction({ ...base, service: 'bank' })).toMatchObject({ kind: 'interact', label: 'Bóveda' });
+    expect(chooseAction(base)).toMatchObject({ kind: 'look', rule: 'npc' });
+    expect(chooseAction({ ...base, service: 'trade', dead: true })).toMatchObject({ kind: 'look', rule: 'dead' });
   });
 });

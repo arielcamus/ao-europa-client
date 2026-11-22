@@ -30,12 +30,16 @@ export interface ActionContext {
   prefer: 'magic' | 'melee';
   /** The equipped projectile weapon's inventory slot (a bow), if any. */
   rangedSlot?: number | undefined;
+  /** What a click on this NPC does on the server (npcService), when it does something. */
+  service?: NpcService | undefined;
 }
 export type MobileAction =
   | { kind: 'cast'; spell: MobileSpell; rule: string }
   | { kind: 'melee'; rule: string }
   | { kind: 'ranged'; slot: number; rule: string }
   | { kind: 'look'; rule: string }
+  /** LeftClick on the NPC's own tile: the server's world action (shop, vault, workbench, quest, ...), what a desktop click on it sends. */
+  | { kind: 'interact'; label: string; service: NpcService; rule: string }
   /** LeftClick the NPC (it becomes the server's TargetNPC), then the chat command. */
   | { kind: 'command'; line: string; label: string; rule: string }
   | { kind: 'hint'; text: string; meditate: boolean; rule: string };
@@ -88,6 +92,7 @@ export function chooseAction(ctx: ActionContext): MobileAction {
   if (ctx.dead) return look('dead');
   if (ctx.kind === 'priest' && ctx.hp < ctx.maxHp) return { kind: 'command', line: '/CURAR', label: 'Curar', rule: 'priest-heal' };
   if (ctx.kind === 'priest') return look('npc');
+  if (ctx.kind === 'npc' && ctx.service) return { kind: 'interact', label: SERVICE_LABEL[ctx.service], service: ctx.service, rule: `npc-${ctx.service}` };
   if (ctx.kind === 'npc') return look('npc');
   if (ctx.kind === 'player') return look('player');
   if (ctx.kind === 'none') return look('none');
@@ -177,6 +182,24 @@ export function crispZoom(raw: number, dpr: number): number {
   const ratio = dpr > 0 && Number.isFinite(dpr) ? dpr : 1;
   const snapped = Math.floor(raw * ratio + 1e-6) / ratio;
   return snapped > 0 && snapped >= raw * 0.8 ? snapped : raw;
+}
+
+export type NpcService = 'trade' | 'bank' | 'craft' | 'talk';
+export const SERVICE_LABEL: Readonly<Record<NpcService, string>> = { trade: 'Comerciar', bank: 'Bóveda', craft: 'Fabricar', talk: 'Hablar' };
+/** e_NPCType values WorldActions.IsNpcWorldInteractable lists besides the bank and the priests: Enlistador, Pirata, Gobernador, Subastador, Quest, EntregaPesca, AO20Shop, AO20ShopPjs, EventMaster, Transporter. */
+const TALK_TYPES: readonly string[] = ['5', '10', '12', '16', '17', '20', '21', '22', '23', '26'];
+/**
+ * What a LeftClick on this NPC does on the server: HandleLeftClick runs HandleWorldAction when IsNpcWorldInteractable (Comercia = 1,
+ * Craftea > 0, or one of its NpcTypes), and HandleNpcInteractionByType opens the shop (IniciarComercioNPC), the vault (Banquero,
+ * IniciarBanco), the workbench, a quest, a trip... The classic client gets there with a plain click on the NPC; so does mobile mode.
+ */
+export function npcService(section: Map<string, string> | undefined): NpcService | undefined {
+  if (!section) return undefined;
+  if (section.get('comercia') === '1') return 'trade';
+  if (num(section, 'craftea') > 0) return 'craft';
+  const type = section.get('npctype');
+  if (type === '4') return 'bank';
+  return type !== undefined && TALK_TYPES.includes(type) ? 'talk' : undefined;
 }
 
 /** Dat/npcs.dat [NPCn]: attackable creatures are the targets of a plain tap; merchants, bankers and priests only get a LeftClick. */
